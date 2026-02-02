@@ -179,6 +179,32 @@ func (s *DatabaseMetricsScraper) ScrapeRunningStatus(ctx context.Context) []erro
 	return nil
 }
 
+// ScrapeConnectionStats scrapes connection statistics metrics
+func (s *DatabaseMetricsScraper) ScrapeConnectionStats(ctx context.Context) []error {
+	now := pcommon.NewTimestampFromTime(time.Now())
+
+	metric, err := s.client.QueryConnectionStats(ctx)
+	if err != nil {
+		s.logger.Error("Failed to query connection stats", zap.Error(err))
+		return []error{err}
+	}
+
+	// Record max_connections
+	maxConn := getInt64(metric.MaxConnections)
+	s.mb.RecordPostgresqlMaxConnectionsDataPoint(now, maxConn, s.instanceName)
+
+	// Calculate and record percent usage
+	if maxConn > 0 {
+		currentConn := getInt64(metric.CurrentConnections)
+		percentUsage := float64(currentConn) / float64(maxConn) * 100.0
+		s.mb.RecordPostgresqlPercentUsageConnectionsDataPoint(now, percentUsage, s.instanceName)
+	}
+
+	s.logger.Debug("Connection stats scrape completed")
+
+	return nil
+}
+
 // ScrapeSessionMetrics scrapes session-level metrics from pg_stat_database (PostgreSQL 14+)
 func (s *DatabaseMetricsScraper) ScrapeSessionMetrics(ctx context.Context) []error {
 	now := pcommon.NewTimestampFromTime(time.Now())

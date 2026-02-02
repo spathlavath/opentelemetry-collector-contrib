@@ -12,6 +12,97 @@ metrics:
     enabled: false
 ```
 
+### postgresql.active_waiting_queries
+
+Number of active queries currently waiting on locks or other resources (PostgreSQL 9.6+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {queries} | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| database_name | Name of the PostgreSQL database | Any Str | Recommended |
+| user_name | Name of the user/role connected to the database | Any Str | Recommended |
+| application_name | Name of the replication application | Any Str | Recommended |
+| backend_type | Type of backend process (client backend, autovacuum worker, logical replication worker, parallel worker, background writer, etc.) | Any Str | Recommended |
+
+### postgresql.activity.backend_xid_age
+
+Maximum age of backend transaction IDs currently in use (PostgreSQL 9.6+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {transactions} | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| database_name | Name of the PostgreSQL database | Any Str | Recommended |
+| user_name | Name of the user/role connected to the database | Any Str | Recommended |
+| application_name | Name of the replication application | Any Str | Recommended |
+| backend_type | Type of backend process (client backend, autovacuum worker, logical replication worker, parallel worker, background writer, etc.) | Any Str | Recommended |
+
+### postgresql.activity.backend_xmin_age
+
+Maximum age of backend xmin values (oldest transaction visible to any backend) (PostgreSQL 9.6+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {transactions} | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| database_name | Name of the PostgreSQL database | Any Str | Recommended |
+| user_name | Name of the user/role connected to the database | Any Str | Recommended |
+| application_name | Name of the replication application | Any Str | Recommended |
+| backend_type | Type of backend process (client backend, autovacuum worker, logical replication worker, parallel worker, background writer, etc.) | Any Str | Recommended |
+
+### postgresql.activity.wait_event
+
+Count of backends grouped by wait event type for performance analysis (PostgreSQL 9.6+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {backends} | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| database_name | Name of the PostgreSQL database | Any Str | Recommended |
+| user_name | Name of the user/role connected to the database | Any Str | Recommended |
+| application_name | Name of the replication application | Any Str | Recommended |
+| backend_type | Type of backend process (client backend, autovacuum worker, logical replication worker, parallel worker, background writer, etc.) | Any Str | Recommended |
+| wait_event | Type of wait event (lock, IO, etc.) or NoWaitEvent if not waiting | Any Str | Recommended |
+
+### postgresql.activity.xact_start_age
+
+Maximum age in seconds of the oldest transaction start time across all backends (PostgreSQL 9.6+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| s | Gauge | Double | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| database_name | Name of the PostgreSQL database | Any Str | Recommended |
+| user_name | Name of the user/role connected to the database | Any Str | Recommended |
+| application_name | Name of the replication application | Any Str | Recommended |
+| backend_type | Type of backend process (client backend, autovacuum worker, logical replication worker, parallel worker, background writer, etc.) | Any Str | Recommended |
+
 ### postgresql.analyze.child_tables_done
 
 Number of child tables processed during ANALYZE operation (PostgreSQL 13+)
@@ -389,6 +480,91 @@ Number of times disk blocks were found in the buffer cache
 | ---- | ----------- | ------ | -------- |
 | database_name | Name of the PostgreSQL database | Any Str | Recommended |
 | newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+
+### postgresql.buffercache.dirty_buffers
+
+Number of dirty buffers in the shared buffer cache (requires pg_buffercache extension, PostgreSQL 9.6+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {buffers} | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| database_name | Name of the PostgreSQL database | Any Str | Recommended |
+| schema_name | Name of the schema containing the table | Any Str | Recommended |
+| table_name | Name of the table | Any Str | Recommended |
+
+### postgresql.buffercache.pinning_backends
+
+Number of backends pinning buffers in the shared buffer cache (requires pg_buffercache extension, PostgreSQL 9.6+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {backends} | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| database_name | Name of the PostgreSQL database | Any Str | Recommended |
+| schema_name | Name of the schema containing the table | Any Str | Recommended |
+| table_name | Name of the table | Any Str | Recommended |
+
+### postgresql.buffercache.unused_buffers
+
+Number of unused buffers in the shared buffer cache (requires pg_buffercache extension, PostgreSQL 9.6+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {buffers} | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| database_name | Name of the PostgreSQL database | Any Str | Recommended |
+| schema_name | Name of the schema containing the table | Any Str | Recommended |
+| table_name | Name of the table | Any Str | Recommended |
+
+### postgresql.buffercache.usage_count
+
+Sum of usage counts for buffers in the shared buffer cache (requires pg_buffercache extension, PostgreSQL 9.6+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {count} | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| database_name | Name of the PostgreSQL database | Any Str | Recommended |
+| schema_name | Name of the schema containing the table | Any Str | Recommended |
+| table_name | Name of the table | Any Str | Recommended |
+
+### postgresql.buffercache.used_buffers
+
+Number of used buffers in the shared buffer cache (requires pg_buffercache extension, PostgreSQL 9.6+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {buffers} | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| database_name | Name of the PostgreSQL database | Any Str | Recommended |
+| schema_name | Name of the schema containing the table | Any Str | Recommended |
+| table_name | Name of the table | Any Str | Recommended |
 
 ### postgresql.checksums.enabled
 
@@ -1066,6 +1242,48 @@ Seconds since last manual VACUUM on this table (PostgreSQL 9.6+)
 | newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
 | schema_name | Name of the schema containing the table | Any Str | Recommended |
 | table_name | Name of the table | Any Str | Recommended |
+
+### postgresql.max_connections
+
+Maximum number of concurrent connections allowed to the server (PostgreSQL 9.6+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {connections} | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+
+### postgresql.percent_usage_connections
+
+Percentage of max_connections currently in use (PostgreSQL 9.6+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| % | Gauge | Double | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+
+### postgresql.pg_stat_statements.dealloc
+
+Number of times pg_stat_statements has deallocated least-used statements (requires pg_stat_statements extension, PostgreSQL 13+)
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {deallocations} | Sum | Int | Cumulative | true | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
 
 ### postgresql.recovery_prefetch.block_distance
 
@@ -1943,6 +2161,48 @@ Number of truncates for this SLRU (PostgreSQL 13+)
 | newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
 | slru_name | Name of the SLRU cache (e.g., CommitTs, MultiXactMember, MultiXactOffset, Notify, Serial, Subtrans, Xact) | Any Str | Recommended |
 
+### postgresql.snapshot.xip_count
+
+Number of in-progress transactions in the current snapshot (PostgreSQL 13+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {transactions} | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+
+### postgresql.snapshot.xmax
+
+First as-yet-unassigned transaction ID in the current snapshot (PostgreSQL 13+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {xid} | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+
+### postgresql.snapshot.xmin
+
+Earliest transaction ID still active in the current snapshot (PostgreSQL 13+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {xid} | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+
 ### postgresql.subscription.apply_error
 
 Number of errors encountered while applying logical replication changes (PostgreSQL 15+)
@@ -2196,6 +2456,42 @@ Size of the TOAST data for this table in bytes (PostgreSQL 9.6+)
 | newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
 | schema_name | Name of the schema containing the table | Any Str | Recommended |
 | table_name | Name of the table | Any Str | Recommended |
+
+### postgresql.transactions.duration.max
+
+Maximum transaction duration in seconds across all active backends (PostgreSQL 9.6+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| s | Gauge | Double | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| database_name | Name of the PostgreSQL database | Any Str | Recommended |
+| user_name | Name of the user/role connected to the database | Any Str | Recommended |
+| application_name | Name of the replication application | Any Str | Recommended |
+| backend_type | Type of backend process (client backend, autovacuum worker, logical replication worker, parallel worker, background writer, etc.) | Any Str | Recommended |
+
+### postgresql.transactions.duration.sum
+
+Sum of transaction durations in seconds across all active backends (PostgreSQL 9.6+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| s | Gauge | Double | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| database_name | Name of the PostgreSQL database | Any Str | Recommended |
+| user_name | Name of the user/role connected to the database | Any Str | Recommended |
+| application_name | Name of the replication application | Any Str | Recommended |
+| backend_type | Type of backend process (client backend, autovacuum worker, logical replication worker, parallel worker, background writer, etc.) | Any Str | Recommended |
 
 ### postgresql.uptime
 

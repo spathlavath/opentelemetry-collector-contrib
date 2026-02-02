@@ -110,3 +110,13 @@ type PgRunningStatusMetric struct {
 	// Query: SELECT 1 as running
 	Running sql.NullInt64
 }
+
+// PgConnectionStatsMetric represents connection statistics from pg_settings and pg_stat_activity
+// This metric shows connection limits and current usage
+// Available in PostgreSQL 9.6+
+type PgConnectionStatsMetric struct {
+	// MaxConnections is the maximum number of concurrent connections allowed (from pg_settings)
+	MaxConnections sql.NullInt64
+	// CurrentConnections is the current number of connections (from pg_stat_activity)
+	CurrentConnections sql.NullInt64
+}

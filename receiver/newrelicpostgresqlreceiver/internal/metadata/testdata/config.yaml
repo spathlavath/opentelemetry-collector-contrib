@@ -1,6 +1,16 @@
 default:
 all_set:
   metrics:
+    postgresql.active_waiting_queries:
+      enabled: true
+    postgresql.activity.backend_xid_age:
+      enabled: true
+    postgresql.activity.backend_xmin_age:
+      enabled: true
+    postgresql.activity.wait_event:
+      enabled: true
+    postgresql.activity.xact_start_age:
+      enabled: true
     postgresql.analyze.child_tables_done:
       enabled: true
     postgresql.analyze.child_tables_total:
@@ -50,6 +60,16 @@ all_set:
     postgresql.blk_write_time:
       enabled: true
     postgresql.buffer_hit:
+      enabled: true
+    postgresql.buffercache.dirty_buffers:
+      enabled: true
+    postgresql.buffercache.pinning_backends:
+      enabled: true
+    postgresql.buffercache.unused_buffers:
+      enabled: true
+    postgresql.buffercache.usage_count:
+      enabled: true
+    postgresql.buffercache.used_buffers:
       enabled: true
     postgresql.checksums.enabled:
       enabled: true
@@ -134,6 +154,12 @@ all_set:
     postgresql.last_autovacuum_age:
       enabled: true
     postgresql.last_vacuum_age:
+      enabled: true
+    postgresql.max_connections:
+      enabled: true
+    postgresql.percent_usage_connections:
+      enabled: true
+    postgresql.pg_stat_statements.dealloc:
       enabled: true
     postgresql.recovery_prefetch.block_distance:
       enabled: true
@@ -249,6 +275,12 @@ all_set:
       enabled: true
     postgresql.slru.truncates:
       enabled: true
+    postgresql.snapshot.xip_count:
+      enabled: true
+    postgresql.snapshot.xmax:
+      enabled: true
+    postgresql.snapshot.xmin:
+      enabled: true
     postgresql.subscription.apply_error:
       enabled: true
     postgresql.subscription.last_msg_receipt_age:
@@ -280,6 +312,10 @@ all_set:
     postgresql.toast_index_blocks_read:
       enabled: true
     postgresql.toast_size:
+      enabled: true
+    postgresql.transactions.duration.max:
+      enabled: true
+    postgresql.transactions.duration.sum:
       enabled: true
     postgresql.uptime:
       enabled: true
@@ -344,6 +380,16 @@ all_set:
       enabled: true
 none_set:
   metrics:
+    postgresql.active_waiting_queries:
+      enabled: false
+    postgresql.activity.backend_xid_age:
+      enabled: false
+    postgresql.activity.backend_xmin_age:
+      enabled: false
+    postgresql.activity.wait_event:
+      enabled: false
+    postgresql.activity.xact_start_age:
+      enabled: false
     postgresql.analyze.child_tables_done:
       enabled: false
     postgresql.analyze.child_tables_total:
@@ -393,6 +439,16 @@ none_set:
     postgresql.blk_write_time:
       enabled: false
     postgresql.buffer_hit:
+      enabled: false
+    postgresql.buffercache.dirty_buffers:
+      enabled: false
+    postgresql.buffercache.pinning_backends:
+      enabled: false
+    postgresql.buffercache.unused_buffers:
+      enabled: false
+    postgresql.buffercache.usage_count:
+      enabled: false
+    postgresql.buffercache.used_buffers:
       enabled: false
     postgresql.checksums.enabled:
       enabled: false
@@ -477,6 +533,12 @@ none_set:
     postgresql.last_autovacuum_age:
       enabled: false
     postgresql.last_vacuum_age:
+      enabled: false
+    postgresql.max_connections:
+      enabled: false
+    postgresql.percent_usage_connections:
+      enabled: false
+    postgresql.pg_stat_statements.dealloc:
       enabled: false
     postgresql.recovery_prefetch.block_distance:
       enabled: false
@@ -592,6 +654,12 @@ none_set:
       enabled: false
     postgresql.slru.truncates:
       enabled: false
+    postgresql.snapshot.xip_count:
+      enabled: false
+    postgresql.snapshot.xmax:
+      enabled: false
+    postgresql.snapshot.xmin:
+      enabled: false
     postgresql.subscription.apply_error:
       enabled: false
     postgresql.subscription.last_msg_receipt_age:
@@ -623,6 +691,10 @@ none_set:
     postgresql.toast_index_blocks_read:
       enabled: false
     postgresql.toast_size:
+      enabled: false
+    postgresql.transactions.duration.max:
+      enabled: false
+    postgresql.transactions.duration.sum:
       enabled: false
     postgresql.uptime:
       enabled: false

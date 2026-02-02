@@ -38,6 +38,9 @@ attributes:
   application_name:
     description: Name of the replication application
     type: string
+  backend_type:
+    description: Type of backend process (client backend, autovacuum worker, logical replication worker, parallel worker, background writer, etc.)
+    type: string
   client_address:
     description: IP address of the standby server
     type: string
@@ -83,8 +86,64 @@ attributes:
   table_name:
     description: Name of the table
     type: string
+  user_name:
+    description: Name of the user/role connected to the database
+    type: string
+  wait_event:
+    description: Type of wait event (lock, IO, etc.) or NoWaitEvent if not waiting
+    type: string
 
 metrics:
+  postgresql.active_waiting_queries:
+    description: Number of active queries currently waiting on locks or other resources (PostgreSQL 9.6+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, database_name, user_name, application_name, backend_type]
+    unit: "{queries}"
+    stability:
+      level: alpha
+
+  postgresql.activity.backend_xid_age:
+    description: Maximum age of backend transaction IDs currently in use (PostgreSQL 9.6+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, database_name, user_name, application_name, backend_type]
+    unit: "{transactions}"
+    stability:
+      level: alpha
+
+  postgresql.activity.backend_xmin_age:
+    description: Maximum age of backend xmin values (oldest transaction visible to any backend) (PostgreSQL 9.6+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, database_name, user_name, application_name, backend_type]
+    unit: "{transactions}"
+    stability:
+      level: alpha
+
+  postgresql.activity.wait_event:
+    description: Count of backends grouped by wait event type for performance analysis (PostgreSQL 9.6+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, database_name, user_name, application_name, backend_type, wait_event]
+    unit: "{backends}"
+    stability:
+      level: alpha
+
+  postgresql.activity.xact_start_age:
+    description: Maximum age in seconds of the oldest transaction start time across all backends (PostgreSQL 9.6+)
+    enabled: true
+    gauge:
+      value_type: double
+    attributes: [newrelicpostgresql.instance_name, database_name, user_name, application_name, backend_type]
+    unit: s
+    stability:
+      level: alpha
+
   postgresql.analyze.child_tables_done:
     description: Number of child tables processed during ANALYZE operation (PostgreSQL 13+)
     enabled: true
@@ -364,6 +423,56 @@ metrics:
       value_type: int
     attributes: [database_name, newrelicpostgresql.instance_name]
     unit: "{blocks}"
+    stability:
+      level: alpha
+
+  postgresql.buffercache.dirty_buffers:
+    description: Number of dirty buffers in the shared buffer cache (requires pg_buffercache extension, PostgreSQL 9.6+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, database_name, schema_name, table_name]
+    unit: "{buffers}"
+    stability:
+      level: alpha
+
+  postgresql.buffercache.pinning_backends:
+    description: Number of backends pinning buffers in the shared buffer cache (requires pg_buffercache extension, PostgreSQL 9.6+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, database_name, schema_name, table_name]
+    unit: "{backends}"
+    stability:
+      level: alpha
+
+  postgresql.buffercache.unused_buffers:
+    description: Number of unused buffers in the shared buffer cache (requires pg_buffercache extension, PostgreSQL 9.6+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, database_name, schema_name, table_name]
+    unit: "{buffers}"
+    stability:
+      level: alpha
+
+  postgresql.buffercache.usage_count:
+    description: Sum of usage counts for buffers in the shared buffer cache (requires pg_buffercache extension, PostgreSQL 9.6+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, database_name, schema_name, table_name]
+    unit: "{count}"
+    stability:
+      level: alpha
+
+  postgresql.buffercache.used_buffers:
+    description: Number of used buffers in the shared buffer cache (requires pg_buffercache extension, PostgreSQL 9.6+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, database_name, schema_name, table_name]
+    unit: "{buffers}"
     stability:
       level: alpha
 
@@ -820,6 +929,38 @@ metrics:
       value_type: double
     attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
     unit: s
+    stability:
+      level: alpha
+
+  postgresql.max_connections:
+    description: Maximum number of concurrent connections allowed to the server (PostgreSQL 9.6+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name]
+    unit: "{connections}"
+    stability:
+      level: alpha
+
+  postgresql.percent_usage_connections:
+    description: Percentage of max_connections currently in use (PostgreSQL 9.6+)
+    enabled: true
+    gauge:
+      value_type: double
+    attributes: [newrelicpostgresql.instance_name]
+    unit: "%"
+    stability:
+      level: alpha
+
+  postgresql.pg_stat_statements.dealloc:
+    description: Number of times pg_stat_statements has deallocated least-used statements (requires pg_stat_statements extension, PostgreSQL 13+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name]
+    unit: "{deallocations}"
     stability:
       level: alpha
 
@@ -1455,6 +1596,36 @@ metrics:
     stability:
       level: alpha
 
+  postgresql.snapshot.xip_count:
+    description: Number of in-progress transactions in the current snapshot (PostgreSQL 13+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name]
+    unit: "{transactions}"
+    stability:
+      level: alpha
+
+  postgresql.snapshot.xmax:
+    description: First as-yet-unassigned transaction ID in the current snapshot (PostgreSQL 13+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name]
+    unit: "{xid}"
+    stability:
+      level: alpha
+
+  postgresql.snapshot.xmin:
+    description: Earliest transaction ID still active in the current snapshot (PostgreSQL 13+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name]
+    unit: "{xid}"
+    stability:
+      level: alpha
+
   postgresql.subscription.apply_error:
     description: Number of errors encountered while applying logical replication changes (PostgreSQL 15+)
     enabled: true
@@ -1632,6 +1803,26 @@ metrics:
       value_type: int
     attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
     unit: By
+    stability:
+      level: alpha
+
+  postgresql.transactions.duration.max:
+    description: Maximum transaction duration in seconds across all active backends (PostgreSQL 9.6+)
+    enabled: true
+    gauge:
+      value_type: double
+    attributes: [newrelicpostgresql.instance_name, database_name, user_name, application_name, backend_type]
+    unit: s
+    stability:
+      level: alpha
+
+  postgresql.transactions.duration.sum:
+    description: Sum of transaction durations in seconds across all active backends (PostgreSQL 9.6+)
+    enabled: true
+    gauge:
+      value_type: double
+    attributes: [newrelicpostgresql.instance_name, database_name, user_name, application_name, backend_type]
+    unit: s
     stability:
       level: alpha
 

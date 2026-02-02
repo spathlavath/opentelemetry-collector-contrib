@@ -115,4 +115,12 @@ const (
 	// Returns 1 if the server is running and responding to queries
 	// Available in PostgreSQL 9.6+
 	PgRunningStatusSQL = `SELECT 1 as running`
+
+	// PgConnectionStatsSQL returns connection statistics including max connections and current usage
+	// Queries pg_settings for max_connections and counts current connections from pg_stat_activity
+	// Available in PostgreSQL 9.6+
+	PgConnectionStatsSQL = `
+		SELECT
+			(SELECT setting::int FROM pg_settings WHERE name = 'max_connections') as max_connections,
+			(SELECT COUNT(*) FROM pg_stat_activity) as current_connections`
 )

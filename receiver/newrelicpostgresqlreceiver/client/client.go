@@ -29,6 +29,38 @@ type PostgreSQLClient interface {
 	// Conflict metrics from pg_stat_database_conflicts (PG9.6+)
 	QueryConflictMetrics(ctx context.Context) ([]models.PgStatDatabaseConflictsMetric, error)
 
+	// Activity metrics from pg_stat_activity
+	// Retrieves connection activity statistics grouped by database, user, application, and backend type
+	// Includes active waiting queries, transaction age, and backend transaction IDs
+	// Available in PostgreSQL 9.6+
+	QueryActivityMetrics(ctx context.Context) ([]models.PgStatActivity, error)
+
+	// Wait event metrics from pg_stat_activity
+	// Retrieves backend counts grouped by wait event type for performance analysis
+	// grouped by database, user, application, backend type, and wait event
+	// Available in PostgreSQL 9.6+
+	QueryWaitEvents(ctx context.Context) ([]models.PgStatActivityWaitEvents, error)
+
+	// pg_stat_statements deallocation metrics from pg_stat_statements_info
+	// Retrieves the number of times pg_stat_statements has deallocated least-used statements
+	// Requires pg_stat_statements extension to be installed and enabled
+	// Returns nil if extension is not available (query will fail gracefully)
+	// Available in PostgreSQL 13+
+	QueryPgStatStatementsDealloc(ctx context.Context) (*models.PgStatStatementsDealloc, error)
+
+	// Snapshot metrics from pg_snapshot functions
+	// Retrieves transaction snapshot information including xmin, xmax, and in-progress transaction count
+	// Provides insight into current transaction state and visibility
+	// Available in PostgreSQL 13+
+	QuerySnapshot(ctx context.Context) (*models.PgSnapshot, error)
+
+	// QueryBuffercache retrieves buffer cache statistics from pg_buffercache extension
+	// Returns buffer usage metrics grouped by database, schema, and table
+	// Requires pg_buffercache extension to be installed and enabled
+	// Returns empty slice if extension is not available (query will fail gracefully)
+	// Available in PostgreSQL 9.6+
+	QueryBuffercache(ctx context.Context) ([]models.PgBuffercache, error)
+
 	// QueryServerUptime retrieves the PostgreSQL server uptime in seconds
 	// Uses pg_postmaster_start_time() to calculate elapsed time since server start
 	// Available in PostgreSQL 9.6+
@@ -43,6 +75,11 @@ type PostgreSQLClient interface {
 	// Returns 1 if the server is running and responding
 	// Available in PostgreSQL 9.6+
 	QueryRunningStatus(ctx context.Context) (*models.PgRunningStatusMetric, error)
+
+	// QueryConnectionStats retrieves connection statistics from pg_settings and pg_stat_activity
+	// Returns max_connections setting and current connection count
+	// Available in PostgreSQL 9.6+
+	QueryConnectionStats(ctx context.Context) (*models.PgConnectionStatsMetric, error)
 
 	// QueryReplicationMetrics retrieves replication statistics from pg_stat_replication
 	// Uses version-specific queries:

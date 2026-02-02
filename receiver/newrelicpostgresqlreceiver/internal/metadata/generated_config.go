@@ -28,6 +28,11 @@ func (ms *MetricConfig) Unmarshal(parser *confmap.Conf) error {
 
 // MetricsConfig provides config for newrelicpostgresql metrics.
 type MetricsConfig struct {
+	PostgresqlActiveWaitingQueries                    MetricConfig `mapstructure:"postgresql.active_waiting_queries"`
+	PostgresqlActivityBackendXidAge                   MetricConfig `mapstructure:"postgresql.activity.backend_xid_age"`
+	PostgresqlActivityBackendXminAge                  MetricConfig `mapstructure:"postgresql.activity.backend_xmin_age"`
+	PostgresqlActivityWaitEvent                       MetricConfig `mapstructure:"postgresql.activity.wait_event"`
+	PostgresqlActivityXactStartAge                    MetricConfig `mapstructure:"postgresql.activity.xact_start_age"`
 	PostgresqlAnalyzeChildTablesDone                  MetricConfig `mapstructure:"postgresql.analyze.child_tables_done"`
 	PostgresqlAnalyzeChildTablesTotal                 MetricConfig `mapstructure:"postgresql.analyze.child_tables_total"`
 	PostgresqlAnalyzeExtStatsComputed                 MetricConfig `mapstructure:"postgresql.analyze.ext_stats_computed"`
@@ -53,6 +58,11 @@ type MetricsConfig struct {
 	PostgresqlBlkReadTime                             MetricConfig `mapstructure:"postgresql.blk_read_time"`
 	PostgresqlBlkWriteTime                            MetricConfig `mapstructure:"postgresql.blk_write_time"`
 	PostgresqlBufferHit                               MetricConfig `mapstructure:"postgresql.buffer_hit"`
+	PostgresqlBuffercacheDirtyBuffers                 MetricConfig `mapstructure:"postgresql.buffercache.dirty_buffers"`
+	PostgresqlBuffercachePinningBackends              MetricConfig `mapstructure:"postgresql.buffercache.pinning_backends"`
+	PostgresqlBuffercacheUnusedBuffers                MetricConfig `mapstructure:"postgresql.buffercache.unused_buffers"`
+	PostgresqlBuffercacheUsageCount                   MetricConfig `mapstructure:"postgresql.buffercache.usage_count"`
+	PostgresqlBuffercacheUsedBuffers                  MetricConfig `mapstructure:"postgresql.buffercache.used_buffers"`
 	PostgresqlChecksumsEnabled                        MetricConfig `mapstructure:"postgresql.checksums.enabled"`
 	PostgresqlChecksumsFailures                       MetricConfig `mapstructure:"postgresql.checksums.failures"`
 	PostgresqlClusterVacuumHeapBlksScanned            MetricConfig `mapstructure:"postgresql.cluster_vacuum.heap_blks_scanned"`
@@ -95,6 +105,9 @@ type MetricsConfig struct {
 	PostgresqlLastAutoanalyzeAge                      MetricConfig `mapstructure:"postgresql.last_autoanalyze_age"`
 	PostgresqlLastAutovacuumAge                       MetricConfig `mapstructure:"postgresql.last_autovacuum_age"`
 	PostgresqlLastVacuumAge                           MetricConfig `mapstructure:"postgresql.last_vacuum_age"`
+	PostgresqlMaxConnections                          MetricConfig `mapstructure:"postgresql.max_connections"`
+	PostgresqlPercentUsageConnections                 MetricConfig `mapstructure:"postgresql.percent_usage_connections"`
+	PostgresqlPgStatStatementsDealloc                 MetricConfig `mapstructure:"postgresql.pg_stat_statements.dealloc"`
 	PostgresqlRecoveryPrefetchBlockDistance           MetricConfig `mapstructure:"postgresql.recovery_prefetch.block_distance"`
 	PostgresqlRecoveryPrefetchHit                     MetricConfig `mapstructure:"postgresql.recovery_prefetch.hit"`
 	PostgresqlRecoveryPrefetchIoDepth                 MetricConfig `mapstructure:"postgresql.recovery_prefetch.io_depth"`
@@ -152,6 +165,9 @@ type MetricsConfig struct {
 	PostgresqlSlruBlksZeroed                          MetricConfig `mapstructure:"postgresql.slru.blks_zeroed"`
 	PostgresqlSlruFlushes                             MetricConfig `mapstructure:"postgresql.slru.flushes"`
 	PostgresqlSlruTruncates                           MetricConfig `mapstructure:"postgresql.slru.truncates"`
+	PostgresqlSnapshotXipCount                        MetricConfig `mapstructure:"postgresql.snapshot.xip_count"`
+	PostgresqlSnapshotXmax                            MetricConfig `mapstructure:"postgresql.snapshot.xmax"`
+	PostgresqlSnapshotXmin                            MetricConfig `mapstructure:"postgresql.snapshot.xmin"`
 	PostgresqlSubscriptionApplyError                  MetricConfig `mapstructure:"postgresql.subscription.apply_error"`
 	PostgresqlSubscriptionLastMsgReceiptAge           MetricConfig `mapstructure:"postgresql.subscription.last_msg_receipt_age"`
 	PostgresqlSubscriptionLastMsgSendAge              MetricConfig `mapstructure:"postgresql.subscription.last_msg_send_age"`
@@ -168,6 +184,8 @@ type MetricsConfig struct {
 	PostgresqlToastIndexBlocksHit                     MetricConfig `mapstructure:"postgresql.toast_index_blocks_hit"`
 	PostgresqlToastIndexBlocksRead                    MetricConfig `mapstructure:"postgresql.toast_index_blocks_read"`
 	PostgresqlToastSize                               MetricConfig `mapstructure:"postgresql.toast_size"`
+	PostgresqlTransactionsDurationMax                 MetricConfig `mapstructure:"postgresql.transactions.duration.max"`
+	PostgresqlTransactionsDurationSum                 MetricConfig `mapstructure:"postgresql.transactions.duration.sum"`
 	PostgresqlUptime                                  MetricConfig `mapstructure:"postgresql.uptime"`
 	PostgresqlVacuumHeapBlksScanned                   MetricConfig `mapstructure:"postgresql.vacuum.heap_blks_scanned"`
 	PostgresqlVacuumHeapBlksTotal                     MetricConfig `mapstructure:"postgresql.vacuum.heap_blks_total"`
@@ -196,6 +214,21 @@ type MetricsConfig struct {
 
 func DefaultMetricsConfig() MetricsConfig {
 	return MetricsConfig{
+		PostgresqlActiveWaitingQueries: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlActivityBackendXidAge: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlActivityBackendXminAge: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlActivityWaitEvent: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlActivityXactStartAge: MetricConfig{
+			Enabled: true,
+		},
 		PostgresqlAnalyzeChildTablesDone: MetricConfig{
 			Enabled: true,
 		},
@@ -269,6 +302,21 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		PostgresqlBufferHit: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlBuffercacheDirtyBuffers: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlBuffercachePinningBackends: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlBuffercacheUnusedBuffers: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlBuffercacheUsageCount: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlBuffercacheUsedBuffers: MetricConfig{
 			Enabled: true,
 		},
 		PostgresqlChecksumsEnabled: MetricConfig{
@@ -395,6 +443,15 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		PostgresqlLastVacuumAge: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlMaxConnections: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlPercentUsageConnections: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlPgStatStatementsDealloc: MetricConfig{
 			Enabled: true,
 		},
 		PostgresqlRecoveryPrefetchBlockDistance: MetricConfig{
@@ -568,6 +625,15 @@ func DefaultMetricsConfig() MetricsConfig {
 		PostgresqlSlruTruncates: MetricConfig{
 			Enabled: true,
 		},
+		PostgresqlSnapshotXipCount: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlSnapshotXmax: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlSnapshotXmin: MetricConfig{
+			Enabled: true,
+		},
 		PostgresqlSubscriptionApplyError: MetricConfig{
 			Enabled: true,
 		},
@@ -614,6 +680,12 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		PostgresqlToastSize: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlTransactionsDurationMax: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlTransactionsDurationSum: MetricConfig{
 			Enabled: true,
 		},
 		PostgresqlUptime: MetricConfig{

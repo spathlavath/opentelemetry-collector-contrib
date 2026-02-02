@@ -42,6 +42,7 @@ const (
 type newRelicPostgreSQLScraper struct {
 	// Scrapers
 	databaseMetricsScraper    *scrapers.DatabaseMetricsScraper
+	activityScraper           *scrapers.ActivityScraper
 	replicationMetricsScraper *scrapers.ReplicationScraper
 	bgwriterScraper           *scrapers.BgwriterScraper
 	vacuumMaintenanceScraper  *scrapers.VacuumMaintenanceScraper
@@ -163,6 +164,19 @@ func (s *newRelicPostgreSQLScraper) initializeScrapers() error {
 		s.supportsPG12,
 	)
 
+	// Initialize activity metrics scraper only if PostgreSQL 9.6+
+	if s.supportsPG96 {
+		s.activityScraper = scrapers.NewActivityScraper(
+			s.client,
+			s.mb,
+			s.logger,
+			s.instanceName,
+		)
+		s.logger.Info("Activity metrics scraper enabled (PostgreSQL 9.6+)")
+	} else {
+		s.logger.Info("Activity metrics scraper disabled (requires PostgreSQL 9.6+)")
+	}
+
 	// Initialize replication metrics scraper only if PostgreSQL 9.6+
 	if s.supportsPG96 {
 		s.replicationMetricsScraper = scrapers.NewReplicationScraper(
@@ -253,6 +267,54 @@ func (s *newRelicPostgreSQLScraper) scrape(ctx context.Context) (pmetric.Metrics
 		scrapeErrors = append(scrapeErrors, dbErrs...)
 	}
 
+	// Scrape activity metrics (PostgreSQL 9.6+)
+	if s.supportsPG96 && s.activityScraper != nil {
+		activityErrs := s.activityScraper.ScrapeActivityMetrics(scrapeCtx)
+		if len(activityErrs) > 0 {
+			s.logger.Warn("Errors occurred while scraping activity metrics",
+				zap.Int("error_count", len(activityErrs)))
+			scrapeErrors = append(scrapeErrors, activityErrs...)
+		}
+
+		// Scrape wait events (PostgreSQL 9.6+)
+		waitEventsErrs := s.activityScraper.ScrapeWaitEvents(scrapeCtx)
+		if len(waitEventsErrs) > 0 {
+			s.logger.Warn("Errors occurred while scraping wait events",
+				zap.Int("error_count", len(waitEventsErrs)))
+			scrapeErrors = append(scrapeErrors, waitEventsErrs...)
+		}
+	}
+
+	// Scrape pg_stat_statements deallocation metric (PostgreSQL 13+, requires pg_stat_statements extension)
+	if s.pgVersion >= PG13Version && s.activityScraper != nil {
+		pgStatStatementsErrs := s.activityScraper.ScrapePgStatStatementsDealloc(scrapeCtx)
+		if len(pgStatStatementsErrs) > 0 {
+			s.logger.Debug("pg_stat_statements extension not available or query failed",
+				zap.Int("error_count", len(pgStatStatementsErrs)))
+			// Don't append to scrapeErrors - extension may not be installed, which is acceptable
+		}
+	}
+
+	// Scrape transaction snapshot metrics (PostgreSQL 13+)
+	if s.pgVersion >= PG13Version && s.activityScraper != nil {
+		snapshotErrs := s.activityScraper.ScrapeSnapshot(scrapeCtx)
+		if len(snapshotErrs) > 0 {
+			s.logger.Warn("Errors occurred while scraping snapshot metrics",
+				zap.Int("error_count", len(snapshotErrs)))
+			scrapeErrors = append(scrapeErrors, snapshotErrs...)
+		}
+	}
+
+	// Scrape buffer cache statistics (PostgreSQL 9.6+, requires pg_buffercache extension)
+	if s.activityScraper != nil {
+		buffercacheErrs := s.activityScraper.ScrapeBuffercache(scrapeCtx)
+		if len(buffercacheErrs) > 0 {
+			s.logger.Debug("pg_buffercache extension not available or query failed",
+				zap.Int("error_count", len(buffercacheErrs)))
+			// Don't append to scrapeErrors - extension may not be installed, which is acceptable
+		}
+	}
+
 	// Scrape server uptime (PostgreSQL 9.6+, available on all versions we support)
 	uptimeErrs := s.databaseMetricsScraper.ScrapeServerUptime(scrapeCtx)
 	if len(uptimeErrs) > 0 {
@@ -275,6 +337,14 @@ func (s *newRelicPostgreSQLScraper) scrape(ctx context.Context) (pmetric.Metrics
 		s.logger.Warn("Errors occurred while scraping running status",
 			zap.Int("error_count", len(runningErrs)))
 		scrapeErrors = append(scrapeErrors, runningErrs...)
+	}
+
+	// Scrape connection statistics (PostgreSQL 9.6+, available on all versions we support)
+	connectionStatsErrs := s.databaseMetricsScraper.ScrapeConnectionStats(scrapeCtx)
+	if len(connectionStatsErrs) > 0 {
+		s.logger.Warn("Errors occurred while scraping connection statistics",
+			zap.Int("error_count", len(connectionStatsErrs)))
+		scrapeErrors = append(scrapeErrors, connectionStatsErrs...)
 	}
 
 	// Scrape conflict metrics (all supported versions)

@@ -197,6 +197,144 @@ func (c *SQLClient) QueryConflictMetrics(ctx context.Context) ([]models.PgStatDa
 	return metrics, nil
 }
 
+func (c *SQLClient) QueryActivityMetrics(ctx context.Context) ([]models.PgStatActivity, error) {
+	rows, err := c.db.QueryContext(ctx, queries.PgStatActivitySQL)
+	if err != nil {
+		return nil, fmt.Errorf("failed to query pg_stat_activity: %w", err)
+	}
+	defer rows.Close()
+
+	var metrics []models.PgStatActivity
+
+	for rows.Next() {
+		var metric models.PgStatActivity
+		err := rows.Scan(
+			&metric.DatName,
+			&metric.UserName,
+			&metric.ApplicationName,
+			&metric.BackendType,
+			&metric.ActiveWaitingQueries,
+			&metric.XactStartAge,
+			&metric.BackendXIDAge,
+			&metric.BackendXminAge,
+			&metric.MaxTransactionDuration,
+			&metric.SumTransactionDuration,
+		)
+		if err != nil {
+			return nil, fmt.Errorf("failed to scan pg_stat_activity row: %w", err)
+		}
+		metrics = append(metrics, metric)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("error iterating pg_stat_activity rows: %w", err)
+	}
+
+	return metrics, nil
+}
+
+// QueryWaitEvents retrieves wait event statistics from pg_stat_activity
+// Returns backend counts grouped by wait event type for performance analysis
+// Available in PostgreSQL 9.6+
+func (c *SQLClient) QueryWaitEvents(ctx context.Context) ([]models.PgStatActivityWaitEvents, error) {
+	rows, err := c.db.QueryContext(ctx, queries.PgStatActivityWaitEventsSQL)
+	if err != nil {
+		return nil, fmt.Errorf("failed to query pg_stat_activity wait events: %w", err)
+	}
+	defer rows.Close()
+
+	var metrics []models.PgStatActivityWaitEvents
+
+	for rows.Next() {
+		var metric models.PgStatActivityWaitEvents
+		err := rows.Scan(
+			&metric.DatName,
+			&metric.UserName,
+			&metric.ApplicationName,
+			&metric.BackendType,
+			&metric.WaitEvent,
+			&metric.WaitEventCount,
+		)
+		if err != nil {
+			return nil, fmt.Errorf("failed to scan pg_stat_activity wait events row: %w", err)
+		}
+		metrics = append(metrics, metric)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("error iterating pg_stat_activity wait events rows: %w", err)
+	}
+
+	return metrics, nil
+}
+
+// QueryPgStatStatementsDealloc retrieves deallocation statistics from pg_stat_statements_info
+// Returns the number of times pg_stat_statements has deallocated least-used statements
+// Requires pg_stat_statements extension to be installed and enabled
+// Returns error if extension is not available or query fails
+// Available in PostgreSQL 13+
+func (c *SQLClient) QueryPgStatStatementsDealloc(ctx context.Context) (*models.PgStatStatementsDealloc, error) {
+	var metric models.PgStatStatementsDealloc
+
+	err := c.db.QueryRowContext(ctx, queries.PgStatStatementsInfoSQL).Scan(&metric.Dealloc)
+	if err != nil {
+		return nil, fmt.Errorf("failed to query pg_stat_statements_info: %w", err)
+	}
+
+	return &metric, nil
+}
+
+// QuerySnapshot retrieves transaction snapshot information using pg_snapshot functions
+// Returns the current transaction visibility snapshot (xmin, xmax, xip_count)
+// Available in PostgreSQL 13+
+func (c *SQLClient) QuerySnapshot(ctx context.Context) (*models.PgSnapshot, error) {
+	var metric models.PgSnapshot
+
+	err := c.db.QueryRowContext(ctx, queries.PgSnapshotSQL).Scan(&metric.Xmin, &metric.Xmax, &metric.XipCount)
+	if err != nil {
+		return nil, fmt.Errorf("failed to query pg_snapshot: %w", err)
+	}
+
+	return &metric, nil
+}
+
+// QueryBuffercache retrieves buffer cache statistics from pg_buffercache extension
+// Returns buffer usage metrics grouped by database, schema, and table
+// Requires pg_buffercache extension to be installed and enabled
+// Available in PostgreSQL 9.6+
+func (c *SQLClient) QueryBuffercache(ctx context.Context) ([]models.PgBuffercache, error) {
+	rows, err := c.db.QueryContext(ctx, queries.PgBuffercacheSQL)
+	if err != nil {
+		return nil, fmt.Errorf("failed to query pg_buffercache: %w", err)
+	}
+	defer rows.Close()
+
+	var metrics []models.PgBuffercache
+	for rows.Next() {
+		var metric models.PgBuffercache
+		err := rows.Scan(
+			&metric.Database,
+			&metric.Schema,
+			&metric.Table,
+			&metric.UsedBuffers,
+			&metric.UnusedBuffers,
+			&metric.UsageCount,
+			&metric.DirtyBuffers,
+			&metric.PinningBackends,
+		)
+		if err != nil {
+			return nil, fmt.Errorf("failed to scan pg_buffercache row: %w", err)
+		}
+		metrics = append(metrics, metric)
+	}
+
+	if err = rows.Err(); err != nil {
+		return nil, fmt.Errorf("error iterating pg_buffercache rows: %w", err)
+	}
+
+	return metrics, nil
+}
+
 // QueryServerUptime retrieves the PostgreSQL server uptime in seconds
 // Calculates time elapsed since server start using pg_postmaster_start_time()
 // Available in PostgreSQL 9.6+
@@ -234,6 +372,20 @@ func (c *SQLClient) QueryRunningStatus(ctx context.Context) (*models.PgRunningSt
 	err := c.db.QueryRowContext(ctx, queries.PgRunningStatusSQL).Scan(&metric.Running)
 	if err != nil {
 		return nil, fmt.Errorf("failed to query running status: %w", err)
+	}
+
+	return &metric, nil
+}
+
+// QueryConnectionStats retrieves connection statistics from pg_settings and pg_stat_activity
+// Returns max_connections setting and current connection count
+// Available in PostgreSQL 9.6+
+func (c *SQLClient) QueryConnectionStats(ctx context.Context) (*models.PgConnectionStatsMetric, error) {
+	var metric models.PgConnectionStatsMetric
+
+	err := c.db.QueryRowContext(ctx, queries.PgConnectionStatsSQL).Scan(&metric.MaxConnections, &metric.CurrentConnections)
+	if err != nil {
+		return nil, fmt.Errorf("failed to query connection stats: %w", err)
 	}
 
 	return &metric, nil
