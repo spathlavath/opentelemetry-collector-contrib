@@ -44,35 +44,29 @@ func GenerateMD5Hash(normalizedSQL string) string {
 }
 
 // ExtractNewRelicMetadata extracts nr_service and optionally nr_txn from New Relic query comments
-// Handles scenarios where service/transaction names may contain commas and fields can appear in any order:
-// 1. Only nr_service: /* nr_service=Oracle-HR-Portal-Java */
-// 2. Both nr_service and nr_txn: /* nr_service=Oracle-HR-Portal-Java,nr_txn=WebTransaction/SpringController/employees (GET) */
-// 3. Reverse order: /* nr_txn=WebTransaction/API/users,nr_service=MyApp */
-// 4. Service with commas: /* nr_service=MyApp,Production,nr_txn=WebTransaction/API/users */
-// 5. Transaction with commas: /* nr_service=MyApp,nr_txn=WebTransaction/API/users,v2 */
+// Supports only quoted values, with fields in any order:
+// 1. Quoted: /* nr_service="pet-clinic" */
+// 2. Quoted with commas: /* nr_service="pet,,,clinic" */
+// 3. Both quoted: /* nr_service="My,App",nr_txn="Web,Transaction" */
+// 4. Any field order: /* nr_txn="Web",nr_service="App" */
 // Returns: (client_name, transaction_name)
 func ExtractNewRelicMetadata(sql string) (nrService string, nrTxn string) {
-	// Match nr_service: capture everything until we see ,nr_txn=, ,nr_trace_id=, comma+space, or */
-	// Order-independent: works whether nr_service comes first or after other fields
-	// Using ,nr_ prefix ensures we only stop at New Relic metadata fields, not commas within the name
-	// Also stop at ", " (comma+space) which indicates end of service name in legacy format
-	serviceRegex := regexp.MustCompile(`nr_service=([^,\*\s]+(?:,[^,\*\s]+)*?)(?:,nr_txn=|,nr_trace_id=|,\s|\s*\*/)`)
+	// Match nr_service with quoted values only
+	// Format: nr_service="value" - stops at closing quote
+	serviceRegex := regexp.MustCompile(`nr_service="([^"]*)"`)
 
-	// Match nr_txn: capture everything until we see ,nr_service=, ,nr_trace_id= or */
-	// Order-independent: works whether nr_txn comes first, last, or in the middle
-	// This allows transaction names to contain commas and spaces
-	txnRegex := regexp.MustCompile(`nr_txn=(.+?)(?:,nr_service=|,nr_trace_id=|\s*\*/)`)
+	// Match nr_txn with quoted values only
+	// Format: nr_txn="value" - stops at closing quote
+	txnRegex := regexp.MustCompile(`nr_txn="([^"]*)"`)
 
 	serviceMatch := serviceRegex.FindStringSubmatch(sql)
 	if len(serviceMatch) > 1 {
-		// Trim whitespace (comma trimming not needed with updated regex)
-		nrService = strings.TrimSpace(serviceMatch[1])
+		nrService = serviceMatch[1]
 	}
 
 	txnMatch := txnRegex.FindStringSubmatch(sql)
 	if len(txnMatch) > 1 {
-		// Remove trailing comma if present and trim whitespace
-		nrTxn = strings.TrimRight(strings.TrimSpace(txnMatch[1]), ",")
+		nrTxn = txnMatch[1]
 	}
 
 	return nrService, nrTxn
