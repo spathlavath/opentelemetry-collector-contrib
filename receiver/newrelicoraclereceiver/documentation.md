@@ -2520,6 +2520,106 @@ Average wait time per execution in the last polling interval (delta metric)
 | client_name | Client service name extracted from query comment (nr_service) | Any Str | false |
 | transaction_name | Transaction name extracted from query comment (nr_txn) | Any Str | false |
 
+### newrelicoracledb.slow_queries.interval_buffer_gets
+
+Total buffer gets (logical reads) in the last polling interval (delta metric, not averaged)
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {gets} | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
+| query_id | SQL query identifier | Any Str | false |
+| user_name | Oracle username for slow queries | Any Str | false |
+| normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | false |
+| client_name | Client service name extracted from query comment (nr_service) | Any Str | false |
+| transaction_name | Transaction name extracted from query comment (nr_txn) | Any Str | false |
+
+### newrelicoracledb.slow_queries.interval_cpu_time
+
+Total CPU time in the last polling interval (delta metric, not averaged)
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| ms | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
+| query_id | SQL query identifier | Any Str | false |
+| user_name | Oracle username for slow queries | Any Str | false |
+| normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | false |
+| client_name | Client service name extracted from query comment (nr_service) | Any Str | false |
+| transaction_name | Transaction name extracted from query comment (nr_txn) | Any Str | false |
+
+### newrelicoracledb.slow_queries.interval_disk_reads
+
+Total disk reads in the last polling interval (delta metric, not averaged)
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {reads} | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
+| query_id | SQL query identifier | Any Str | false |
+| user_name | Oracle username for slow queries | Any Str | false |
+| normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | false |
+| client_name | Client service name extracted from query comment (nr_service) | Any Str | false |
+| transaction_name | Transaction name extracted from query comment (nr_txn) | Any Str | false |
+
+### newrelicoracledb.slow_queries.interval_disk_writes
+
+Total direct writes in the last polling interval - writes bypassing buffer cache (delta metric, not averaged)
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {writes} | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
+| query_id | SQL query identifier | Any Str | false |
+| user_name | Oracle username for slow queries | Any Str | false |
+| normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | false |
+| client_name | Client service name extracted from query comment (nr_service) | Any Str | false |
+| transaction_name | Transaction name extracted from query comment (nr_txn) | Any Str | false |
+
+### newrelicoracledb.slow_queries.interval_elapsed_time
+
+Total elapsed time in the last polling interval (delta metric, not averaged)
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| ms | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
+| query_id | SQL query identifier | Any Str | false |
+| user_name | Oracle username for slow queries | Any Str | false |
+| normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | false |
+| client_name | Client service name extracted from query comment (nr_service) | Any Str | false |
+| transaction_name | Transaction name extracted from query comment (nr_txn) | Any Str | false |
+
 ### newrelicoracledb.slow_queries.interval_execution_count
 
 Number of new executions since last scrape (delta metric). On first scrape or after cache reset, represents all executions since plan cache load.
@@ -2527,6 +2627,46 @@ Number of new executions since last scrape (delta metric). On first scrape or af
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
 | {executions} | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
+| query_id | SQL query identifier | Any Str | false |
+| user_name | Oracle username for slow queries | Any Str | false |
+| normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | false |
+| client_name | Client service name extracted from query comment (nr_service) | Any Str | false |
+| transaction_name | Transaction name extracted from query comment (nr_txn) | Any Str | false |
+
+### newrelicoracledb.slow_queries.interval_rows_processed
+
+Total rows processed (returned) in the last polling interval (delta metric, not averaged)
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {rows} | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
+| query_id | SQL query identifier | Any Str | false |
+| user_name | Oracle username for slow queries | Any Str | false |
+| normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | false |
+| client_name | Client service name extracted from query comment (nr_service) | Any Str | false |
+| transaction_name | Transaction name extracted from query comment (nr_txn) | Any Str | false |
+
+### newrelicoracledb.slow_queries.interval_wait_time
+
+Total wait time in the last polling interval (delta metric, not averaged)
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| ms | Gauge | Double |
 
 #### Attributes
 

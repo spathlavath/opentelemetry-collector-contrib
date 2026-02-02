@@ -22,6 +22,8 @@ type SlowQuery struct {
 
 	// Interval-based delta metrics (calculated in-memory, not from DB)
 	// These are populated by the OracleIntervalCalculator
+
+	// Interval averages (delta divided by execution count)
 	IntervalAvgElapsedTimeMS *float64 // Average elapsed time in the last interval (milliseconds)
 	IntervalAvgCPUTimeMS     *float64 // Average CPU time in the last interval (milliseconds)
 	IntervalAvgWaitTimeMS    *float64 // Average wait time in the last interval (milliseconds)
@@ -30,6 +32,15 @@ type SlowQuery struct {
 	IntervalAvgBufferGets    *float64 // Average buffer gets in the last interval
 	IntervalAvgRowsProcessed *float64 // Average rows processed in the last interval
 	IntervalExecutionCount   *int64   // Number of executions in the last interval
+
+	// Interval totals (delta values without averaging)
+	IntervalElapsedTimeMS *float64 // Total elapsed time in the last interval (milliseconds, not averaged)
+	IntervalCPUTimeMS     *float64 // Total CPU time in the last interval (milliseconds, not averaged)
+	IntervalWaitTimeMS    *float64 // Total wait time in the last interval (milliseconds, not averaged)
+	IntervalDiskReads     *float64 // Total disk reads in the last interval (not averaged)
+	IntervalDiskWrites    *float64 // Total direct writes in the last interval (not averaged)
+	IntervalBufferGets    *float64 // Total buffer gets in the last interval (not averaged)
+	IntervalRowsProcessed *float64 // Total rows processed in the last interval (not averaged)
 }
 
 // GetCollectionTimestamp returns the collection timestamp as a string, empty if null

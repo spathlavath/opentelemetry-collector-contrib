@@ -196,7 +196,14 @@ type MetricsConfig struct {
 	NewrelicoracledbSlowQueriesIntervalAvgElapsedTime                  MetricConfig `mapstructure:"newrelicoracledb.slow_queries.interval_avg_elapsed_time"`
 	NewrelicoracledbSlowQueriesIntervalAvgRowsProcessed                MetricConfig `mapstructure:"newrelicoracledb.slow_queries.interval_avg_rows_processed"`
 	NewrelicoracledbSlowQueriesIntervalAvgWaitTime                     MetricConfig `mapstructure:"newrelicoracledb.slow_queries.interval_avg_wait_time"`
+	NewrelicoracledbSlowQueriesIntervalBufferGets                      MetricConfig `mapstructure:"newrelicoracledb.slow_queries.interval_buffer_gets"`
+	NewrelicoracledbSlowQueriesIntervalCPUTime                         MetricConfig `mapstructure:"newrelicoracledb.slow_queries.interval_cpu_time"`
+	NewrelicoracledbSlowQueriesIntervalDiskReads                       MetricConfig `mapstructure:"newrelicoracledb.slow_queries.interval_disk_reads"`
+	NewrelicoracledbSlowQueriesIntervalDiskWrites                      MetricConfig `mapstructure:"newrelicoracledb.slow_queries.interval_disk_writes"`
+	NewrelicoracledbSlowQueriesIntervalElapsedTime                     MetricConfig `mapstructure:"newrelicoracledb.slow_queries.interval_elapsed_time"`
 	NewrelicoracledbSlowQueriesIntervalExecutionCount                  MetricConfig `mapstructure:"newrelicoracledb.slow_queries.interval_execution_count"`
+	NewrelicoracledbSlowQueriesIntervalRowsProcessed                   MetricConfig `mapstructure:"newrelicoracledb.slow_queries.interval_rows_processed"`
+	NewrelicoracledbSlowQueriesIntervalWaitTime                        MetricConfig `mapstructure:"newrelicoracledb.slow_queries.interval_wait_time"`
 	NewrelicoracledbSlowQueriesQueryDetails                            MetricConfig `mapstructure:"newrelicoracledb.slow_queries.query_details"`
 	NewrelicoracledbSlowQueriesTotalCPUTime                            MetricConfig `mapstructure:"newrelicoracledb.slow_queries.total_cpu_time"`
 	NewrelicoracledbSlowQueriesTotalDiskReads                          MetricConfig `mapstructure:"newrelicoracledb.slow_queries.total_disk_reads"`
@@ -869,7 +876,28 @@ func DefaultMetricsConfig() MetricsConfig {
 		NewrelicoracledbSlowQueriesIntervalAvgWaitTime: MetricConfig{
 			Enabled: true,
 		},
+		NewrelicoracledbSlowQueriesIntervalBufferGets: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbSlowQueriesIntervalCPUTime: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbSlowQueriesIntervalDiskReads: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbSlowQueriesIntervalDiskWrites: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbSlowQueriesIntervalElapsedTime: MetricConfig{
+			Enabled: true,
+		},
 		NewrelicoracledbSlowQueriesIntervalExecutionCount: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbSlowQueriesIntervalRowsProcessed: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbSlowQueriesIntervalWaitTime: MetricConfig{
 			Enabled: true,
 		},
 		NewrelicoracledbSlowQueriesQueryDetails: MetricConfig{

@@ -64,7 +64,7 @@ type OracleQueryState struct {
 
 // OracleIntervalMetrics holds both interval and historical metrics
 type OracleIntervalMetrics struct {
-	// Interval-based metrics (delta calculation)
+	// Interval-based average metrics (delta calculation with per-execution averaging)
 	IntervalAvgElapsedTimeMs float64
 	IntervalAvgCPUTimeMs     float64
 	IntervalAvgWaitTimeMs    float64
@@ -73,6 +73,15 @@ type OracleIntervalMetrics struct {
 	IntervalAvgBufferGets    float64
 	IntervalAvgRowsProcessed float64
 	IntervalExecutionCount   int64
+
+	// Interval-based total metrics (delta calculation without averaging)
+	IntervalElapsedTimeMs float64
+	IntervalCPUTimeMs     float64
+	IntervalWaitTimeMs    float64
+	IntervalDiskReads     float64
+	IntervalDiskWrites    float64
+	IntervalBufferGets    float64
+	IntervalRowsProcessed float64
 
 	// Historical metrics (cumulative from Oracle)
 	HistoricalAvgElapsedTimeMs float64
@@ -247,6 +256,7 @@ func (oic *OracleIntervalCalculator) CalculateMetrics(query *models.SlowQuery, n
 
 		// For first scrape, use historical average as interval average
 		// Use currentExecCount as interval count since this represents all executions since plan cache
+		// For interval totals, use the cumulative totals from Oracle (since this is first scrape)
 		// Caller will filter by threshold
 		return &OracleIntervalMetrics{
 			IntervalAvgElapsedTimeMs:   historicalAvgElapsedMs,
@@ -257,6 +267,13 @@ func (oic *OracleIntervalCalculator) CalculateMetrics(query *models.SlowQuery, n
 			IntervalAvgBufferGets:      historicalAvgBufferGets,
 			IntervalAvgRowsProcessed:   historicalAvgRowsProcessed,
 			IntervalExecutionCount:     currentExecCount, // All executions since plan cache
+			IntervalElapsedTimeMs:      currentTotalElapsedMs,
+			IntervalCPUTimeMs:          currentTotalCPUMs,
+			IntervalWaitTimeMs:         currentTotalWaitMs,
+			IntervalDiskReads:          float64(currentTotalDiskReads),
+			IntervalDiskWrites:         float64(currentTotalDiskWrites),
+			IntervalBufferGets:         float64(currentTotalBufferGets),
+			IntervalRowsProcessed:      float64(currentTotalRowsProcessed),
 			HistoricalAvgElapsedTimeMs: historicalAvgElapsedMs,
 			HistoricalAvgCPUTimeMs:     historicalAvgCPUMs,
 			HistoricalAvgWaitTimeMs:    historicalAvgWaitMs,
@@ -295,6 +312,13 @@ func (oic *OracleIntervalCalculator) CalculateMetrics(query *models.SlowQuery, n
 			IntervalAvgBufferGets:      0,
 			IntervalAvgRowsProcessed:   0,
 			IntervalExecutionCount:     0,
+			IntervalElapsedTimeMs:      0,
+			IntervalCPUTimeMs:          0,
+			IntervalWaitTimeMs:         0,
+			IntervalDiskReads:          0,
+			IntervalDiskWrites:         0,
+			IntervalBufferGets:         0,
+			IntervalRowsProcessed:      0,
 			HistoricalAvgElapsedTimeMs: historicalAvgElapsedMs,
 			HistoricalAvgCPUTimeMs:     historicalAvgCPUMs,
 			HistoricalAvgWaitTimeMs:    historicalAvgWaitMs,
@@ -334,6 +358,7 @@ func (oic *OracleIntervalCalculator) CalculateMetrics(query *models.SlowQuery, n
 
 		// After cache reset, we cannot calculate a valid interval delta
 		// Use historical average but set interval count to current count (all execs since reset)
+		// For interval totals, use the cumulative totals from Oracle (since this is like first scrape)
 		// Alternative: Could skip emitting by setting HasNewExecutions: false
 		return &OracleIntervalMetrics{
 			IntervalAvgElapsedTimeMs:   historicalAvgElapsedMs,
@@ -344,6 +369,13 @@ func (oic *OracleIntervalCalculator) CalculateMetrics(query *models.SlowQuery, n
 			IntervalAvgBufferGets:      historicalAvgBufferGets,
 			IntervalAvgRowsProcessed:   historicalAvgRowsProcessed,
 			IntervalExecutionCount:     currentExecCount, // All executions since cache reset
+			IntervalElapsedTimeMs:      currentTotalElapsedMs,
+			IntervalCPUTimeMs:          currentTotalCPUMs,
+			IntervalWaitTimeMs:         currentTotalWaitMs,
+			IntervalDiskReads:          float64(currentTotalDiskReads),
+			IntervalDiskWrites:         float64(currentTotalDiskWrites),
+			IntervalBufferGets:         float64(currentTotalBufferGets),
+			IntervalRowsProcessed:      float64(currentTotalRowsProcessed),
 			HistoricalAvgElapsedTimeMs: historicalAvgElapsedMs,
 			HistoricalAvgCPUTimeMs:     historicalAvgCPUMs,
 			HistoricalAvgWaitTimeMs:    historicalAvgWaitMs,
@@ -358,7 +390,7 @@ func (oic *OracleIntervalCalculator) CalculateMetrics(query *models.SlowQuery, n
 		}
 	}
 
-	// NORMAL CASE: Calculate interval averages for all metrics
+	// NORMAL CASE: Calculate interval metrics (both averages and totals)
 	deltaCPUMs := currentTotalCPUMs - state.PrevTotalCPUTimeMs
 	deltaWaitMs := currentTotalWaitMs - state.PrevTotalWaitTimeMs
 	deltaDiskReads := currentTotalDiskReads - state.PrevTotalDiskReads
@@ -366,6 +398,7 @@ func (oic *OracleIntervalCalculator) CalculateMetrics(query *models.SlowQuery, n
 	deltaBufferGets := currentTotalBufferGets - state.PrevTotalBufferGets
 	deltaRowsProcessed := currentTotalRowsProcessed - state.PrevTotalRowsProcessed
 
+	// Calculate interval averages (delta divided by execution count)
 	intervalAvgElapsedMs := deltaElapsedMs / float64(deltaExecCount)
 	intervalAvgCPUMs := deltaCPUMs / float64(deltaExecCount)
 	intervalAvgWaitMs := deltaWaitMs / float64(deltaExecCount)
@@ -373,6 +406,15 @@ func (oic *OracleIntervalCalculator) CalculateMetrics(query *models.SlowQuery, n
 	intervalAvgDiskWrites := float64(deltaDiskWrites) / float64(deltaExecCount)
 	intervalAvgBufferGets := float64(deltaBufferGets) / float64(deltaExecCount)
 	intervalAvgRowsProcessed := float64(deltaRowsProcessed) / float64(deltaExecCount)
+
+	// Interval totals are just the delta values themselves (not divided)
+	intervalElapsedMs := deltaElapsedMs
+	intervalCPUMs := deltaCPUMs
+	intervalWaitMs := deltaWaitMs
+	intervalDiskReads := float64(deltaDiskReads)
+	intervalDiskWrites := float64(deltaDiskWrites)
+	intervalBufferGets := float64(deltaBufferGets)
+	intervalRowsProcessed := float64(deltaRowsProcessed)
 
 	// Warn if we have executions but zero elapsed time
 	if deltaElapsedMs == 0 && deltaExecCount > 0 {
@@ -400,6 +442,13 @@ func (oic *OracleIntervalCalculator) CalculateMetrics(query *models.SlowQuery, n
 		IntervalAvgBufferGets:      intervalAvgBufferGets,
 		IntervalAvgRowsProcessed:   intervalAvgRowsProcessed,
 		IntervalExecutionCount:     deltaExecCount,
+		IntervalElapsedTimeMs:      intervalElapsedMs,
+		IntervalCPUTimeMs:          intervalCPUMs,
+		IntervalWaitTimeMs:         intervalWaitMs,
+		IntervalDiskReads:          intervalDiskReads,
+		IntervalDiskWrites:         intervalDiskWrites,
+		IntervalBufferGets:         intervalBufferGets,
+		IntervalRowsProcessed:      intervalRowsProcessed,
 		HistoricalAvgElapsedTimeMs: historicalAvgElapsedMs,
 		HistoricalAvgCPUTimeMs:     historicalAvgCPUMs,
 		HistoricalAvgWaitTimeMs:    historicalAvgWaitMs,

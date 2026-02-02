@@ -3514,6 +3514,113 @@ metrics:
       - client_name
       - transaction_name
 
+  # Interval total (non-averaged) delta metrics - showing TOTAL activity in the last polling interval
+  # These metrics show aggregate delta values without per-execution averaging
+  newrelicoracledb.slow_queries.interval_elapsed_time:
+    description: Total elapsed time in the last polling interval (delta metric, not averaged)
+    enabled: true
+    gauge:
+      value_type: double
+    unit: ms
+    attributes:
+      - collection_timestamp
+      - database_name
+      - query_id
+      - user_name
+      - normalised_sql_hash
+      - client_name
+      - transaction_name
+
+  newrelicoracledb.slow_queries.interval_cpu_time:
+    description: Total CPU time in the last polling interval (delta metric, not averaged)
+    enabled: true
+    gauge:
+      value_type: double
+    unit: ms
+    attributes:
+      - collection_timestamp
+      - database_name
+      - query_id
+      - user_name
+      - normalised_sql_hash
+      - client_name
+      - transaction_name
+
+  newrelicoracledb.slow_queries.interval_wait_time:
+    description: Total wait time in the last polling interval (delta metric, not averaged)
+    enabled: true
+    gauge:
+      value_type: double
+    unit: ms
+    attributes:
+      - collection_timestamp
+      - database_name
+      - query_id
+      - user_name
+      - normalised_sql_hash
+      - client_name
+      - transaction_name
+
+  newrelicoracledb.slow_queries.interval_disk_reads:
+    description: Total disk reads in the last polling interval (delta metric, not averaged)
+    enabled: true
+    gauge:
+      value_type: double
+    unit: "{reads}"
+    attributes:
+      - collection_timestamp
+      - database_name
+      - query_id
+      - user_name
+      - normalised_sql_hash
+      - client_name
+      - transaction_name
+
+  newrelicoracledb.slow_queries.interval_disk_writes:
+    description: Total direct writes in the last polling interval - writes bypassing buffer cache (delta metric, not averaged)
+    enabled: true
+    gauge:
+      value_type: double
+    unit: "{writes}"
+    attributes:
+      - collection_timestamp
+      - database_name
+      - query_id
+      - user_name
+      - normalised_sql_hash
+      - client_name
+      - transaction_name
+
+  newrelicoracledb.slow_queries.interval_buffer_gets:
+    description: Total buffer gets (logical reads) in the last polling interval (delta metric, not averaged)
+    enabled: true
+    gauge:
+      value_type: double
+    unit: "{gets}"
+    attributes:
+      - collection_timestamp
+      - database_name
+      - query_id
+      - user_name
+      - normalised_sql_hash
+      - client_name
+      - transaction_name
+
+  newrelicoracledb.slow_queries.interval_rows_processed:
+    description: Total rows processed (returned) in the last polling interval (delta metric, not averaged)
+    enabled: true
+    gauge:
+      value_type: double
+    unit: "{rows}"
+    attributes:
+      - collection_timestamp
+      - database_name
+      - query_id
+      - user_name
+      - normalised_sql_hash
+      - client_name
+      - transaction_name
+
   # Child Cursor Metrics (from V$SQL) - Average values per execution
   newrelicoracledb.child_cursors.cpu_time:
     description: Average CPU time per execution for this child cursor (in milliseconds)
