@@ -15,11 +15,6 @@ import (
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicmysqlreceiver/internal/metadata"
 )
 
-// InnoDBExtendedScraper handles optional InnoDB extended metrics collection (125 metrics).
-// These metrics provide comprehensive insights into InnoDB internals including:
-// active transactions, adaptive hash index, buffer pool operations, change buffer, doublewrite buffer,
-// data/log operations, LSN tracking, master thread, memory subsystems, mutex/locks, pending operations,
-// purge operations, queries, row operations, semaphores, and undo tablespaces.
 // This scraper is only initialized when extra_innodb_metrics flag is enabled.
 type InnoDBExtendedScraper struct {
 	client common.Client
