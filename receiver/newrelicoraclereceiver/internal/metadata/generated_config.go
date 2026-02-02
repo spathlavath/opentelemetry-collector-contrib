@@ -188,21 +188,23 @@ type MetricsConfig struct {
 	NewrelicoracledbSgaSharedPoolDictCacheMissRatio                    MetricConfig `mapstructure:"newrelicoracledb.sga_shared_pool_dict_cache_miss_ratio"`
 	NewrelicoracledbSgaSharedPoolLibraryCacheHitRatio                  MetricConfig `mapstructure:"newrelicoracledb.sga_shared_pool_library_cache_hit_ratio"`
 	NewrelicoracledbSgaSharedPoolLibraryCacheReloadRatio               MetricConfig `mapstructure:"newrelicoracledb.sga_shared_pool_library_cache_reload_ratio"`
-	NewrelicoracledbSlowQueriesAvgCPUTime                              MetricConfig `mapstructure:"newrelicoracledb.slow_queries.avg_cpu_time"`
-	NewrelicoracledbSlowQueriesAvgDiskReads                            MetricConfig `mapstructure:"newrelicoracledb.slow_queries.avg_disk_reads"`
-	NewrelicoracledbSlowQueriesAvgDiskWrites                           MetricConfig `mapstructure:"newrelicoracledb.slow_queries.avg_disk_writes"`
-	NewrelicoracledbSlowQueriesAvgElapsedTime                          MetricConfig `mapstructure:"newrelicoracledb.slow_queries.avg_elapsed_time"`
-	NewrelicoracledbSlowQueriesAvgLockTime                             MetricConfig `mapstructure:"newrelicoracledb.slow_queries.avg_lock_time"`
-	NewrelicoracledbSlowQueriesAvgRowsExamined                         MetricConfig `mapstructure:"newrelicoracledb.slow_queries.avg_rows_examined"`
-	NewrelicoracledbSlowQueriesAvgRowsReturned                         MetricConfig `mapstructure:"newrelicoracledb.slow_queries.avg_rows_returned"`
 	NewrelicoracledbSlowQueriesExecutionCount                          MetricConfig `mapstructure:"newrelicoracledb.slow_queries.execution_count"`
 	NewrelicoracledbSlowQueriesIntervalAvgBufferGets                   MetricConfig `mapstructure:"newrelicoracledb.slow_queries.interval_avg_buffer_gets"`
 	NewrelicoracledbSlowQueriesIntervalAvgCPUTime                      MetricConfig `mapstructure:"newrelicoracledb.slow_queries.interval_avg_cpu_time"`
 	NewrelicoracledbSlowQueriesIntervalAvgDiskReads                    MetricConfig `mapstructure:"newrelicoracledb.slow_queries.interval_avg_disk_reads"`
+	NewrelicoracledbSlowQueriesIntervalAvgDiskWrites                   MetricConfig `mapstructure:"newrelicoracledb.slow_queries.interval_avg_disk_writes"`
 	NewrelicoracledbSlowQueriesIntervalAvgElapsedTime                  MetricConfig `mapstructure:"newrelicoracledb.slow_queries.interval_avg_elapsed_time"`
 	NewrelicoracledbSlowQueriesIntervalAvgRowsProcessed                MetricConfig `mapstructure:"newrelicoracledb.slow_queries.interval_avg_rows_processed"`
+	NewrelicoracledbSlowQueriesIntervalAvgWaitTime                     MetricConfig `mapstructure:"newrelicoracledb.slow_queries.interval_avg_wait_time"`
 	NewrelicoracledbSlowQueriesIntervalExecutionCount                  MetricConfig `mapstructure:"newrelicoracledb.slow_queries.interval_execution_count"`
 	NewrelicoracledbSlowQueriesQueryDetails                            MetricConfig `mapstructure:"newrelicoracledb.slow_queries.query_details"`
+	NewrelicoracledbSlowQueriesTotalCPUTime                            MetricConfig `mapstructure:"newrelicoracledb.slow_queries.total_cpu_time"`
+	NewrelicoracledbSlowQueriesTotalDiskReads                          MetricConfig `mapstructure:"newrelicoracledb.slow_queries.total_disk_reads"`
+	NewrelicoracledbSlowQueriesTotalDiskWrites                         MetricConfig `mapstructure:"newrelicoracledb.slow_queries.total_disk_writes"`
+	NewrelicoracledbSlowQueriesTotalElapsedTime                        MetricConfig `mapstructure:"newrelicoracledb.slow_queries.total_elapsed_time"`
+	NewrelicoracledbSlowQueriesTotalRowsExamined                       MetricConfig `mapstructure:"newrelicoracledb.slow_queries.total_rows_examined"`
+	NewrelicoracledbSlowQueriesTotalRowsReturned                       MetricConfig `mapstructure:"newrelicoracledb.slow_queries.total_rows_returned"`
+	NewrelicoracledbSlowQueriesTotalWaitTime                           MetricConfig `mapstructure:"newrelicoracledb.slow_queries.total_wait_time"`
 	NewrelicoracledbSortsDisk                                          MetricConfig `mapstructure:"newrelicoracledb.sorts_disk"`
 	NewrelicoracledbSortsMemory                                        MetricConfig `mapstructure:"newrelicoracledb.sorts_memory"`
 	NewrelicoracledbSystemActiveParallelSessions                       MetricConfig `mapstructure:"newrelicoracledb.system.active_parallel_sessions"`
@@ -843,27 +845,6 @@ func DefaultMetricsConfig() MetricsConfig {
 		NewrelicoracledbSgaSharedPoolLibraryCacheReloadRatio: MetricConfig{
 			Enabled: true,
 		},
-		NewrelicoracledbSlowQueriesAvgCPUTime: MetricConfig{
-			Enabled: true,
-		},
-		NewrelicoracledbSlowQueriesAvgDiskReads: MetricConfig{
-			Enabled: true,
-		},
-		NewrelicoracledbSlowQueriesAvgDiskWrites: MetricConfig{
-			Enabled: true,
-		},
-		NewrelicoracledbSlowQueriesAvgElapsedTime: MetricConfig{
-			Enabled: true,
-		},
-		NewrelicoracledbSlowQueriesAvgLockTime: MetricConfig{
-			Enabled: true,
-		},
-		NewrelicoracledbSlowQueriesAvgRowsExamined: MetricConfig{
-			Enabled: true,
-		},
-		NewrelicoracledbSlowQueriesAvgRowsReturned: MetricConfig{
-			Enabled: true,
-		},
 		NewrelicoracledbSlowQueriesExecutionCount: MetricConfig{
 			Enabled: true,
 		},
@@ -876,16 +857,43 @@ func DefaultMetricsConfig() MetricsConfig {
 		NewrelicoracledbSlowQueriesIntervalAvgDiskReads: MetricConfig{
 			Enabled: true,
 		},
+		NewrelicoracledbSlowQueriesIntervalAvgDiskWrites: MetricConfig{
+			Enabled: true,
+		},
 		NewrelicoracledbSlowQueriesIntervalAvgElapsedTime: MetricConfig{
 			Enabled: true,
 		},
 		NewrelicoracledbSlowQueriesIntervalAvgRowsProcessed: MetricConfig{
 			Enabled: true,
 		},
+		NewrelicoracledbSlowQueriesIntervalAvgWaitTime: MetricConfig{
+			Enabled: true,
+		},
 		NewrelicoracledbSlowQueriesIntervalExecutionCount: MetricConfig{
 			Enabled: true,
 		},
 		NewrelicoracledbSlowQueriesQueryDetails: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbSlowQueriesTotalCPUTime: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbSlowQueriesTotalDiskReads: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbSlowQueriesTotalDiskWrites: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbSlowQueriesTotalElapsedTime: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbSlowQueriesTotalRowsExamined: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbSlowQueriesTotalRowsReturned: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicoracledbSlowQueriesTotalWaitTime: MetricConfig{
 			Enabled: true,
 		},
 		NewrelicoracledbSortsDisk: MetricConfig{

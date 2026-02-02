@@ -53,8 +53,8 @@ func TestSlowQueriesScraper_ScrapeWithValidData(t *testing.T) {
 			UserName:           sql.NullString{String: "TEST_USER", Valid: true},
 			ExecutionCount:     sql.NullInt64{Int64: 150, Valid: true},
 			QueryText:          sql.NullString{String: "SELECT * FROM users WHERE id = 1", Valid: true},
-			AvgDiskWrites:      sql.NullFloat64{Float64: 10.3, Valid: true},
-			AvgElapsedTimeMs:   sql.NullFloat64{Float64: 1500.75, Valid: true},
+			TotalDiskWrites:      sql.NullInt64{Int64: 10, Valid: true},
+			TotalElapsedTimeMS:   sql.NullFloat64{Float64: 1500.75, Valid: true},
 			TotalCPUTimeMS:     sql.NullFloat64{Float64: 18825.0, Valid: true}, // 150 * 125.5
 			TotalDiskReads:     sql.NullInt64{Int64: 7530, Valid: true},         // 150 * 50.2
 			TotalBufferGets:    sql.NullInt64{Int64: 15000, Valid: true},
@@ -66,7 +66,7 @@ func TestSlowQueriesScraper_ScrapeWithValidData(t *testing.T) {
 			UserName:           sql.NullString{String: "TEST_USER2", Valid: true},
 			ExecutionCount:     sql.NullInt64{Int64: 200, Valid: true},
 			QueryText:          sql.NullString{String: "SELECT * FROM orders", Valid: true},
-			AvgElapsedTimeMs:   sql.NullFloat64{Float64: 2000.0, Valid: true},
+			TotalElapsedTimeMS:   sql.NullFloat64{Float64: 2000.0, Valid: true},
 			TotalCPUTimeMS:     sql.NullFloat64{Float64: 50000.0, Valid: true},
 			TotalDiskReads:     sql.NullInt64{Int64: 10000, Valid: true},
 			TotalBufferGets:    sql.NullInt64{Int64: 20000, Valid: true},
@@ -76,8 +76,7 @@ func TestSlowQueriesScraper_ScrapeWithValidData(t *testing.T) {
 
 	config := metadata.DefaultMetricsBuilderConfig()
 	config.Metrics.NewrelicoracledbSlowQueriesExecutionCount.Enabled = true
-	config.Metrics.NewrelicoracledbSlowQueriesAvgDiskWrites.Enabled = true
-	config.Metrics.NewrelicoracledbSlowQueriesAvgElapsedTime.Enabled = true
+		config.Metrics.NewrelicoracledbSlowQueriesTotalElapsedTime.Enabled = true
 
 	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(config, settings)
@@ -128,14 +127,14 @@ func TestSlowQueriesScraper_ScrapeWithInvalidData(t *testing.T) {
 			// Missing required fields - should be skipped
 			DatabaseName:     sql.NullString{Valid: false},
 			QueryID:          sql.NullString{Valid: false},
-			AvgElapsedTimeMs: sql.NullFloat64{Float64: 1500.0, Valid: true},
+			TotalElapsedTimeMS: sql.NullFloat64{Float64: 1500.0, Valid: true},
 		},
 		{
 			// Valid query
 			DatabaseName:     sql.NullString{String: "TESTDB", Valid: true},
 			QueryID:          sql.NullString{String: "valid_query", Valid: true},
 			UserName:         sql.NullString{String: "USER", Valid: true},
-			AvgElapsedTimeMs: sql.NullFloat64{Float64: 2000.0, Valid: true},
+			TotalElapsedTimeMS: sql.NullFloat64{Float64: 2000.0, Valid: true},
 		},
 	}
 
@@ -158,8 +157,8 @@ func TestSlowQueriesScraper_RecordMetrics(t *testing.T) {
 			QueryID:            sql.NullString{String: "test_query", Valid: true},
 			UserName:           sql.NullString{String: "TEST_USER", Valid: true},
 			ExecutionCount:     sql.NullInt64{Int64: 100, Valid: true},
-			AvgDiskWrites:      sql.NullFloat64{Float64: 5.3, Valid: true},
-			AvgElapsedTimeMs:   sql.NullFloat64{Float64: 1000.0, Valid: true},
+			TotalDiskWrites:      sql.NullInt64{Int64: 5, Valid: true},
+			TotalElapsedTimeMS:   sql.NullFloat64{Float64: 1000.0, Valid: true},
 			TotalCPUTimeMS:     sql.NullFloat64{Float64: 5050.0, Valid: true},
 			TotalDiskReads:     sql.NullInt64{Int64: 2020, Valid: true},
 			TotalBufferGets:    sql.NullInt64{Int64: 10000, Valid: true},
@@ -169,8 +168,7 @@ func TestSlowQueriesScraper_RecordMetrics(t *testing.T) {
 
 	config := metadata.DefaultMetricsBuilderConfig()
 	config.Metrics.NewrelicoracledbSlowQueriesExecutionCount.Enabled = true
-	config.Metrics.NewrelicoracledbSlowQueriesAvgDiskWrites.Enabled = true
-	config.Metrics.NewrelicoracledbSlowQueriesAvgElapsedTime.Enabled = true
+		config.Metrics.NewrelicoracledbSlowQueriesTotalElapsedTime.Enabled = true
 
 	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(config, settings)
@@ -195,7 +193,7 @@ func TestScrapeSlowQueries_WithIntervalCalculator(t *testing.T) {
 			QueryID:          sql.NullString{String: "query_1", Valid: true},
 			UserName:         sql.NullString{String: "USER1", Valid: true},
 			ExecutionCount:   sql.NullInt64{Int64: 100, Valid: true},
-			AvgElapsedTimeMs: sql.NullFloat64{Float64: 1500.0, Valid: true},
+			TotalElapsedTimeMS: sql.NullFloat64{Float64: 1500.0, Valid: true},
 		},
 	}
 
@@ -218,7 +216,7 @@ func TestScrapeSlowQueries_IntervalCalculatorFiltersThreshold(t *testing.T) {
 			QueryID:          sql.NullString{String: "query_1", Valid: true},
 			UserName:         sql.NullString{String: "USER1", Valid: true},
 			ExecutionCount:   sql.NullInt64{Int64: 100, Valid: true},
-			AvgElapsedTimeMs: sql.NullFloat64{Float64: 500.0, Valid: true}, // Below threshold
+			TotalElapsedTimeMS: sql.NullFloat64{Float64: 500.0, Valid: true}, // Below threshold
 		},
 	}
 
@@ -241,14 +239,14 @@ func TestScrapeSlowQueries_IntervalCalculatorTopN(t *testing.T) {
 			QueryID:          sql.NullString{String: "query_1", Valid: true},
 			UserName:         sql.NullString{String: "USER1", Valid: true},
 			ExecutionCount:   sql.NullInt64{Int64: 100, Valid: true},
-			AvgElapsedTimeMs: sql.NullFloat64{Float64: 3000.0, Valid: true},
+			TotalElapsedTimeMS: sql.NullFloat64{Float64: 3000.0, Valid: true},
 		},
 		{
 			DatabaseName:     sql.NullString{String: "TESTDB", Valid: true},
 			QueryID:          sql.NullString{String: "query_2", Valid: true},
 			UserName:         sql.NullString{String: "USER2", Valid: true},
 			ExecutionCount:   sql.NullInt64{Int64: 150, Valid: true},
-			AvgElapsedTimeMs: sql.NullFloat64{Float64: 2000.0, Valid: true},
+			TotalElapsedTimeMS: sql.NullFloat64{Float64: 2000.0, Valid: true},
 		},
 	}
 
@@ -272,7 +270,7 @@ func TestScrapeSlowQueries_NilIntervalCalculator(t *testing.T) {
 			QueryID:          sql.NullString{String: "query_1", Valid: true},
 			UserName:         sql.NullString{String: "USER1", Valid: true},
 			ExecutionCount:   sql.NullInt64{Int64: 100, Valid: true},
-			AvgElapsedTimeMs: sql.NullFloat64{Float64: 1500.0, Valid: true},
+			TotalElapsedTimeMS: sql.NullFloat64{Float64: 1500.0, Valid: true},
 		},
 	}
 
@@ -311,10 +309,10 @@ func TestRecordMetrics_AllFieldsValid(t *testing.T) {
 		ExecutionCount:     sql.NullInt64{Int64: 100, Valid: true},
 		TotalCPUTimeMS:     sql.NullFloat64{Float64: 5000.0, Valid: true},   // 100 * 50 = 5000
 		TotalDiskReads:     sql.NullInt64{Int64: 2500, Valid: true},         // 100 * 25 = 2500
-		AvgDiskWrites:      sql.NullFloat64{Float64: 10.0, Valid: true},
-		AvgElapsedTimeMs:   sql.NullFloat64{Float64: 1500.0, Valid: true},
+		TotalDiskWrites:      sql.NullInt64{Int64: 10, Valid: true},
+		TotalElapsedTimeMS:   sql.NullFloat64{Float64: 1500.0, Valid: true},
 		TotalBufferGets:    sql.NullInt64{Int64: 100000, Valid: true},       // Buffer gets (rows examined)
-		AvgLockTimeMs:      sql.NullFloat64{Float64: 5.0, Valid: true},
+		TotalWaitTimeMS:      sql.NullFloat64{Float64: 5.0, Valid: true},
 	}
 
 	err := scraper.recordMetrics(0, slowQuery, "timestamp", "db", "qid", "qtext", "user", "schema", "lastactive", "hash123", "MyApp", "WebTransaction/API")
@@ -332,7 +330,7 @@ func TestRecordMetrics_IntervalMetrics(t *testing.T) {
 	intervalCount := int64(50)
 	slowQuery := &models.SlowQuery{
 		ExecutionCount:           sql.NullInt64{Int64: 100, Valid: true},
-		AvgElapsedTimeMs:         sql.NullFloat64{Float64: 1500.0, Valid: true},
+		TotalElapsedTimeMS:         sql.NullFloat64{Float64: 1500.0, Valid: true},
 		IntervalAvgElapsedTimeMS: &intervalAvg,
 		IntervalExecutionCount:   &intervalCount,
 	}
@@ -350,11 +348,11 @@ func TestRecordMetrics_PartialFields(t *testing.T) {
 
 	slowQuery := &models.SlowQuery{
 		ExecutionCount:   sql.NullInt64{Int64: 100, Valid: true},
-		AvgElapsedTimeMs: sql.NullFloat64{Float64: 1500.0, Valid: true},
+		TotalElapsedTimeMS: sql.NullFloat64{Float64: 1500.0, Valid: true},
 		// Other fields invalid
 		TotalCPUTimeMS:  sql.NullFloat64{Valid: false},
 		TotalDiskReads:  sql.NullInt64{Valid: false},
-		AvgDiskWrites:   sql.NullFloat64{Valid: false},
+		TotalDiskWrites:   sql.NullInt64{Valid: false},
 	}
 
 	err := scraper.recordMetrics(0, slowQuery, "timestamp", "db", "qid", "qtext", "user", "schema", "lastactive", "hash123", "", "")
@@ -371,13 +369,13 @@ func TestGetSlowQueryIDs_Success(t *testing.T) {
 			DatabaseName:     sql.NullString{String: "TESTDB", Valid: true},
 			QueryID:          sql.NullString{String: "query_1", Valid: true},
 			UserName:         sql.NullString{String: "USER1", Valid: true},
-			AvgElapsedTimeMs: sql.NullFloat64{Float64: 1500.0, Valid: true},
+			TotalElapsedTimeMS: sql.NullFloat64{Float64: 1500.0, Valid: true},
 		},
 		{
 			DatabaseName:     sql.NullString{String: "TESTDB", Valid: true},
 			QueryID:          sql.NullString{String: "query_2", Valid: true},
 			UserName:         sql.NullString{String: "USER2", Valid: true},
-			AvgElapsedTimeMs: sql.NullFloat64{Float64: 2000.0, Valid: true},
+			TotalElapsedTimeMS: sql.NullFloat64{Float64: 2000.0, Valid: true},
 		},
 	}
 
@@ -431,13 +429,13 @@ func TestGetSlowQueryIDs_InvalidData(t *testing.T) {
 		{
 			DatabaseName:     sql.NullString{Valid: false},
 			QueryID:          sql.NullString{Valid: false},
-			AvgElapsedTimeMs: sql.NullFloat64{Float64: 1500.0, Valid: true},
+			TotalElapsedTimeMS: sql.NullFloat64{Float64: 1500.0, Valid: true},
 		},
 		{
 			DatabaseName:     sql.NullString{String: "TESTDB", Valid: true},
 			QueryID:          sql.NullString{String: "valid_query", Valid: true},
 			UserName:         sql.NullString{String: "USER", Valid: true},
-			AvgElapsedTimeMs: sql.NullFloat64{Float64: 2000.0, Valid: true},
+			TotalElapsedTimeMS: sql.NullFloat64{Float64: 2000.0, Valid: true},
 		},
 	}
 
@@ -460,7 +458,7 @@ func TestGetSlowQueryIDs_InvalidQueryID(t *testing.T) {
 			DatabaseName:     sql.NullString{String: "TESTDB", Valid: true},
 			QueryID:          sql.NullString{Valid: false},
 			UserName:         sql.NullString{String: "USER", Valid: true},
-			AvgElapsedTimeMs: sql.NullFloat64{Float64: 1500.0, Valid: true},
+			TotalElapsedTimeMS: sql.NullFloat64{Float64: 1500.0, Valid: true},
 		},
 	}
 

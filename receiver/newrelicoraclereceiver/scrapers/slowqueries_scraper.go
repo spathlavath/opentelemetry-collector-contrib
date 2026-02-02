@@ -101,6 +101,7 @@ func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) ([]models.SQ
 			slowQuery.IntervalExecutionCount = &metrics.IntervalExecutionCount
 			slowQuery.IntervalAvgCPUTimeMS = &metrics.IntervalAvgCPUTimeMs
 			slowQuery.IntervalAvgDiskReads = &metrics.IntervalAvgDiskReads
+			slowQuery.IntervalAvgDiskWrites = &metrics.IntervalAvgDiskWrites
 			slowQuery.IntervalAvgBufferGets = &metrics.IntervalAvgBufferGets
 			slowQuery.IntervalAvgRowsProcessed = &metrics.IntervalAvgRowsProcessed
 
@@ -213,10 +214,11 @@ func (s *SlowQueriesScraper) recordMetrics(now pcommon.Timestamp, slowQuery *mod
 		)
 	}
 
-	if slowQuery.AvgDiskWrites.Valid {
-		s.mb.RecordNewrelicoracledbSlowQueriesAvgDiskWritesDataPoint(
+	// Record historical (cumulative) total elapsed time - raw value from V$SQLAREA
+	if slowQuery.TotalElapsedTimeMS.Valid {
+		s.mb.RecordNewrelicoracledbSlowQueriesTotalElapsedTimeDataPoint(
 			now,
-			slowQuery.AvgDiskWrites.Float64,
+			slowQuery.TotalElapsedTimeMS.Float64,
 			collectionTimestamp,
 			dbName,
 			qID,
@@ -227,25 +229,11 @@ func (s *SlowQueriesScraper) recordMetrics(now pcommon.Timestamp, slowQuery *mod
 		)
 	}
 
-	// Record historical (cumulative) average elapsed time
-	s.mb.RecordNewrelicoracledbSlowQueriesAvgElapsedTimeDataPoint(
-		now,
-		slowQuery.AvgElapsedTimeMs.Float64,
-		collectionTimestamp,
-		dbName,
-		qID,
-		userName,
-		queryHash,
-		nrService,
-		nrTxn,
-	)
-
-	// Record historical (cumulative) average CPU time
-	if slowQuery.TotalCPUTimeMS.Valid && slowQuery.ExecutionCount.Valid && slowQuery.ExecutionCount.Int64 > 0 {
-		historicalAvgCPUTime := slowQuery.TotalCPUTimeMS.Float64 / float64(slowQuery.ExecutionCount.Int64)
-		s.mb.RecordNewrelicoracledbSlowQueriesAvgCPUTimeDataPoint(
+	// Record historical (cumulative) total CPU time - raw value from V$SQLAREA
+	if slowQuery.TotalCPUTimeMS.Valid {
+		s.mb.RecordNewrelicoracledbSlowQueriesTotalCPUTimeDataPoint(
 			now,
-			historicalAvgCPUTime,
+			slowQuery.TotalCPUTimeMS.Float64,
 			collectionTimestamp,
 			dbName,
 			qID,
@@ -256,12 +244,11 @@ func (s *SlowQueriesScraper) recordMetrics(now pcommon.Timestamp, slowQuery *mod
 		)
 	}
 
-	// Record historical (cumulative) average disk reads
-	if slowQuery.TotalDiskReads.Valid && slowQuery.ExecutionCount.Valid && slowQuery.ExecutionCount.Int64 > 0 {
-		historicalAvgDiskReads := float64(slowQuery.TotalDiskReads.Int64) / float64(slowQuery.ExecutionCount.Int64)
-		s.mb.RecordNewrelicoracledbSlowQueriesAvgDiskReadsDataPoint(
+	// Record historical (cumulative) total disk reads - raw value from V$SQLAREA
+	if slowQuery.TotalDiskReads.Valid {
+		s.mb.RecordNewrelicoracledbSlowQueriesTotalDiskReadsDataPoint(
 			now,
-			historicalAvgDiskReads,
+			float64(slowQuery.TotalDiskReads.Int64),
 			collectionTimestamp,
 			dbName,
 			qID,
@@ -272,12 +259,11 @@ func (s *SlowQueriesScraper) recordMetrics(now pcommon.Timestamp, slowQuery *mod
 		)
 	}
 
-	// Record historical (cumulative) average rows examined (buffer gets)
-	if slowQuery.TotalBufferGets.Valid && slowQuery.ExecutionCount.Valid && slowQuery.ExecutionCount.Int64 > 0 {
-		historicalAvgBufferGets := float64(slowQuery.TotalBufferGets.Int64) / float64(slowQuery.ExecutionCount.Int64)
-		s.mb.RecordNewrelicoracledbSlowQueriesAvgRowsExaminedDataPoint(
+	// Record historical (cumulative) total direct writes - raw value from V$SQLAREA
+	if slowQuery.TotalDiskWrites.Valid {
+		s.mb.RecordNewrelicoracledbSlowQueriesTotalDiskWritesDataPoint(
 			now,
-			historicalAvgBufferGets,
+			float64(slowQuery.TotalDiskWrites.Int64),
 			collectionTimestamp,
 			dbName,
 			qID,
@@ -288,12 +274,26 @@ func (s *SlowQueriesScraper) recordMetrics(now pcommon.Timestamp, slowQuery *mod
 		)
 	}
 
-	// Record historical (cumulative) average rows returned (rows processed)
-	if slowQuery.TotalRowsProcessed.Valid && slowQuery.ExecutionCount.Valid && slowQuery.ExecutionCount.Int64 > 0 {
-		historicalAvgRowsProcessed := float64(slowQuery.TotalRowsProcessed.Int64) / float64(slowQuery.ExecutionCount.Int64)
-		s.mb.RecordNewrelicoracledbSlowQueriesAvgRowsReturnedDataPoint(
+	// Record historical (cumulative) total rows examined (buffer gets) - raw value from V$SQLAREA
+	if slowQuery.TotalBufferGets.Valid {
+		s.mb.RecordNewrelicoracledbSlowQueriesTotalRowsExaminedDataPoint(
 			now,
-			historicalAvgRowsProcessed,
+			float64(slowQuery.TotalBufferGets.Int64),
+			collectionTimestamp,
+			dbName,
+			qID,
+			userName,
+			queryHash,
+			nrService,
+			nrTxn,
+		)
+	}
+
+	// Record historical (cumulative) total rows returned (rows processed) - raw value from V$SQLAREA
+	if slowQuery.TotalRowsProcessed.Valid {
+		s.mb.RecordNewrelicoracledbSlowQueriesTotalRowsReturnedDataPoint(
+			now,
+			float64(slowQuery.TotalRowsProcessed.Int64),
 			collectionTimestamp,
 			dbName,
 			qID,
@@ -364,6 +364,21 @@ func (s *SlowQueriesScraper) recordMetrics(now pcommon.Timestamp, slowQuery *mod
 		)
 	}
 
+	// Record interval direct writes if available (delta metric)
+	if slowQuery.IntervalAvgDiskWrites != nil {
+		s.mb.RecordNewrelicoracledbSlowQueriesIntervalAvgDiskWritesDataPoint(
+			now,
+			*slowQuery.IntervalAvgDiskWrites,
+			collectionTimestamp,
+			dbName,
+			qID,
+			userName,
+			queryHash,
+			nrService,
+			nrTxn,
+		)
+	}
+
 	// Record interval buffer gets if available (delta metric)
 	if slowQuery.IntervalAvgBufferGets != nil {
 		s.mb.RecordNewrelicoracledbSlowQueriesIntervalAvgBufferGetsDataPoint(
@@ -394,10 +409,11 @@ func (s *SlowQueriesScraper) recordMetrics(now pcommon.Timestamp, slowQuery *mod
 		)
 	}
 
-	if slowQuery.AvgLockTimeMs.Valid {
-		s.mb.RecordNewrelicoracledbSlowQueriesAvgLockTimeDataPoint(
+	// Record historical (cumulative) total wait time - raw value from V$SQLAREA
+	if slowQuery.TotalWaitTimeMS.Valid {
+		s.mb.RecordNewrelicoracledbSlowQueriesTotalWaitTimeDataPoint(
 			now,
-			slowQuery.AvgLockTimeMs.Float64,
+			slowQuery.TotalWaitTimeMS.Float64,
 			collectionTimestamp,
 			dbName,
 			qID,

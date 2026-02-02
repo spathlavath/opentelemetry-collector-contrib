@@ -30,15 +30,14 @@ func GetSlowQueriesSQL(intervalSeconds int) string {
 			au.username AS user_name,
 			sa.executions AS execution_count,
 			sa.sql_fulltext AS query_text,
-			sa.direct_writes / DECODE(sa.executions, 0, 1, sa.executions) AS avg_disk_writes,
-			sa.elapsed_time / DECODE(sa.executions, 0, 1, sa.executions) / 1000 AS avg_elapsed_time_ms,
-			sa.concurrency_wait_time / DECODE(sa.executions, 0, 1, sa.executions) / 1000 AS avg_lock_time_ms,
 			sa.last_active_time AS last_active_time_ms,
 			sa.elapsed_time / 1000 AS total_elapsed_time_ms,
 			sa.cpu_time / 1000 AS total_cpu_time_ms,
 			sa.disk_reads AS total_disk_reads,
 			sa.buffer_gets AS total_buffer_gets,
-			sa.rows_processed AS total_rows_processed
+			sa.rows_processed AS total_rows_processed,
+			sa.direct_writes AS total_disk_writes,
+			(sa.elapsed_time - sa.cpu_time) / 1000 AS total_wait_time_ms
 		FROM
 			v$sqlarea sa
 		INNER JOIN
@@ -61,7 +60,7 @@ func GetSlowQueriesSQL(intervalSeconds int) string {
 			AND au.username NOT IN ('SYS', 'SYSTEM', 'DBSNMP', 'SYSMAN', 'OUTLN', 'MDSYS', 'ORDSYS', 'EXFSYS', 'WMSYS', 'APPQOSSYS', 'APEX_030200', 'OWBSYS', 'GSMADMIN_INTERNAL', 'OLAPSYS', 'XDB', 'ANONYMOUS', 'CTXSYS', 'SI_INFORMTN_SCHEMA', 'ORDDATA', 'DVSYS', 'LBACSYS', 'OJVMSYS')
 			AND sa.last_active_time >= SYSDATE - INTERVAL '%d' SECOND
 		ORDER BY
-			sa.elapsed_time / DECODE(sa.executions, 0, 1, sa.executions) DESC`, intervalSeconds)
+			sa.elapsed_time DESC`, intervalSeconds)
 }
 
 // GetWaitEventsAndBlockingSQL returns SQL for wait events with optional blocking information

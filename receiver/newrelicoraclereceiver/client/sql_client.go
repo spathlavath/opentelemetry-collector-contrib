@@ -117,15 +117,14 @@ func (c *SQLClient) QuerySlowQueries(ctx context.Context, intervalSeconds, respo
 			&slowQuery.UserName,
 			&slowQuery.ExecutionCount,
 			&slowQuery.QueryText,
-			&slowQuery.AvgDiskWrites,
-			&slowQuery.AvgElapsedTimeMs,
-			&slowQuery.AvgLockTimeMs,
 			&slowQuery.LastActiveTime,
 			&slowQuery.TotalElapsedTimeMS,
 			&slowQuery.TotalCPUTimeMS,
 			&slowQuery.TotalDiskReads,
 			&slowQuery.TotalBufferGets,
 			&slowQuery.TotalRowsProcessed,
+			&slowQuery.TotalDiskWrites,
+			&slowQuery.TotalWaitTimeMS,
 		)
 		if err != nil {
 			return nil, err

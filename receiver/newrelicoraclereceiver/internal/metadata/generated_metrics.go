@@ -493,27 +493,6 @@ var MetricsInfo = metricsInfo{
 	NewrelicoracledbSgaSharedPoolLibraryCacheReloadRatio: metricInfo{
 		Name: "newrelicoracledb.sga_shared_pool_library_cache_reload_ratio",
 	},
-	NewrelicoracledbSlowQueriesAvgCPUTime: metricInfo{
-		Name: "newrelicoracledb.slow_queries.avg_cpu_time",
-	},
-	NewrelicoracledbSlowQueriesAvgDiskReads: metricInfo{
-		Name: "newrelicoracledb.slow_queries.avg_disk_reads",
-	},
-	NewrelicoracledbSlowQueriesAvgDiskWrites: metricInfo{
-		Name: "newrelicoracledb.slow_queries.avg_disk_writes",
-	},
-	NewrelicoracledbSlowQueriesAvgElapsedTime: metricInfo{
-		Name: "newrelicoracledb.slow_queries.avg_elapsed_time",
-	},
-	NewrelicoracledbSlowQueriesAvgLockTime: metricInfo{
-		Name: "newrelicoracledb.slow_queries.avg_lock_time",
-	},
-	NewrelicoracledbSlowQueriesAvgRowsExamined: metricInfo{
-		Name: "newrelicoracledb.slow_queries.avg_rows_examined",
-	},
-	NewrelicoracledbSlowQueriesAvgRowsReturned: metricInfo{
-		Name: "newrelicoracledb.slow_queries.avg_rows_returned",
-	},
 	NewrelicoracledbSlowQueriesExecutionCount: metricInfo{
 		Name: "newrelicoracledb.slow_queries.execution_count",
 	},
@@ -526,17 +505,44 @@ var MetricsInfo = metricsInfo{
 	NewrelicoracledbSlowQueriesIntervalAvgDiskReads: metricInfo{
 		Name: "newrelicoracledb.slow_queries.interval_avg_disk_reads",
 	},
+	NewrelicoracledbSlowQueriesIntervalAvgDiskWrites: metricInfo{
+		Name: "newrelicoracledb.slow_queries.interval_avg_disk_writes",
+	},
 	NewrelicoracledbSlowQueriesIntervalAvgElapsedTime: metricInfo{
 		Name: "newrelicoracledb.slow_queries.interval_avg_elapsed_time",
 	},
 	NewrelicoracledbSlowQueriesIntervalAvgRowsProcessed: metricInfo{
 		Name: "newrelicoracledb.slow_queries.interval_avg_rows_processed",
 	},
+	NewrelicoracledbSlowQueriesIntervalAvgWaitTime: metricInfo{
+		Name: "newrelicoracledb.slow_queries.interval_avg_wait_time",
+	},
 	NewrelicoracledbSlowQueriesIntervalExecutionCount: metricInfo{
 		Name: "newrelicoracledb.slow_queries.interval_execution_count",
 	},
 	NewrelicoracledbSlowQueriesQueryDetails: metricInfo{
 		Name: "newrelicoracledb.slow_queries.query_details",
+	},
+	NewrelicoracledbSlowQueriesTotalCPUTime: metricInfo{
+		Name: "newrelicoracledb.slow_queries.total_cpu_time",
+	},
+	NewrelicoracledbSlowQueriesTotalDiskReads: metricInfo{
+		Name: "newrelicoracledb.slow_queries.total_disk_reads",
+	},
+	NewrelicoracledbSlowQueriesTotalDiskWrites: metricInfo{
+		Name: "newrelicoracledb.slow_queries.total_disk_writes",
+	},
+	NewrelicoracledbSlowQueriesTotalElapsedTime: metricInfo{
+		Name: "newrelicoracledb.slow_queries.total_elapsed_time",
+	},
+	NewrelicoracledbSlowQueriesTotalRowsExamined: metricInfo{
+		Name: "newrelicoracledb.slow_queries.total_rows_examined",
+	},
+	NewrelicoracledbSlowQueriesTotalRowsReturned: metricInfo{
+		Name: "newrelicoracledb.slow_queries.total_rows_returned",
+	},
+	NewrelicoracledbSlowQueriesTotalWaitTime: metricInfo{
+		Name: "newrelicoracledb.slow_queries.total_wait_time",
 	},
 	NewrelicoracledbSortsDisk: metricInfo{
 		Name: "newrelicoracledb.sorts_disk",
@@ -1169,21 +1175,23 @@ type metricsInfo struct {
 	NewrelicoracledbSgaSharedPoolDictCacheMissRatio                    metricInfo
 	NewrelicoracledbSgaSharedPoolLibraryCacheHitRatio                  metricInfo
 	NewrelicoracledbSgaSharedPoolLibraryCacheReloadRatio               metricInfo
-	NewrelicoracledbSlowQueriesAvgCPUTime                              metricInfo
-	NewrelicoracledbSlowQueriesAvgDiskReads                            metricInfo
-	NewrelicoracledbSlowQueriesAvgDiskWrites                           metricInfo
-	NewrelicoracledbSlowQueriesAvgElapsedTime                          metricInfo
-	NewrelicoracledbSlowQueriesAvgLockTime                             metricInfo
-	NewrelicoracledbSlowQueriesAvgRowsExamined                         metricInfo
-	NewrelicoracledbSlowQueriesAvgRowsReturned                         metricInfo
 	NewrelicoracledbSlowQueriesExecutionCount                          metricInfo
 	NewrelicoracledbSlowQueriesIntervalAvgBufferGets                   metricInfo
 	NewrelicoracledbSlowQueriesIntervalAvgCPUTime                      metricInfo
 	NewrelicoracledbSlowQueriesIntervalAvgDiskReads                    metricInfo
+	NewrelicoracledbSlowQueriesIntervalAvgDiskWrites                   metricInfo
 	NewrelicoracledbSlowQueriesIntervalAvgElapsedTime                  metricInfo
 	NewrelicoracledbSlowQueriesIntervalAvgRowsProcessed                metricInfo
+	NewrelicoracledbSlowQueriesIntervalAvgWaitTime                     metricInfo
 	NewrelicoracledbSlowQueriesIntervalExecutionCount                  metricInfo
 	NewrelicoracledbSlowQueriesQueryDetails                            metricInfo
+	NewrelicoracledbSlowQueriesTotalCPUTime                            metricInfo
+	NewrelicoracledbSlowQueriesTotalDiskReads                          metricInfo
+	NewrelicoracledbSlowQueriesTotalDiskWrites                         metricInfo
+	NewrelicoracledbSlowQueriesTotalElapsedTime                        metricInfo
+	NewrelicoracledbSlowQueriesTotalRowsExamined                       metricInfo
+	NewrelicoracledbSlowQueriesTotalRowsReturned                       metricInfo
+	NewrelicoracledbSlowQueriesTotalWaitTime                           metricInfo
 	NewrelicoracledbSortsDisk                                          metricInfo
 	NewrelicoracledbSortsMemory                                        metricInfo
 	NewrelicoracledbSystemActiveParallelSessions                       metricInfo
@@ -9690,405 +9698,6 @@ func newMetricNewrelicoracledbSgaSharedPoolLibraryCacheReloadRatio(cfg MetricCon
 	return m
 }
 
-type metricNewrelicoracledbSlowQueriesAvgCPUTime struct {
-	data     pmetric.Metric // data buffer for generated metric.
-	config   MetricConfig   // metric config provided by user.
-	capacity int            // max observed number of data points added to the metric.
-}
-
-// init fills newrelicoracledb.slow_queries.avg_cpu_time metric with initial data.
-func (m *metricNewrelicoracledbSlowQueriesAvgCPUTime) init() {
-	m.data.SetName("newrelicoracledb.slow_queries.avg_cpu_time")
-	m.data.SetDescription("Average CPU time per execution for slow queries")
-	m.data.SetUnit("ms")
-	m.data.SetEmptyGauge()
-	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
-}
-
-func (m *metricNewrelicoracledbSlowQueriesAvgCPUTime) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, collectionTimestampAttributeValue string, databaseNameAttributeValue string, queryIDAttributeValue string, userNameAttributeValue string, normalisedSQLHashAttributeValue string, clientNameAttributeValue string, transactionNameAttributeValue string) {
-	if !m.config.Enabled {
-		return
-	}
-	dp := m.data.Gauge().DataPoints().AppendEmpty()
-	dp.SetStartTimestamp(start)
-	dp.SetTimestamp(ts)
-	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("collection_timestamp", collectionTimestampAttributeValue)
-	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
-	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
-	dp.Attributes().PutStr("user_name", userNameAttributeValue)
-	dp.Attributes().PutStr("normalised_sql_hash", normalisedSQLHashAttributeValue)
-	dp.Attributes().PutStr("client_name", clientNameAttributeValue)
-	dp.Attributes().PutStr("transaction_name", transactionNameAttributeValue)
-}
-
-// updateCapacity saves max length of data point slices that will be used for the slice capacity.
-func (m *metricNewrelicoracledbSlowQueriesAvgCPUTime) updateCapacity() {
-	if m.data.Gauge().DataPoints().Len() > m.capacity {
-		m.capacity = m.data.Gauge().DataPoints().Len()
-	}
-}
-
-// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
-func (m *metricNewrelicoracledbSlowQueriesAvgCPUTime) emit(metrics pmetric.MetricSlice) {
-	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
-		m.updateCapacity()
-		m.data.MoveTo(metrics.AppendEmpty())
-		m.init()
-	}
-}
-
-func newMetricNewrelicoracledbSlowQueriesAvgCPUTime(cfg MetricConfig) metricNewrelicoracledbSlowQueriesAvgCPUTime {
-	m := metricNewrelicoracledbSlowQueriesAvgCPUTime{config: cfg}
-	if cfg.Enabled {
-		m.data = pmetric.NewMetric()
-		m.init()
-	}
-	return m
-}
-
-type metricNewrelicoracledbSlowQueriesAvgDiskReads struct {
-	data     pmetric.Metric // data buffer for generated metric.
-	config   MetricConfig   // metric config provided by user.
-	capacity int            // max observed number of data points added to the metric.
-}
-
-// init fills newrelicoracledb.slow_queries.avg_disk_reads metric with initial data.
-func (m *metricNewrelicoracledbSlowQueriesAvgDiskReads) init() {
-	m.data.SetName("newrelicoracledb.slow_queries.avg_disk_reads")
-	m.data.SetDescription("Average disk reads per execution for slow queries")
-	m.data.SetUnit("{reads}")
-	m.data.SetEmptyGauge()
-	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
-}
-
-func (m *metricNewrelicoracledbSlowQueriesAvgDiskReads) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, collectionTimestampAttributeValue string, databaseNameAttributeValue string, queryIDAttributeValue string, userNameAttributeValue string, normalisedSQLHashAttributeValue string, clientNameAttributeValue string, transactionNameAttributeValue string) {
-	if !m.config.Enabled {
-		return
-	}
-	dp := m.data.Gauge().DataPoints().AppendEmpty()
-	dp.SetStartTimestamp(start)
-	dp.SetTimestamp(ts)
-	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("collection_timestamp", collectionTimestampAttributeValue)
-	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
-	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
-	dp.Attributes().PutStr("user_name", userNameAttributeValue)
-	dp.Attributes().PutStr("normalised_sql_hash", normalisedSQLHashAttributeValue)
-	dp.Attributes().PutStr("client_name", clientNameAttributeValue)
-	dp.Attributes().PutStr("transaction_name", transactionNameAttributeValue)
-}
-
-// updateCapacity saves max length of data point slices that will be used for the slice capacity.
-func (m *metricNewrelicoracledbSlowQueriesAvgDiskReads) updateCapacity() {
-	if m.data.Gauge().DataPoints().Len() > m.capacity {
-		m.capacity = m.data.Gauge().DataPoints().Len()
-	}
-}
-
-// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
-func (m *metricNewrelicoracledbSlowQueriesAvgDiskReads) emit(metrics pmetric.MetricSlice) {
-	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
-		m.updateCapacity()
-		m.data.MoveTo(metrics.AppendEmpty())
-		m.init()
-	}
-}
-
-func newMetricNewrelicoracledbSlowQueriesAvgDiskReads(cfg MetricConfig) metricNewrelicoracledbSlowQueriesAvgDiskReads {
-	m := metricNewrelicoracledbSlowQueriesAvgDiskReads{config: cfg}
-	if cfg.Enabled {
-		m.data = pmetric.NewMetric()
-		m.init()
-	}
-	return m
-}
-
-type metricNewrelicoracledbSlowQueriesAvgDiskWrites struct {
-	data     pmetric.Metric // data buffer for generated metric.
-	config   MetricConfig   // metric config provided by user.
-	capacity int            // max observed number of data points added to the metric.
-}
-
-// init fills newrelicoracledb.slow_queries.avg_disk_writes metric with initial data.
-func (m *metricNewrelicoracledbSlowQueriesAvgDiskWrites) init() {
-	m.data.SetName("newrelicoracledb.slow_queries.avg_disk_writes")
-	m.data.SetDescription("Average disk writes per execution for slow queries")
-	m.data.SetUnit("{writes}")
-	m.data.SetEmptyGauge()
-	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
-}
-
-func (m *metricNewrelicoracledbSlowQueriesAvgDiskWrites) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, collectionTimestampAttributeValue string, databaseNameAttributeValue string, queryIDAttributeValue string, userNameAttributeValue string, normalisedSQLHashAttributeValue string, clientNameAttributeValue string, transactionNameAttributeValue string) {
-	if !m.config.Enabled {
-		return
-	}
-	dp := m.data.Gauge().DataPoints().AppendEmpty()
-	dp.SetStartTimestamp(start)
-	dp.SetTimestamp(ts)
-	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("collection_timestamp", collectionTimestampAttributeValue)
-	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
-	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
-	dp.Attributes().PutStr("user_name", userNameAttributeValue)
-	dp.Attributes().PutStr("normalised_sql_hash", normalisedSQLHashAttributeValue)
-	dp.Attributes().PutStr("client_name", clientNameAttributeValue)
-	dp.Attributes().PutStr("transaction_name", transactionNameAttributeValue)
-}
-
-// updateCapacity saves max length of data point slices that will be used for the slice capacity.
-func (m *metricNewrelicoracledbSlowQueriesAvgDiskWrites) updateCapacity() {
-	if m.data.Gauge().DataPoints().Len() > m.capacity {
-		m.capacity = m.data.Gauge().DataPoints().Len()
-	}
-}
-
-// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
-func (m *metricNewrelicoracledbSlowQueriesAvgDiskWrites) emit(metrics pmetric.MetricSlice) {
-	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
-		m.updateCapacity()
-		m.data.MoveTo(metrics.AppendEmpty())
-		m.init()
-	}
-}
-
-func newMetricNewrelicoracledbSlowQueriesAvgDiskWrites(cfg MetricConfig) metricNewrelicoracledbSlowQueriesAvgDiskWrites {
-	m := metricNewrelicoracledbSlowQueriesAvgDiskWrites{config: cfg}
-	if cfg.Enabled {
-		m.data = pmetric.NewMetric()
-		m.init()
-	}
-	return m
-}
-
-type metricNewrelicoracledbSlowQueriesAvgElapsedTime struct {
-	data     pmetric.Metric // data buffer for generated metric.
-	config   MetricConfig   // metric config provided by user.
-	capacity int            // max observed number of data points added to the metric.
-}
-
-// init fills newrelicoracledb.slow_queries.avg_elapsed_time metric with initial data.
-func (m *metricNewrelicoracledbSlowQueriesAvgElapsedTime) init() {
-	m.data.SetName("newrelicoracledb.slow_queries.avg_elapsed_time")
-	m.data.SetDescription("Average elapsed time per execution for slow queries")
-	m.data.SetUnit("ms")
-	m.data.SetEmptyGauge()
-	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
-}
-
-func (m *metricNewrelicoracledbSlowQueriesAvgElapsedTime) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, collectionTimestampAttributeValue string, databaseNameAttributeValue string, queryIDAttributeValue string, userNameAttributeValue string, normalisedSQLHashAttributeValue string, clientNameAttributeValue string, transactionNameAttributeValue string) {
-	if !m.config.Enabled {
-		return
-	}
-	dp := m.data.Gauge().DataPoints().AppendEmpty()
-	dp.SetStartTimestamp(start)
-	dp.SetTimestamp(ts)
-	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("collection_timestamp", collectionTimestampAttributeValue)
-	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
-	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
-	dp.Attributes().PutStr("user_name", userNameAttributeValue)
-	dp.Attributes().PutStr("normalised_sql_hash", normalisedSQLHashAttributeValue)
-	dp.Attributes().PutStr("client_name", clientNameAttributeValue)
-	dp.Attributes().PutStr("transaction_name", transactionNameAttributeValue)
-}
-
-// updateCapacity saves max length of data point slices that will be used for the slice capacity.
-func (m *metricNewrelicoracledbSlowQueriesAvgElapsedTime) updateCapacity() {
-	if m.data.Gauge().DataPoints().Len() > m.capacity {
-		m.capacity = m.data.Gauge().DataPoints().Len()
-	}
-}
-
-// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
-func (m *metricNewrelicoracledbSlowQueriesAvgElapsedTime) emit(metrics pmetric.MetricSlice) {
-	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
-		m.updateCapacity()
-		m.data.MoveTo(metrics.AppendEmpty())
-		m.init()
-	}
-}
-
-func newMetricNewrelicoracledbSlowQueriesAvgElapsedTime(cfg MetricConfig) metricNewrelicoracledbSlowQueriesAvgElapsedTime {
-	m := metricNewrelicoracledbSlowQueriesAvgElapsedTime{config: cfg}
-	if cfg.Enabled {
-		m.data = pmetric.NewMetric()
-		m.init()
-	}
-	return m
-}
-
-type metricNewrelicoracledbSlowQueriesAvgLockTime struct {
-	data     pmetric.Metric // data buffer for generated metric.
-	config   MetricConfig   // metric config provided by user.
-	capacity int            // max observed number of data points added to the metric.
-}
-
-// init fills newrelicoracledb.slow_queries.avg_lock_time metric with initial data.
-func (m *metricNewrelicoracledbSlowQueriesAvgLockTime) init() {
-	m.data.SetName("newrelicoracledb.slow_queries.avg_lock_time")
-	m.data.SetDescription("Average lock/concurrency wait time per execution for slow queries")
-	m.data.SetUnit("ms")
-	m.data.SetEmptyGauge()
-	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
-}
-
-func (m *metricNewrelicoracledbSlowQueriesAvgLockTime) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, collectionTimestampAttributeValue string, databaseNameAttributeValue string, queryIDAttributeValue string, userNameAttributeValue string, normalisedSQLHashAttributeValue string, clientNameAttributeValue string, transactionNameAttributeValue string) {
-	if !m.config.Enabled {
-		return
-	}
-	dp := m.data.Gauge().DataPoints().AppendEmpty()
-	dp.SetStartTimestamp(start)
-	dp.SetTimestamp(ts)
-	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("collection_timestamp", collectionTimestampAttributeValue)
-	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
-	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
-	dp.Attributes().PutStr("user_name", userNameAttributeValue)
-	dp.Attributes().PutStr("normalised_sql_hash", normalisedSQLHashAttributeValue)
-	dp.Attributes().PutStr("client_name", clientNameAttributeValue)
-	dp.Attributes().PutStr("transaction_name", transactionNameAttributeValue)
-}
-
-// updateCapacity saves max length of data point slices that will be used for the slice capacity.
-func (m *metricNewrelicoracledbSlowQueriesAvgLockTime) updateCapacity() {
-	if m.data.Gauge().DataPoints().Len() > m.capacity {
-		m.capacity = m.data.Gauge().DataPoints().Len()
-	}
-}
-
-// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
-func (m *metricNewrelicoracledbSlowQueriesAvgLockTime) emit(metrics pmetric.MetricSlice) {
-	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
-		m.updateCapacity()
-		m.data.MoveTo(metrics.AppendEmpty())
-		m.init()
-	}
-}
-
-func newMetricNewrelicoracledbSlowQueriesAvgLockTime(cfg MetricConfig) metricNewrelicoracledbSlowQueriesAvgLockTime {
-	m := metricNewrelicoracledbSlowQueriesAvgLockTime{config: cfg}
-	if cfg.Enabled {
-		m.data = pmetric.NewMetric()
-		m.init()
-	}
-	return m
-}
-
-type metricNewrelicoracledbSlowQueriesAvgRowsExamined struct {
-	data     pmetric.Metric // data buffer for generated metric.
-	config   MetricConfig   // metric config provided by user.
-	capacity int            // max observed number of data points added to the metric.
-}
-
-// init fills newrelicoracledb.slow_queries.avg_rows_examined metric with initial data.
-func (m *metricNewrelicoracledbSlowQueriesAvgRowsExamined) init() {
-	m.data.SetName("newrelicoracledb.slow_queries.avg_rows_examined")
-	m.data.SetDescription("Average rows examined per execution for slow queries (buffer gets/logical reads)")
-	m.data.SetUnit("{rows}")
-	m.data.SetEmptyGauge()
-	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
-}
-
-func (m *metricNewrelicoracledbSlowQueriesAvgRowsExamined) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, collectionTimestampAttributeValue string, databaseNameAttributeValue string, queryIDAttributeValue string, userNameAttributeValue string, normalisedSQLHashAttributeValue string, clientNameAttributeValue string, transactionNameAttributeValue string) {
-	if !m.config.Enabled {
-		return
-	}
-	dp := m.data.Gauge().DataPoints().AppendEmpty()
-	dp.SetStartTimestamp(start)
-	dp.SetTimestamp(ts)
-	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("collection_timestamp", collectionTimestampAttributeValue)
-	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
-	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
-	dp.Attributes().PutStr("user_name", userNameAttributeValue)
-	dp.Attributes().PutStr("normalised_sql_hash", normalisedSQLHashAttributeValue)
-	dp.Attributes().PutStr("client_name", clientNameAttributeValue)
-	dp.Attributes().PutStr("transaction_name", transactionNameAttributeValue)
-}
-
-// updateCapacity saves max length of data point slices that will be used for the slice capacity.
-func (m *metricNewrelicoracledbSlowQueriesAvgRowsExamined) updateCapacity() {
-	if m.data.Gauge().DataPoints().Len() > m.capacity {
-		m.capacity = m.data.Gauge().DataPoints().Len()
-	}
-}
-
-// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
-func (m *metricNewrelicoracledbSlowQueriesAvgRowsExamined) emit(metrics pmetric.MetricSlice) {
-	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
-		m.updateCapacity()
-		m.data.MoveTo(metrics.AppendEmpty())
-		m.init()
-	}
-}
-
-func newMetricNewrelicoracledbSlowQueriesAvgRowsExamined(cfg MetricConfig) metricNewrelicoracledbSlowQueriesAvgRowsExamined {
-	m := metricNewrelicoracledbSlowQueriesAvgRowsExamined{config: cfg}
-	if cfg.Enabled {
-		m.data = pmetric.NewMetric()
-		m.init()
-	}
-	return m
-}
-
-type metricNewrelicoracledbSlowQueriesAvgRowsReturned struct {
-	data     pmetric.Metric // data buffer for generated metric.
-	config   MetricConfig   // metric config provided by user.
-	capacity int            // max observed number of data points added to the metric.
-}
-
-// init fills newrelicoracledb.slow_queries.avg_rows_returned metric with initial data.
-func (m *metricNewrelicoracledbSlowQueriesAvgRowsReturned) init() {
-	m.data.SetName("newrelicoracledb.slow_queries.avg_rows_returned")
-	m.data.SetDescription("Average rows returned per execution for slow queries (rows processed)")
-	m.data.SetUnit("{rows}")
-	m.data.SetEmptyGauge()
-	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
-}
-
-func (m *metricNewrelicoracledbSlowQueriesAvgRowsReturned) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, collectionTimestampAttributeValue string, databaseNameAttributeValue string, queryIDAttributeValue string, userNameAttributeValue string, normalisedSQLHashAttributeValue string, clientNameAttributeValue string, transactionNameAttributeValue string) {
-	if !m.config.Enabled {
-		return
-	}
-	dp := m.data.Gauge().DataPoints().AppendEmpty()
-	dp.SetStartTimestamp(start)
-	dp.SetTimestamp(ts)
-	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("collection_timestamp", collectionTimestampAttributeValue)
-	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
-	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
-	dp.Attributes().PutStr("user_name", userNameAttributeValue)
-	dp.Attributes().PutStr("normalised_sql_hash", normalisedSQLHashAttributeValue)
-	dp.Attributes().PutStr("client_name", clientNameAttributeValue)
-	dp.Attributes().PutStr("transaction_name", transactionNameAttributeValue)
-}
-
-// updateCapacity saves max length of data point slices that will be used for the slice capacity.
-func (m *metricNewrelicoracledbSlowQueriesAvgRowsReturned) updateCapacity() {
-	if m.data.Gauge().DataPoints().Len() > m.capacity {
-		m.capacity = m.data.Gauge().DataPoints().Len()
-	}
-}
-
-// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
-func (m *metricNewrelicoracledbSlowQueriesAvgRowsReturned) emit(metrics pmetric.MetricSlice) {
-	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
-		m.updateCapacity()
-		m.data.MoveTo(metrics.AppendEmpty())
-		m.init()
-	}
-}
-
-func newMetricNewrelicoracledbSlowQueriesAvgRowsReturned(cfg MetricConfig) metricNewrelicoracledbSlowQueriesAvgRowsReturned {
-	m := metricNewrelicoracledbSlowQueriesAvgRowsReturned{config: cfg}
-	if cfg.Enabled {
-		m.data = pmetric.NewMetric()
-		m.init()
-	}
-	return m
-}
-
 type metricNewrelicoracledbSlowQueriesExecutionCount struct {
 	data     pmetric.Metric // data buffer for generated metric.
 	config   MetricConfig   // metric config provided by user.
@@ -10317,6 +9926,63 @@ func newMetricNewrelicoracledbSlowQueriesIntervalAvgDiskReads(cfg MetricConfig) 
 	return m
 }
 
+type metricNewrelicoracledbSlowQueriesIntervalAvgDiskWrites struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.slow_queries.interval_avg_disk_writes metric with initial data.
+func (m *metricNewrelicoracledbSlowQueriesIntervalAvgDiskWrites) init() {
+	m.data.SetName("newrelicoracledb.slow_queries.interval_avg_disk_writes")
+	m.data.SetDescription("Average direct writes per execution in the last polling interval - writes bypassing buffer cache (delta metric)")
+	m.data.SetUnit("{writes}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbSlowQueriesIntervalAvgDiskWrites) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, collectionTimestampAttributeValue string, databaseNameAttributeValue string, queryIDAttributeValue string, userNameAttributeValue string, normalisedSQLHashAttributeValue string, clientNameAttributeValue string, transactionNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("collection_timestamp", collectionTimestampAttributeValue)
+	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
+	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
+	dp.Attributes().PutStr("user_name", userNameAttributeValue)
+	dp.Attributes().PutStr("normalised_sql_hash", normalisedSQLHashAttributeValue)
+	dp.Attributes().PutStr("client_name", clientNameAttributeValue)
+	dp.Attributes().PutStr("transaction_name", transactionNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbSlowQueriesIntervalAvgDiskWrites) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbSlowQueriesIntervalAvgDiskWrites) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbSlowQueriesIntervalAvgDiskWrites(cfg MetricConfig) metricNewrelicoracledbSlowQueriesIntervalAvgDiskWrites {
+	m := metricNewrelicoracledbSlowQueriesIntervalAvgDiskWrites{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
 type metricNewrelicoracledbSlowQueriesIntervalAvgElapsedTime struct {
 	data     pmetric.Metric // data buffer for generated metric.
 	config   MetricConfig   // metric config provided by user.
@@ -10424,6 +10090,63 @@ func (m *metricNewrelicoracledbSlowQueriesIntervalAvgRowsProcessed) emit(metrics
 
 func newMetricNewrelicoracledbSlowQueriesIntervalAvgRowsProcessed(cfg MetricConfig) metricNewrelicoracledbSlowQueriesIntervalAvgRowsProcessed {
 	m := metricNewrelicoracledbSlowQueriesIntervalAvgRowsProcessed{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicoracledbSlowQueriesIntervalAvgWaitTime struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.slow_queries.interval_avg_wait_time metric with initial data.
+func (m *metricNewrelicoracledbSlowQueriesIntervalAvgWaitTime) init() {
+	m.data.SetName("newrelicoracledb.slow_queries.interval_avg_wait_time")
+	m.data.SetDescription("Average wait time per execution in the last polling interval (delta metric)")
+	m.data.SetUnit("ms")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbSlowQueriesIntervalAvgWaitTime) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, collectionTimestampAttributeValue string, databaseNameAttributeValue string, queryIDAttributeValue string, userNameAttributeValue string, normalisedSQLHashAttributeValue string, clientNameAttributeValue string, transactionNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("collection_timestamp", collectionTimestampAttributeValue)
+	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
+	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
+	dp.Attributes().PutStr("user_name", userNameAttributeValue)
+	dp.Attributes().PutStr("normalised_sql_hash", normalisedSQLHashAttributeValue)
+	dp.Attributes().PutStr("client_name", clientNameAttributeValue)
+	dp.Attributes().PutStr("transaction_name", transactionNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbSlowQueriesIntervalAvgWaitTime) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbSlowQueriesIntervalAvgWaitTime) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbSlowQueriesIntervalAvgWaitTime(cfg MetricConfig) metricNewrelicoracledbSlowQueriesIntervalAvgWaitTime {
+	m := metricNewrelicoracledbSlowQueriesIntervalAvgWaitTime{config: cfg}
 	if cfg.Enabled {
 		m.data = pmetric.NewMetric()
 		m.init()
@@ -10542,6 +10265,405 @@ func (m *metricNewrelicoracledbSlowQueriesQueryDetails) emit(metrics pmetric.Met
 
 func newMetricNewrelicoracledbSlowQueriesQueryDetails(cfg MetricConfig) metricNewrelicoracledbSlowQueriesQueryDetails {
 	m := metricNewrelicoracledbSlowQueriesQueryDetails{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicoracledbSlowQueriesTotalCPUTime struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.slow_queries.total_cpu_time metric with initial data.
+func (m *metricNewrelicoracledbSlowQueriesTotalCPUTime) init() {
+	m.data.SetName("newrelicoracledb.slow_queries.total_cpu_time")
+	m.data.SetDescription("Total cumulative CPU time for slow queries (raw value from V$SQLAREA)")
+	m.data.SetUnit("ms")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbSlowQueriesTotalCPUTime) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, collectionTimestampAttributeValue string, databaseNameAttributeValue string, queryIDAttributeValue string, userNameAttributeValue string, normalisedSQLHashAttributeValue string, clientNameAttributeValue string, transactionNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("collection_timestamp", collectionTimestampAttributeValue)
+	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
+	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
+	dp.Attributes().PutStr("user_name", userNameAttributeValue)
+	dp.Attributes().PutStr("normalised_sql_hash", normalisedSQLHashAttributeValue)
+	dp.Attributes().PutStr("client_name", clientNameAttributeValue)
+	dp.Attributes().PutStr("transaction_name", transactionNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbSlowQueriesTotalCPUTime) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbSlowQueriesTotalCPUTime) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbSlowQueriesTotalCPUTime(cfg MetricConfig) metricNewrelicoracledbSlowQueriesTotalCPUTime {
+	m := metricNewrelicoracledbSlowQueriesTotalCPUTime{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicoracledbSlowQueriesTotalDiskReads struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.slow_queries.total_disk_reads metric with initial data.
+func (m *metricNewrelicoracledbSlowQueriesTotalDiskReads) init() {
+	m.data.SetName("newrelicoracledb.slow_queries.total_disk_reads")
+	m.data.SetDescription("Total cumulative disk reads for slow queries (raw value from V$SQLAREA)")
+	m.data.SetUnit("{reads}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbSlowQueriesTotalDiskReads) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, collectionTimestampAttributeValue string, databaseNameAttributeValue string, queryIDAttributeValue string, userNameAttributeValue string, normalisedSQLHashAttributeValue string, clientNameAttributeValue string, transactionNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("collection_timestamp", collectionTimestampAttributeValue)
+	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
+	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
+	dp.Attributes().PutStr("user_name", userNameAttributeValue)
+	dp.Attributes().PutStr("normalised_sql_hash", normalisedSQLHashAttributeValue)
+	dp.Attributes().PutStr("client_name", clientNameAttributeValue)
+	dp.Attributes().PutStr("transaction_name", transactionNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbSlowQueriesTotalDiskReads) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbSlowQueriesTotalDiskReads) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbSlowQueriesTotalDiskReads(cfg MetricConfig) metricNewrelicoracledbSlowQueriesTotalDiskReads {
+	m := metricNewrelicoracledbSlowQueriesTotalDiskReads{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicoracledbSlowQueriesTotalDiskWrites struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.slow_queries.total_disk_writes metric with initial data.
+func (m *metricNewrelicoracledbSlowQueriesTotalDiskWrites) init() {
+	m.data.SetName("newrelicoracledb.slow_queries.total_disk_writes")
+	m.data.SetDescription("Total cumulative direct writes for slow queries - writes bypassing buffer cache (raw value from V$SQLAREA DIRECT_WRITES)")
+	m.data.SetUnit("{writes}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbSlowQueriesTotalDiskWrites) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, collectionTimestampAttributeValue string, databaseNameAttributeValue string, queryIDAttributeValue string, userNameAttributeValue string, normalisedSQLHashAttributeValue string, clientNameAttributeValue string, transactionNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("collection_timestamp", collectionTimestampAttributeValue)
+	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
+	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
+	dp.Attributes().PutStr("user_name", userNameAttributeValue)
+	dp.Attributes().PutStr("normalised_sql_hash", normalisedSQLHashAttributeValue)
+	dp.Attributes().PutStr("client_name", clientNameAttributeValue)
+	dp.Attributes().PutStr("transaction_name", transactionNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbSlowQueriesTotalDiskWrites) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbSlowQueriesTotalDiskWrites) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbSlowQueriesTotalDiskWrites(cfg MetricConfig) metricNewrelicoracledbSlowQueriesTotalDiskWrites {
+	m := metricNewrelicoracledbSlowQueriesTotalDiskWrites{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicoracledbSlowQueriesTotalElapsedTime struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.slow_queries.total_elapsed_time metric with initial data.
+func (m *metricNewrelicoracledbSlowQueriesTotalElapsedTime) init() {
+	m.data.SetName("newrelicoracledb.slow_queries.total_elapsed_time")
+	m.data.SetDescription("Total cumulative elapsed time for slow queries (raw value from V$SQLAREA)")
+	m.data.SetUnit("ms")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbSlowQueriesTotalElapsedTime) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, collectionTimestampAttributeValue string, databaseNameAttributeValue string, queryIDAttributeValue string, userNameAttributeValue string, normalisedSQLHashAttributeValue string, clientNameAttributeValue string, transactionNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("collection_timestamp", collectionTimestampAttributeValue)
+	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
+	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
+	dp.Attributes().PutStr("user_name", userNameAttributeValue)
+	dp.Attributes().PutStr("normalised_sql_hash", normalisedSQLHashAttributeValue)
+	dp.Attributes().PutStr("client_name", clientNameAttributeValue)
+	dp.Attributes().PutStr("transaction_name", transactionNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbSlowQueriesTotalElapsedTime) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbSlowQueriesTotalElapsedTime) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbSlowQueriesTotalElapsedTime(cfg MetricConfig) metricNewrelicoracledbSlowQueriesTotalElapsedTime {
+	m := metricNewrelicoracledbSlowQueriesTotalElapsedTime{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicoracledbSlowQueriesTotalRowsExamined struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.slow_queries.total_rows_examined metric with initial data.
+func (m *metricNewrelicoracledbSlowQueriesTotalRowsExamined) init() {
+	m.data.SetName("newrelicoracledb.slow_queries.total_rows_examined")
+	m.data.SetDescription("Total cumulative rows examined for slow queries (buffer gets/logical reads, raw value from V$SQLAREA)")
+	m.data.SetUnit("{rows}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbSlowQueriesTotalRowsExamined) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, collectionTimestampAttributeValue string, databaseNameAttributeValue string, queryIDAttributeValue string, userNameAttributeValue string, normalisedSQLHashAttributeValue string, clientNameAttributeValue string, transactionNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("collection_timestamp", collectionTimestampAttributeValue)
+	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
+	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
+	dp.Attributes().PutStr("user_name", userNameAttributeValue)
+	dp.Attributes().PutStr("normalised_sql_hash", normalisedSQLHashAttributeValue)
+	dp.Attributes().PutStr("client_name", clientNameAttributeValue)
+	dp.Attributes().PutStr("transaction_name", transactionNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbSlowQueriesTotalRowsExamined) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbSlowQueriesTotalRowsExamined) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbSlowQueriesTotalRowsExamined(cfg MetricConfig) metricNewrelicoracledbSlowQueriesTotalRowsExamined {
+	m := metricNewrelicoracledbSlowQueriesTotalRowsExamined{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicoracledbSlowQueriesTotalRowsReturned struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.slow_queries.total_rows_returned metric with initial data.
+func (m *metricNewrelicoracledbSlowQueriesTotalRowsReturned) init() {
+	m.data.SetName("newrelicoracledb.slow_queries.total_rows_returned")
+	m.data.SetDescription("Total cumulative rows returned for slow queries (rows processed, raw value from V$SQLAREA)")
+	m.data.SetUnit("{rows}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbSlowQueriesTotalRowsReturned) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, collectionTimestampAttributeValue string, databaseNameAttributeValue string, queryIDAttributeValue string, userNameAttributeValue string, normalisedSQLHashAttributeValue string, clientNameAttributeValue string, transactionNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("collection_timestamp", collectionTimestampAttributeValue)
+	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
+	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
+	dp.Attributes().PutStr("user_name", userNameAttributeValue)
+	dp.Attributes().PutStr("normalised_sql_hash", normalisedSQLHashAttributeValue)
+	dp.Attributes().PutStr("client_name", clientNameAttributeValue)
+	dp.Attributes().PutStr("transaction_name", transactionNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbSlowQueriesTotalRowsReturned) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbSlowQueriesTotalRowsReturned) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbSlowQueriesTotalRowsReturned(cfg MetricConfig) metricNewrelicoracledbSlowQueriesTotalRowsReturned {
+	m := metricNewrelicoracledbSlowQueriesTotalRowsReturned{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicoracledbSlowQueriesTotalWaitTime struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicoracledb.slow_queries.total_wait_time metric with initial data.
+func (m *metricNewrelicoracledbSlowQueriesTotalWaitTime) init() {
+	m.data.SetName("newrelicoracledb.slow_queries.total_wait_time")
+	m.data.SetDescription("Total cumulative wait time for slow queries (elapsed_time - cpu_time, raw value from V$SQLAREA)")
+	m.data.SetUnit("ms")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricNewrelicoracledbSlowQueriesTotalWaitTime) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, collectionTimestampAttributeValue string, databaseNameAttributeValue string, queryIDAttributeValue string, userNameAttributeValue string, normalisedSQLHashAttributeValue string, clientNameAttributeValue string, transactionNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("collection_timestamp", collectionTimestampAttributeValue)
+	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
+	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
+	dp.Attributes().PutStr("user_name", userNameAttributeValue)
+	dp.Attributes().PutStr("normalised_sql_hash", normalisedSQLHashAttributeValue)
+	dp.Attributes().PutStr("client_name", clientNameAttributeValue)
+	dp.Attributes().PutStr("transaction_name", transactionNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicoracledbSlowQueriesTotalWaitTime) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicoracledbSlowQueriesTotalWaitTime) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicoracledbSlowQueriesTotalWaitTime(cfg MetricConfig) metricNewrelicoracledbSlowQueriesTotalWaitTime {
+	m := metricNewrelicoracledbSlowQueriesTotalWaitTime{config: cfg}
 	if cfg.Enabled {
 		m.data = pmetric.NewMetric()
 		m.init()
@@ -18703,21 +18825,23 @@ type MetricsBuilder struct {
 	metricNewrelicoracledbSgaSharedPoolDictCacheMissRatio                    metricNewrelicoracledbSgaSharedPoolDictCacheMissRatio
 	metricNewrelicoracledbSgaSharedPoolLibraryCacheHitRatio                  metricNewrelicoracledbSgaSharedPoolLibraryCacheHitRatio
 	metricNewrelicoracledbSgaSharedPoolLibraryCacheReloadRatio               metricNewrelicoracledbSgaSharedPoolLibraryCacheReloadRatio
-	metricNewrelicoracledbSlowQueriesAvgCPUTime                              metricNewrelicoracledbSlowQueriesAvgCPUTime
-	metricNewrelicoracledbSlowQueriesAvgDiskReads                            metricNewrelicoracledbSlowQueriesAvgDiskReads
-	metricNewrelicoracledbSlowQueriesAvgDiskWrites                           metricNewrelicoracledbSlowQueriesAvgDiskWrites
-	metricNewrelicoracledbSlowQueriesAvgElapsedTime                          metricNewrelicoracledbSlowQueriesAvgElapsedTime
-	metricNewrelicoracledbSlowQueriesAvgLockTime                             metricNewrelicoracledbSlowQueriesAvgLockTime
-	metricNewrelicoracledbSlowQueriesAvgRowsExamined                         metricNewrelicoracledbSlowQueriesAvgRowsExamined
-	metricNewrelicoracledbSlowQueriesAvgRowsReturned                         metricNewrelicoracledbSlowQueriesAvgRowsReturned
 	metricNewrelicoracledbSlowQueriesExecutionCount                          metricNewrelicoracledbSlowQueriesExecutionCount
 	metricNewrelicoracledbSlowQueriesIntervalAvgBufferGets                   metricNewrelicoracledbSlowQueriesIntervalAvgBufferGets
 	metricNewrelicoracledbSlowQueriesIntervalAvgCPUTime                      metricNewrelicoracledbSlowQueriesIntervalAvgCPUTime
 	metricNewrelicoracledbSlowQueriesIntervalAvgDiskReads                    metricNewrelicoracledbSlowQueriesIntervalAvgDiskReads
+	metricNewrelicoracledbSlowQueriesIntervalAvgDiskWrites                   metricNewrelicoracledbSlowQueriesIntervalAvgDiskWrites
 	metricNewrelicoracledbSlowQueriesIntervalAvgElapsedTime                  metricNewrelicoracledbSlowQueriesIntervalAvgElapsedTime
 	metricNewrelicoracledbSlowQueriesIntervalAvgRowsProcessed                metricNewrelicoracledbSlowQueriesIntervalAvgRowsProcessed
+	metricNewrelicoracledbSlowQueriesIntervalAvgWaitTime                     metricNewrelicoracledbSlowQueriesIntervalAvgWaitTime
 	metricNewrelicoracledbSlowQueriesIntervalExecutionCount                  metricNewrelicoracledbSlowQueriesIntervalExecutionCount
 	metricNewrelicoracledbSlowQueriesQueryDetails                            metricNewrelicoracledbSlowQueriesQueryDetails
+	metricNewrelicoracledbSlowQueriesTotalCPUTime                            metricNewrelicoracledbSlowQueriesTotalCPUTime
+	metricNewrelicoracledbSlowQueriesTotalDiskReads                          metricNewrelicoracledbSlowQueriesTotalDiskReads
+	metricNewrelicoracledbSlowQueriesTotalDiskWrites                         metricNewrelicoracledbSlowQueriesTotalDiskWrites
+	metricNewrelicoracledbSlowQueriesTotalElapsedTime                        metricNewrelicoracledbSlowQueriesTotalElapsedTime
+	metricNewrelicoracledbSlowQueriesTotalRowsExamined                       metricNewrelicoracledbSlowQueriesTotalRowsExamined
+	metricNewrelicoracledbSlowQueriesTotalRowsReturned                       metricNewrelicoracledbSlowQueriesTotalRowsReturned
+	metricNewrelicoracledbSlowQueriesTotalWaitTime                           metricNewrelicoracledbSlowQueriesTotalWaitTime
 	metricNewrelicoracledbSortsDisk                                          metricNewrelicoracledbSortsDisk
 	metricNewrelicoracledbSortsMemory                                        metricNewrelicoracledbSortsMemory
 	metricNewrelicoracledbSystemActiveParallelSessions                       metricNewrelicoracledbSystemActiveParallelSessions
@@ -19059,21 +19183,23 @@ func NewMetricsBuilder(mbc MetricsBuilderConfig, settings receiver.Settings, opt
 		metricNewrelicoracledbSgaSharedPoolDictCacheMissRatio:                    newMetricNewrelicoracledbSgaSharedPoolDictCacheMissRatio(mbc.Metrics.NewrelicoracledbSgaSharedPoolDictCacheMissRatio),
 		metricNewrelicoracledbSgaSharedPoolLibraryCacheHitRatio:                  newMetricNewrelicoracledbSgaSharedPoolLibraryCacheHitRatio(mbc.Metrics.NewrelicoracledbSgaSharedPoolLibraryCacheHitRatio),
 		metricNewrelicoracledbSgaSharedPoolLibraryCacheReloadRatio:               newMetricNewrelicoracledbSgaSharedPoolLibraryCacheReloadRatio(mbc.Metrics.NewrelicoracledbSgaSharedPoolLibraryCacheReloadRatio),
-		metricNewrelicoracledbSlowQueriesAvgCPUTime:                              newMetricNewrelicoracledbSlowQueriesAvgCPUTime(mbc.Metrics.NewrelicoracledbSlowQueriesAvgCPUTime),
-		metricNewrelicoracledbSlowQueriesAvgDiskReads:                            newMetricNewrelicoracledbSlowQueriesAvgDiskReads(mbc.Metrics.NewrelicoracledbSlowQueriesAvgDiskReads),
-		metricNewrelicoracledbSlowQueriesAvgDiskWrites:                           newMetricNewrelicoracledbSlowQueriesAvgDiskWrites(mbc.Metrics.NewrelicoracledbSlowQueriesAvgDiskWrites),
-		metricNewrelicoracledbSlowQueriesAvgElapsedTime:                          newMetricNewrelicoracledbSlowQueriesAvgElapsedTime(mbc.Metrics.NewrelicoracledbSlowQueriesAvgElapsedTime),
-		metricNewrelicoracledbSlowQueriesAvgLockTime:                             newMetricNewrelicoracledbSlowQueriesAvgLockTime(mbc.Metrics.NewrelicoracledbSlowQueriesAvgLockTime),
-		metricNewrelicoracledbSlowQueriesAvgRowsExamined:                         newMetricNewrelicoracledbSlowQueriesAvgRowsExamined(mbc.Metrics.NewrelicoracledbSlowQueriesAvgRowsExamined),
-		metricNewrelicoracledbSlowQueriesAvgRowsReturned:                         newMetricNewrelicoracledbSlowQueriesAvgRowsReturned(mbc.Metrics.NewrelicoracledbSlowQueriesAvgRowsReturned),
 		metricNewrelicoracledbSlowQueriesExecutionCount:                          newMetricNewrelicoracledbSlowQueriesExecutionCount(mbc.Metrics.NewrelicoracledbSlowQueriesExecutionCount),
 		metricNewrelicoracledbSlowQueriesIntervalAvgBufferGets:                   newMetricNewrelicoracledbSlowQueriesIntervalAvgBufferGets(mbc.Metrics.NewrelicoracledbSlowQueriesIntervalAvgBufferGets),
 		metricNewrelicoracledbSlowQueriesIntervalAvgCPUTime:                      newMetricNewrelicoracledbSlowQueriesIntervalAvgCPUTime(mbc.Metrics.NewrelicoracledbSlowQueriesIntervalAvgCPUTime),
 		metricNewrelicoracledbSlowQueriesIntervalAvgDiskReads:                    newMetricNewrelicoracledbSlowQueriesIntervalAvgDiskReads(mbc.Metrics.NewrelicoracledbSlowQueriesIntervalAvgDiskReads),
+		metricNewrelicoracledbSlowQueriesIntervalAvgDiskWrites:                   newMetricNewrelicoracledbSlowQueriesIntervalAvgDiskWrites(mbc.Metrics.NewrelicoracledbSlowQueriesIntervalAvgDiskWrites),
 		metricNewrelicoracledbSlowQueriesIntervalAvgElapsedTime:                  newMetricNewrelicoracledbSlowQueriesIntervalAvgElapsedTime(mbc.Metrics.NewrelicoracledbSlowQueriesIntervalAvgElapsedTime),
 		metricNewrelicoracledbSlowQueriesIntervalAvgRowsProcessed:                newMetricNewrelicoracledbSlowQueriesIntervalAvgRowsProcessed(mbc.Metrics.NewrelicoracledbSlowQueriesIntervalAvgRowsProcessed),
+		metricNewrelicoracledbSlowQueriesIntervalAvgWaitTime:                     newMetricNewrelicoracledbSlowQueriesIntervalAvgWaitTime(mbc.Metrics.NewrelicoracledbSlowQueriesIntervalAvgWaitTime),
 		metricNewrelicoracledbSlowQueriesIntervalExecutionCount:                  newMetricNewrelicoracledbSlowQueriesIntervalExecutionCount(mbc.Metrics.NewrelicoracledbSlowQueriesIntervalExecutionCount),
 		metricNewrelicoracledbSlowQueriesQueryDetails:                            newMetricNewrelicoracledbSlowQueriesQueryDetails(mbc.Metrics.NewrelicoracledbSlowQueriesQueryDetails),
+		metricNewrelicoracledbSlowQueriesTotalCPUTime:                            newMetricNewrelicoracledbSlowQueriesTotalCPUTime(mbc.Metrics.NewrelicoracledbSlowQueriesTotalCPUTime),
+		metricNewrelicoracledbSlowQueriesTotalDiskReads:                          newMetricNewrelicoracledbSlowQueriesTotalDiskReads(mbc.Metrics.NewrelicoracledbSlowQueriesTotalDiskReads),
+		metricNewrelicoracledbSlowQueriesTotalDiskWrites:                         newMetricNewrelicoracledbSlowQueriesTotalDiskWrites(mbc.Metrics.NewrelicoracledbSlowQueriesTotalDiskWrites),
+		metricNewrelicoracledbSlowQueriesTotalElapsedTime:                        newMetricNewrelicoracledbSlowQueriesTotalElapsedTime(mbc.Metrics.NewrelicoracledbSlowQueriesTotalElapsedTime),
+		metricNewrelicoracledbSlowQueriesTotalRowsExamined:                       newMetricNewrelicoracledbSlowQueriesTotalRowsExamined(mbc.Metrics.NewrelicoracledbSlowQueriesTotalRowsExamined),
+		metricNewrelicoracledbSlowQueriesTotalRowsReturned:                       newMetricNewrelicoracledbSlowQueriesTotalRowsReturned(mbc.Metrics.NewrelicoracledbSlowQueriesTotalRowsReturned),
+		metricNewrelicoracledbSlowQueriesTotalWaitTime:                           newMetricNewrelicoracledbSlowQueriesTotalWaitTime(mbc.Metrics.NewrelicoracledbSlowQueriesTotalWaitTime),
 		metricNewrelicoracledbSortsDisk:                                          newMetricNewrelicoracledbSortsDisk(mbc.Metrics.NewrelicoracledbSortsDisk),
 		metricNewrelicoracledbSortsMemory:                                        newMetricNewrelicoracledbSortsMemory(mbc.Metrics.NewrelicoracledbSortsMemory),
 		metricNewrelicoracledbSystemActiveParallelSessions:                       newMetricNewrelicoracledbSystemActiveParallelSessions(mbc.Metrics.NewrelicoracledbSystemActiveParallelSessions),
@@ -19480,21 +19606,23 @@ func (mb *MetricsBuilder) EmitForResource(options ...ResourceMetricsOption) {
 	mb.metricNewrelicoracledbSgaSharedPoolDictCacheMissRatio.emit(ils.Metrics())
 	mb.metricNewrelicoracledbSgaSharedPoolLibraryCacheHitRatio.emit(ils.Metrics())
 	mb.metricNewrelicoracledbSgaSharedPoolLibraryCacheReloadRatio.emit(ils.Metrics())
-	mb.metricNewrelicoracledbSlowQueriesAvgCPUTime.emit(ils.Metrics())
-	mb.metricNewrelicoracledbSlowQueriesAvgDiskReads.emit(ils.Metrics())
-	mb.metricNewrelicoracledbSlowQueriesAvgDiskWrites.emit(ils.Metrics())
-	mb.metricNewrelicoracledbSlowQueriesAvgElapsedTime.emit(ils.Metrics())
-	mb.metricNewrelicoracledbSlowQueriesAvgLockTime.emit(ils.Metrics())
-	mb.metricNewrelicoracledbSlowQueriesAvgRowsExamined.emit(ils.Metrics())
-	mb.metricNewrelicoracledbSlowQueriesAvgRowsReturned.emit(ils.Metrics())
 	mb.metricNewrelicoracledbSlowQueriesExecutionCount.emit(ils.Metrics())
 	mb.metricNewrelicoracledbSlowQueriesIntervalAvgBufferGets.emit(ils.Metrics())
 	mb.metricNewrelicoracledbSlowQueriesIntervalAvgCPUTime.emit(ils.Metrics())
 	mb.metricNewrelicoracledbSlowQueriesIntervalAvgDiskReads.emit(ils.Metrics())
+	mb.metricNewrelicoracledbSlowQueriesIntervalAvgDiskWrites.emit(ils.Metrics())
 	mb.metricNewrelicoracledbSlowQueriesIntervalAvgElapsedTime.emit(ils.Metrics())
 	mb.metricNewrelicoracledbSlowQueriesIntervalAvgRowsProcessed.emit(ils.Metrics())
+	mb.metricNewrelicoracledbSlowQueriesIntervalAvgWaitTime.emit(ils.Metrics())
 	mb.metricNewrelicoracledbSlowQueriesIntervalExecutionCount.emit(ils.Metrics())
 	mb.metricNewrelicoracledbSlowQueriesQueryDetails.emit(ils.Metrics())
+	mb.metricNewrelicoracledbSlowQueriesTotalCPUTime.emit(ils.Metrics())
+	mb.metricNewrelicoracledbSlowQueriesTotalDiskReads.emit(ils.Metrics())
+	mb.metricNewrelicoracledbSlowQueriesTotalDiskWrites.emit(ils.Metrics())
+	mb.metricNewrelicoracledbSlowQueriesTotalElapsedTime.emit(ils.Metrics())
+	mb.metricNewrelicoracledbSlowQueriesTotalRowsExamined.emit(ils.Metrics())
+	mb.metricNewrelicoracledbSlowQueriesTotalRowsReturned.emit(ils.Metrics())
+	mb.metricNewrelicoracledbSlowQueriesTotalWaitTime.emit(ils.Metrics())
 	mb.metricNewrelicoracledbSortsDisk.emit(ils.Metrics())
 	mb.metricNewrelicoracledbSortsMemory.emit(ils.Metrics())
 	mb.metricNewrelicoracledbSystemActiveParallelSessions.emit(ils.Metrics())
@@ -20482,41 +20610,6 @@ func (mb *MetricsBuilder) RecordNewrelicoracledbSgaSharedPoolLibraryCacheReloadR
 	mb.metricNewrelicoracledbSgaSharedPoolLibraryCacheReloadRatio.recordDataPoint(mb.startTime, ts, val, instanceIDAttributeValue)
 }
 
-// RecordNewrelicoracledbSlowQueriesAvgCPUTimeDataPoint adds a data point to newrelicoracledb.slow_queries.avg_cpu_time metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSlowQueriesAvgCPUTimeDataPoint(ts pcommon.Timestamp, val float64, collectionTimestampAttributeValue string, databaseNameAttributeValue string, queryIDAttributeValue string, userNameAttributeValue string, normalisedSQLHashAttributeValue string, clientNameAttributeValue string, transactionNameAttributeValue string) {
-	mb.metricNewrelicoracledbSlowQueriesAvgCPUTime.recordDataPoint(mb.startTime, ts, val, collectionTimestampAttributeValue, databaseNameAttributeValue, queryIDAttributeValue, userNameAttributeValue, normalisedSQLHashAttributeValue, clientNameAttributeValue, transactionNameAttributeValue)
-}
-
-// RecordNewrelicoracledbSlowQueriesAvgDiskReadsDataPoint adds a data point to newrelicoracledb.slow_queries.avg_disk_reads metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSlowQueriesAvgDiskReadsDataPoint(ts pcommon.Timestamp, val float64, collectionTimestampAttributeValue string, databaseNameAttributeValue string, queryIDAttributeValue string, userNameAttributeValue string, normalisedSQLHashAttributeValue string, clientNameAttributeValue string, transactionNameAttributeValue string) {
-	mb.metricNewrelicoracledbSlowQueriesAvgDiskReads.recordDataPoint(mb.startTime, ts, val, collectionTimestampAttributeValue, databaseNameAttributeValue, queryIDAttributeValue, userNameAttributeValue, normalisedSQLHashAttributeValue, clientNameAttributeValue, transactionNameAttributeValue)
-}
-
-// RecordNewrelicoracledbSlowQueriesAvgDiskWritesDataPoint adds a data point to newrelicoracledb.slow_queries.avg_disk_writes metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSlowQueriesAvgDiskWritesDataPoint(ts pcommon.Timestamp, val float64, collectionTimestampAttributeValue string, databaseNameAttributeValue string, queryIDAttributeValue string, userNameAttributeValue string, normalisedSQLHashAttributeValue string, clientNameAttributeValue string, transactionNameAttributeValue string) {
-	mb.metricNewrelicoracledbSlowQueriesAvgDiskWrites.recordDataPoint(mb.startTime, ts, val, collectionTimestampAttributeValue, databaseNameAttributeValue, queryIDAttributeValue, userNameAttributeValue, normalisedSQLHashAttributeValue, clientNameAttributeValue, transactionNameAttributeValue)
-}
-
-// RecordNewrelicoracledbSlowQueriesAvgElapsedTimeDataPoint adds a data point to newrelicoracledb.slow_queries.avg_elapsed_time metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSlowQueriesAvgElapsedTimeDataPoint(ts pcommon.Timestamp, val float64, collectionTimestampAttributeValue string, databaseNameAttributeValue string, queryIDAttributeValue string, userNameAttributeValue string, normalisedSQLHashAttributeValue string, clientNameAttributeValue string, transactionNameAttributeValue string) {
-	mb.metricNewrelicoracledbSlowQueriesAvgElapsedTime.recordDataPoint(mb.startTime, ts, val, collectionTimestampAttributeValue, databaseNameAttributeValue, queryIDAttributeValue, userNameAttributeValue, normalisedSQLHashAttributeValue, clientNameAttributeValue, transactionNameAttributeValue)
-}
-
-// RecordNewrelicoracledbSlowQueriesAvgLockTimeDataPoint adds a data point to newrelicoracledb.slow_queries.avg_lock_time metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSlowQueriesAvgLockTimeDataPoint(ts pcommon.Timestamp, val float64, collectionTimestampAttributeValue string, databaseNameAttributeValue string, queryIDAttributeValue string, userNameAttributeValue string, normalisedSQLHashAttributeValue string, clientNameAttributeValue string, transactionNameAttributeValue string) {
-	mb.metricNewrelicoracledbSlowQueriesAvgLockTime.recordDataPoint(mb.startTime, ts, val, collectionTimestampAttributeValue, databaseNameAttributeValue, queryIDAttributeValue, userNameAttributeValue, normalisedSQLHashAttributeValue, clientNameAttributeValue, transactionNameAttributeValue)
-}
-
-// RecordNewrelicoracledbSlowQueriesAvgRowsExaminedDataPoint adds a data point to newrelicoracledb.slow_queries.avg_rows_examined metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSlowQueriesAvgRowsExaminedDataPoint(ts pcommon.Timestamp, val float64, collectionTimestampAttributeValue string, databaseNameAttributeValue string, queryIDAttributeValue string, userNameAttributeValue string, normalisedSQLHashAttributeValue string, clientNameAttributeValue string, transactionNameAttributeValue string) {
-	mb.metricNewrelicoracledbSlowQueriesAvgRowsExamined.recordDataPoint(mb.startTime, ts, val, collectionTimestampAttributeValue, databaseNameAttributeValue, queryIDAttributeValue, userNameAttributeValue, normalisedSQLHashAttributeValue, clientNameAttributeValue, transactionNameAttributeValue)
-}
-
-// RecordNewrelicoracledbSlowQueriesAvgRowsReturnedDataPoint adds a data point to newrelicoracledb.slow_queries.avg_rows_returned metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSlowQueriesAvgRowsReturnedDataPoint(ts pcommon.Timestamp, val float64, collectionTimestampAttributeValue string, databaseNameAttributeValue string, queryIDAttributeValue string, userNameAttributeValue string, normalisedSQLHashAttributeValue string, clientNameAttributeValue string, transactionNameAttributeValue string) {
-	mb.metricNewrelicoracledbSlowQueriesAvgRowsReturned.recordDataPoint(mb.startTime, ts, val, collectionTimestampAttributeValue, databaseNameAttributeValue, queryIDAttributeValue, userNameAttributeValue, normalisedSQLHashAttributeValue, clientNameAttributeValue, transactionNameAttributeValue)
-}
-
 // RecordNewrelicoracledbSlowQueriesExecutionCountDataPoint adds a data point to newrelicoracledb.slow_queries.execution_count metric.
 func (mb *MetricsBuilder) RecordNewrelicoracledbSlowQueriesExecutionCountDataPoint(ts pcommon.Timestamp, val float64, collectionTimestampAttributeValue string, databaseNameAttributeValue string, queryIDAttributeValue string, userNameAttributeValue string, normalisedSQLHashAttributeValue string, clientNameAttributeValue string, transactionNameAttributeValue string) {
 	mb.metricNewrelicoracledbSlowQueriesExecutionCount.recordDataPoint(mb.startTime, ts, val, collectionTimestampAttributeValue, databaseNameAttributeValue, queryIDAttributeValue, userNameAttributeValue, normalisedSQLHashAttributeValue, clientNameAttributeValue, transactionNameAttributeValue)
@@ -20537,6 +20630,11 @@ func (mb *MetricsBuilder) RecordNewrelicoracledbSlowQueriesIntervalAvgDiskReadsD
 	mb.metricNewrelicoracledbSlowQueriesIntervalAvgDiskReads.recordDataPoint(mb.startTime, ts, val, collectionTimestampAttributeValue, databaseNameAttributeValue, queryIDAttributeValue, userNameAttributeValue, normalisedSQLHashAttributeValue, clientNameAttributeValue, transactionNameAttributeValue)
 }
 
+// RecordNewrelicoracledbSlowQueriesIntervalAvgDiskWritesDataPoint adds a data point to newrelicoracledb.slow_queries.interval_avg_disk_writes metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbSlowQueriesIntervalAvgDiskWritesDataPoint(ts pcommon.Timestamp, val float64, collectionTimestampAttributeValue string, databaseNameAttributeValue string, queryIDAttributeValue string, userNameAttributeValue string, normalisedSQLHashAttributeValue string, clientNameAttributeValue string, transactionNameAttributeValue string) {
+	mb.metricNewrelicoracledbSlowQueriesIntervalAvgDiskWrites.recordDataPoint(mb.startTime, ts, val, collectionTimestampAttributeValue, databaseNameAttributeValue, queryIDAttributeValue, userNameAttributeValue, normalisedSQLHashAttributeValue, clientNameAttributeValue, transactionNameAttributeValue)
+}
+
 // RecordNewrelicoracledbSlowQueriesIntervalAvgElapsedTimeDataPoint adds a data point to newrelicoracledb.slow_queries.interval_avg_elapsed_time metric.
 func (mb *MetricsBuilder) RecordNewrelicoracledbSlowQueriesIntervalAvgElapsedTimeDataPoint(ts pcommon.Timestamp, val float64, collectionTimestampAttributeValue string, databaseNameAttributeValue string, queryIDAttributeValue string, userNameAttributeValue string, normalisedSQLHashAttributeValue string, clientNameAttributeValue string, transactionNameAttributeValue string) {
 	mb.metricNewrelicoracledbSlowQueriesIntervalAvgElapsedTime.recordDataPoint(mb.startTime, ts, val, collectionTimestampAttributeValue, databaseNameAttributeValue, queryIDAttributeValue, userNameAttributeValue, normalisedSQLHashAttributeValue, clientNameAttributeValue, transactionNameAttributeValue)
@@ -20547,6 +20645,11 @@ func (mb *MetricsBuilder) RecordNewrelicoracledbSlowQueriesIntervalAvgRowsProces
 	mb.metricNewrelicoracledbSlowQueriesIntervalAvgRowsProcessed.recordDataPoint(mb.startTime, ts, val, collectionTimestampAttributeValue, databaseNameAttributeValue, queryIDAttributeValue, userNameAttributeValue, normalisedSQLHashAttributeValue, clientNameAttributeValue, transactionNameAttributeValue)
 }
 
+// RecordNewrelicoracledbSlowQueriesIntervalAvgWaitTimeDataPoint adds a data point to newrelicoracledb.slow_queries.interval_avg_wait_time metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbSlowQueriesIntervalAvgWaitTimeDataPoint(ts pcommon.Timestamp, val float64, collectionTimestampAttributeValue string, databaseNameAttributeValue string, queryIDAttributeValue string, userNameAttributeValue string, normalisedSQLHashAttributeValue string, clientNameAttributeValue string, transactionNameAttributeValue string) {
+	mb.metricNewrelicoracledbSlowQueriesIntervalAvgWaitTime.recordDataPoint(mb.startTime, ts, val, collectionTimestampAttributeValue, databaseNameAttributeValue, queryIDAttributeValue, userNameAttributeValue, normalisedSQLHashAttributeValue, clientNameAttributeValue, transactionNameAttributeValue)
+}
+
 // RecordNewrelicoracledbSlowQueriesIntervalExecutionCountDataPoint adds a data point to newrelicoracledb.slow_queries.interval_execution_count metric.
 func (mb *MetricsBuilder) RecordNewrelicoracledbSlowQueriesIntervalExecutionCountDataPoint(ts pcommon.Timestamp, val float64, collectionTimestampAttributeValue string, databaseNameAttributeValue string, queryIDAttributeValue string, userNameAttributeValue string, normalisedSQLHashAttributeValue string, clientNameAttributeValue string, transactionNameAttributeValue string) {
 	mb.metricNewrelicoracledbSlowQueriesIntervalExecutionCount.recordDataPoint(mb.startTime, ts, val, collectionTimestampAttributeValue, databaseNameAttributeValue, queryIDAttributeValue, userNameAttributeValue, normalisedSQLHashAttributeValue, clientNameAttributeValue, transactionNameAttributeValue)
@@ -20555,6 +20658,41 @@ func (mb *MetricsBuilder) RecordNewrelicoracledbSlowQueriesIntervalExecutionCoun
 // RecordNewrelicoracledbSlowQueriesQueryDetailsDataPoint adds a data point to newrelicoracledb.slow_queries.query_details metric.
 func (mb *MetricsBuilder) RecordNewrelicoracledbSlowQueriesQueryDetailsDataPoint(ts pcommon.Timestamp, val int64, newrelicEventTypeAttributeValue string, collectionTimestampAttributeValue string, databaseNameAttributeValue string, queryIDAttributeValue string, queryTextAttributeValue string, schemaNameAttributeValue string, userNameAttributeValue string, lastActiveTimeAttributeValue string, normalisedSQLHashAttributeValue string, clientNameAttributeValue string, transactionNameAttributeValue string) {
 	mb.metricNewrelicoracledbSlowQueriesQueryDetails.recordDataPoint(mb.startTime, ts, val, newrelicEventTypeAttributeValue, collectionTimestampAttributeValue, databaseNameAttributeValue, queryIDAttributeValue, queryTextAttributeValue, schemaNameAttributeValue, userNameAttributeValue, lastActiveTimeAttributeValue, normalisedSQLHashAttributeValue, clientNameAttributeValue, transactionNameAttributeValue)
+}
+
+// RecordNewrelicoracledbSlowQueriesTotalCPUTimeDataPoint adds a data point to newrelicoracledb.slow_queries.total_cpu_time metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbSlowQueriesTotalCPUTimeDataPoint(ts pcommon.Timestamp, val float64, collectionTimestampAttributeValue string, databaseNameAttributeValue string, queryIDAttributeValue string, userNameAttributeValue string, normalisedSQLHashAttributeValue string, clientNameAttributeValue string, transactionNameAttributeValue string) {
+	mb.metricNewrelicoracledbSlowQueriesTotalCPUTime.recordDataPoint(mb.startTime, ts, val, collectionTimestampAttributeValue, databaseNameAttributeValue, queryIDAttributeValue, userNameAttributeValue, normalisedSQLHashAttributeValue, clientNameAttributeValue, transactionNameAttributeValue)
+}
+
+// RecordNewrelicoracledbSlowQueriesTotalDiskReadsDataPoint adds a data point to newrelicoracledb.slow_queries.total_disk_reads metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbSlowQueriesTotalDiskReadsDataPoint(ts pcommon.Timestamp, val float64, collectionTimestampAttributeValue string, databaseNameAttributeValue string, queryIDAttributeValue string, userNameAttributeValue string, normalisedSQLHashAttributeValue string, clientNameAttributeValue string, transactionNameAttributeValue string) {
+	mb.metricNewrelicoracledbSlowQueriesTotalDiskReads.recordDataPoint(mb.startTime, ts, val, collectionTimestampAttributeValue, databaseNameAttributeValue, queryIDAttributeValue, userNameAttributeValue, normalisedSQLHashAttributeValue, clientNameAttributeValue, transactionNameAttributeValue)
+}
+
+// RecordNewrelicoracledbSlowQueriesTotalDiskWritesDataPoint adds a data point to newrelicoracledb.slow_queries.total_disk_writes metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbSlowQueriesTotalDiskWritesDataPoint(ts pcommon.Timestamp, val float64, collectionTimestampAttributeValue string, databaseNameAttributeValue string, queryIDAttributeValue string, userNameAttributeValue string, normalisedSQLHashAttributeValue string, clientNameAttributeValue string, transactionNameAttributeValue string) {
+	mb.metricNewrelicoracledbSlowQueriesTotalDiskWrites.recordDataPoint(mb.startTime, ts, val, collectionTimestampAttributeValue, databaseNameAttributeValue, queryIDAttributeValue, userNameAttributeValue, normalisedSQLHashAttributeValue, clientNameAttributeValue, transactionNameAttributeValue)
+}
+
+// RecordNewrelicoracledbSlowQueriesTotalElapsedTimeDataPoint adds a data point to newrelicoracledb.slow_queries.total_elapsed_time metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbSlowQueriesTotalElapsedTimeDataPoint(ts pcommon.Timestamp, val float64, collectionTimestampAttributeValue string, databaseNameAttributeValue string, queryIDAttributeValue string, userNameAttributeValue string, normalisedSQLHashAttributeValue string, clientNameAttributeValue string, transactionNameAttributeValue string) {
+	mb.metricNewrelicoracledbSlowQueriesTotalElapsedTime.recordDataPoint(mb.startTime, ts, val, collectionTimestampAttributeValue, databaseNameAttributeValue, queryIDAttributeValue, userNameAttributeValue, normalisedSQLHashAttributeValue, clientNameAttributeValue, transactionNameAttributeValue)
+}
+
+// RecordNewrelicoracledbSlowQueriesTotalRowsExaminedDataPoint adds a data point to newrelicoracledb.slow_queries.total_rows_examined metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbSlowQueriesTotalRowsExaminedDataPoint(ts pcommon.Timestamp, val float64, collectionTimestampAttributeValue string, databaseNameAttributeValue string, queryIDAttributeValue string, userNameAttributeValue string, normalisedSQLHashAttributeValue string, clientNameAttributeValue string, transactionNameAttributeValue string) {
+	mb.metricNewrelicoracledbSlowQueriesTotalRowsExamined.recordDataPoint(mb.startTime, ts, val, collectionTimestampAttributeValue, databaseNameAttributeValue, queryIDAttributeValue, userNameAttributeValue, normalisedSQLHashAttributeValue, clientNameAttributeValue, transactionNameAttributeValue)
+}
+
+// RecordNewrelicoracledbSlowQueriesTotalRowsReturnedDataPoint adds a data point to newrelicoracledb.slow_queries.total_rows_returned metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbSlowQueriesTotalRowsReturnedDataPoint(ts pcommon.Timestamp, val float64, collectionTimestampAttributeValue string, databaseNameAttributeValue string, queryIDAttributeValue string, userNameAttributeValue string, normalisedSQLHashAttributeValue string, clientNameAttributeValue string, transactionNameAttributeValue string) {
+	mb.metricNewrelicoracledbSlowQueriesTotalRowsReturned.recordDataPoint(mb.startTime, ts, val, collectionTimestampAttributeValue, databaseNameAttributeValue, queryIDAttributeValue, userNameAttributeValue, normalisedSQLHashAttributeValue, clientNameAttributeValue, transactionNameAttributeValue)
+}
+
+// RecordNewrelicoracledbSlowQueriesTotalWaitTimeDataPoint adds a data point to newrelicoracledb.slow_queries.total_wait_time metric.
+func (mb *MetricsBuilder) RecordNewrelicoracledbSlowQueriesTotalWaitTimeDataPoint(ts pcommon.Timestamp, val float64, collectionTimestampAttributeValue string, databaseNameAttributeValue string, queryIDAttributeValue string, userNameAttributeValue string, normalisedSQLHashAttributeValue string, clientNameAttributeValue string, transactionNameAttributeValue string) {
+	mb.metricNewrelicoracledbSlowQueriesTotalWaitTime.recordDataPoint(mb.startTime, ts, val, collectionTimestampAttributeValue, databaseNameAttributeValue, queryIDAttributeValue, userNameAttributeValue, normalisedSQLHashAttributeValue, clientNameAttributeValue, transactionNameAttributeValue)
 }
 
 // RecordNewrelicoracledbSortsDiskDataPoint adds a data point to newrelicoracledb.sorts_disk metric.

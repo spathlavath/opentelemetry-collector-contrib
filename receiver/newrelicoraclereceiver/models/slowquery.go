@@ -10,23 +10,23 @@ type SlowQuery struct {
 	SchemaName          sql.NullString
 	UserName            sql.NullString // NEW: The user who parsed the statement
 	ExecutionCount      sql.NullInt64
-	QueryText           sql.NullString // Full query text from sql_fulltext (used for metadata extraction, normalization, and hash generation)
-	AvgDiskWrites       sql.NullFloat64 // Average disk writes per execution (kept - no total available)
-	AvgElapsedTimeMs    sql.NullFloat64 // Average elapsed time per execution (kept - used for ORDER BY and threshold filtering)
-	AvgLockTimeMs       sql.NullFloat64 // Average lock time per execution (kept - no total available for concurrency_wait_time)
+	QueryText           sql.NullString  // Full query text from sql_fulltext (used for metadata extraction, normalization, and hash generation)
 	LastActiveTime      sql.NullString
-	HasFullTableScan    sql.NullString
 	TotalElapsedTimeMS  sql.NullFloat64 // Total elapsed time - used for precise delta calculation
-	TotalCPUTimeMS      sql.NullFloat64 // Total CPU time - used for delta calculation and computing historical avg
-	TotalDiskReads      sql.NullInt64   // Total disk reads - used for delta calculation and computing historical avg
-	TotalBufferGets     sql.NullInt64   // Total buffer gets (rows examined) - used for delta calculation and computing historical avg
-	TotalRowsProcessed  sql.NullInt64   // Total rows processed (rows returned) - used for delta calculation and computing historical avg
+	TotalCPUTimeMS      sql.NullFloat64 // Total CPU time - used for delta calculation
+	TotalDiskReads      sql.NullInt64   // Total disk reads - used for delta calculation
+	TotalBufferGets     sql.NullInt64   // Total buffer gets (rows examined) - used for delta calculation
+	TotalRowsProcessed  sql.NullInt64   // Total rows processed (rows returned) - used for delta calculation
+	TotalDiskWrites     sql.NullInt64   // Total disk writes - used for delta calculation
+	TotalWaitTimeMS     sql.NullFloat64 // Total wait time (user I/O wait) - used for delta calculation
 
 	// Interval-based delta metrics (calculated in-memory, not from DB)
 	// These are populated by the OracleIntervalCalculator
 	IntervalAvgElapsedTimeMS *float64 // Average elapsed time in the last interval (milliseconds)
 	IntervalAvgCPUTimeMS     *float64 // Average CPU time in the last interval (milliseconds)
+	IntervalAvgWaitTimeMS    *float64 // Average wait time in the last interval (milliseconds)
 	IntervalAvgDiskReads     *float64 // Average disk reads in the last interval
+	IntervalAvgDiskWrites    *float64 // Average direct writes in the last interval (bypass buffer cache)
 	IntervalAvgBufferGets    *float64 // Average buffer gets in the last interval
 	IntervalAvgRowsProcessed *float64 // Average rows processed in the last interval
 	IntervalExecutionCount   *int64   // Number of executions in the last interval
@@ -88,13 +88,6 @@ func (sq *SlowQuery) GetLastActiveTime() string {
 	return ""
 }
 
-// GetHasFullTableScan returns the full table scan flag as a string, empty if null
-func (sq *SlowQuery) GetHasFullTableScan() string {
-	if sq.HasFullTableScan.Valid {
-		return sq.HasFullTableScan.String
-	}
-	return ""
-}
 
 // HasValidQueryID checks if the query has a valid query ID
 func (sq *SlowQuery) HasValidQueryID() bool {
@@ -103,7 +96,7 @@ func (sq *SlowQuery) HasValidQueryID() bool {
 
 // HasValidElapsedTime checks if the query has a valid elapsed time
 func (sq *SlowQuery) HasValidElapsedTime() bool {
-	return sq.AvgElapsedTimeMs.Valid
+	return sq.TotalElapsedTimeMS.Valid
 }
 
 // IsValidForMetrics checks if the slow query has the minimum required fields for metrics

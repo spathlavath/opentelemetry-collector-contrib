@@ -3268,8 +3268,8 @@ metrics:
       - client_name
       - transaction_name
 
-  newrelicoracledb.slow_queries.avg_cpu_time:
-    description: Average CPU time per execution for slow queries
+  newrelicoracledb.slow_queries.total_cpu_time:
+    description: Total cumulative CPU time for slow queries (raw value from V$SQLAREA)
     enabled: true
     gauge:
       value_type: double
@@ -3283,8 +3283,8 @@ metrics:
       - client_name
       - transaction_name
 
-  newrelicoracledb.slow_queries.avg_disk_reads:
-    description: Average disk reads per execution for slow queries
+  newrelicoracledb.slow_queries.total_disk_reads:
+    description: Total cumulative disk reads for slow queries (raw value from V$SQLAREA)
     enabled: true
     gauge:
       value_type: double
@@ -3298,8 +3298,8 @@ metrics:
       - client_name
       - transaction_name
 
-  newrelicoracledb.slow_queries.avg_disk_writes:
-    description: Average disk writes per execution for slow queries
+  newrelicoracledb.slow_queries.total_disk_writes:
+    description: Total cumulative direct writes for slow queries - writes bypassing buffer cache (raw value from V$SQLAREA DIRECT_WRITES)
     enabled: true
     gauge:
       value_type: double
@@ -3313,8 +3313,8 @@ metrics:
       - client_name
       - transaction_name
 
-  newrelicoracledb.slow_queries.avg_elapsed_time:
-    description: Average elapsed time per execution for slow queries
+  newrelicoracledb.slow_queries.total_elapsed_time:
+    description: Total cumulative elapsed time for slow queries (raw value from V$SQLAREA)
     enabled: true
     gauge:
       value_type: double
@@ -3328,8 +3328,8 @@ metrics:
       - client_name
       - transaction_name
 
-  newrelicoracledb.slow_queries.avg_rows_examined:
-    description: Average rows examined per execution for slow queries (buffer gets/logical reads)
+  newrelicoracledb.slow_queries.total_rows_examined:
+    description: Total cumulative rows examined for slow queries (buffer gets/logical reads, raw value from V$SQLAREA)
     enabled: true
     gauge:
       value_type: double
@@ -3343,8 +3343,8 @@ metrics:
       - client_name
       - transaction_name
 
-  newrelicoracledb.slow_queries.avg_rows_returned:
-    description: Average rows returned per execution for slow queries (rows processed)
+  newrelicoracledb.slow_queries.total_rows_returned:
+    description: Total cumulative rows returned for slow queries (rows processed, raw value from V$SQLAREA)
     enabled: true
     gauge:
       value_type: double
@@ -3358,8 +3358,8 @@ metrics:
       - client_name
       - transaction_name
 
-  newrelicoracledb.slow_queries.avg_lock_time:
-    description: Average lock/concurrency wait time per execution for slow queries
+  newrelicoracledb.slow_queries.total_wait_time:
+    description: Total cumulative wait time for slow queries (elapsed_time - cpu_time, raw value from V$SQLAREA)
     enabled: true
     gauge:
       value_type: double
@@ -3439,12 +3439,42 @@ metrics:
       - client_name
       - transaction_name
 
+  newrelicoracledb.slow_queries.interval_avg_wait_time:
+    description: Average wait time per execution in the last polling interval (delta metric)
+    enabled: true
+    gauge:
+      value_type: double
+    unit: ms
+    attributes:
+      - collection_timestamp
+      - database_name
+      - query_id
+      - user_name
+      - normalised_sql_hash
+      - client_name
+      - transaction_name
+
   newrelicoracledb.slow_queries.interval_avg_disk_reads:
     description: Average disk reads per execution in the last polling interval (delta metric)
     enabled: true
     gauge:
       value_type: double
     unit: "{reads}"
+    attributes:
+      - collection_timestamp
+      - database_name
+      - query_id
+      - user_name
+      - normalised_sql_hash
+      - client_name
+      - transaction_name
+
+  newrelicoracledb.slow_queries.interval_avg_disk_writes:
+    description: Average direct writes per execution in the last polling interval - writes bypassing buffer cache (delta metric)
+    enabled: true
+    gauge:
+      value_type: double
+    unit: "{writes}"
     attributes:
       - collection_timestamp
       - database_name
