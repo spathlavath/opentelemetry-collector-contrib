@@ -127,8 +127,76 @@ func (s *newRelicPostgreSQLScraper) initializeDatabase() error {
 		return fmt.Errorf("failed to open db connection: %w", err)
 	}
 	s.db = db
-	s.client = client.NewSQLClient(db)
+	sqlClient := client.NewSQLClient(db)
+	s.client = sqlClient
+
+	// If connected to a regular database (not pgbouncer admin DB),
+	// create a separate connection to pgbouncer admin DB for SHOW STATS commands
+	if s.config.Database != "pgbouncer" {
+		pgBouncerDB, err := s.createPgBouncerConnection()
+		if err != nil {
+			// Log the error but don't fail - PgBouncer may not be available
+			s.logger.Debug("Failed to create PgBouncer admin connection, PgBouncer metrics will not be available",
+				zap.Error(err))
+		} else {
+			sqlClient.SetPgBouncerDB(pgBouncerDB)
+			s.logger.Info("PgBouncer admin connection established for metrics collection")
+		}
+	}
+
 	return nil
+}
+
+// createPgBouncerConnection creates a connection to the PgBouncer admin database
+func (s *newRelicPostgreSQLScraper) createPgBouncerConnection() (*sql.DB, error) {
+	// Build connection string for pgbouncer admin database
+	connStr := fmt.Sprintf("host=%s port=%s user=%s dbname=pgbouncer sslmode=%s",
+		s.config.Hostname,
+		s.config.Port,
+		s.config.Username,
+		s.config.SSLMode,
+	)
+
+	if s.config.Password != "" {
+		connStr += fmt.Sprintf(" password=%s", s.config.Password)
+	}
+
+	if s.config.SSLCert != "" {
+		connStr += fmt.Sprintf(" sslcert=%s", s.config.SSLCert)
+	}
+
+	if s.config.SSLKey != "" {
+		connStr += fmt.Sprintf(" sslkey=%s", s.config.SSLKey)
+	}
+
+	if s.config.SSLRootCert != "" {
+		connStr += fmt.Sprintf(" sslrootcert=%s", s.config.SSLRootCert)
+	}
+
+	if s.config.Timeout > 0 {
+		connStr += fmt.Sprintf(" connect_timeout=%d", int(s.config.Timeout.Seconds()))
+	}
+
+	db, err := sql.Open("postgres", connStr)
+	if err != nil {
+		return nil, fmt.Errorf("failed to open PgBouncer admin connection: %w", err)
+	}
+
+	// Configure connection pool settings (smaller pool for admin commands)
+	db.SetMaxOpenConns(2)
+	db.SetMaxIdleConns(1)
+	db.SetConnMaxLifetime(10 * time.Minute)
+	db.SetConnMaxIdleTime(30 * time.Second)
+
+	// Test the connection
+	ctx, cancel := context.WithTimeout(context.Background(), s.config.Timeout)
+	defer cancel()
+	if err := db.PingContext(ctx); err != nil {
+		db.Close()
+		return nil, fmt.Errorf("failed to ping PgBouncer admin database: %w", err)
+	}
+
+	return db, nil
 }
 
 // initializeScrapers initializes all metric scrapers

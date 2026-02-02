@@ -14,7 +14,8 @@ import (
 
 // SQLClient implements the PostgreSQLClient interface using database/sql
 type SQLClient struct {
-	db *sql.DB
+	db           *sql.DB
+	pgBouncerDB  *sql.DB // Optional separate connection for PgBouncer admin commands
 }
 
 // NewSQLClient creates a new SQLClient instance
@@ -22,12 +23,25 @@ func NewSQLClient(db *sql.DB) *SQLClient {
 	return &SQLClient{db: db}
 }
 
+// SetPgBouncerDB sets a separate database connection for PgBouncer admin commands
+func (c *SQLClient) SetPgBouncerDB(pgBouncerDB *sql.DB) {
+	c.pgBouncerDB = pgBouncerDB
+}
+
 // Close closes the database connection
 func (c *SQLClient) Close() error {
-	if c.db != nil {
-		return c.db.Close()
+	var err error
+	if c.pgBouncerDB != nil {
+		if closeErr := c.pgBouncerDB.Close(); closeErr != nil {
+			err = closeErr
+		}
 	}
-	return nil
+	if c.db != nil {
+		if closeErr := c.db.Close(); closeErr != nil {
+			err = closeErr
+		}
+	}
+	return err
 }
 
 // Ping verifies the database connection is alive
@@ -1221,8 +1235,15 @@ func (c *SQLClient) QueryVacuumProgress(ctx context.Context) ([]models.PgStatPro
 
 // QueryPgBouncerStats retrieves connection pool statistics from PgBouncer
 // Returns statistics from SHOW STATS command
+// Uses pgBouncerDB connection if available, otherwise uses main db connection
 func (c *SQLClient) QueryPgBouncerStats(ctx context.Context) ([]models.PgBouncerStatsMetric, error) {
-	rows, err := c.db.QueryContext(ctx, queries.PgBouncerStatsSQL)
+	// Use PgBouncer admin connection if available, otherwise use main connection
+	db := c.db
+	if c.pgBouncerDB != nil {
+		db = c.pgBouncerDB
+	}
+
+	rows, err := db.QueryContext(ctx, queries.PgBouncerStatsSQL)
 	if err != nil {
 		return nil, fmt.Errorf("failed to query PgBouncer stats: %w", err)
 	}
