@@ -27,6 +27,7 @@ func TestConfigExtraStatusMetrics(t *testing.T) {
 		require.True(t, cfg.ExtraStatusMetrics, "ExtraStatusMetrics should be enabled")
 	})
 }
+
 func TestConfig_ExtraInnoDBMetrics(t *testing.T) {
 	tests := []struct {
 		name     string
