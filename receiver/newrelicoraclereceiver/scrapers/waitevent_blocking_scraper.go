@@ -262,4 +262,20 @@ func (s *WaitEventBlockingScraper) recordBlockingMetrics(now pcommon.Timestamp, 
 		finalBlockerQueryID,
 		finalBlockerQueryText,
 	)
+
+	// Record the final blocker query details if we have a valid query ID and text
+	if finalBlockerQueryID != "" && finalBlockerQueryText != "" {
+		s.mb.RecordNewrelicoracledbSlowQueriesQueryDetailsDataPoint(
+			now,
+			1,
+			"OracleQueryDetails",
+			collectionTimestamp,
+			dbName,
+			finalBlockerQueryID,
+			finalBlockerQueryText,
+			"", // schema_name not available in blocking event
+			finalBlockerUser,
+			sqlExecStart, // using blocked query's execution start as approximate last active time
+		)
+	}
 }
