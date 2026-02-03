@@ -43,7 +43,7 @@ type PgBouncerStatsMetric struct {
 // PgBouncerPoolsMetric represents per-pool connection statistics from PgBouncer SHOW POOLS command
 // This metric provides detailed connection pool status per database and user
 // Available in PgBouncer 1.8+
-// IMPORTANT: Field order must match the column order returned by SHOW POOLS
+// IMPORTANT: Field order must match the exact column order returned by SHOW POOLS
 type PgBouncerPoolsMetric struct {
 	// Database is the database name
 	Database string
@@ -54,19 +54,21 @@ type PgBouncerPoolsMetric struct {
 	// Client connection counters
 	ClActive            sql.NullInt64 // Active client connections
 	ClWaiting           sql.NullInt64 // Client connections waiting for a server connection
-	ClActiveCancelReq   sql.NullInt64 // Client connections with active cancel requests
-	ClWaitingCancelReq  sql.NullInt64 // Client connections waiting with cancel requests
+	ClActiveCancelReq   sql.NullInt64 // Client connections with active cancel requests (PgBouncer 1.18+)
+	ClWaitingCancelReq  sql.NullInt64 // Client connections waiting with cancel requests (PgBouncer 1.18+)
 
-	// Server connection counters
+	// Server connection counters (order is critical!)
 	SvActive        sql.NullInt64 // Server connections actively linked to a client
+	SvActiveCancel  sql.NullInt64 // Server connections currently being canceled (PgBouncer 1.18+)
+	SvBeingCancel   sql.NullInt64 // Server connections in the process of being canceled (PgBouncer 1.18+)
 	SvIdle          sql.NullInt64 // Server connections idle and ready
 	SvUsed          sql.NullInt64 // Server connections idle more than server_check_delay
 	SvTested        sql.NullInt64 // Server connections currently being tested
 	SvLogin         sql.NullInt64 // Server connections currently logging in
-	SvActiveCancel  sql.NullInt64 // Server connections currently being canceled
-	SvBeingCancel   sql.NullInt64 // Server connections in the process of being canceled
 
 	// Pool status
-	Maxwait  sql.NullInt64 // Maximum wait time for clients in microseconds
-	PoolMode string        // Pool mode: session, transaction, or statement
+	Maxwait    sql.NullInt64 // Maximum wait time for clients in seconds (integer)
+	MaxwaitUs  sql.NullInt64 // Maximum wait time for clients in microseconds (PgBouncer 1.21+)
+	PoolMode   string        // Pool mode: session, transaction, or statement
+	MinPoolSize sql.NullInt64 // Minimum pool size (might be in newer versions)
 }

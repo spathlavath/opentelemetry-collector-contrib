@@ -130,7 +130,13 @@ func (s *PgBouncerScraper) recordPgBouncerPoolsMetrics(now pcommon.Timestamp, me
 	s.mb.RecordPgbouncerPoolsServerConnectionsBeingCancelDataPoint(now, getInt64(metric.SvBeingCancel), s.instanceName, database, user, poolMode)
 
 	// Convert maxwait from microseconds to milliseconds
-	maxwaitUs := getInt64(metric.Maxwait)
+	// PgBouncer 1.21+ provides maxwait_us (microseconds), older versions have maxwait (seconds as integer)
+	// Prefer maxwait_us if available, otherwise convert maxwait seconds to microseconds
+	maxwaitUs := getInt64(metric.MaxwaitUs)
+	if maxwaitUs == 0 && metric.Maxwait.Valid {
+		// Fallback for older PgBouncer versions that only have maxwait in seconds
+		maxwaitUs = getInt64(metric.Maxwait) * 1000000
+	}
 	maxwaitMs := float64(maxwaitUs) / 1000.0
 	s.mb.RecordPgbouncerPoolsMaxwaitInMillisecondsDataPoint(now, maxwaitMs, s.instanceName, database, user, poolMode)
 }

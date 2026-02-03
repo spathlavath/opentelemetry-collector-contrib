@@ -1313,25 +1313,31 @@ func (c *SQLClient) QueryPgBouncerPools(ctx context.Context) ([]models.PgBouncer
 
 	for rows.Next() {
 		var metric models.PgBouncerPoolsMetric
+		// SHOW POOLS column order (PgBouncer 1.21+):
+		// database, user, cl_active, cl_waiting, cl_active_cancel_req, cl_waiting_cancel_req,
+		// sv_active, sv_active_cancel, sv_being_cancel, sv_idle, sv_used, sv_tested, sv_login,
+		// maxwait, maxwait_us, pool_mode, min_pool_size (17 columns in recent versions)
 		err := rows.Scan(
-			&metric.Database,
-			&metric.User,
-			// Client connection counters (must match SHOW POOLS column order)
-			&metric.ClActive,
-			&metric.ClWaiting,
-			&metric.ClActiveCancelReq,
-			&metric.ClWaitingCancelReq,
-			// Server connection counters (must match SHOW POOLS column order)
-			&metric.SvActive,
-			&metric.SvIdle,
-			&metric.SvUsed,
-			&metric.SvTested,
-			&metric.SvLogin,
-			&metric.SvActiveCancel,
-			&metric.SvBeingCancel,
+			&metric.Database,           // 1. database
+			&metric.User,               // 2. user
+			// Client connection counters
+			&metric.ClActive,           // 3. cl_active
+			&metric.ClWaiting,          // 4. cl_waiting
+			&metric.ClActiveCancelReq,  // 5. cl_active_cancel_req (PgBouncer 1.18+)
+			&metric.ClWaitingCancelReq, // 6. cl_waiting_cancel_req (PgBouncer 1.18+)
+			// Server connection counters (ORDER IS CRITICAL!)
+			&metric.SvActive,           // 7. sv_active
+			&metric.SvActiveCancel,     // 8. sv_active_cancel (PgBouncer 1.18+)
+			&metric.SvBeingCancel,      // 9. sv_being_cancel (PgBouncer 1.18+)
+			&metric.SvIdle,             // 10. sv_idle
+			&metric.SvUsed,             // 11. sv_used
+			&metric.SvTested,           // 12. sv_tested
+			&metric.SvLogin,            // 13. sv_login
 			// Pool status
-			&metric.Maxwait,
-			&metric.PoolMode,
+			&metric.Maxwait,            // 14. maxwait (integer seconds)
+			&metric.MaxwaitUs,          // 15. maxwait_us (microseconds, PgBouncer 1.21+)
+			&metric.PoolMode,           // 16. pool_mode
+			&metric.MinPoolSize,        // 17. min_pool_size (might be in newer versions)
 		)
 		if err != nil {
 			return nil, fmt.Errorf("failed to scan PgBouncer pools row: %w", err)
