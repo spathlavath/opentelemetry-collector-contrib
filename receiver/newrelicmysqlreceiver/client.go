@@ -9,8 +9,9 @@ import (
 	"fmt"
 
 	"github.com/go-sql-driver/mysql"
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicmysqlreceiver/common"
 	"go.uber.org/zap"
+
+	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicmysqlreceiver/common"
 )
 
 // mySQLClient is the concrete implementation of Client interface.

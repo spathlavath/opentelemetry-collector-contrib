@@ -34,25 +34,131 @@ type MetricsConfig struct {
 	NewrelicmysqlConnectionCount                        MetricConfig `mapstructure:"newrelicmysql.connection.count"`
 	NewrelicmysqlDbHandlerRollback                      MetricConfig `mapstructure:"newrelicmysql.db.handler_rollback"`
 	NewrelicmysqlDbOpenedTables                         MetricConfig `mapstructure:"newrelicmysql.db.opened_tables"`
+	NewrelicmysqlInnodbActiveTransactions               MetricConfig `mapstructure:"newrelicmysql.innodb.active_transactions"`
+	NewrelicmysqlInnodbAdaptiveHashHashSearches         MetricConfig `mapstructure:"newrelicmysql.innodb.adaptive_hash_hash_searches"`
+	NewrelicmysqlInnodbAdaptiveHashNonHashSearches      MetricConfig `mapstructure:"newrelicmysql.innodb.adaptive_hash_non_hash_searches"`
+	NewrelicmysqlInnodbAdaptiveHashPagesAdded           MetricConfig `mapstructure:"newrelicmysql.innodb.adaptive_hash_pages_added"`
+	NewrelicmysqlInnodbAdaptiveHashPagesRemoved         MetricConfig `mapstructure:"newrelicmysql.innodb.adaptive_hash_pages_removed"`
+	NewrelicmysqlInnodbAvailableUndoLogs                MetricConfig `mapstructure:"newrelicmysql.innodb.available_undo_logs"`
+	NewrelicmysqlInnodbBufferPoolBytesData              MetricConfig `mapstructure:"newrelicmysql.innodb.buffer_pool_bytes_data"`
+	NewrelicmysqlInnodbBufferPoolBytesDirty             MetricConfig `mapstructure:"newrelicmysql.innodb.buffer_pool_bytes_dirty"`
 	NewrelicmysqlInnodbBufferPoolDirty                  MetricConfig `mapstructure:"newrelicmysql.innodb.buffer_pool_dirty"`
 	NewrelicmysqlInnodbBufferPoolFree                   MetricConfig `mapstructure:"newrelicmysql.innodb.buffer_pool_free"`
+	NewrelicmysqlInnodbBufferPoolPagesData              MetricConfig `mapstructure:"newrelicmysql.innodb.buffer_pool_pages_data"`
+	NewrelicmysqlInnodbBufferPoolPagesFlushed           MetricConfig `mapstructure:"newrelicmysql.innodb.buffer_pool_pages_flushed"`
+	NewrelicmysqlInnodbBufferPoolPagesFree              MetricConfig `mapstructure:"newrelicmysql.innodb.buffer_pool_pages_free"`
+	NewrelicmysqlInnodbBufferPoolPagesLruFlushed        MetricConfig `mapstructure:"newrelicmysql.innodb.buffer_pool_pages_lru_flushed"`
+	NewrelicmysqlInnodbBufferPoolPagesMadeNotYoung      MetricConfig `mapstructure:"newrelicmysql.innodb.buffer_pool_pages_made_not_young"`
+	NewrelicmysqlInnodbBufferPoolPagesMadeYoung         MetricConfig `mapstructure:"newrelicmysql.innodb.buffer_pool_pages_made_young"`
+	NewrelicmysqlInnodbBufferPoolPagesMisc              MetricConfig `mapstructure:"newrelicmysql.innodb.buffer_pool_pages_misc"`
+	NewrelicmysqlInnodbBufferPoolPagesOld               MetricConfig `mapstructure:"newrelicmysql.innodb.buffer_pool_pages_old"`
+	NewrelicmysqlInnodbBufferPoolPagesTotal             MetricConfig `mapstructure:"newrelicmysql.innodb.buffer_pool_pages_total"`
+	NewrelicmysqlInnodbBufferPoolReadAhead              MetricConfig `mapstructure:"newrelicmysql.innodb.buffer_pool_read_ahead"`
+	NewrelicmysqlInnodbBufferPoolReadAheadEvicted       MetricConfig `mapstructure:"newrelicmysql.innodb.buffer_pool_read_ahead_evicted"`
+	NewrelicmysqlInnodbBufferPoolReadAheadRnd           MetricConfig `mapstructure:"newrelicmysql.innodb.buffer_pool_read_ahead_rnd"`
 	NewrelicmysqlInnodbBufferPoolReadRequests           MetricConfig `mapstructure:"newrelicmysql.innodb.buffer_pool_read_requests"`
 	NewrelicmysqlInnodbBufferPoolReads                  MetricConfig `mapstructure:"newrelicmysql.innodb.buffer_pool_reads"`
 	NewrelicmysqlInnodbBufferPoolTotal                  MetricConfig `mapstructure:"newrelicmysql.innodb.buffer_pool_total"`
 	NewrelicmysqlInnodbBufferPoolUsed                   MetricConfig `mapstructure:"newrelicmysql.innodb.buffer_pool_used"`
 	NewrelicmysqlInnodbBufferPoolUtilization            MetricConfig `mapstructure:"newrelicmysql.innodb.buffer_pool_utilization"`
+	NewrelicmysqlInnodbBufferPoolWaitFree               MetricConfig `mapstructure:"newrelicmysql.innodb.buffer_pool_wait_free"`
+	NewrelicmysqlInnodbBufferPoolWriteRequests          MetricConfig `mapstructure:"newrelicmysql.innodb.buffer_pool_write_requests"`
+	NewrelicmysqlInnodbCheckpointAge                    MetricConfig `mapstructure:"newrelicmysql.innodb.checkpoint_age"`
 	NewrelicmysqlInnodbCurrentRowLocks                  MetricConfig `mapstructure:"newrelicmysql.innodb.current_row_locks"`
+	NewrelicmysqlInnodbCurrentTransactions              MetricConfig `mapstructure:"newrelicmysql.innodb.current_transactions"`
+	NewrelicmysqlInnodbDataFsyncs                       MetricConfig `mapstructure:"newrelicmysql.innodb.data_fsyncs"`
+	NewrelicmysqlInnodbDataPendingFsyncs                MetricConfig `mapstructure:"newrelicmysql.innodb.data_pending_fsyncs"`
+	NewrelicmysqlInnodbDataPendingReads                 MetricConfig `mapstructure:"newrelicmysql.innodb.data_pending_reads"`
+	NewrelicmysqlInnodbDataPendingWrites                MetricConfig `mapstructure:"newrelicmysql.innodb.data_pending_writes"`
+	NewrelicmysqlInnodbDataRead                         MetricConfig `mapstructure:"newrelicmysql.innodb.data_read"`
 	NewrelicmysqlInnodbDataReads                        MetricConfig `mapstructure:"newrelicmysql.innodb.data_reads"`
 	NewrelicmysqlInnodbDataWrites                       MetricConfig `mapstructure:"newrelicmysql.innodb.data_writes"`
 	NewrelicmysqlInnodbDataWritten                      MetricConfig `mapstructure:"newrelicmysql.innodb.data_written"`
+	NewrelicmysqlInnodbDblwrPagesWritten                MetricConfig `mapstructure:"newrelicmysql.innodb.dblwr_pages_written"`
+	NewrelicmysqlInnodbDblwrWrites                      MetricConfig `mapstructure:"newrelicmysql.innodb.dblwr_writes"`
+	NewrelicmysqlInnodbHashIndexCellsTotal              MetricConfig `mapstructure:"newrelicmysql.innodb.hash_index_cells_total"`
+	NewrelicmysqlInnodbHashIndexCellsUsed               MetricConfig `mapstructure:"newrelicmysql.innodb.hash_index_cells_used"`
+	NewrelicmysqlInnodbHistoryListLength                MetricConfig `mapstructure:"newrelicmysql.innodb.history_list_length"`
+	NewrelicmysqlInnodbIbufFreeList                     MetricConfig `mapstructure:"newrelicmysql.innodb.ibuf_free_list"`
+	NewrelicmysqlInnodbIbufMergedDeleteMarks            MetricConfig `mapstructure:"newrelicmysql.innodb.ibuf_merged_delete_marks"`
+	NewrelicmysqlInnodbIbufMergedDeletes                MetricConfig `mapstructure:"newrelicmysql.innodb.ibuf_merged_deletes"`
+	NewrelicmysqlInnodbIbufMergedInserts                MetricConfig `mapstructure:"newrelicmysql.innodb.ibuf_merged_inserts"`
+	NewrelicmysqlInnodbIbufMerges                       MetricConfig `mapstructure:"newrelicmysql.innodb.ibuf_merges"`
+	NewrelicmysqlInnodbIbufSegmentSize                  MetricConfig `mapstructure:"newrelicmysql.innodb.ibuf_segment_size"`
+	NewrelicmysqlInnodbIbufSize                         MetricConfig `mapstructure:"newrelicmysql.innodb.ibuf_size"`
+	NewrelicmysqlInnodbLockStructs                      MetricConfig `mapstructure:"newrelicmysql.innodb.lock_structs"`
+	NewrelicmysqlInnodbLockedTables                     MetricConfig `mapstructure:"newrelicmysql.innodb.locked_tables"`
+	NewrelicmysqlInnodbLockedTransactions               MetricConfig `mapstructure:"newrelicmysql.innodb.locked_transactions"`
 	NewrelicmysqlInnodbLogWaits                         MetricConfig `mapstructure:"newrelicmysql.innodb.log_waits"`
+	NewrelicmysqlInnodbLogWriteRequests                 MetricConfig `mapstructure:"newrelicmysql.innodb.log_write_requests"`
+	NewrelicmysqlInnodbLogWrites                        MetricConfig `mapstructure:"newrelicmysql.innodb.log_writes"`
+	NewrelicmysqlInnodbLsnCurrent                       MetricConfig `mapstructure:"newrelicmysql.innodb.lsn_current"`
+	NewrelicmysqlInnodbLsnFlushed                       MetricConfig `mapstructure:"newrelicmysql.innodb.lsn_flushed"`
+	NewrelicmysqlInnodbLsnLastCheckpoint                MetricConfig `mapstructure:"newrelicmysql.innodb.lsn_last_checkpoint"`
+	NewrelicmysqlInnodbMasterThreadActiveLoops          MetricConfig `mapstructure:"newrelicmysql.innodb.master_thread_active_loops"`
+	NewrelicmysqlInnodbMasterThreadIdleLoops            MetricConfig `mapstructure:"newrelicmysql.innodb.master_thread_idle_loops"`
+	NewrelicmysqlInnodbMemAdaptiveHash                  MetricConfig `mapstructure:"newrelicmysql.innodb.mem_adaptive_hash"`
+	NewrelicmysqlInnodbMemAdditionalPool                MetricConfig `mapstructure:"newrelicmysql.innodb.mem_additional_pool"`
+	NewrelicmysqlInnodbMemDictionary                    MetricConfig `mapstructure:"newrelicmysql.innodb.mem_dictionary"`
+	NewrelicmysqlInnodbMemFileSystem                    MetricConfig `mapstructure:"newrelicmysql.innodb.mem_file_system"`
+	NewrelicmysqlInnodbMemLockSystem                    MetricConfig `mapstructure:"newrelicmysql.innodb.mem_lock_system"`
+	NewrelicmysqlInnodbMemPageHash                      MetricConfig `mapstructure:"newrelicmysql.innodb.mem_page_hash"`
+	NewrelicmysqlInnodbMemRecoverySystem                MetricConfig `mapstructure:"newrelicmysql.innodb.mem_recovery_system"`
+	NewrelicmysqlInnodbMemThreadHash                    MetricConfig `mapstructure:"newrelicmysql.innodb.mem_thread_hash"`
+	NewrelicmysqlInnodbMemTotal                         MetricConfig `mapstructure:"newrelicmysql.innodb.mem_total"`
 	NewrelicmysqlInnodbMutexOsWaits                     MetricConfig `mapstructure:"newrelicmysql.innodb.mutex_os_waits"`
 	NewrelicmysqlInnodbMutexSpinRounds                  MetricConfig `mapstructure:"newrelicmysql.innodb.mutex_spin_rounds"`
 	NewrelicmysqlInnodbMutexSpinWaits                   MetricConfig `mapstructure:"newrelicmysql.innodb.mutex_spin_waits"`
+	NewrelicmysqlInnodbNumOpenFiles                     MetricConfig `mapstructure:"newrelicmysql.innodb.num_open_files"`
+	NewrelicmysqlInnodbOsFileFsyncs                     MetricConfig `mapstructure:"newrelicmysql.innodb.os_file_fsyncs"`
+	NewrelicmysqlInnodbOsFileReads                      MetricConfig `mapstructure:"newrelicmysql.innodb.os_file_reads"`
+	NewrelicmysqlInnodbOsFileWrites                     MetricConfig `mapstructure:"newrelicmysql.innodb.os_file_writes"`
 	NewrelicmysqlInnodbOsLogFsyncs                      MetricConfig `mapstructure:"newrelicmysql.innodb.os_log_fsyncs"`
+	NewrelicmysqlInnodbOsLogPendingFsyncs               MetricConfig `mapstructure:"newrelicmysql.innodb.os_log_pending_fsyncs"`
+	NewrelicmysqlInnodbOsLogPendingWrites               MetricConfig `mapstructure:"newrelicmysql.innodb.os_log_pending_writes"`
+	NewrelicmysqlInnodbOsLogWritten                     MetricConfig `mapstructure:"newrelicmysql.innodb.os_log_written"`
+	NewrelicmysqlInnodbPageSize                         MetricConfig `mapstructure:"newrelicmysql.innodb.page_size"`
+	NewrelicmysqlInnodbPagesCreated                     MetricConfig `mapstructure:"newrelicmysql.innodb.pages_created"`
+	NewrelicmysqlInnodbPagesRead                        MetricConfig `mapstructure:"newrelicmysql.innodb.pages_read"`
+	NewrelicmysqlInnodbPagesWritten                     MetricConfig `mapstructure:"newrelicmysql.innodb.pages_written"`
+	NewrelicmysqlInnodbPendingAioLogIos                 MetricConfig `mapstructure:"newrelicmysql.innodb.pending_aio_log_ios"`
+	NewrelicmysqlInnodbPendingAioSyncIos                MetricConfig `mapstructure:"newrelicmysql.innodb.pending_aio_sync_ios"`
+	NewrelicmysqlInnodbPendingBufferPoolFlushes         MetricConfig `mapstructure:"newrelicmysql.innodb.pending_buffer_pool_flushes"`
+	NewrelicmysqlInnodbPendingCheckpointWrites          MetricConfig `mapstructure:"newrelicmysql.innodb.pending_checkpoint_writes"`
+	NewrelicmysqlInnodbPendingIbufAioReads              MetricConfig `mapstructure:"newrelicmysql.innodb.pending_ibuf_aio_reads"`
+	NewrelicmysqlInnodbPendingLogFlushes                MetricConfig `mapstructure:"newrelicmysql.innodb.pending_log_flushes"`
+	NewrelicmysqlInnodbPendingLogWrites                 MetricConfig `mapstructure:"newrelicmysql.innodb.pending_log_writes"`
+	NewrelicmysqlInnodbPendingNormalAioReads            MetricConfig `mapstructure:"newrelicmysql.innodb.pending_normal_aio_reads"`
+	NewrelicmysqlInnodbPendingNormalAioWrites           MetricConfig `mapstructure:"newrelicmysql.innodb.pending_normal_aio_writes"`
+	NewrelicmysqlInnodbPurgeTrxID                       MetricConfig `mapstructure:"newrelicmysql.innodb.purge_trx_id"`
+	NewrelicmysqlInnodbPurgeUndoNo                      MetricConfig `mapstructure:"newrelicmysql.innodb.purge_undo_no"`
+	NewrelicmysqlInnodbQueriesInside                    MetricConfig `mapstructure:"newrelicmysql.innodb.queries_inside"`
+	NewrelicmysqlInnodbQueriesQueued                    MetricConfig `mapstructure:"newrelicmysql.innodb.queries_queued"`
+	NewrelicmysqlInnodbReadViews                        MetricConfig `mapstructure:"newrelicmysql.innodb.read_views"`
+	NewrelicmysqlInnodbRedoLogEnabled                   MetricConfig `mapstructure:"newrelicmysql.innodb.redo_log_enabled"`
 	NewrelicmysqlInnodbRowLockCurrentWaits              MetricConfig `mapstructure:"newrelicmysql.innodb.row_lock_current_waits"`
 	NewrelicmysqlInnodbRowLockTime                      MetricConfig `mapstructure:"newrelicmysql.innodb.row_lock_time"`
+	NewrelicmysqlInnodbRowLockTimeAvg                   MetricConfig `mapstructure:"newrelicmysql.innodb.row_lock_time_avg"`
+	NewrelicmysqlInnodbRowLockTimeMax                   MetricConfig `mapstructure:"newrelicmysql.innodb.row_lock_time_max"`
 	NewrelicmysqlInnodbRowLockWaits                     MetricConfig `mapstructure:"newrelicmysql.innodb.row_lock_waits"`
+	NewrelicmysqlInnodbRowsDeleted                      MetricConfig `mapstructure:"newrelicmysql.innodb.rows_deleted"`
+	NewrelicmysqlInnodbRowsInserted                     MetricConfig `mapstructure:"newrelicmysql.innodb.rows_inserted"`
+	NewrelicmysqlInnodbRowsRead                         MetricConfig `mapstructure:"newrelicmysql.innodb.rows_read"`
+	NewrelicmysqlInnodbRowsUpdated                      MetricConfig `mapstructure:"newrelicmysql.innodb.rows_updated"`
+	NewrelicmysqlInnodbSLockOsWaits                     MetricConfig `mapstructure:"newrelicmysql.innodb.s_lock_os_waits"`
+	NewrelicmysqlInnodbSLockSpinRounds                  MetricConfig `mapstructure:"newrelicmysql.innodb.s_lock_spin_rounds"`
+	NewrelicmysqlInnodbSLockSpinWaits                   MetricConfig `mapstructure:"newrelicmysql.innodb.s_lock_spin_waits"`
+	NewrelicmysqlInnodbSemaphoreWaitTime                MetricConfig `mapstructure:"newrelicmysql.innodb.semaphore_wait_time"`
+	NewrelicmysqlInnodbSemaphoreWaits                   MetricConfig `mapstructure:"newrelicmysql.innodb.semaphore_waits"`
+	NewrelicmysqlInnodbTablesInUse                      MetricConfig `mapstructure:"newrelicmysql.innodb.tables_in_use"`
+	NewrelicmysqlInnodbTruncatedStatusWrites            MetricConfig `mapstructure:"newrelicmysql.innodb.truncated_status_writes"`
+	NewrelicmysqlInnodbUndoTablespacesActive            MetricConfig `mapstructure:"newrelicmysql.innodb.undo_tablespaces_active"`
+	NewrelicmysqlInnodbUndoTablespacesExplicit          MetricConfig `mapstructure:"newrelicmysql.innodb.undo_tablespaces_explicit"`
+	NewrelicmysqlInnodbUndoTablespacesImplicit          MetricConfig `mapstructure:"newrelicmysql.innodb.undo_tablespaces_implicit"`
+	NewrelicmysqlInnodbUndoTablespacesTotal             MetricConfig `mapstructure:"newrelicmysql.innodb.undo_tablespaces_total"`
+	NewrelicmysqlInnodbXLockOsWaits                     MetricConfig `mapstructure:"newrelicmysql.innodb.x_lock_os_waits"`
+	NewrelicmysqlInnodbXLockSpinRounds                  MetricConfig `mapstructure:"newrelicmysql.innodb.x_lock_spin_rounds"`
+	NewrelicmysqlInnodbXLockSpinWaits                   MetricConfig `mapstructure:"newrelicmysql.innodb.x_lock_spin_waits"`
 	NewrelicmysqlMyisamKeyBufferBytesUnflushed          MetricConfig `mapstructure:"newrelicmysql.myisam.key_buffer_bytes_unflushed"`
 	NewrelicmysqlMyisamKeyBufferBytesUsed               MetricConfig `mapstructure:"newrelicmysql.myisam.key_buffer_bytes_used"`
 	NewrelicmysqlMyisamKeyBufferSize                    MetricConfig `mapstructure:"newrelicmysql.myisam.key_buffer_size"`
@@ -152,10 +258,70 @@ func DefaultMetricsConfig() MetricsConfig {
 		NewrelicmysqlDbOpenedTables: MetricConfig{
 			Enabled: true,
 		},
+		NewrelicmysqlInnodbActiveTransactions: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbAdaptiveHashHashSearches: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbAdaptiveHashNonHashSearches: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbAdaptiveHashPagesAdded: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbAdaptiveHashPagesRemoved: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbAvailableUndoLogs: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbBufferPoolBytesData: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbBufferPoolBytesDirty: MetricConfig{
+			Enabled: true,
+		},
 		NewrelicmysqlInnodbBufferPoolDirty: MetricConfig{
 			Enabled: true,
 		},
 		NewrelicmysqlInnodbBufferPoolFree: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbBufferPoolPagesData: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbBufferPoolPagesFlushed: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbBufferPoolPagesFree: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbBufferPoolPagesLruFlushed: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbBufferPoolPagesMadeNotYoung: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbBufferPoolPagesMadeYoung: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbBufferPoolPagesMisc: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbBufferPoolPagesOld: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbBufferPoolPagesTotal: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbBufferPoolReadAhead: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbBufferPoolReadAheadEvicted: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbBufferPoolReadAheadRnd: MetricConfig{
 			Enabled: true,
 		},
 		NewrelicmysqlInnodbBufferPoolReadRequests: MetricConfig{
@@ -173,7 +339,34 @@ func DefaultMetricsConfig() MetricsConfig {
 		NewrelicmysqlInnodbBufferPoolUtilization: MetricConfig{
 			Enabled: true,
 		},
+		NewrelicmysqlInnodbBufferPoolWaitFree: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbBufferPoolWriteRequests: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbCheckpointAge: MetricConfig{
+			Enabled: true,
+		},
 		NewrelicmysqlInnodbCurrentRowLocks: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbCurrentTransactions: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbDataFsyncs: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbDataPendingFsyncs: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbDataPendingReads: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbDataPendingWrites: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbDataRead: MetricConfig{
 			Enabled: true,
 		},
 		NewrelicmysqlInnodbDataReads: MetricConfig{
@@ -185,7 +378,100 @@ func DefaultMetricsConfig() MetricsConfig {
 		NewrelicmysqlInnodbDataWritten: MetricConfig{
 			Enabled: true,
 		},
+		NewrelicmysqlInnodbDblwrPagesWritten: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbDblwrWrites: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbHashIndexCellsTotal: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbHashIndexCellsUsed: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbHistoryListLength: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbIbufFreeList: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbIbufMergedDeleteMarks: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbIbufMergedDeletes: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbIbufMergedInserts: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbIbufMerges: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbIbufSegmentSize: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbIbufSize: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbLockStructs: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbLockedTables: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbLockedTransactions: MetricConfig{
+			Enabled: true,
+		},
 		NewrelicmysqlInnodbLogWaits: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbLogWriteRequests: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbLogWrites: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbLsnCurrent: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbLsnFlushed: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbLsnLastCheckpoint: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbMasterThreadActiveLoops: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbMasterThreadIdleLoops: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbMemAdaptiveHash: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbMemAdditionalPool: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbMemDictionary: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbMemFileSystem: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbMemLockSystem: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbMemPageHash: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbMemRecoverySystem: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbMemThreadHash: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbMemTotal: MetricConfig{
 			Enabled: true,
 		},
 		NewrelicmysqlInnodbMutexOsWaits: MetricConfig{
@@ -197,7 +483,85 @@ func DefaultMetricsConfig() MetricsConfig {
 		NewrelicmysqlInnodbMutexSpinWaits: MetricConfig{
 			Enabled: true,
 		},
+		NewrelicmysqlInnodbNumOpenFiles: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbOsFileFsyncs: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbOsFileReads: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbOsFileWrites: MetricConfig{
+			Enabled: true,
+		},
 		NewrelicmysqlInnodbOsLogFsyncs: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbOsLogPendingFsyncs: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbOsLogPendingWrites: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbOsLogWritten: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbPageSize: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbPagesCreated: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbPagesRead: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbPagesWritten: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbPendingAioLogIos: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbPendingAioSyncIos: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbPendingBufferPoolFlushes: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbPendingCheckpointWrites: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbPendingIbufAioReads: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbPendingLogFlushes: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbPendingLogWrites: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbPendingNormalAioReads: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbPendingNormalAioWrites: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbPurgeTrxID: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbPurgeUndoNo: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbQueriesInside: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbQueriesQueued: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbReadViews: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbRedoLogEnabled: MetricConfig{
 			Enabled: true,
 		},
 		NewrelicmysqlInnodbRowLockCurrentWaits: MetricConfig{
@@ -206,7 +570,67 @@ func DefaultMetricsConfig() MetricsConfig {
 		NewrelicmysqlInnodbRowLockTime: MetricConfig{
 			Enabled: true,
 		},
+		NewrelicmysqlInnodbRowLockTimeAvg: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbRowLockTimeMax: MetricConfig{
+			Enabled: true,
+		},
 		NewrelicmysqlInnodbRowLockWaits: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbRowsDeleted: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbRowsInserted: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbRowsRead: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbRowsUpdated: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbSLockOsWaits: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbSLockSpinRounds: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbSLockSpinWaits: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbSemaphoreWaitTime: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbSemaphoreWaits: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbTablesInUse: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbTruncatedStatusWrites: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbUndoTablespacesActive: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbUndoTablespacesExplicit: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbUndoTablespacesImplicit: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbUndoTablespacesTotal: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbXLockOsWaits: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbXLockSpinRounds: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlInnodbXLockSpinWaits: MetricConfig{
 			Enabled: true,
 		},
 		NewrelicmysqlMyisamKeyBufferBytesUnflushed: MetricConfig{

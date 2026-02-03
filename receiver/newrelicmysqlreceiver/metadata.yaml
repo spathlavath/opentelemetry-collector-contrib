@@ -52,6 +52,7 @@ metrics:
       monotonic: true
       aggregation_temporality: cumulative
     attributes: [command]
+
   newrelicmysql.connection.count:
     enabled: true
     description: The number of connection attempts (successful or not) to the MySQL server.
@@ -63,6 +64,7 @@ metrics:
       input_type: string
       monotonic: true
       aggregation_temporality: cumulative
+
   newrelicmysql.db.handler_rollback:
     enabled: true
     description: The number of internal ROLLBACK statements.
@@ -86,6 +88,87 @@ metrics:
       aggregation_temporality: cumulative
 
   # InnoDB Additional Metrics
+
+  newrelicmysql.innodb.active_transactions:
+    enabled: true
+    description: The number of currently active transactions.
+    stability:
+      level: development
+    unit: "1"
+    gauge:
+      value_type: int
+
+  newrelicmysql.innodb.adaptive_hash_hash_searches:
+    enabled: true
+    description: The number of successful hash searches in the adaptive hash index.
+    stability:
+      level: development
+    unit: "1"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  newrelicmysql.innodb.adaptive_hash_non_hash_searches:
+    enabled: true
+    description: The number of unsuccessful hash searches that fell back to B-tree searches.
+    stability:
+      level: development
+    unit: "1"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  newrelicmysql.innodb.adaptive_hash_pages_added:
+    enabled: true
+    description: The number of pages added to the adaptive hash index.
+    stability:
+      level: development
+    unit: "1"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  newrelicmysql.innodb.adaptive_hash_pages_removed:
+    enabled: true
+    description: The number of pages removed from the adaptive hash index.
+    stability:
+      level: development
+    unit: "1"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  newrelicmysql.innodb.available_undo_logs:
+    enabled: true
+    description: The number of available undo logs.
+    stability:
+      level: development
+    unit: "1"
+    gauge:
+      value_type: int
+
+  newrelicmysql.innodb.buffer_pool_bytes_data:
+    enabled: true
+    description: The total number of bytes in the InnoDB buffer pool containing data.
+    stability:
+      level: development
+    unit: By
+    gauge:
+      value_type: int
+
+  newrelicmysql.innodb.buffer_pool_bytes_dirty:
+    enabled: true
+    description: The total size in bytes of dirty pages in the InnoDB buffer pool.
+    stability:
+      level: development
+    unit: By
+    gauge:
+      value_type: int
+
   newrelicmysql.innodb.buffer_pool_dirty:
     enabled: true
     description: The number of dirty pages in the InnoDB buffer pool.
@@ -103,6 +186,128 @@ metrics:
     unit: "1"
     gauge:
       value_type: int
+
+  newrelicmysql.innodb.buffer_pool_pages_data:
+    enabled: true
+    description: The number of pages in the InnoDB buffer pool containing data.
+    stability:
+      level: development
+    unit: "1"
+    gauge:
+      value_type: int
+
+  newrelicmysql.innodb.buffer_pool_pages_flushed:
+    enabled: true
+    description: The number of requests to flush pages from the InnoDB buffer pool.
+    stability:
+      level: development
+    unit: "1"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  newrelicmysql.innodb.buffer_pool_pages_free:
+    enabled: true
+    description: The number of free pages in the InnoDB buffer pool.
+    stability:
+      level: development
+    unit: "1"
+    gauge:
+      value_type: int
+
+  newrelicmysql.innodb.buffer_pool_pages_lru_flushed:
+    enabled: true
+    description: The number of pages flushed from the LRU list.
+    stability:
+      level: development
+    unit: "1"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  newrelicmysql.innodb.buffer_pool_pages_made_not_young:
+    enabled: true
+    description: The number of pages not made young in the buffer pool LRU list.
+    stability:
+      level: development
+    unit: "1"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  newrelicmysql.innodb.buffer_pool_pages_made_young:
+    enabled: true
+    description: The number of pages made young in the buffer pool LRU list.
+    stability:
+      level: development
+    unit: "1"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  newrelicmysql.innodb.buffer_pool_pages_misc:
+    enabled: true
+    description: The number of pages in the InnoDB buffer pool used for miscellaneous purposes.
+    stability:
+      level: development
+    unit: "1"
+    gauge:
+      value_type: int
+
+  newrelicmysql.innodb.buffer_pool_pages_old:
+    enabled: true
+    description: The number of old pages in the buffer pool LRU list.
+    stability:
+      level: development
+    unit: "1"
+    gauge:
+      value_type: int
+
+  newrelicmysql.innodb.buffer_pool_pages_total:
+    enabled: true
+    description: The total number of pages in the InnoDB buffer pool.
+    stability:
+      level: development
+    unit: "1"
+    gauge:
+      value_type: int
+
+  newrelicmysql.innodb.buffer_pool_read_ahead:
+    enabled: true
+    description: The number of pages read into the InnoDB buffer pool by the read-ahead background thread.
+    stability:
+      level: development
+    unit: "1"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  newrelicmysql.innodb.buffer_pool_read_ahead_evicted:
+    enabled: true
+    description: The number of pages read by read-ahead that were evicted without being accessed.
+    stability:
+      level: development
+    unit: "1"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  newrelicmysql.innodb.buffer_pool_read_ahead_rnd:
+    enabled: true
+    description: The number of random read-aheads initiated by InnoDB.
+    stability:
+      level: development
+    unit: "1"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
 
   newrelicmysql.innodb.buffer_pool_read_requests:
     enabled: true
@@ -153,6 +358,37 @@ metrics:
     gauge:
       value_type: double
 
+  newrelicmysql.innodb.buffer_pool_wait_free:
+    enabled: true
+    description: The number of times InnoDB waited for a free page in the buffer pool.
+    stability:
+      level: development
+    unit: "1"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  newrelicmysql.innodb.buffer_pool_write_requests:
+    enabled: true
+    description: The number of write requests to the InnoDB buffer pool.
+    stability:
+      level: development
+    unit: "1"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  newrelicmysql.innodb.checkpoint_age:
+    enabled: true
+    description: The age of the checkpoint (difference between current LSN and checkpoint LSN).
+    stability:
+      level: development
+    unit: By
+    gauge:
+      value_type: int
+
   newrelicmysql.innodb.current_row_locks:
     enabled: true
     description: The number of current row locks.
@@ -161,6 +397,64 @@ metrics:
     unit: "1"
     gauge:
       value_type: int
+
+  newrelicmysql.innodb.current_transactions:
+    enabled: true
+    description: The current number of transactions.
+    stability:
+      level: development
+    unit: "1"
+    gauge:
+      value_type: int
+
+  newrelicmysql.innodb.data_fsyncs:
+    enabled: true
+    description: The number of fsync() operations performed by InnoDB.
+    stability:
+      level: development
+    unit: "1"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  newrelicmysql.innodb.data_pending_fsyncs:
+    enabled: true
+    description: The current number of pending fsync operations.
+    stability:
+      level: development
+    unit: "1"
+    gauge:
+      value_type: int
+
+  newrelicmysql.innodb.data_pending_reads:
+    enabled: true
+    description: The current number of pending read operations.
+    stability:
+      level: development
+    unit: "1"
+    gauge:
+      value_type: int
+
+  newrelicmysql.innodb.data_pending_writes:
+    enabled: true
+    description: The current number of pending write operations.
+    stability:
+      level: development
+    unit: "1"
+    gauge:
+      value_type: int
+
+  newrelicmysql.innodb.data_read:
+    enabled: true
+    description: The total amount of data read by InnoDB.
+    stability:
+      level: development
+    unit: By
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
 
   newrelicmysql.innodb.data_reads:
     enabled: true
@@ -195,6 +489,153 @@ metrics:
       monotonic: true
       aggregation_temporality: cumulative
 
+  newrelicmysql.innodb.dblwr_pages_written:
+    enabled: true
+    description: The number of pages written to the doublewrite buffer.
+    stability:
+      level: development
+    unit: "1"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  newrelicmysql.innodb.dblwr_writes:
+    enabled: true
+    description: The number of doublewrite operations performed.
+    stability:
+      level: development
+    unit: "1"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  newrelicmysql.innodb.hash_index_cells_total:
+    enabled: true
+    description: The total number of cells in the adaptive hash index.
+    stability:
+      level: development
+    unit: "1"
+    gauge:
+      value_type: int
+
+  newrelicmysql.innodb.hash_index_cells_used:
+    enabled: true
+    description: The number of used cells in the adaptive hash index.
+    stability:
+      level: development
+    unit: "1"
+    gauge:
+      value_type: int
+
+  newrelicmysql.innodb.history_list_length:
+    enabled: true
+    description: The length of the InnoDB history list (undo log entries).
+    stability:
+      level: development
+    unit: "1"
+    gauge:
+      value_type: int
+
+  newrelicmysql.innodb.ibuf_free_list:
+    enabled: true
+    description: The number of pages in the change buffer free list.
+    stability:
+      level: development
+    unit: "1"
+    gauge:
+      value_type: int
+
+  newrelicmysql.innodb.ibuf_merged_delete_marks:
+    enabled: true
+    description: The number of delete mark operations merged by the change buffer.
+    stability:
+      level: development
+    unit: "1"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  newrelicmysql.innodb.ibuf_merged_deletes:
+    enabled: true
+    description: The number of delete operations merged by the change buffer.
+    stability:
+      level: development
+    unit: "1"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  newrelicmysql.innodb.ibuf_merged_inserts:
+    enabled: true
+    description: The number of insert operations merged by the change buffer.
+    stability:
+      level: development
+    unit: "1"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  newrelicmysql.innodb.ibuf_merges:
+    enabled: true
+    description: The number of merge operations performed by the change buffer.
+    stability:
+      level: development
+    unit: "1"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  newrelicmysql.innodb.ibuf_segment_size:
+    enabled: true
+    description: The size of the change buffer segment.
+    stability:
+      level: development
+    unit: "1"
+    gauge:
+      value_type: int
+
+  newrelicmysql.innodb.ibuf_size:
+    enabled: true
+    description: The size of the change buffer in pages.
+    stability:
+      level: development
+    unit: "1"
+    gauge:
+      value_type: int
+
+  newrelicmysql.innodb.lock_structs:
+    enabled: true
+    description: The number of lock structures allocated.
+    stability:
+      level: development
+    unit: "1"
+    gauge:
+      value_type: int
+
+  newrelicmysql.innodb.locked_tables:
+    enabled: true
+    description: The number of locked tables.
+    stability:
+      level: development
+    unit: "1"
+    gauge:
+      value_type: int
+
+  newrelicmysql.innodb.locked_transactions:
+    enabled: true
+    description: The number of locked transactions.
+    stability:
+      level: development
+    unit: "1"
+    gauge:
+      value_type: int
+
   newrelicmysql.innodb.log_waits:
     enabled: true
     description: The number of times the log buffer was too small and a wait was required for it to be flushed.
@@ -206,7 +647,158 @@ metrics:
       monotonic: true
       aggregation_temporality: cumulative
 
-  # Performance Metrics
+  newrelicmysql.innodb.log_write_requests:
+    enabled: true
+    description: The number of write requests to the InnoDB log.
+    stability:
+      level: development
+    unit: "1"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  newrelicmysql.innodb.log_writes:
+    enabled: true
+    description: The number of physical writes to the InnoDB log file.
+    stability:
+      level: development
+    unit: "1"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  newrelicmysql.innodb.lsn_current:
+    enabled: true
+    description: The current log sequence number.
+    stability:
+      level: development
+    unit: "1"
+    gauge:
+      value_type: int
+
+  newrelicmysql.innodb.lsn_flushed:
+    enabled: true
+    description: The log sequence number up to which all changes have been flushed to disk.
+    stability:
+      level: development
+    unit: "1"
+    gauge:
+      value_type: int
+
+  newrelicmysql.innodb.lsn_last_checkpoint:
+    enabled: true
+    description: The log sequence number of the last checkpoint.
+    stability:
+      level: development
+    unit: "1"
+    gauge:
+      value_type: int
+
+  newrelicmysql.innodb.master_thread_active_loops:
+    enabled: true
+    description: The number of times the master thread has gone through its active loop.
+    stability:
+      level: development
+    unit: "1"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  newrelicmysql.innodb.master_thread_idle_loops:
+    enabled: true
+    description: The number of times the master thread has gone through its idle loop.
+    stability:
+      level: development
+    unit: "1"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  newrelicmysql.innodb.mem_adaptive_hash:
+    enabled: true
+    description: The total memory allocated for the adaptive hash index.
+    stability:
+      level: development
+    unit: By
+    gauge:
+      value_type: int
+
+  newrelicmysql.innodb.mem_additional_pool:
+    enabled: true
+    description: The size of the additional memory pool in bytes.
+    stability:
+      level: development
+    unit: By
+    gauge:
+      value_type: int
+
+  newrelicmysql.innodb.mem_dictionary:
+    enabled: true
+    description: The memory allocated for the InnoDB data dictionary in bytes.
+    stability:
+      level: development
+    unit: By
+    gauge:
+      value_type: int
+
+  newrelicmysql.innodb.mem_file_system:
+    enabled: true
+    description: The memory allocated for the file system in bytes.
+    stability:
+      level: development
+    unit: By
+    gauge:
+      value_type: int
+
+  newrelicmysql.innodb.mem_lock_system:
+    enabled: true
+    description: The memory allocated for the lock system in bytes.
+    stability:
+      level: development
+    unit: By
+    gauge:
+      value_type: int
+
+  newrelicmysql.innodb.mem_page_hash:
+    enabled: true
+    description: The memory allocated for the page hash in bytes.
+    stability:
+      level: development
+    unit: By
+    gauge:
+      value_type: int
+
+  newrelicmysql.innodb.mem_recovery_system:
+    enabled: true
+    description: The memory allocated for the recovery system in bytes.
+    stability:
+      level: development
+    unit: By
+    gauge:
+      value_type: int
+
+  newrelicmysql.innodb.mem_thread_hash:
+    enabled: true
+    description: The memory allocated for the thread hash in bytes.
+    stability:
+      level: development
+    unit: By
+    gauge:
+      value_type: int
+
+  newrelicmysql.innodb.mem_total:
+    enabled: true
+    description: The total memory allocated by InnoDB in bytes.
+    stability:
+      level: development
+    unit: By
+    gauge:
+      value_type: int
+
   newrelicmysql.innodb.mutex_os_waits:
     enabled: true
     description: The number of mutex OS waits.
@@ -240,6 +832,48 @@ metrics:
       monotonic: true
       aggregation_temporality: cumulative
 
+  newrelicmysql.innodb.num_open_files:
+    enabled: true
+    description: The number of files InnoDB currently holds open.
+    stability:
+      level: development
+    unit: "1"
+    gauge:
+      value_type: int
+
+  newrelicmysql.innodb.os_file_fsyncs:
+    enabled: true
+    description: The number of fsync calls to files.
+    stability:
+      level: development
+    unit: "1"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  newrelicmysql.innodb.os_file_reads:
+    enabled: true
+    description: The number of file reads performed by InnoDB.
+    stability:
+      level: development
+    unit: "1"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  newrelicmysql.innodb.os_file_writes:
+    enabled: true
+    description: The number of file writes performed by InnoDB.
+    stability:
+      level: development
+    unit: "1"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
   newrelicmysql.innodb.os_log_fsyncs:
     enabled: true
     description: The number of fsync writes done to the InnoDB redo log files.
@@ -250,6 +884,212 @@ metrics:
       value_type: int
       monotonic: true
       aggregation_temporality: cumulative
+
+  newrelicmysql.innodb.os_log_pending_fsyncs:
+    enabled: true
+    description: The number of pending fsync operations for the redo log.
+    stability:
+      level: development
+    unit: "1"
+    gauge:
+      value_type: int
+
+  newrelicmysql.innodb.os_log_pending_writes:
+    enabled: true
+    description: The number of pending write operations for the redo log.
+    stability:
+      level: development
+    unit: "1"
+    gauge:
+      value_type: int
+
+  newrelicmysql.innodb.os_log_written:
+    enabled: true
+    description: The total amount of data written to the redo log files.
+    stability:
+      level: development
+    unit: By
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  newrelicmysql.innodb.page_size:
+    enabled: true
+    description: The compiled-in InnoDB page size.
+    stability:
+      level: development
+    unit: By
+    gauge:
+      value_type: int
+
+  newrelicmysql.innodb.pages_created:
+    enabled: true
+    description: The number of pages created by InnoDB.
+    stability:
+      level: development
+    unit: "1"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  newrelicmysql.innodb.pages_read:
+    enabled: true
+    description: The number of pages read by InnoDB.
+    stability:
+      level: development
+    unit: "1"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  newrelicmysql.innodb.pages_written:
+    enabled: true
+    description: The number of pages written by InnoDB.
+    stability:
+      level: development
+    unit: "1"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  newrelicmysql.innodb.pending_aio_log_ios:
+    enabled: true
+    description: The number of pending asynchronous I/O operations for log files.
+    stability:
+      level: development
+    unit: "1"
+    gauge:
+      value_type: int
+
+  newrelicmysql.innodb.pending_aio_sync_ios:
+    enabled: true
+    description: The number of pending synchronous I/O operations.
+    stability:
+      level: development
+    unit: "1"
+    gauge:
+      value_type: int
+
+  newrelicmysql.innodb.pending_buffer_pool_flushes:
+    enabled: true
+    description: The number of pending buffer pool flush operations.
+    stability:
+      level: development
+    unit: "1"
+    gauge:
+      value_type: int
+
+  newrelicmysql.innodb.pending_checkpoint_writes:
+    enabled: true
+    description: The number of pending checkpoint write operations.
+    stability:
+      level: development
+    unit: "1"
+    gauge:
+      value_type: int
+
+  newrelicmysql.innodb.pending_ibuf_aio_reads:
+    enabled: true
+    description: The number of pending asynchronous change buffer read operations.
+    stability:
+      level: development
+    unit: "1"
+    gauge:
+      value_type: int
+
+  newrelicmysql.innodb.pending_log_flushes:
+    enabled: true
+    description: The number of pending log flush operations.
+    stability:
+      level: development
+    unit: "1"
+    gauge:
+      value_type: int
+
+  newrelicmysql.innodb.pending_log_writes:
+    enabled: true
+    description: The number of pending log write operations.
+    stability:
+      level: development
+    unit: "1"
+    gauge:
+      value_type: int
+
+  newrelicmysql.innodb.pending_normal_aio_reads:
+    enabled: true
+    description: The number of pending normal asynchronous read operations.
+    stability:
+      level: development
+    unit: "1"
+    gauge:
+      value_type: int
+
+  newrelicmysql.innodb.pending_normal_aio_writes:
+    enabled: true
+    description: The number of pending normal asynchronous write operations.
+    stability:
+      level: development
+    unit: "1"
+    gauge:
+      value_type: int
+
+  newrelicmysql.innodb.purge_trx_id:
+    enabled: true
+    description: The transaction ID that the purge system is currently processing.
+    stability:
+      level: development
+    unit: "1"
+    gauge:
+      value_type: int
+
+  newrelicmysql.innodb.purge_undo_no:
+    enabled: true
+    description: The undo number that the purge system is currently processing.
+    stability:
+      level: development
+    unit: "1"
+    gauge:
+      value_type: int
+
+  newrelicmysql.innodb.queries_inside:
+    enabled: true
+    description: The number of queries currently being executed inside InnoDB.
+    stability:
+      level: development
+    unit: "1"
+    gauge:
+      value_type: int
+
+  newrelicmysql.innodb.queries_queued:
+    enabled: true
+    description: The number of queries queued inside InnoDB.
+    stability:
+      level: development
+    unit: "1"
+    gauge:
+      value_type: int
+
+  newrelicmysql.innodb.read_views:
+    enabled: true
+    description: The number of read views currently open.
+    stability:
+      level: development
+    unit: "1"
+    gauge:
+      value_type: int
+
+  newrelicmysql.innodb.redo_log_enabled:
+    enabled: true
+    description: Whether redo logging is enabled (1) or disabled (0).
+    stability:
+      level: development
+    unit: "1"
+    gauge:
+      value_type: int
 
   newrelicmysql.innodb.row_lock_current_waits:
     enabled: true
@@ -271,6 +1111,24 @@ metrics:
       monotonic: true
       aggregation_temporality: cumulative
 
+  newrelicmysql.innodb.row_lock_time_avg:
+    enabled: true
+    description: The average time to acquire a row lock.
+    stability:
+      level: development
+    unit: ms
+    gauge:
+      value_type: int
+
+  newrelicmysql.innodb.row_lock_time_max:
+    enabled: true
+    description: The maximum time to acquire a row lock.
+    stability:
+      level: development
+    unit: ms
+    gauge:
+      value_type: int
+
   newrelicmysql.innodb.row_lock_waits:
     enabled: true
     description: The number of times operations had to wait for a row lock.
@@ -282,7 +1140,196 @@ metrics:
       monotonic: true
       aggregation_temporality: cumulative
 
+  newrelicmysql.innodb.rows_deleted:
+    enabled: true
+    description: The number of rows deleted from InnoDB tables.
+    stability:
+      level: development
+    unit: "1"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  newrelicmysql.innodb.rows_inserted:
+    enabled: true
+    description: The number of rows inserted into InnoDB tables.
+    stability:
+      level: development
+    unit: "1"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  newrelicmysql.innodb.rows_read:
+    enabled: true
+    description: The number of rows read from InnoDB tables.
+    stability:
+      level: development
+    unit: "1"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  newrelicmysql.innodb.rows_updated:
+    enabled: true
+    description: The number of rows updated in InnoDB tables.
+    stability:
+      level: development
+    unit: "1"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  newrelicmysql.innodb.s_lock_os_waits:
+    enabled: true
+    description: The number of OS waits for S-locks.
+    stability:
+      level: development
+    unit: "1"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  newrelicmysql.innodb.s_lock_spin_rounds:
+    enabled: true
+    description: The number of spin rounds for S-locks.
+    stability:
+      level: development
+    unit: "1"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  newrelicmysql.innodb.s_lock_spin_waits:
+    enabled: true
+    description: The number of spin waits for S-locks.
+    stability:
+      level: development
+    unit: "1"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  newrelicmysql.innodb.semaphore_wait_time:
+    enabled: true
+    description: The total time spent waiting for semaphores in milliseconds.
+    stability:
+      level: development
+    unit: ms
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  newrelicmysql.innodb.semaphore_waits:
+    enabled: true
+    description: The number of times a semaphore wait occurred.
+    stability:
+      level: development
+    unit: "1"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  newrelicmysql.innodb.tables_in_use:
+    enabled: true
+    description: The number of tables currently in use by transactions.
+    stability:
+      level: development
+    unit: "1"
+    gauge:
+      value_type: int
+
+  newrelicmysql.innodb.truncated_status_writes:
+    enabled: true
+    description: The number of times output from SHOW ENGINE INNODB STATUS has been truncated.
+    stability:
+      level: development
+    unit: "1"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  newrelicmysql.innodb.undo_tablespaces_active:
+    enabled: true
+    description: The number of active undo tablespaces.
+    stability:
+      level: development
+    unit: "1"
+    gauge:
+      value_type: int
+
+  newrelicmysql.innodb.undo_tablespaces_explicit:
+    enabled: true
+    description: The number of user-created undo tablespaces.
+    stability:
+      level: development
+    unit: "1"
+    gauge:
+      value_type: int
+
+  newrelicmysql.innodb.undo_tablespaces_implicit:
+    enabled: true
+    description: The number of implicit undo tablespaces.
+    stability:
+      level: development
+    unit: "1"
+    gauge:
+      value_type: int
+
+  newrelicmysql.innodb.undo_tablespaces_total:
+    enabled: true
+    description: The total number of undo tablespaces.
+    stability:
+      level: development
+    unit: "1"
+    gauge:
+      value_type: int
+
+  newrelicmysql.innodb.x_lock_os_waits:
+    enabled: true
+    description: The number of OS waits for X-locks.
+    stability:
+      level: development
+    unit: "1"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  newrelicmysql.innodb.x_lock_spin_rounds:
+    enabled: true
+    description: The number of spin rounds for X-locks.
+    stability:
+      level: development
+    unit: "1"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  newrelicmysql.innodb.x_lock_spin_waits:
+    enabled: true
+    description: The number of spin waits for X-locks.
+    stability:
+      level: development
+    unit: "1"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
   # MyISAM Metrics
+
   newrelicmysql.myisam.key_buffer_bytes_unflushed:
     enabled: true
     description: MyISAM key buffer bytes unflushed.
@@ -355,6 +1402,7 @@ metrics:
       aggregation_temporality: cumulative
 
   # Network Metrics
+
   newrelicmysql.net.aborted_clients:
     enabled: true
     description: The number of connections that were aborted because the client died without closing the connection properly.
@@ -416,6 +1464,7 @@ metrics:
       value_type: int
 
   # DB Metrics
+
   newrelicmysql.performance.bytes_received:
     enabled: true
     description: The number of bytes received from all clients.
@@ -978,6 +2027,7 @@ metrics:
       input_type: string
       monotonic: true
       aggregation_temporality: cumulative
+
   newrelicmysql.replication.exec_master_log_pos:
     enabled: true
     description: The position in the current master binary log file to which the replication SQL thread has read and executed.
@@ -996,7 +2046,6 @@ metrics:
     gauge:
       value_type: int
 
-
   newrelicmysql.replication.last_sql_errno:
     enabled: true
     description: The error number of the most recent error that caused the replication SQL thread to stop.
@@ -1005,10 +2054,6 @@ metrics:
     unit: "1"
     gauge:
       value_type: int
-
-
-
-
 
   newrelicmysql.replication.read_master_log_pos:
     enabled: true
@@ -1027,7 +2072,6 @@ metrics:
     unit: By
     gauge:
       value_type: int
-
 
   newrelicmysql.replication.seconds_behind_master:
     enabled: true
@@ -1064,9 +2108,6 @@ metrics:
     unit: "1"
     gauge:
       value_type: int
-
-
-
 
   newrelicmysql.uptime:
     enabled: true
