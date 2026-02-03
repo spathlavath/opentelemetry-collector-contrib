@@ -879,6 +879,16 @@ metrics:
     stability:
       level: alpha
 
+  postgresql.connections.active:
+    description: Number of active connections to the database (state='active')
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [database_name, newrelicpostgresql.instance_name, user_name, application_name, backend_type]
+    unit: "{connections}"
+    stability:
+      level: alpha
+
   postgresql.control.checkpoint_delay:
     description: Time elapsed since the last checkpoint in seconds (PostgreSQL 10+)
     enabled: true
@@ -1174,6 +1184,86 @@ metrics:
       value_type: double
     attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
     unit: s
+    stability:
+      level: alpha
+
+  postgresql.locks.access_exclusive:
+    description: Number of AccessExclusiveLock locks held on the database (PostgreSQL 9.6+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, database_name]
+    unit: "{locks}"
+    stability:
+      level: alpha
+
+  postgresql.locks.access_share:
+    description: Number of AccessShareLock locks held on the database (PostgreSQL 9.6+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, database_name]
+    unit: "{locks}"
+    stability:
+      level: alpha
+
+  postgresql.locks.exclusive:
+    description: Number of ExclusiveLock locks held on the database (PostgreSQL 9.6+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, database_name]
+    unit: "{locks}"
+    stability:
+      level: alpha
+
+  postgresql.locks.row_exclusive:
+    description: Number of RowExclusiveLock locks held on the database (PostgreSQL 9.6+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, database_name]
+    unit: "{locks}"
+    stability:
+      level: alpha
+
+  postgresql.locks.row_share:
+    description: Number of RowShareLock locks held on the database (PostgreSQL 9.6+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, database_name]
+    unit: "{locks}"
+    stability:
+      level: alpha
+
+  postgresql.locks.share:
+    description: Number of ShareLock locks held on the database (PostgreSQL 9.6+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, database_name]
+    unit: "{locks}"
+    stability:
+      level: alpha
+
+  postgresql.locks.share_row_exclusive:
+    description: Number of ShareRowExclusiveLock locks held on the database (PostgreSQL 9.6+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, database_name]
+    unit: "{locks}"
+    stability:
+      level: alpha
+
+  postgresql.locks.share_update_exclusive:
+    description: Number of ShareUpdateExclusiveLock locks held on the database (PostgreSQL 9.6+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, database_name]
+    unit: "{locks}"
     stability:
       level: alpha
 
@@ -1922,6 +2012,152 @@ metrics:
       value_type: int
     attributes: [subscription_name, state, newrelicpostgresql.instance_name]
     unit: "{errors}"
+    stability:
+      level: alpha
+
+  postgresql.table.dead_rows:
+    description: Estimated number of dead rows in this table (PostgreSQL 9.6+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: "{rows}"
+    stability:
+      level: alpha
+
+  postgresql.table.hot_updates:
+    description: Number of rows HOT (Heap-Only Tuple) updated in this table (PostgreSQL 9.6+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: "{operations}"
+    stability:
+      level: alpha
+
+  postgresql.table.index_scan_rows_fetched:
+    description: Number of live rows fetched by index scans on this table (PostgreSQL 9.6+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: "{rows}"
+    stability:
+      level: alpha
+
+  postgresql.table.index_scans:
+    description: Number of index scans initiated on this table (PostgreSQL 9.6+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: "{scans}"
+    stability:
+      level: alpha
+
+  postgresql.table.indexes_size:
+    description: Total size of all indexes for this table in bytes (PostgreSQL 9.6+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: By
+    stability:
+      level: alpha
+
+  postgresql.table.live_rows:
+    description: Estimated number of live rows in this table (PostgreSQL 9.6+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: "{rows}"
+    stability:
+      level: alpha
+
+  postgresql.table.modified_since_analyze:
+    description: Estimated number of rows modified since last ANALYZE on this table (PostgreSQL 9.6+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: "{rows}"
+    stability:
+      level: alpha
+
+  postgresql.table.rows_deleted:
+    description: Number of rows deleted from this table (PostgreSQL 9.6+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: "{rows}"
+    stability:
+      level: alpha
+
+  postgresql.table.rows_inserted:
+    description: Number of rows inserted into this table (PostgreSQL 9.6+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: "{rows}"
+    stability:
+      level: alpha
+
+  postgresql.table.rows_updated:
+    description: Number of rows updated in this table (PostgreSQL 9.6+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: "{rows}"
+    stability:
+      level: alpha
+
+  postgresql.table.sequential_scan_rows_fetched:
+    description: Number of live rows fetched by sequential scans on this table (PostgreSQL 9.6+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: "{rows}"
+    stability:
+      level: alpha
+
+  postgresql.table.sequential_scans:
+    description: Number of sequential scans initiated on this table (PostgreSQL 9.6+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: "{scans}"
+    stability:
+      level: alpha
+
+  postgresql.table.total_size:
+    description: Total size of this table including indexes and TOAST in bytes (PostgreSQL 9.6+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
+    unit: By
     stability:
       level: alpha
 

@@ -72,6 +72,25 @@ func (s *TableIOScraper) recordUserTableMetrics(now pcommon.Timestamp, metric mo
 	s.mb.RecordPostgresqlAnalyzedDataPoint(now, getInt64(metric.AnalyzeCount), s.instanceName, metric.SchemaName, metric.TableName)
 	s.mb.RecordPostgresqlAutoanalyzedDataPoint(now, getInt64(metric.AutoanalyzeCount), s.instanceName, metric.SchemaName, metric.TableName)
 
+	// Record table row counts (gauge metrics)
+	s.mb.RecordPostgresqlTableLiveRowsDataPoint(now, getInt64(metric.NLiveTup), s.instanceName, metric.SchemaName, metric.TableName)
+	s.mb.RecordPostgresqlTableDeadRowsDataPoint(now, getInt64(metric.NDeadTup), s.instanceName, metric.SchemaName, metric.TableName)
+	s.mb.RecordPostgresqlTableModifiedSinceAnalyzeDataPoint(now, getInt64(metric.NModSinceAnalyze), s.instanceName, metric.SchemaName, metric.TableName)
+
+	// Record sequential scan statistics (cumulative counters)
+	s.mb.RecordPostgresqlTableSequentialScansDataPoint(now, getInt64(metric.SeqScan), s.instanceName, metric.SchemaName, metric.TableName)
+	s.mb.RecordPostgresqlTableSequentialScanRowsFetchedDataPoint(now, getInt64(metric.SeqTupRead), s.instanceName, metric.SchemaName, metric.TableName)
+
+	// Record index scan statistics (cumulative counters)
+	s.mb.RecordPostgresqlTableIndexScansDataPoint(now, getInt64(metric.IdxScan), s.instanceName, metric.SchemaName, metric.TableName)
+	s.mb.RecordPostgresqlTableIndexScanRowsFetchedDataPoint(now, getInt64(metric.IdxTupFetch), s.instanceName, metric.SchemaName, metric.TableName)
+
+	// Record row modification statistics (cumulative counters)
+	s.mb.RecordPostgresqlTableRowsInsertedDataPoint(now, getInt64(metric.NTupIns), s.instanceName, metric.SchemaName, metric.TableName)
+	s.mb.RecordPostgresqlTableRowsUpdatedDataPoint(now, getInt64(metric.NTupUpd), s.instanceName, metric.SchemaName, metric.TableName)
+	s.mb.RecordPostgresqlTableRowsDeletedDataPoint(now, getInt64(metric.NTupDel), s.instanceName, metric.SchemaName, metric.TableName)
+	s.mb.RecordPostgresqlTableHotUpdatesDataPoint(now, getInt64(metric.NTupHotUpd), s.instanceName, metric.SchemaName, metric.TableName)
+
 	s.logger.Debug("Recorded metrics for table",
 		zap.String("table", tableID))
 }
@@ -163,13 +182,13 @@ func (s *TableIOScraper) recordUserIndexesMetrics(now pcommon.Timestamp, metric 
 }
 
 // getIndexSize retrieves the size of an index using pg_relation_size
-// This is a simplified implementation that returns 0 for now
-// TODO: Implement proper size calculation using client query method
-func (s *TableIOScraper) getIndexSize(_ context.Context, indexRelID int64) int64 {
-	// Placeholder: Will implement proper pg_relation_size query
-	// query := "SELECT pg_relation_size($1)"
-	s.logger.Debug("Index size calculation not yet implemented", zap.Int64("indexRelID", indexRelID))
-	return 0
+func (s *TableIOScraper) getIndexSize(ctx context.Context, indexRelID int64) int64 {
+	size, err := s.client.QueryIndexSize(ctx, indexRelID)
+	if err != nil {
+		s.logger.Debug("Failed to query index size", zap.Int64("indexRelID", indexRelID), zap.Error(err))
+		return 0
+	}
+	return size
 }
 
 // ScrapeToastTables scrapes TOAST table vacuum statistics
@@ -237,6 +256,8 @@ func (s *TableIOScraper) recordTableSizesMetrics(now pcommon.Timestamp, metric m
 	// Record table sizes (gauges)
 	s.mb.RecordPostgresqlRelationSizeDataPoint(now, getInt64(metric.RelationSize), s.instanceName, metric.SchemaName, metric.TableName)
 	s.mb.RecordPostgresqlToastSizeDataPoint(now, getInt64(metric.ToastSize), s.instanceName, metric.SchemaName, metric.TableName)
+	s.mb.RecordPostgresqlTableTotalSizeDataPoint(now, getInt64(metric.TotalSize), s.instanceName, metric.SchemaName, metric.TableName)
+	s.mb.RecordPostgresqlTableIndexesSizeDataPoint(now, getInt64(metric.IndexesSize), s.instanceName, metric.SchemaName, metric.TableName)
 
 	s.logger.Debug("Recorded table size metrics",
 		zap.String("table", tableID))

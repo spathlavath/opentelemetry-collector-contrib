@@ -67,6 +67,7 @@ func (s *ActivityScraper) recordActivityMetrics(now pcommon.Timestamp, metric mo
 	backendType := getString(metric.BackendType)
 
 	// Record all activity metrics using helper functions to extract values
+	s.mb.RecordPostgresqlConnectionsActiveDataPoint(now, getInt64(metric.ActiveConnections), s.instanceName, databaseName, userName, applicationName, backendType)
 	s.mb.RecordPostgresqlActiveWaitingQueriesDataPoint(now, getInt64(metric.ActiveWaitingQueries), s.instanceName, databaseName, userName, applicationName, backendType)
 	s.mb.RecordPostgresqlActivityXactStartAgeDataPoint(now, getFloat64(metric.XactStartAge), s.instanceName, databaseName, userName, applicationName, backendType)
 	s.mb.RecordPostgresqlActivityBackendXidAgeDataPoint(now, getInt64(metric.BackendXIDAge), s.instanceName, databaseName, userName, applicationName, backendType)

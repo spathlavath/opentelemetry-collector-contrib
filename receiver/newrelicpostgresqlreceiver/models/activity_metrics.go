@@ -17,6 +17,7 @@ type PgStatActivity struct {
 	BackendType     sql.NullString // Type of backend process
 
 	// Activity metrics
+	ActiveConnections    sql.NullInt64 // Count of active connections (state='active')
 	ActiveWaitingQueries sql.NullInt64 // Count of active queries waiting on locks or resources
 
 	// Transaction age metrics

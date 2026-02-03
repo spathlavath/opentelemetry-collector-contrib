@@ -101,6 +101,7 @@ type MetricsConfig struct {
 	PostgresqlConflictsSnapshot                       MetricConfig `mapstructure:"postgresql.conflicts.snapshot"`
 	PostgresqlConflictsTablespace                     MetricConfig `mapstructure:"postgresql.conflicts.tablespace"`
 	PostgresqlConnections                             MetricConfig `mapstructure:"postgresql.connections"`
+	PostgresqlConnectionsActive                       MetricConfig `mapstructure:"postgresql.connections.active"`
 	PostgresqlControlCheckpointDelay                  MetricConfig `mapstructure:"postgresql.control.checkpoint_delay"`
 	PostgresqlControlCheckpointDelayBytes             MetricConfig `mapstructure:"postgresql.control.checkpoint_delay_bytes"`
 	PostgresqlControlRedoDelayBytes                   MetricConfig `mapstructure:"postgresql.control.redo_delay_bytes"`
@@ -129,6 +130,14 @@ type MetricsConfig struct {
 	PostgresqlLastAutoanalyzeAge                      MetricConfig `mapstructure:"postgresql.last_autoanalyze_age"`
 	PostgresqlLastAutovacuumAge                       MetricConfig `mapstructure:"postgresql.last_autovacuum_age"`
 	PostgresqlLastVacuumAge                           MetricConfig `mapstructure:"postgresql.last_vacuum_age"`
+	PostgresqlLocksAccessExclusive                    MetricConfig `mapstructure:"postgresql.locks.access_exclusive"`
+	PostgresqlLocksAccessShare                        MetricConfig `mapstructure:"postgresql.locks.access_share"`
+	PostgresqlLocksExclusive                          MetricConfig `mapstructure:"postgresql.locks.exclusive"`
+	PostgresqlLocksRowExclusive                       MetricConfig `mapstructure:"postgresql.locks.row_exclusive"`
+	PostgresqlLocksRowShare                           MetricConfig `mapstructure:"postgresql.locks.row_share"`
+	PostgresqlLocksShare                              MetricConfig `mapstructure:"postgresql.locks.share"`
+	PostgresqlLocksShareRowExclusive                  MetricConfig `mapstructure:"postgresql.locks.share_row_exclusive"`
+	PostgresqlLocksShareUpdateExclusive               MetricConfig `mapstructure:"postgresql.locks.share_update_exclusive"`
 	PostgresqlMaxConnections                          MetricConfig `mapstructure:"postgresql.max_connections"`
 	PostgresqlPercentUsageConnections                 MetricConfig `mapstructure:"postgresql.percent_usage_connections"`
 	PostgresqlPgStatStatementsDealloc                 MetricConfig `mapstructure:"postgresql.pg_stat_statements.dealloc"`
@@ -197,6 +206,19 @@ type MetricsConfig struct {
 	PostgresqlSubscriptionLastMsgSendAge              MetricConfig `mapstructure:"postgresql.subscription.last_msg_send_age"`
 	PostgresqlSubscriptionLatestEndAge                MetricConfig `mapstructure:"postgresql.subscription.latest_end_age"`
 	PostgresqlSubscriptionSyncError                   MetricConfig `mapstructure:"postgresql.subscription.sync_error"`
+	PostgresqlTableDeadRows                           MetricConfig `mapstructure:"postgresql.table.dead_rows"`
+	PostgresqlTableHotUpdates                         MetricConfig `mapstructure:"postgresql.table.hot_updates"`
+	PostgresqlTableIndexScanRowsFetched               MetricConfig `mapstructure:"postgresql.table.index_scan_rows_fetched"`
+	PostgresqlTableIndexScans                         MetricConfig `mapstructure:"postgresql.table.index_scans"`
+	PostgresqlTableIndexesSize                        MetricConfig `mapstructure:"postgresql.table.indexes_size"`
+	PostgresqlTableLiveRows                           MetricConfig `mapstructure:"postgresql.table.live_rows"`
+	PostgresqlTableModifiedSinceAnalyze               MetricConfig `mapstructure:"postgresql.table.modified_since_analyze"`
+	PostgresqlTableRowsDeleted                        MetricConfig `mapstructure:"postgresql.table.rows_deleted"`
+	PostgresqlTableRowsInserted                       MetricConfig `mapstructure:"postgresql.table.rows_inserted"`
+	PostgresqlTableRowsUpdated                        MetricConfig `mapstructure:"postgresql.table.rows_updated"`
+	PostgresqlTableSequentialScanRowsFetched          MetricConfig `mapstructure:"postgresql.table.sequential_scan_rows_fetched"`
+	PostgresqlTableSequentialScans                    MetricConfig `mapstructure:"postgresql.table.sequential_scans"`
+	PostgresqlTableTotalSize                          MetricConfig `mapstructure:"postgresql.table.total_size"`
 	PostgresqlTempBytes                               MetricConfig `mapstructure:"postgresql.temp_bytes"`
 	PostgresqlTempFiles                               MetricConfig `mapstructure:"postgresql.temp_files"`
 	PostgresqlToastAutovacuumed                       MetricConfig `mapstructure:"postgresql.toast.autovacuumed"`
@@ -457,6 +479,9 @@ func DefaultMetricsConfig() MetricsConfig {
 		PostgresqlConnections: MetricConfig{
 			Enabled: true,
 		},
+		PostgresqlConnectionsActive: MetricConfig{
+			Enabled: true,
+		},
 		PostgresqlControlCheckpointDelay: MetricConfig{
 			Enabled: true,
 		},
@@ -539,6 +564,30 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		PostgresqlLastVacuumAge: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlLocksAccessExclusive: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlLocksAccessShare: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlLocksExclusive: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlLocksRowExclusive: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlLocksRowShare: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlLocksShare: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlLocksShareRowExclusive: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlLocksShareUpdateExclusive: MetricConfig{
 			Enabled: true,
 		},
 		PostgresqlMaxConnections: MetricConfig{
@@ -743,6 +792,45 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		PostgresqlSubscriptionSyncError: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlTableDeadRows: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlTableHotUpdates: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlTableIndexScanRowsFetched: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlTableIndexScans: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlTableIndexesSize: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlTableLiveRows: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlTableModifiedSinceAnalyze: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlTableRowsDeleted: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlTableRowsInserted: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlTableRowsUpdated: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlTableSequentialScanRowsFetched: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlTableSequentialScans: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlTableTotalSize: MetricConfig{
 			Enabled: true,
 		},
 		PostgresqlTempBytes: MetricConfig{

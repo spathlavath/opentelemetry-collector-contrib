@@ -48,6 +48,7 @@ type newRelicPostgreSQLScraper struct {
 	vacuumMaintenanceScraper  *scrapers.VacuumMaintenanceScraper
 	tableIOScraper            *scrapers.TableIOScraper
 	pgbouncerScraper          *scrapers.PgBouncerScraper
+	locksScraper              *scrapers.LocksScraper
 
 	// Database and configuration
 	db             *sql.DB
@@ -331,6 +332,15 @@ func (s *newRelicPostgreSQLScraper) initializeScrapers() error {
 		s.instanceName,
 	)
 	s.logger.Info("PgBouncer scraper initialized (will fail gracefully if PgBouncer not available)")
+
+	// Initialize Locks scraper (collects lock statistics from pg_locks)
+	s.locksScraper = scrapers.NewLocksScraper(
+		s.client,
+		s.mb,
+		s.logger,
+		s.instanceName,
+	)
+	s.logger.Info("Locks scraper initialized")
 
 	return nil
 }
@@ -703,6 +713,18 @@ func (s *newRelicPostgreSQLScraper) scrape(ctx context.Context) (pmetric.Metrics
 		}
 	} else {
 		s.logger.Warn("PgBouncer scraper is nil - this should not happen if admin connection was established")
+	}
+
+	// Scrape lock statistics from pg_locks
+	s.logger.Debug("Attempting to scrape lock statistics")
+	locksErrs := s.locksScraper.ScrapeLocks(scrapeCtx)
+	if len(locksErrs) > 0 {
+		s.logger.Warn("Failed to scrape lock statistics",
+			zap.Int("error_count", len(locksErrs)),
+			zap.Errors("errors", locksErrs))
+		scrapeErrors = append(scrapeErrors, locksErrs...)
+	} else {
+		s.logger.Debug("Successfully scraped lock statistics")
 	}
 
 	metrics := s.buildMetrics()

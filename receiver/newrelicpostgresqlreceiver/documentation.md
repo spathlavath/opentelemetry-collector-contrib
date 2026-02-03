@@ -1172,6 +1172,24 @@ Number of active connections (backends) to the database
 | database_name | Name of the PostgreSQL database | Any Str | Recommended |
 | newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
 
+### postgresql.connections.active
+
+Number of active connections to the database (state='active')
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {connections} | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| database_name | Name of the PostgreSQL database | Any Str | Recommended |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| user_name | Name of the user/role connected to the database | Any Str | Recommended |
+| application_name | Name of the replication application | Any Str | Recommended |
+| backend_type | Type of backend process (client backend, autovacuum worker, logical replication worker, parallel worker, background writer, etc.) | Any Str | Recommended |
+
 ### postgresql.control.checkpoint_delay
 
 Time elapsed since the last checkpoint in seconds (PostgreSQL 10+)
@@ -1626,6 +1644,126 @@ Seconds since last manual VACUUM on this table (PostgreSQL 9.6+)
 | newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
 | schema_name | Name of the schema containing the table | Any Str | Recommended |
 | table_name | Name of the table | Any Str | Recommended |
+
+### postgresql.locks.access_exclusive
+
+Number of AccessExclusiveLock locks held on the database (PostgreSQL 9.6+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {locks} | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| database_name | Name of the PostgreSQL database | Any Str | Recommended |
+
+### postgresql.locks.access_share
+
+Number of AccessShareLock locks held on the database (PostgreSQL 9.6+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {locks} | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| database_name | Name of the PostgreSQL database | Any Str | Recommended |
+
+### postgresql.locks.exclusive
+
+Number of ExclusiveLock locks held on the database (PostgreSQL 9.6+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {locks} | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| database_name | Name of the PostgreSQL database | Any Str | Recommended |
+
+### postgresql.locks.row_exclusive
+
+Number of RowExclusiveLock locks held on the database (PostgreSQL 9.6+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {locks} | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| database_name | Name of the PostgreSQL database | Any Str | Recommended |
+
+### postgresql.locks.row_share
+
+Number of RowShareLock locks held on the database (PostgreSQL 9.6+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {locks} | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| database_name | Name of the PostgreSQL database | Any Str | Recommended |
+
+### postgresql.locks.share
+
+Number of ShareLock locks held on the database (PostgreSQL 9.6+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {locks} | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| database_name | Name of the PostgreSQL database | Any Str | Recommended |
+
+### postgresql.locks.share_row_exclusive
+
+Number of ShareRowExclusiveLock locks held on the database (PostgreSQL 9.6+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {locks} | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| database_name | Name of the PostgreSQL database | Any Str | Recommended |
+
+### postgresql.locks.share_update_exclusive
+
+Number of ShareUpdateExclusiveLock locks held on the database (PostgreSQL 9.6+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {locks} | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| database_name | Name of the PostgreSQL database | Any Str | Recommended |
 
 ### postgresql.max_connections
 
@@ -2666,6 +2804,214 @@ Number of errors encountered during initial sync in logical replication (Postgre
 | subscription_name | Name of the logical replication subscription | Any Str | Recommended |
 | state | State of the replication slot (active or inactive) | Any Str | Recommended |
 | newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+
+### postgresql.table.dead_rows
+
+Estimated number of dead rows in this table (PostgreSQL 9.6+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {rows} | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| schema_name | Name of the schema containing the table | Any Str | Recommended |
+| table_name | Name of the table | Any Str | Recommended |
+
+### postgresql.table.hot_updates
+
+Number of rows HOT (Heap-Only Tuple) updated in this table (PostgreSQL 9.6+)
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {operations} | Sum | Int | Cumulative | true | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| schema_name | Name of the schema containing the table | Any Str | Recommended |
+| table_name | Name of the table | Any Str | Recommended |
+
+### postgresql.table.index_scan_rows_fetched
+
+Number of live rows fetched by index scans on this table (PostgreSQL 9.6+)
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {rows} | Sum | Int | Cumulative | true | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| schema_name | Name of the schema containing the table | Any Str | Recommended |
+| table_name | Name of the table | Any Str | Recommended |
+
+### postgresql.table.index_scans
+
+Number of index scans initiated on this table (PostgreSQL 9.6+)
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {scans} | Sum | Int | Cumulative | true | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| schema_name | Name of the schema containing the table | Any Str | Recommended |
+| table_name | Name of the table | Any Str | Recommended |
+
+### postgresql.table.indexes_size
+
+Total size of all indexes for this table in bytes (PostgreSQL 9.6+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| By | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| schema_name | Name of the schema containing the table | Any Str | Recommended |
+| table_name | Name of the table | Any Str | Recommended |
+
+### postgresql.table.live_rows
+
+Estimated number of live rows in this table (PostgreSQL 9.6+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {rows} | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| schema_name | Name of the schema containing the table | Any Str | Recommended |
+| table_name | Name of the table | Any Str | Recommended |
+
+### postgresql.table.modified_since_analyze
+
+Estimated number of rows modified since last ANALYZE on this table (PostgreSQL 9.6+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {rows} | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| schema_name | Name of the schema containing the table | Any Str | Recommended |
+| table_name | Name of the table | Any Str | Recommended |
+
+### postgresql.table.rows_deleted
+
+Number of rows deleted from this table (PostgreSQL 9.6+)
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {rows} | Sum | Int | Cumulative | true | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| schema_name | Name of the schema containing the table | Any Str | Recommended |
+| table_name | Name of the table | Any Str | Recommended |
+
+### postgresql.table.rows_inserted
+
+Number of rows inserted into this table (PostgreSQL 9.6+)
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {rows} | Sum | Int | Cumulative | true | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| schema_name | Name of the schema containing the table | Any Str | Recommended |
+| table_name | Name of the table | Any Str | Recommended |
+
+### postgresql.table.rows_updated
+
+Number of rows updated in this table (PostgreSQL 9.6+)
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {rows} | Sum | Int | Cumulative | true | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| schema_name | Name of the schema containing the table | Any Str | Recommended |
+| table_name | Name of the table | Any Str | Recommended |
+
+### postgresql.table.sequential_scan_rows_fetched
+
+Number of live rows fetched by sequential scans on this table (PostgreSQL 9.6+)
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {rows} | Sum | Int | Cumulative | true | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| schema_name | Name of the schema containing the table | Any Str | Recommended |
+| table_name | Name of the table | Any Str | Recommended |
+
+### postgresql.table.sequential_scans
+
+Number of sequential scans initiated on this table (PostgreSQL 9.6+)
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {scans} | Sum | Int | Cumulative | true | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| schema_name | Name of the schema containing the table | Any Str | Recommended |
+| table_name | Name of the table | Any Str | Recommended |
+
+### postgresql.table.total_size
+
+Total size of this table including indexes and TOAST in bytes (PostgreSQL 9.6+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| By | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| schema_name | Name of the schema containing the table | Any Str | Recommended |
+| table_name | Name of the table | Any Str | Recommended |
 
 ### postgresql.temp_bytes
 

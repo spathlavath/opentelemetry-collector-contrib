@@ -147,6 +147,8 @@ all_set:
       enabled: true
     postgresql.connections:
       enabled: true
+    postgresql.connections.active:
+      enabled: true
     postgresql.control.checkpoint_delay:
       enabled: true
     postgresql.control.checkpoint_delay_bytes:
@@ -202,6 +204,22 @@ all_set:
     postgresql.last_autovacuum_age:
       enabled: true
     postgresql.last_vacuum_age:
+      enabled: true
+    postgresql.locks.access_exclusive:
+      enabled: true
+    postgresql.locks.access_share:
+      enabled: true
+    postgresql.locks.exclusive:
+      enabled: true
+    postgresql.locks.row_exclusive:
+      enabled: true
+    postgresql.locks.row_share:
+      enabled: true
+    postgresql.locks.share:
+      enabled: true
+    postgresql.locks.share_row_exclusive:
+      enabled: true
+    postgresql.locks.share_update_exclusive:
       enabled: true
     postgresql.max_connections:
       enabled: true
@@ -338,6 +356,32 @@ all_set:
     postgresql.subscription.latest_end_age:
       enabled: true
     postgresql.subscription.sync_error:
+      enabled: true
+    postgresql.table.dead_rows:
+      enabled: true
+    postgresql.table.hot_updates:
+      enabled: true
+    postgresql.table.index_scan_rows_fetched:
+      enabled: true
+    postgresql.table.index_scans:
+      enabled: true
+    postgresql.table.indexes_size:
+      enabled: true
+    postgresql.table.live_rows:
+      enabled: true
+    postgresql.table.modified_since_analyze:
+      enabled: true
+    postgresql.table.rows_deleted:
+      enabled: true
+    postgresql.table.rows_inserted:
+      enabled: true
+    postgresql.table.rows_updated:
+      enabled: true
+    postgresql.table.sequential_scan_rows_fetched:
+      enabled: true
+    postgresql.table.sequential_scans:
+      enabled: true
+    postgresql.table.total_size:
       enabled: true
     postgresql.temp_bytes:
       enabled: true
@@ -574,6 +618,8 @@ none_set:
       enabled: false
     postgresql.connections:
       enabled: false
+    postgresql.connections.active:
+      enabled: false
     postgresql.control.checkpoint_delay:
       enabled: false
     postgresql.control.checkpoint_delay_bytes:
@@ -629,6 +675,22 @@ none_set:
     postgresql.last_autovacuum_age:
       enabled: false
     postgresql.last_vacuum_age:
+      enabled: false
+    postgresql.locks.access_exclusive:
+      enabled: false
+    postgresql.locks.access_share:
+      enabled: false
+    postgresql.locks.exclusive:
+      enabled: false
+    postgresql.locks.row_exclusive:
+      enabled: false
+    postgresql.locks.row_share:
+      enabled: false
+    postgresql.locks.share:
+      enabled: false
+    postgresql.locks.share_row_exclusive:
+      enabled: false
+    postgresql.locks.share_update_exclusive:
       enabled: false
     postgresql.max_connections:
       enabled: false
@@ -765,6 +827,32 @@ none_set:
     postgresql.subscription.latest_end_age:
       enabled: false
     postgresql.subscription.sync_error:
+      enabled: false
+    postgresql.table.dead_rows:
+      enabled: false
+    postgresql.table.hot_updates:
+      enabled: false
+    postgresql.table.index_scan_rows_fetched:
+      enabled: false
+    postgresql.table.index_scans:
+      enabled: false
+    postgresql.table.indexes_size:
+      enabled: false
+    postgresql.table.live_rows:
+      enabled: false
+    postgresql.table.modified_since_analyze:
+      enabled: false
+    postgresql.table.rows_deleted:
+      enabled: false
+    postgresql.table.rows_inserted:
+      enabled: false
+    postgresql.table.rows_updated:
+      enabled: false
+    postgresql.table.sequential_scan_rows_fetched:
+      enabled: false
+    postgresql.table.sequential_scans:
+      enabled: false
+    postgresql.table.total_size:
       enabled: false
     postgresql.temp_bytes:
       enabled: false
