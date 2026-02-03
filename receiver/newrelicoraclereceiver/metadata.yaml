@@ -190,9 +190,6 @@ attributes:
   final_blocker_query_id:
     description: SQL query ID of the final blocking session's query
     type: string
-  final_blocker_query_text:
-    description: SQL query text of the final blocking session's query
-    type: string
   blocking_session_status:
     description: Status of the blocking session (VALID, NO HOLDER, etc.)
     type: string
@@ -3513,7 +3510,6 @@ metrics:
       - final_blocker_sid
       - final_blocker_serial
       - final_blocker_query_id
-      - final_blocker_query_text
 
   # Disabled old wait events metrics - replaced with current_wait_seconds
   # newrelicoracledb.wait_events.total_wait_time_ms:

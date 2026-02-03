@@ -233,7 +233,6 @@ func (s *WaitEventBlockingScraper) recordBlockingMetrics(now pcommon.Timestamp, 
 	finalBlockerSerial := commonutils.FormatInt64(event.GetFinalBlockerSerial())
 	finalBlockerUser := event.GetFinalBlockerUser()
 	finalBlockerQueryID := event.GetFinalBlockerQueryID()
-	finalBlockerQueryText := commonutils.AnonymizeAndNormalize(event.GetFinalBlockerQueryText())
 
 	s.mb.RecordNewrelicoracledbBlockingQueriesWaitTimeMsDataPoint(
 		now,
@@ -260,10 +259,10 @@ func (s *WaitEventBlockingScraper) recordBlockingMetrics(now pcommon.Timestamp, 
 		finalBlockerSID,
 		finalBlockerSerial,
 		finalBlockerQueryID,
-		finalBlockerQueryText,
 	)
 
 	// Record the final blocker query details if we have a valid query ID and text
+	finalBlockerQueryText := commonutils.AnonymizeAndNormalize(event.GetFinalBlockerQueryText())
 	if finalBlockerQueryID != "" && finalBlockerQueryText != "" {
 		s.mb.RecordNewrelicoracledbSlowQueriesQueryDetailsDataPoint(
 			now,

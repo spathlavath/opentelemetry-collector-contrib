@@ -96,7 +96,6 @@ Source: Same as current_wait_time_ms (WAIT_TIME_MICRO / 1000).
 | final_blocker_sid | Session ID of the final blocking session (root cause) | Any Str | false |
 | final_blocker_serial | Serial number of the final blocking session (root cause) | Any Str | false |
 | final_blocker_query_id | SQL query ID of the final blocking session's query | Any Str | false |
-| final_blocker_query_text | SQL query text of the final blocking session's query | Any Str | false |
 
 ### newrelicoracledb.child_cursors.buffer_gets
 
@@ -810,7 +809,7 @@ Number of physical disk writes
 
 ### newrelicoracledb.execution_plan
 
- 
+Oracle SQL execution plan details including operation costs, cardinality, and resource estimates
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |

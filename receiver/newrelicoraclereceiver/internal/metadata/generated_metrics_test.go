@@ -82,7 +82,7 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbBlockingQueriesWaitTimeMsDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "user_name-val", "session_id-val", 14, "session_state-val", "query_id-val", 16, 11, "sql_exec_start-val", "wait_event_name-val", "wait_category-val", "wait_object_name-val", "wait_object_owner-val", "wait_object_type-val", "blocking_session_status-val", "immediate_blocker_sid-val", "final_blocking_session_status-val", "final_blocker_user-val", "final_blocker_sid-val", "final_blocker_serial-val", "final_blocker_query_id-val", "final_blocker_query_text-val")
+			mb.RecordNewrelicoracledbBlockingQueriesWaitTimeMsDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "user_name-val", "session_id-val", 14, "session_state-val", "query_id-val", 16, 11, "sql_exec_start-val", "wait_event_name-val", "wait_category-val", "wait_object_name-val", "wait_object_owner-val", "wait_object_type-val", "blocking_session_status-val", "immediate_blocker_sid-val", "final_blocking_session_status-val", "final_blocker_user-val", "final_blocker_sid-val", "final_blocker_serial-val", "final_blocker_query_id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
@@ -1521,9 +1521,6 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("final_blocker_query_id")
 					assert.True(t, ok)
 					assert.Equal(t, "final_blocker_query_id-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("final_blocker_query_text")
-					assert.True(t, ok)
-					assert.Equal(t, "final_blocker_query_text-val", attrVal.Str())
 				case "newrelicoracledb.child_cursors.buffer_gets":
 					assert.False(t, validatedMetrics["newrelicoracledb.child_cursors.buffer_gets"], "Found a duplicate in the metrics slice: newrelicoracledb.child_cursors.buffer_gets")
 					validatedMetrics["newrelicoracledb.child_cursors.buffer_gets"] = true
@@ -2505,7 +2502,7 @@ func TestMetricsBuilder(t *testing.T) {
 					validatedMetrics["newrelicoracledb.execution_plan"] = true
 					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
 					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
-					assert.Equal(t, " ", ms.At(i).Description())
+					assert.Equal(t, "Oracle SQL execution plan details including operation costs, cardinality, and resource estimates", ms.At(i).Description())
 					assert.Equal(t, "1", ms.At(i).Unit())
 					dp := ms.At(i).Gauge().DataPoints().At(0)
 					assert.Equal(t, start, dp.StartTimestamp())
