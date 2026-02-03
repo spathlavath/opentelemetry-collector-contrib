@@ -74,9 +74,6 @@ var (
 	errInvalidTimeout                          = errors.New("collection_interval must be between 10s and 3600s")
 	errInvalidUsername                         = errors.New("username cannot contain special characters that could cause SQL injection")
 	errInvalidService                          = errors.New("service name cannot contain special characters")
-	errInvalidQueryMonitoringResponseThreshold = errors.New("query_monitoring_response_time_threshold must be between 1ms and 5000ms")
-	errInvalidQueryMonitoringCountThreshold    = errors.New("query_monitoring_count_threshold must be between 10 and 50")
-	errInvalidChildCursorsPerSQLID             = errors.New("child_cursors_per_sql_id must be between 3 and 20")
 )
 
 // TablespaceFilterConfig defines tablespace filtering options
