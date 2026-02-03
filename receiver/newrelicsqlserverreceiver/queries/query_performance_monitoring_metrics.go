@@ -142,6 +142,20 @@ SELECT TOP (@Limit)
     -- C. QUERY CORRELATION (Required for slow query correlation)
     r_wait.query_hash AS query_id,
 
+    -- C2. QUERY TEXT (Required for APM metadata extraction)
+    -- Extract the current query text using sql_handle and statement offsets
+    SUBSTRING(
+        st_wait.text,
+        (r_wait.statement_start_offset / 2) + 1,
+        (
+            CASE
+                r_wait.statement_end_offset
+                WHEN -1 THEN DATALENGTH(st_wait.text)
+                ELSE r_wait.statement_end_offset
+            END - r_wait.statement_start_offset
+        ) / 2
+    ) AS query_text,
+
     -- D. WAIT DETAILS (Required by NRQL Query 1)
     r_wait.wait_type AS wait_type,
     r_wait.wait_time / 1000.0 AS wait_time_s,
@@ -211,6 +225,8 @@ FROM
     sys.dm_exec_requests AS r_wait
 INNER JOIN
     sys.dm_exec_sessions AS s_wait ON s_wait.session_id = r_wait.session_id
+OUTER APPLY
+    sys.dm_exec_sql_text(r_wait.sql_handle) AS st_wait
 LEFT JOIN
     sys.dm_exec_requests AS r_blocker ON r_wait.blocking_session_id = r_blocker.session_id
 LEFT JOIN

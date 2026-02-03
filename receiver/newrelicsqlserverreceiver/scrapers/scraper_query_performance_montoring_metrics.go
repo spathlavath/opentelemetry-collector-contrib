@@ -376,18 +376,18 @@ func (s *QueryPerformanceScraper) processSlowQueryMetrics(result models.SlowQuer
 	// Extract New Relic metadata and normalize SQL for cross-language correlation
 	// This enables APM integration and query correlation across different language agents
 	if result.QueryText != nil && *result.QueryText != "" {
-		// Extract metadata from New Relic query comments (e.g., /* nr_service=MyApp,nr_txn=WebTransaction/API/users */)
-		clientName, transactionName := helpers.ExtractNewRelicMetadata(*result.QueryText)
+		// Extract metadata from New Relic query comments (e.g., /* nr_apm_guid="ABC123", nr_service="order-service" */)
+		nrApmGuid, clientName := helpers.ExtractNewRelicMetadata(*result.QueryText)
 
 		// Normalize SQL and generate MD5 hash for cross-language query correlation
 		normalizedSQL, sqlHash := helpers.NormalizeSqlAndHash(*result.QueryText)
 
 		// Populate model fields with extracted metadata
+		if nrApmGuid != "" {
+			result.NrApmGuid = &nrApmGuid
+		}
 		if clientName != "" {
 			result.ClientName = &clientName
-		}
-		if transactionName != "" {
-			result.TransactionName = &transactionName
 		}
 		if sqlHash != "" {
 			result.NormalisedSqlHash = &sqlHash
@@ -423,6 +423,21 @@ func (s *QueryPerformanceScraper) processSlowQueryMetrics(result models.SlowQuer
 		lastExecutionTimestamp = *result.LastExecutionTimestamp
 	}
 
+	normalisedSqlHash := ""
+	if result.NormalisedSqlHash != nil {
+		normalisedSqlHash = *result.NormalisedSqlHash
+	}
+
+	nrApmGuid := ""
+	if result.NrApmGuid != nil {
+		nrApmGuid = *result.NrApmGuid
+	}
+
+	clientName := ""
+	if result.ClientName != nil {
+		clientName = *result.ClientName
+	}
+
 	// Emit a single metric with all query details (non-numeric attributes)
 	s.mb.RecordSqlserverSlowqueryQueryDetailsDataPoint(
 		timestamp,
@@ -433,6 +448,9 @@ func (s *QueryPerformanceScraper) processSlowQueryMetrics(result models.SlowQuer
 		queryText,
 		collectionTimestamp,
 		lastExecutionTimestamp,
+		normalisedSqlHash,
+		nrApmGuid,
+		clientName,
 		"SqlServerSlowQueryDetails",
 	)
 
@@ -442,6 +460,9 @@ func (s *QueryPerformanceScraper) processSlowQueryMetrics(result models.SlowQuer
 			*result.AvgElapsedTimeMS,
 			queryID,
 			databaseName,
+			normalisedSqlHash,
+			nrApmGuid,
+			clientName,
 		)
 	}
 
@@ -451,6 +472,9 @@ func (s *QueryPerformanceScraper) processSlowQueryMetrics(result models.SlowQuer
 			*result.IntervalAvgElapsedTimeMS,
 			queryID,
 			databaseName,
+			normalisedSqlHash,
+			nrApmGuid,
+			clientName,
 		)
 	}
 
@@ -460,6 +484,9 @@ func (s *QueryPerformanceScraper) processSlowQueryMetrics(result models.SlowQuer
 			*result.ExecutionCount,
 			queryID,
 			databaseName,
+			normalisedSqlHash,
+			nrApmGuid,
+			clientName,
 		)
 	}
 
@@ -469,6 +496,9 @@ func (s *QueryPerformanceScraper) processSlowQueryMetrics(result models.SlowQuer
 			*result.IntervalExecutionCount,
 			queryID,
 			databaseName,
+			normalisedSqlHash,
+			nrApmGuid,
+			clientName,
 		)
 	}
 

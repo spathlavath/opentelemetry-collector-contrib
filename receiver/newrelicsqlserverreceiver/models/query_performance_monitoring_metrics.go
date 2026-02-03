@@ -24,8 +24,8 @@ type SlowQuery struct {
 
 	// New Relic Metadata Extraction (calculated in-memory from query comments, not from DB)
 	// These fields enable cross-language query correlation and APM integration
+	NrApmGuid         *string `db:"-" metric_name:"nr_apm_guid" source_type:"attribute"`         // Extracted from nr_apm_guid comment (APM entity GUID)
 	ClientName        *string `db:"-" metric_name:"client_name" source_type:"attribute"`         // Extracted from nr_service comment
-	TransactionName   *string `db:"-" metric_name:"transaction_name" source_type:"attribute"`    // Extracted from nr_txn comment
 	NormalisedSqlHash *string `db:"-" metric_name:"normalised_sql_hash" source_type:"attribute"` // MD5 hash of normalized SQL for cross-language correlation
 }
 
@@ -137,6 +137,9 @@ type ActiveRunningQuery struct {
 	// C. QUERY CORRELATION (Required for slow query correlation)
 	QueryID *QueryID `db:"query_id" metric_name:"query_id" source_type:"attribute"`
 
+	// C2. QUERY TEXT (Required for APM metadata extraction)
+	QueryText *string `db:"query_text" metric_name:"query_text" source_type:"attribute"`
+
 	// D. WAIT DETAILS (Required by NRQL Query 1)
 	WaitType               *string  `db:"wait_type" metric_name:"wait_type" source_type:"attribute"`
 	WaitTimeS              *float64 `db:"wait_time_s" metric_name:"sqlserver.activequery.wait_time_seconds" source_type:"gauge"`
@@ -163,8 +166,8 @@ type ActiveRunningQuery struct {
 
 	// K. APM Integration (calculated in-memory from query comments, not from DB)
 	// These fields enable cross-language query correlation for active queries
+	NrApmGuid         *string `db:"-" metric_name:"nr_apm_guid" source_type:"attribute"`         // Extracted from nr_apm_guid comment (APM entity GUID)
 	ClientName        *string `db:"-" metric_name:"client_name" source_type:"attribute"`         // Extracted from nr_service comment
-	TransactionName   *string `db:"-" metric_name:"transaction_name" source_type:"attribute"`    // Extracted from nr_txn comment
 	NormalisedSqlHash *string `db:"-" metric_name:"normalised_sql_hash" source_type:"attribute"` // MD5 hash of normalized SQL for cross-language correlation
 }
 

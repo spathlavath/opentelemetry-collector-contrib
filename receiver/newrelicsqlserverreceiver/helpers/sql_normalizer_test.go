@@ -190,159 +190,166 @@ func TestExtractNewRelicMetadata(t *testing.T) {
 	tests := []struct {
 		name              string
 		input             string
+		expectedNrApmGuid string
 		expectedNrService string
-		expectedNrTxn     string
 	}{
-		// Quoted value format tests (REQUIRED FORMAT)
+		// Test cases for nr_guid (short format)
+		{
+			name:              "Short format: nr_guid with nr_service",
+			input:             `/* nr_guid="MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI5MjMzNDQwNw", nr_service="order-service" */ SELECT * FROM orders`,
+			expectedNrApmGuid: "MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI5MjMzNDQwNw",
+			expectedNrService: "order-service",
+		},
+		{
+			name:              "Short format: nr_guid only",
+			input:             `/* nr_guid="MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI5MjMzNDQwNw" */ SELECT * FROM orders`,
+			expectedNrApmGuid: "MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI5MjMzNDQwNw",
+			expectedNrService: "",
+		},
+		{
+			name:              "Short format: reversed order (nr_service first)",
+			input:             `/* nr_service="order-service", nr_guid="MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI5MjMzNDQwNw" */ SELECT * FROM orders`,
+			expectedNrApmGuid: "MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI5MjMzNDQwNw",
+			expectedNrService: "order-service",
+		},
+		{
+			name:              "Short format: with extra spaces",
+			input:             `/*  nr_guid = "ABC123" , nr_service = "my-service"  */ SELECT * FROM data`,
+			expectedNrApmGuid: "ABC123",
+			expectedNrService: "my-service",
+		},
+		{
+			name:              "Short format: no spaces around equals",
+			input:             `/* nr_guid="XYZ789",nr_service="test-service" */ SELECT * FROM test`,
+			expectedNrApmGuid: "XYZ789",
+			expectedNrService: "test-service",
+		},
+		// Test cases for nr_apm_guid (full format)
+		{
+			name:              "Full format: nr_apm_guid with nr_service",
+			input:             `/* nr_apm_guid="MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI5MjMzNDQwNw", nr_service="order-service" */ SELECT * FROM orders`,
+			expectedNrApmGuid: "MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI5MjMzNDQwNw",
+			expectedNrService: "order-service",
+		},
+		{
+			name:              "Full format: nr_apm_guid only",
+			input:             `/* nr_apm_guid="MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI5MjMzNDQwNw" */ SELECT * FROM orders`,
+			expectedNrApmGuid: "MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI5MjMzNDQwNw",
+			expectedNrService: "",
+		},
+		{
+			name:              "Full format: reversed order (nr_service first)",
+			input:             `/* nr_service="order-service", nr_apm_guid="MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI5MjMzNDQwNw" */ SELECT * FROM orders`,
+			expectedNrApmGuid: "MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI5MjMzNDQwNw",
+			expectedNrService: "order-service",
+		},
+		{
+			name:              "Full format: with extra spaces",
+			input:             `/*  nr_apm_guid = "ABC123" , nr_service = "my-service"  */ SELECT * FROM data`,
+			expectedNrApmGuid: "ABC123",
+			expectedNrService: "my-service",
+		},
+		{
+			name:              "Full format: no spaces around equals",
+			input:             `/* nr_apm_guid="XYZ789",nr_service="test-service" */ SELECT * FROM test`,
+			expectedNrApmGuid: "XYZ789",
+			expectedNrService: "test-service",
+		},
+		// Test cases for nr_service only (no GUID)
 		{
 			name:              "Only nr_service",
 			input:             `/* nr_service="MyApp-SQLServer" */ SELECT * FROM employees`,
+			expectedNrApmGuid: "",
 			expectedNrService: "MyApp-SQLServer",
-			expectedNrTxn:     "",
-		},
-		{
-			name:              "Both nr_service and nr_txn",
-			input:             `/* nr_service="MyApp-SQLServer",nr_txn="WebTransaction/API/customers (GET)" */ SELECT * FROM customers`,
-			expectedNrService: "MyApp-SQLServer",
-			expectedNrTxn:     "WebTransaction/API/customers (GET)",
-		},
-		{
-			name:              "Both with extra spaces",
-			input:             `/*  nr_service="MyService", nr_txn="WebTransaction/Controller/api" */ SELECT * FROM users`,
-			expectedNrService: "MyService",
-			expectedNrTxn:     "WebTransaction/Controller/api",
-		},
-		{
-			name:              "Real APM log example - customers GET with transaction",
-			input:             `/* nr_service="MyApp-SQLServer",nr_txn="WebTransaction/API/GetCustomers (GET)" */ SELECT c.customer_id, c.name FROM customers c WHERE c.status = @status`,
-			expectedNrService: "MyApp-SQLServer",
-			expectedNrTxn:     "WebTransaction/API/GetCustomers (GET)",
-		},
-		{
-			name:              "Real APM log example - order history GET with path variable",
-			input:             `/* nr_service="MyApp-SQLServer",nr_txn="WebTransaction/API/customers/{id}/orders (GET)" */ SELECT o.* FROM orders o WHERE o.customer_id = @customerId`,
-			expectedNrService: "MyApp-SQLServer",
-			expectedNrTxn:     "WebTransaction/API/customers/{id}/orders (GET)",
-		},
-		{
-			name:              "No New Relic metadata",
-			input:             "SELECT * FROM employees WHERE id = 1",
-			expectedNrService: "",
-			expectedNrTxn:     "",
-		},
-		{
-			name:              "Comment without New Relic metadata",
-			input:             "/* This is a regular comment */ SELECT * FROM employees",
-			expectedNrService: "",
-			expectedNrTxn:     "",
-		},
-		{
-			name:              "Transaction with PUT method",
-			input:             `/* nr_service="MyApp-SQLServer",nr_txn="WebTransaction/API/customers/{id} (PUT)" */ UPDATE customers SET name = @name WHERE id = @id`,
-			expectedNrService: "MyApp-SQLServer",
-			expectedNrTxn:     "WebTransaction/API/customers/{id} (PUT)",
-		},
-		{
-			name:              "Reverse order - transaction first",
-			input:             `/* nr_txn="WebTransaction/API/users",nr_service="MyApp" */ SELECT * FROM users`,
-			expectedNrService: "MyApp",
-			expectedNrTxn:     "WebTransaction/API/users",
 		},
 		{
 			name:              "Service with commas (requires quotes)",
 			input:             `/* nr_service="MyApp, Production, US-East" */ SELECT * FROM users`,
+			expectedNrApmGuid: "",
 			expectedNrService: "MyApp, Production, US-East",
-			expectedNrTxn:     "",
-		},
-		{
-			name:              "Transaction with commas and spaces in parentheses",
-			input:             `/* nr_service="MyApp",nr_txn="WebTransaction/API/customers, v2 (GET)" */ SELECT * FROM customers`,
-			expectedNrService: "MyApp",
-			expectedNrTxn:     "WebTransaction/API/customers, v2 (GET)",
-		},
-		{
-			name:              "Transaction with commas and path variables",
-			input:             `/* nr_service="MyApp",nr_txn="WebTransaction/API/users/{id}/history, v2 (GET)" */ SELECT * FROM history`,
-			expectedNrService: "MyApp",
-			expectedNrTxn:     "WebTransaction/API/users/{id}/history, v2 (GET)",
 		},
 		{
 			name:              "Service name with hyphens and numbers",
-			input:             `/* nr_service="MyApp-2024-prod",nr_txn="WebTransaction/API/test" */ SELECT * FROM test`,
+			input:             `/* nr_service="MyApp-2024-prod" */ SELECT * FROM test`,
+			expectedNrApmGuid: "",
 			expectedNrService: "MyApp-2024-prod",
-			expectedNrTxn:     "WebTransaction/API/test",
-		},
-		{
-			name:              "Transaction with DELETE method",
-			input:             `/* nr_service="MyApp",nr_txn="WebTransaction/API/customers/{id} (DELETE)" */ DELETE FROM customers WHERE id = @id`,
-			expectedNrService: "MyApp",
-			expectedNrTxn:     "WebTransaction/API/customers/{id} (DELETE)",
 		},
 		{
 			name:              "Service with multiple hyphens and underscores",
-			input:             `/* nr_service="My_App-Service-2024",nr_txn="WebTransaction/API/endpoint" */ SELECT * FROM data`,
+			input:             `/* nr_service="My_App-Service-2024" */ SELECT * FROM data`,
+			expectedNrApmGuid: "",
 			expectedNrService: "My_App-Service-2024",
-			expectedNrTxn:     "WebTransaction/API/endpoint",
 		},
-		{
-			name:              "Transaction name with special characters",
-			input:             `/* nr_service="MyApp",nr_txn="WebTransaction/API/search?query=test&page=1" */ SELECT * FROM results`,
-			expectedNrService: "MyApp",
-			expectedNrTxn:     "WebTransaction/API/search?query=test&page=1",
-		},
-		{
-			name:              "Complex real-world example",
-			input:             `/* nr_service="ECommerce-API-Prod",nr_txn="WebTransaction/SpringMVC/OrderController/processCheckout (POST)" */ EXEC ProcessOrder @orderId = @p1, @userId = @p2`,
-			expectedNrService: "ECommerce-API-Prod",
-			expectedNrTxn:     "WebTransaction/SpringMVC/OrderController/processCheckout (POST)",
-		},
-		// Additional quoted format tests
 		{
 			name:              "Service with background job notation",
 			input:             `/* nr_service="MyApp-SQLServer, Background Job" */ SELECT * FROM employees`,
+			expectedNrApmGuid: "",
 			expectedNrService: "MyApp-SQLServer, Background Job",
-			expectedNrTxn:     "",
 		},
 		{
 			name:              "Service with company name format",
-			input:             `/* nr_service="MyApp, Inc",nr_txn="WebTransaction/API/customers/{id}/orders (GET)" */ SELECT * FROM orders`,
+			input:             `/* nr_service="MyApp, Inc" */ SELECT * FROM orders`,
+			expectedNrApmGuid: "",
 			expectedNrService: "MyApp, Inc",
-			expectedNrTxn:     "WebTransaction/API/customers/{id}/orders (GET)",
-		},
-		{
-			name:              "Spaces around equals signs",
-			input:             `/* nr_service = "MyApp, Background" , nr_txn = "WebTransaction/Test" */ SELECT * FROM test`,
-			expectedNrService: "MyApp, Background",
-			expectedNrTxn:     "WebTransaction/Test",
-		},
-		{
-			name:              "Transaction with version in name",
-			input:             `/* nr_service="MyApp",nr_txn="WebTransaction/API/search?query=test&page=1, v2" */ SELECT * FROM results`,
-			expectedNrService: "MyApp",
-			expectedNrTxn:     "WebTransaction/API/search?query=test&page=1, v2",
 		},
 		{
 			name:              "Service with multiple location segments",
 			input:             `/* nr_service="MyApp, Inc, USA, Production" */ SELECT * FROM data`,
+			expectedNrApmGuid: "",
 			expectedNrService: "MyApp, Inc, USA, Production",
-			expectedNrTxn:     "",
 		},
 		{
 			name:              "Production service with regions",
-			input:             `/* nr_service="ECommerce-API, Production, US-East",nr_txn="WebTransaction/SpringMVC/OrderController/processCheckout (POST)" */ EXEC ProcessOrder @orderId = @p1`,
+			input:             `/* nr_service="ECommerce-API, Production, US-East" */ EXEC ProcessOrder @orderId = @p1`,
+			expectedNrApmGuid: "",
 			expectedNrService: "ECommerce-API, Production, US-East",
-			expectedNrTxn:     "WebTransaction/SpringMVC/OrderController/processCheckout (POST)",
+		},
+		{
+			name:              "No New Relic metadata",
+			input:             "SELECT * FROM employees WHERE id = 1",
+			expectedNrApmGuid: "",
+			expectedNrService: "",
+		},
+		{
+			name:              "Comment without New Relic metadata",
+			input:             "/* This is a regular comment */ SELECT * FROM employees",
+			expectedNrApmGuid: "",
+			expectedNrService: "",
+		},
+		{
+			name:              "Complex real-world example with short format",
+			input:             `/* nr_guid="ABC123XYZ789",nr_service="ECommerce-API-Prod" */ EXEC ProcessOrder @orderId = @p1, @userId = @p2`,
+			expectedNrApmGuid: "ABC123XYZ789",
+			expectedNrService: "ECommerce-API-Prod",
+		},
+		{
+			name:              "Complex real-world example with full format",
+			input:             `/* nr_apm_guid="ABC123XYZ789",nr_service="ECommerce-API-Prod" */ EXEC ProcessOrder @orderId = @p1, @userId = @p2`,
+			expectedNrApmGuid: "ABC123XYZ789",
+			expectedNrService: "ECommerce-API-Prod",
+		},
+		{
+			name:              "Mixed spacing with short format",
+			input:             `/* nr_service = "MyApp, Background" , nr_guid = "TEST123" */ SELECT * FROM test`,
+			expectedNrApmGuid: "TEST123",
+			expectedNrService: "MyApp, Background",
+		},
+		{
+			name:              "Mixed spacing with full format",
+			input:             `/* nr_service = "MyApp, Background" , nr_apm_guid = "TEST123" */ SELECT * FROM test`,
+			expectedNrApmGuid: "TEST123",
+			expectedNrService: "MyApp, Background",
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			nrService, nrTxn := ExtractNewRelicMetadata(tt.input)
+			nrApmGuid, nrService := ExtractNewRelicMetadata(tt.input)
+			if nrApmGuid != tt.expectedNrApmGuid {
+				t.Errorf("nrApmGuid = %q; want %q", nrApmGuid, tt.expectedNrApmGuid)
+			}
 			if nrService != tt.expectedNrService {
 				t.Errorf("nrService = %q; want %q", nrService, tt.expectedNrService)
-			}
-			if nrTxn != tt.expectedNrTxn {
-				t.Errorf("nrTxn = %q; want %q", nrTxn, tt.expectedNrTxn)
 			}
 		})
 	}

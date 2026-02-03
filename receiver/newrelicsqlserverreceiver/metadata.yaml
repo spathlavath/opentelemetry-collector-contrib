@@ -50,11 +50,14 @@ metrics:
       value_type: double
     attributes:
       [
+        session_id,
+        request_id,
         database_name,
         login_name,
         host_name,
         client_name,
         query_id,
+        query_text,
         wait_type,
         wait_type_description,
         wait_type_category,
@@ -66,6 +69,7 @@ metrics:
         request_start_time,
         collection_timestamp,
         transaction_id,
+        nr_apm_guid,
         normalised_sql_hash,
         open_transaction_count,
         plan_handle,
@@ -1198,7 +1202,7 @@ metrics:
     unit: ms
     gauge:
       value_type: double
-    attributes: [query_id, database_name]
+    attributes: [query_id, database_name, normalised_sql_hash, nr_apm_guid, client_name]
 
   sqlserver.slowquery.historical_execution_count:
     enabled: true
@@ -1208,7 +1212,7 @@ metrics:
     unit: "{executions}"
     gauge:
       value_type: int
-    attributes: [query_id, database_name]
+    attributes: [query_id, database_name, normalised_sql_hash, nr_apm_guid, client_name]
 
   sqlserver.slowquery.interval_avg_elapsed_time_ms:
     enabled: true
@@ -1218,7 +1222,7 @@ metrics:
     unit: ms
     gauge:
       value_type: double
-    attributes: [query_id, database_name]
+    attributes: [query_id, database_name, normalised_sql_hash, nr_apm_guid, client_name]
 
   sqlserver.slowquery.interval_execution_count:
     enabled: true
@@ -1228,7 +1232,7 @@ metrics:
     unit: "{executions}"
     gauge:
       value_type: int
-    attributes: [query_id, database_name]
+    attributes: [query_id, database_name, normalised_sql_hash, nr_apm_guid, client_name]
 
   sqlserver.slowquery.query_details:
     enabled: true
@@ -1246,6 +1250,9 @@ metrics:
         query_text,
         collection_timestamp,
         last_execution_timestamp,
+        normalised_sql_hash,
+        nr_apm_guid,
+        client_name,
         newrelic.event.type,
       ]
 
@@ -1735,12 +1742,15 @@ attributes:
   no_join_predicate:
     description: Whether join lacks a predicate (potential Cartesian product)
     type: bool
-  normalised_sql_hash:
-    description: MD5 hash of normalized SQL for cross-language query correlation
-    type: string
   node_id:
     description: Execution plan node identifier
     type: int
+  normalised_sql_hash:
+    description: MD5 hash of normalized SQL for cross-language query correlation
+    type: string
+  nr_apm_guid:
+    description: New Relic APM entity GUID extracted from query comments for APM-DB correlation
+    type: string
   open_transaction_count:
     description: Number of open transactions
     type: int
@@ -1827,15 +1837,6 @@ attributes:
   transaction_id:
     description: Transaction identifier
     type: int
-<<<<<<< HEAD
-=======
-  transaction_isolation_level:
-    description: Transaction isolation level
-    type: int
-  transaction_name:
-    description: Transaction name extracted from New Relic query comments (nr_txn)
-    type: string
->>>>>>> 351c9b6168 (Implementation of generating normalised query hash for APM - DB linking and extracting client name and transaction name for service identification)
   wait_resource:
     description: Resource being waited on
     type: string

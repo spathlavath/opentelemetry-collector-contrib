@@ -218,12 +218,12 @@ func TestConfigValidate(t *testing.T) {
 		{
 			name: "both custom query and config file specified",
 			config: &Config{
-				Hostname:            "localhost",
-				Port:                "1433",
+				Hostname:             "localhost",
+				Port:                 "1433",
 				MaxConcurrentWorkers: 5,
-				Timeout:             30 * time.Second,
-				CustomMetricsQuery:  "SELECT 1",
-				CustomMetricsConfig: "/path/to/config.yaml",
+				Timeout:              30 * time.Second,
+				CustomMetricsQuery:   "SELECT 1",
+				CustomMetricsConfig:  "/path/to/config.yaml",
 			},
 			wantErr: true,
 			errMsg:  "cannot specify both custom_metrics_query and custom_metrics_config",
@@ -274,7 +274,7 @@ func TestConfigValidateCustomMetricsConfigFileExists(t *testing.T) {
 	// Create a temporary file
 	tmpDir := t.TempDir()
 	tmpFile := filepath.Join(tmpDir, "custom_metrics.yaml")
-	err := os.WriteFile(tmpFile, []byte("test: data"), 0644)
+	err := os.WriteFile(tmpFile, []byte("test: data"), 0o644)
 	require.NoError(t, err)
 
 	cfg := &Config{
@@ -412,10 +412,10 @@ func TestIsAzureADAuth(t *testing.T) {
 
 func TestCreateConnectionURL(t *testing.T) {
 	tests := []struct {
-		name           string
-		config         *Config
-		dbName         string
-		shouldContain  []string
+		name             string
+		config           *Config
+		dbName           string
+		shouldContain    []string
 		shouldNotContain []string
 	}{
 		{
@@ -663,27 +663,27 @@ func TestConfigStructTags(t *testing.T) {
 
 	// Test that confmap can unmarshal into the Config struct
 	conf := confmap.NewFromStringMap(map[string]interface{}{
-		"hostname":                          "testhost",
-		"port":                              "1433",
-		"username":                          "user",
-		"password":                          "pass",
-		"client_id":                         "client",
-		"tenant_id":                         "tenant",
-		"client_secret":                     "secret",
-		"enable_ssl":                        true,
-		"trust_server_certificate":          true,
-		"certificate_location":              "/path/to/cert",
-		"max_concurrent_workers":            5,
-		"timeout":                           "30s",
-		"custom_metrics_query":              "SELECT 1",
-		"custom_metrics_config":             "",
-		"extra_connection_url_args":         "app=test",
-		"enable_query_monitoring":           true,
-		"query_monitoring_response_time_threshold": 100,
-		"query_monitoring_count_threshold":         50,
-		"query_monitoring_fetch_interval":          30,
-		"query_monitoring_text_truncate_limit":     2048,
-		"enable_active_running_queries":                true,
+		"hostname":                  "testhost",
+		"port":                      "1433",
+		"username":                  "user",
+		"password":                  "pass",
+		"client_id":                 "client",
+		"tenant_id":                 "tenant",
+		"client_secret":             "secret",
+		"enable_ssl":                true,
+		"trust_server_certificate":  true,
+		"certificate_location":      "/path/to/cert",
+		"max_concurrent_workers":    5,
+		"timeout":                   "30s",
+		"custom_metrics_query":      "SELECT 1",
+		"custom_metrics_config":     "",
+		"extra_connection_url_args": "app=test",
+		"enable_query_monitoring":   true,
+		"query_monitoring_response_time_threshold":      100,
+		"query_monitoring_count_threshold":              50,
+		"query_monitoring_fetch_interval":               30,
+		"query_monitoring_text_truncate_limit":          2048,
+		"enable_active_running_queries":                 true,
 		"active_running_queries_elapsed_time_threshold": 1000,
 		"enable_slow_query_smoothing":                   true,
 		"slow_query_smoothing_factor":                   0.5,

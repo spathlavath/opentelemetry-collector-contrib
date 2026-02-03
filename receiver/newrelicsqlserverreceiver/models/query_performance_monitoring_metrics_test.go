@@ -11,7 +11,7 @@ func TestSlowQueryModel(t *testing.T) {
 		queryText := "SELECT * FROM USERS WHERE ID = ?"
 		queryID := QueryID("0x12345678")
 		clientName := "MyApp-SQLServer"
-		transactionName := "WebTransaction/API/users (GET)"
+		nrApmGuid := "MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI5MjMzNDQwNw"
 		sqlHash := "d1c08094cf228a33039e9ee0387ab83c"
 		avgElapsedTime := 150.5
 		executionCount := int64(1000)
@@ -22,7 +22,7 @@ func TestSlowQueryModel(t *testing.T) {
 			QueryText:                &queryText,
 			QueryID:                  &queryID,
 			ClientName:               &clientName,
-			TransactionName:          &transactionName,
+			NrApmGuid:                &nrApmGuid,
 			NormalisedSqlHash:        &sqlHash,
 			AvgElapsedTimeMS:         &avgElapsedTime,
 			ExecutionCount:           &executionCount,
@@ -40,8 +40,8 @@ func TestSlowQueryModel(t *testing.T) {
 		assert.NotNil(t, slowQuery.ClientName)
 		assert.Equal(t, clientName, *slowQuery.ClientName)
 
-		assert.NotNil(t, slowQuery.TransactionName)
-		assert.Equal(t, transactionName, *slowQuery.TransactionName)
+		assert.NotNil(t, slowQuery.NrApmGuid)
+		assert.Equal(t, nrApmGuid, *slowQuery.NrApmGuid)
 
 		assert.NotNil(t, slowQuery.NormalisedSqlHash)
 		assert.Equal(t, sqlHash, *slowQuery.NormalisedSqlHash)
@@ -66,27 +66,27 @@ func TestSlowQueryModel(t *testing.T) {
 		slowQuery := SlowQuery{
 			QueryText:         &queryText,
 			ClientName:        nil,
-			TransactionName:   nil,
+			NrApmGuid:         nil,
 			NormalisedSqlHash: nil,
 		}
 
 		// Verify metadata fields can be nil
 		assert.NotNil(t, slowQuery.QueryText)
 		assert.Nil(t, slowQuery.ClientName)
-		assert.Nil(t, slowQuery.TransactionName)
+		assert.Nil(t, slowQuery.NrApmGuid)
 		assert.Nil(t, slowQuery.NormalisedSqlHash)
 	})
 
-	t.Run("SlowQuery model with empty client name and transaction", func(t *testing.T) {
+	t.Run("SlowQuery model with empty client name and nr_apm_guid", func(t *testing.T) {
 		queryText := "SELECT * FROM PRODUCTS"
 		emptyClient := ""
-		emptyTransaction := ""
-		sqlHash := "abc123def456"
+		emptyGuid := ""
+		sqlHash := "abc123def456abc123def456abc123de"
 
 		slowQuery := SlowQuery{
 			QueryText:         &queryText,
 			ClientName:        &emptyClient,
-			TransactionName:   &emptyTransaction,
+			NrApmGuid:         &emptyGuid,
 			NormalisedSqlHash: &sqlHash,
 		}
 
@@ -94,8 +94,8 @@ func TestSlowQueryModel(t *testing.T) {
 		assert.NotNil(t, slowQuery.ClientName)
 		assert.Equal(t, "", *slowQuery.ClientName)
 
-		assert.NotNil(t, slowQuery.TransactionName)
-		assert.Equal(t, "", *slowQuery.TransactionName)
+		assert.NotNil(t, slowQuery.NrApmGuid)
+		assert.Equal(t, "", *slowQuery.NrApmGuid)
 
 		assert.NotNil(t, slowQuery.NormalisedSqlHash)
 		assert.NotEmpty(t, *slowQuery.NormalisedSqlHash)
@@ -107,31 +107,41 @@ func TestActiveRunningQueryModel(t *testing.T) {
 		sessionID := int64(52)
 		queryText := "SELECT * FROM ORDERS"
 		waitType := "LCK_M_S"
-		cpuTime := int64(1500)
-		elapsedTime := int64(3000)
+		waitTime := 1.5
+		clientName := "MyApp"
+		nrApmGuid := "ABC123"
+		sqlHash := "abc123def456abc123def456abc123de"
 
 		activeQuery := ActiveRunningQuery{
-			CurrentSessionID:   &sessionID,
-			QueryStatementText: &queryText,
-			WaitType:           &waitType,
-			CPUTimeMs:          &cpuTime,
-			TotalElapsedTimeMs: &elapsedTime,
+			CurrentSessionID:  &sessionID,
+			QueryText:         &queryText,
+			WaitType:          &waitType,
+			WaitTimeS:         &waitTime,
+			ClientName:        &clientName,
+			NrApmGuid:         &nrApmGuid,
+			NormalisedSqlHash: &sqlHash,
 		}
 
 		assert.NotNil(t, activeQuery.CurrentSessionID)
 		assert.Equal(t, sessionID, *activeQuery.CurrentSessionID)
 
-		assert.NotNil(t, activeQuery.QueryStatementText)
-		assert.Equal(t, queryText, *activeQuery.QueryStatementText)
+		assert.NotNil(t, activeQuery.QueryText)
+		assert.Equal(t, queryText, *activeQuery.QueryText)
 
 		assert.NotNil(t, activeQuery.WaitType)
 		assert.Equal(t, waitType, *activeQuery.WaitType)
 
-		assert.NotNil(t, activeQuery.CPUTimeMs)
-		assert.Equal(t, cpuTime, *activeQuery.CPUTimeMs)
+		assert.NotNil(t, activeQuery.WaitTimeS)
+		assert.Equal(t, waitTime, *activeQuery.WaitTimeS)
 
-		assert.NotNil(t, activeQuery.TotalElapsedTimeMs)
-		assert.Equal(t, elapsedTime, *activeQuery.TotalElapsedTimeMs)
+		assert.NotNil(t, activeQuery.ClientName)
+		assert.Equal(t, clientName, *activeQuery.ClientName)
+
+		assert.NotNil(t, activeQuery.NrApmGuid)
+		assert.Equal(t, nrApmGuid, *activeQuery.NrApmGuid)
+
+		assert.NotNil(t, activeQuery.NormalisedSqlHash)
+		assert.Equal(t, sqlHash, *activeQuery.NormalisedSqlHash)
 	})
 }
 
@@ -166,8 +176,8 @@ func TestSlowQueryWithIntervalMetrics(t *testing.T) {
 		sqlHash := "1234567890abcdef1234567890abcdef"
 
 		// Cumulative metrics (from database)
-		totalElapsedTime := 50000.0  // 50 seconds total
-		executionCount := int64(500)  // 500 total executions
+		totalElapsedTime := 50000.0                                  // 50 seconds total
+		executionCount := int64(500)                                 // 500 total executions
 		avgElapsedTime := totalElapsedTime / float64(executionCount) // 100ms average
 
 		// Interval metrics (calculated by scraper)
@@ -218,15 +228,15 @@ func TestModelTagging(t *testing.T) {
 
 		// Just verify we can create instances with all field combinations
 		clientName := "TestApp"
-		transactionName := "WebTransaction/Test"
+		nrApmGuid := "MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI5MjMzNDQwNw"
 		sqlHash := "abcd1234efgh5678ijkl9012mnop3456"
 
 		slowQuery.ClientName = &clientName
-		slowQuery.TransactionName = &transactionName
+		slowQuery.NrApmGuid = &nrApmGuid
 		slowQuery.NormalisedSqlHash = &sqlHash
 
 		assert.Equal(t, "TestApp", *slowQuery.ClientName)
-		assert.Equal(t, "WebTransaction/Test", *slowQuery.TransactionName)
+		assert.Equal(t, "MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI5MjMzNDQwNw", *slowQuery.NrApmGuid)
 		assert.Equal(t, "abcd1234efgh5678ijkl9012mnop3456", *slowQuery.NormalisedSqlHash)
 	})
 }
@@ -255,7 +265,7 @@ func TestNilSafetyInModels(t *testing.T) {
 			QueryText:         nil,
 			QueryID:           nil,
 			ClientName:        nil,
-			TransactionName:   nil,
+			NrApmGuid:         nil,
 			NormalisedSqlHash: nil,
 		}
 
@@ -263,7 +273,7 @@ func TestNilSafetyInModels(t *testing.T) {
 		assert.Nil(t, slowQuery.QueryText)
 		assert.Nil(t, slowQuery.QueryID)
 		assert.Nil(t, slowQuery.ClientName)
-		assert.Nil(t, slowQuery.TransactionName)
+		assert.Nil(t, slowQuery.NrApmGuid)
 		assert.Nil(t, slowQuery.NormalisedSqlHash)
 
 		// Setting values should work
