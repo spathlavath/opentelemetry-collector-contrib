@@ -43,38 +43,26 @@ func GenerateMD5Hash(normalizedSQL string) string {
 	return hex.EncodeToString(hash[:])
 }
 
-// ExtractNewRelicMetadata extracts nr_service and optionally nr_txn from New Relic query comments
+// ExtractNewRelicMetadata extracts nr_service from New Relic query comments
 // REQUIRED FORMAT: Values must be enclosed in double quotes to handle commas and special characters
 //
 // Examples:
 // 1. Service only: /* nr_service="MyApp-SQLServer, Background Job" */
-// 2. Both fields: /* nr_service="MyApp, Inc",nr_txn="WebTransaction/API/customers/{id}/orders (GET)" */
-// 3. Any order: /* nr_txn="WebTransaction/Test",nr_service="MyApp" */
-// 4. With spaces: /* nr_service = "MyApp" , nr_txn = "WebTransaction/Test" */
+// 2. With spaces: /* nr_service = "MyApp" */
 //
-// Returns: (client_name, transaction_name)
-func ExtractNewRelicMetadata(sql string) (nrService string, nrTxn string) {
+// Returns: client_name
+func ExtractNewRelicMetadata(sql string) string {
 	// Match nr_service with quoted values (spaces around = are optional)
 	// Format: nr_service = "value with, commas and special chars"
 	serviceRegex := regexp.MustCompile(`nr_service\s*=\s*"([^"]+)"`)
 
-	// Match nr_txn with quoted values (spaces around = are optional)
-	// Format: nr_txn = "value with, commas and special chars"
-	txnRegex := regexp.MustCompile(`nr_txn\s*=\s*"([^"]+)"`)
-
 	// Extract nr_service
 	serviceMatch := serviceRegex.FindStringSubmatch(sql)
 	if len(serviceMatch) > 1 {
-		nrService = strings.TrimSpace(serviceMatch[1])
+		return strings.TrimSpace(serviceMatch[1])
 	}
 
-	// Extract nr_txn
-	txnMatch := txnRegex.FindStringSubmatch(sql)
-	if len(txnMatch) > 1 {
-		nrTxn = strings.TrimSpace(txnMatch[1])
-	}
-
-	return nrService, nrTxn
+	return ""
 }
 
 // sqlNormalizerState holds state during SQL normalization

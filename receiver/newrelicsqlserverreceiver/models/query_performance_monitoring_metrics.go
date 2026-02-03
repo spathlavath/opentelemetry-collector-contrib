@@ -25,7 +25,6 @@ type SlowQuery struct {
 	// New Relic Metadata Extraction (calculated in-memory from query comments, not from DB)
 	// These fields enable cross-language query correlation and APM integration
 	ClientName        *string `db:"-" metric_name:"client_name" source_type:"attribute"`         // Extracted from nr_service comment
-	TransactionName   *string `db:"-" metric_name:"transaction_name" source_type:"attribute"`    // Extracted from nr_txn comment
 	NormalisedSqlHash *string `db:"-" metric_name:"normalised_sql_hash" source_type:"attribute"` // MD5 hash of normalized SQL for cross-language correlation
 }
 
@@ -165,7 +164,6 @@ type ActiveRunningQuery struct {
 	// K. APM Integration (calculated in-memory from query comments, not from DB)
 	// These fields enable cross-language query correlation for active queries
 	ClientName        *string `db:"-" metric_name:"client_name" source_type:"attribute"`         // Extracted from nr_service comment
-	TransactionName   *string `db:"-" metric_name:"transaction_name" source_type:"attribute"`    // Extracted from nr_txn comment
 	NormalisedSqlHash *string `db:"-" metric_name:"normalised_sql_hash" source_type:"attribute"` // MD5 hash of normalized SQL for cross-language correlation
 }
 

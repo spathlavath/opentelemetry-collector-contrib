@@ -1198,7 +1198,7 @@ metrics:
     unit: ms
     gauge:
       value_type: double
-    attributes: [query_id, database_name, client_name, transaction_name, normalised_sql_hash]
+    attributes: [query_id, database_name, client_name, normalised_sql_hash]
 
   sqlserver.slowquery.historical_execution_count:
     enabled: true
@@ -1208,7 +1208,7 @@ metrics:
     unit: "{executions}"
     gauge:
       value_type: int
-    attributes: [query_id, database_name, client_name, transaction_name, normalised_sql_hash]
+    attributes: [query_id, database_name, client_name, normalised_sql_hash]
 
   sqlserver.slowquery.interval_avg_elapsed_time_ms:
     enabled: true
@@ -1218,7 +1218,7 @@ metrics:
     unit: ms
     gauge:
       value_type: double
-    attributes: [query_id, database_name, client_name, transaction_name, normalised_sql_hash]
+    attributes: [query_id, database_name, client_name, normalised_sql_hash]
 
   sqlserver.slowquery.interval_execution_count:
     enabled: true
@@ -1228,7 +1228,7 @@ metrics:
     unit: "{executions}"
     gauge:
       value_type: int
-    attributes: [query_id, database_name, client_name, transaction_name, normalised_sql_hash]
+    attributes: [query_id, database_name, client_name, normalised_sql_hash]
 
   sqlserver.slowquery.query_details:
     enabled: true
@@ -1247,7 +1247,6 @@ metrics:
         collection_timestamp,
         last_execution_timestamp,
         client_name,
-        transaction_name,
         normalised_sql_hash,
         newrelic.event.type,
       ]
@@ -1738,12 +1737,12 @@ attributes:
   no_join_predicate:
     description: Whether join lacks a predicate (potential Cartesian product)
     type: bool
-  normalised_sql_hash:
-    description: MD5 hash of normalized SQL for cross-language query correlation
-    type: string
   node_id:
     description: Execution plan node identifier
     type: int
+  normalised_sql_hash:
+    description: MD5 hash of normalized SQL for cross-language query correlation
+    type: string
   open_transaction_count:
     description: Number of open transactions
     type: int
@@ -1778,9 +1777,6 @@ attributes:
   replica_server_name:
     description: Replica server name in availability group
     type: string
-  request_id:
-    description: SQL Server request identifier
-    type: int
   request_start_time:
     description: Timestamp when the request started
     type: string
@@ -1794,9 +1790,6 @@ attributes:
   schema_name:
     description: Schema name of the database object
     type: string
-  session_id:
-    description: SQL Server session identifier
-    type: int
   spill_occurred:
     description: Whether memory spill occurred
     type: bool

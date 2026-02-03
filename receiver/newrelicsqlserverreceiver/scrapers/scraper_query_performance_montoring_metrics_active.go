@@ -137,8 +137,8 @@ func (s *QueryPerformanceScraper) processActiveRunningQueryMetricsWithPlan(resul
 	// APM metadata extraction and SQL normalization (similar to slow query processing)
 	// This enables APM integration and query correlation across different language agents
 	if result.QueryStatementText != nil && *result.QueryStatementText != "" {
-		// Extract metadata from New Relic query comments (e.g., /* nr_service=MyApp,nr_txn=WebTransaction/API/users */)
-		clientName, transactionName := helpers.ExtractNewRelicMetadata(*result.QueryStatementText)
+		// Extract metadata from New Relic query comments (e.g., /* nr_service="MyApp" */)
+		clientName := helpers.ExtractNewRelicMetadata(*result.QueryStatementText)
 
 		// Normalize SQL and generate MD5 hash for cross-language query correlation
 		normalizedSQL, sqlHash := helpers.NormalizeSqlAndHash(*result.QueryStatementText)
@@ -146,9 +146,6 @@ func (s *QueryPerformanceScraper) processActiveRunningQueryMetricsWithPlan(resul
 		// Populate model fields with extracted metadata
 		if clientName != "" {
 			result.ClientName = &clientName
-		}
-		if transactionName != "" {
-			result.TransactionName = &transactionName
 		}
 		if sqlHash != "" {
 			result.NormalisedSqlHash = &sqlHash
@@ -162,87 +159,87 @@ func (s *QueryPerformanceScraper) processActiveRunningQueryMetricsWithPlan(resul
 	timestamp := pcommon.NewTimestampFromTime(time.Now())
 
 	// Extract attribute values
-	var sessionID int64
-	if result.CurrentSessionID != nil {
-		sessionID = *result.CurrentSessionID
-	}
-
-	var requestID int64
-	if result.RequestID != nil {
-		requestID = *result.RequestID
-	}
-
-	var databaseName string
+	databaseName := ""
 	if result.DatabaseName != nil {
 		databaseName = *result.DatabaseName
 	}
 
-	var loginName string
+	loginName := ""
 	if result.LoginName != nil {
 		loginName = *result.LoginName
 	}
 
-	var hostName string
+	hostName := ""
 	if result.HostName != nil {
 		hostName = *result.HostName
 	}
 
-	var waitType string
+	clientName := ""
+	if result.ClientName != nil {
+		clientName = *result.ClientName
+	}
+
+	waitType := ""
 	if result.WaitType != nil {
 		waitType = *result.WaitType
 	}
 
-	var waitResource string
+	waitResource := ""
 	if result.WaitResource != nil {
 		waitResource = *result.WaitResource
 	}
 
-	var waitResourceObjectName string
+	waitResourceObjectName := ""
 	if result.WaitResourceObjectName != nil {
 		waitResourceObjectName = *result.WaitResourceObjectName
 	}
 
-	var lastWaitType string
+	lastWaitType := ""
 	if result.LastWaitType != nil {
 		lastWaitType = *result.LastWaitType
 	}
 
-	var requestStartTime string
+	requestStartTime := ""
 	if result.RequestStartTime != nil {
 		requestStartTime = *result.RequestStartTime
 	}
 
-	var collectionTimestamp string
+	collectionTimestamp := ""
 	if result.CollectionTimestamp != nil {
 		collectionTimestamp = *result.CollectionTimestamp
 	}
 
-	var transactionID int64
+	transactionID := int64(0)
 	if result.TransactionID != nil {
 		transactionID = *result.TransactionID
 	}
 
-	var openTransactionCount int64
+	normalisedSqlHash := ""
+	if result.NormalisedSqlHash != nil {
+		normalisedSqlHash = *result.NormalisedSqlHash
+	}
+
+	openTransactionCount := int64(0)
 	if result.OpenTransactionCount != nil {
 		openTransactionCount = *result.OpenTransactionCount
 	}
 
-	var blockingSessionID int64
+	blockingSessionID := int64(0)
 	if result.BlockingSessionID != nil {
 		blockingSessionID = *result.BlockingSessionID
 	}
 
-	var blockingLoginName string
+	blockingLoginName := ""
 	if result.BlockerLoginName != nil {
 		blockingLoginName = *result.BlockerLoginName
 	}
 
-	var blockingQueryHash string
+	blockingQueryHash := ""
 	if result.BlockingQueryHash != nil && !result.BlockingQueryHash.IsEmpty() {
 		blockingQueryHash = result.BlockingQueryHash.String()
 	}
 
-	var blockingQueryText string
+	blockingQueryText := ""
 	if result.BlockingQueryStatementText != nil {
 		// Truncate to 4095 characters first (before anonymization for efficiency)
 		truncatedText := *result.BlockingQueryStatementText
@@ -253,12 +250,12 @@ func (s *QueryPerformanceScraper) processActiveRunningQueryMetricsWithPlan(resul
 		blockingQueryText = helpers.AnonymizeQueryText(truncatedText)
 	}
 
-	var queryID string
+	queryID := ""
 	if result.QueryID != nil && !result.QueryID.IsEmpty() {
 		queryID = result.QueryID.String()
 	}
 
-	var planHandle string
+	planHandle := ""
 	if slowQueryPlanHandle != nil && !slowQueryPlanHandle.IsEmpty() {
 		planHandle = slowQueryPlanHandle.String()
 	}
@@ -304,11 +301,10 @@ func (s *QueryPerformanceScraper) processActiveRunningQueryMetricsWithPlan(resul
 		s.mb.RecordSqlserverActivequeryWaitTimeSecondsDataPoint(
 			timestamp,
 			*result.WaitTimeS,
-			sessionID,
-			requestID,
 			databaseName,
 			loginName,
 			hostName,
+			clientName,
 			queryID,
 			waitType,
 			waitTypeDescription,
@@ -321,6 +317,7 @@ func (s *QueryPerformanceScraper) processActiveRunningQueryMetricsWithPlan(resul
 			requestStartTime,
 			collectionTimestamp,
 			transactionID,
+			normalisedSqlHash,
 			openTransactionCount,
 			planHandle,
 			blockingSessionID,
