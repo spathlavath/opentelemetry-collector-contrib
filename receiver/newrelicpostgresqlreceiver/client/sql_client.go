@@ -1292,3 +1292,56 @@ func (c *SQLClient) QueryPgBouncerStats(ctx context.Context) ([]models.PgBouncer
 
 	return metrics, nil
 }
+
+// QueryPgBouncerPools retrieves per-pool connection details from PgBouncer
+// Returns connection pool status from SHOW POOLS command
+// Uses pgBouncerDB connection if available, otherwise uses main db connection
+func (c *SQLClient) QueryPgBouncerPools(ctx context.Context) ([]models.PgBouncerPoolsMetric, error) {
+	// Use PgBouncer admin connection if available, otherwise use main connection
+	db := c.db
+	if c.pgBouncerDB != nil {
+		db = c.pgBouncerDB
+	}
+
+	rows, err := db.QueryContext(ctx, queries.PgBouncerPoolsSQL)
+	if err != nil {
+		return nil, fmt.Errorf("failed to query PgBouncer pools: %w", err)
+	}
+	defer rows.Close()
+
+	var metrics []models.PgBouncerPoolsMetric
+
+	for rows.Next() {
+		var metric models.PgBouncerPoolsMetric
+		err := rows.Scan(
+			&metric.Database,
+			&metric.User,
+			// Client connection counters (must match SHOW POOLS column order)
+			&metric.ClActive,
+			&metric.ClWaiting,
+			&metric.ClActiveCancelReq,
+			&metric.ClWaitingCancelReq,
+			// Server connection counters (must match SHOW POOLS column order)
+			&metric.SvActive,
+			&metric.SvIdle,
+			&metric.SvUsed,
+			&metric.SvTested,
+			&metric.SvLogin,
+			&metric.SvActiveCancel,
+			&metric.SvBeingCancel,
+			// Pool status
+			&metric.Maxwait,
+			&metric.PoolMode,
+		)
+		if err != nil {
+			return nil, fmt.Errorf("failed to scan PgBouncer pools row: %w", err)
+		}
+		metrics = append(metrics, metric)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("error iterating PgBouncer pools rows: %w", err)
+	}
+
+	return metrics, nil
+}

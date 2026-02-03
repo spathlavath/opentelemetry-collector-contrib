@@ -13,6 +13,42 @@ import (
 )
 
 var MetricsInfo = metricsInfo{
+	PgbouncerPoolsClientConnectionsActive: metricInfo{
+		Name: "pgbouncer.pools.client_connections_active",
+	},
+	PgbouncerPoolsClientConnectionsActiveCancelReq: metricInfo{
+		Name: "pgbouncer.pools.client_connections_active_cancel_req",
+	},
+	PgbouncerPoolsClientConnectionsWaiting: metricInfo{
+		Name: "pgbouncer.pools.client_connections_waiting",
+	},
+	PgbouncerPoolsClientConnectionsWaitingCancelReq: metricInfo{
+		Name: "pgbouncer.pools.client_connections_waiting_cancel_req",
+	},
+	PgbouncerPoolsMaxwaitInMilliseconds: metricInfo{
+		Name: "pgbouncer.pools.maxwait_in_milliseconds",
+	},
+	PgbouncerPoolsServerConnectionsActive: metricInfo{
+		Name: "pgbouncer.pools.server_connections_active",
+	},
+	PgbouncerPoolsServerConnectionsActiveCancel: metricInfo{
+		Name: "pgbouncer.pools.server_connections_active_cancel",
+	},
+	PgbouncerPoolsServerConnectionsBeingCancel: metricInfo{
+		Name: "pgbouncer.pools.server_connections_being_cancel",
+	},
+	PgbouncerPoolsServerConnectionsIdle: metricInfo{
+		Name: "pgbouncer.pools.server_connections_idle",
+	},
+	PgbouncerPoolsServerConnectionsLogin: metricInfo{
+		Name: "pgbouncer.pools.server_connections_login",
+	},
+	PgbouncerPoolsServerConnectionsTested: metricInfo{
+		Name: "pgbouncer.pools.server_connections_tested",
+	},
+	PgbouncerPoolsServerConnectionsUsed: metricInfo{
+		Name: "pgbouncer.pools.server_connections_used",
+	},
 	PgbouncerStatsAvgBytesIn: metricInfo{
 		Name: "pgbouncer.stats.avg_bytes_in",
 	},
@@ -598,6 +634,18 @@ var MetricsInfo = metricsInfo{
 }
 
 type metricsInfo struct {
+	PgbouncerPoolsClientConnectionsActive             metricInfo
+	PgbouncerPoolsClientConnectionsActiveCancelReq    metricInfo
+	PgbouncerPoolsClientConnectionsWaiting            metricInfo
+	PgbouncerPoolsClientConnectionsWaitingCancelReq   metricInfo
+	PgbouncerPoolsMaxwaitInMilliseconds               metricInfo
+	PgbouncerPoolsServerConnectionsActive             metricInfo
+	PgbouncerPoolsServerConnectionsActiveCancel       metricInfo
+	PgbouncerPoolsServerConnectionsBeingCancel        metricInfo
+	PgbouncerPoolsServerConnectionsIdle               metricInfo
+	PgbouncerPoolsServerConnectionsLogin              metricInfo
+	PgbouncerPoolsServerConnectionsTested             metricInfo
+	PgbouncerPoolsServerConnectionsUsed               metricInfo
 	PgbouncerStatsAvgBytesIn                          metricInfo
 	PgbouncerStatsAvgBytesOut                         metricInfo
 	PgbouncerStatsAvgRequestsPerSecond                metricInfo
@@ -796,6 +844,654 @@ type metricsInfo struct {
 
 type metricInfo struct {
 	Name string
+}
+
+type metricPgbouncerPoolsClientConnectionsActive struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills pgbouncer.pools.client_connections_active metric with initial data.
+func (m *metricPgbouncerPoolsClientConnectionsActive) init() {
+	m.data.SetName("pgbouncer.pools.client_connections_active")
+	m.data.SetDescription("Number of active client connections (PgBouncer 1.8+)")
+	m.data.SetUnit("{connections}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPgbouncerPoolsClientConnectionsActive) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, poolModeAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
+	dp.Attributes().PutStr("user_name", userNameAttributeValue)
+	dp.Attributes().PutStr("pool_mode", poolModeAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPgbouncerPoolsClientConnectionsActive) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPgbouncerPoolsClientConnectionsActive) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPgbouncerPoolsClientConnectionsActive(cfg MetricConfig) metricPgbouncerPoolsClientConnectionsActive {
+	m := metricPgbouncerPoolsClientConnectionsActive{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPgbouncerPoolsClientConnectionsActiveCancelReq struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills pgbouncer.pools.client_connections_active_cancel_req metric with initial data.
+func (m *metricPgbouncerPoolsClientConnectionsActiveCancelReq) init() {
+	m.data.SetName("pgbouncer.pools.client_connections_active_cancel_req")
+	m.data.SetDescription("Number of client connections with active cancel requests (PgBouncer 1.8+)")
+	m.data.SetUnit("{connections}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPgbouncerPoolsClientConnectionsActiveCancelReq) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, poolModeAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
+	dp.Attributes().PutStr("user_name", userNameAttributeValue)
+	dp.Attributes().PutStr("pool_mode", poolModeAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPgbouncerPoolsClientConnectionsActiveCancelReq) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPgbouncerPoolsClientConnectionsActiveCancelReq) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPgbouncerPoolsClientConnectionsActiveCancelReq(cfg MetricConfig) metricPgbouncerPoolsClientConnectionsActiveCancelReq {
+	m := metricPgbouncerPoolsClientConnectionsActiveCancelReq{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPgbouncerPoolsClientConnectionsWaiting struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills pgbouncer.pools.client_connections_waiting metric with initial data.
+func (m *metricPgbouncerPoolsClientConnectionsWaiting) init() {
+	m.data.SetName("pgbouncer.pools.client_connections_waiting")
+	m.data.SetDescription("Number of client connections waiting for a server connection (PgBouncer 1.8+)")
+	m.data.SetUnit("{connections}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPgbouncerPoolsClientConnectionsWaiting) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, poolModeAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
+	dp.Attributes().PutStr("user_name", userNameAttributeValue)
+	dp.Attributes().PutStr("pool_mode", poolModeAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPgbouncerPoolsClientConnectionsWaiting) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPgbouncerPoolsClientConnectionsWaiting) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPgbouncerPoolsClientConnectionsWaiting(cfg MetricConfig) metricPgbouncerPoolsClientConnectionsWaiting {
+	m := metricPgbouncerPoolsClientConnectionsWaiting{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPgbouncerPoolsClientConnectionsWaitingCancelReq struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills pgbouncer.pools.client_connections_waiting_cancel_req metric with initial data.
+func (m *metricPgbouncerPoolsClientConnectionsWaitingCancelReq) init() {
+	m.data.SetName("pgbouncer.pools.client_connections_waiting_cancel_req")
+	m.data.SetDescription("Number of client connections waiting with cancel requests (PgBouncer 1.8+)")
+	m.data.SetUnit("{connections}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPgbouncerPoolsClientConnectionsWaitingCancelReq) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, poolModeAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
+	dp.Attributes().PutStr("user_name", userNameAttributeValue)
+	dp.Attributes().PutStr("pool_mode", poolModeAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPgbouncerPoolsClientConnectionsWaitingCancelReq) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPgbouncerPoolsClientConnectionsWaitingCancelReq) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPgbouncerPoolsClientConnectionsWaitingCancelReq(cfg MetricConfig) metricPgbouncerPoolsClientConnectionsWaitingCancelReq {
+	m := metricPgbouncerPoolsClientConnectionsWaitingCancelReq{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPgbouncerPoolsMaxwaitInMilliseconds struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills pgbouncer.pools.maxwait_in_milliseconds metric with initial data.
+func (m *metricPgbouncerPoolsMaxwaitInMilliseconds) init() {
+	m.data.SetName("pgbouncer.pools.maxwait_in_milliseconds")
+	m.data.SetDescription("Maximum wait time for clients in milliseconds (PgBouncer 1.8+)")
+	m.data.SetUnit("ms")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPgbouncerPoolsMaxwaitInMilliseconds) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, poolModeAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
+	dp.Attributes().PutStr("user_name", userNameAttributeValue)
+	dp.Attributes().PutStr("pool_mode", poolModeAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPgbouncerPoolsMaxwaitInMilliseconds) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPgbouncerPoolsMaxwaitInMilliseconds) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPgbouncerPoolsMaxwaitInMilliseconds(cfg MetricConfig) metricPgbouncerPoolsMaxwaitInMilliseconds {
+	m := metricPgbouncerPoolsMaxwaitInMilliseconds{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPgbouncerPoolsServerConnectionsActive struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills pgbouncer.pools.server_connections_active metric with initial data.
+func (m *metricPgbouncerPoolsServerConnectionsActive) init() {
+	m.data.SetName("pgbouncer.pools.server_connections_active")
+	m.data.SetDescription("Number of server connections actively linked to a client (PgBouncer 1.8+)")
+	m.data.SetUnit("{connections}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPgbouncerPoolsServerConnectionsActive) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, poolModeAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
+	dp.Attributes().PutStr("user_name", userNameAttributeValue)
+	dp.Attributes().PutStr("pool_mode", poolModeAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPgbouncerPoolsServerConnectionsActive) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPgbouncerPoolsServerConnectionsActive) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPgbouncerPoolsServerConnectionsActive(cfg MetricConfig) metricPgbouncerPoolsServerConnectionsActive {
+	m := metricPgbouncerPoolsServerConnectionsActive{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPgbouncerPoolsServerConnectionsActiveCancel struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills pgbouncer.pools.server_connections_active_cancel metric with initial data.
+func (m *metricPgbouncerPoolsServerConnectionsActiveCancel) init() {
+	m.data.SetName("pgbouncer.pools.server_connections_active_cancel")
+	m.data.SetDescription("Number of server connections currently being canceled (PgBouncer 1.8+)")
+	m.data.SetUnit("{connections}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPgbouncerPoolsServerConnectionsActiveCancel) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, poolModeAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
+	dp.Attributes().PutStr("user_name", userNameAttributeValue)
+	dp.Attributes().PutStr("pool_mode", poolModeAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPgbouncerPoolsServerConnectionsActiveCancel) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPgbouncerPoolsServerConnectionsActiveCancel) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPgbouncerPoolsServerConnectionsActiveCancel(cfg MetricConfig) metricPgbouncerPoolsServerConnectionsActiveCancel {
+	m := metricPgbouncerPoolsServerConnectionsActiveCancel{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPgbouncerPoolsServerConnectionsBeingCancel struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills pgbouncer.pools.server_connections_being_cancel metric with initial data.
+func (m *metricPgbouncerPoolsServerConnectionsBeingCancel) init() {
+	m.data.SetName("pgbouncer.pools.server_connections_being_cancel")
+	m.data.SetDescription("Number of server connections in the process of being canceled (PgBouncer 1.8+)")
+	m.data.SetUnit("{connections}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPgbouncerPoolsServerConnectionsBeingCancel) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, poolModeAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
+	dp.Attributes().PutStr("user_name", userNameAttributeValue)
+	dp.Attributes().PutStr("pool_mode", poolModeAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPgbouncerPoolsServerConnectionsBeingCancel) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPgbouncerPoolsServerConnectionsBeingCancel) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPgbouncerPoolsServerConnectionsBeingCancel(cfg MetricConfig) metricPgbouncerPoolsServerConnectionsBeingCancel {
+	m := metricPgbouncerPoolsServerConnectionsBeingCancel{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPgbouncerPoolsServerConnectionsIdle struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills pgbouncer.pools.server_connections_idle metric with initial data.
+func (m *metricPgbouncerPoolsServerConnectionsIdle) init() {
+	m.data.SetName("pgbouncer.pools.server_connections_idle")
+	m.data.SetDescription("Number of server connections idle and ready (PgBouncer 1.8+)")
+	m.data.SetUnit("{connections}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPgbouncerPoolsServerConnectionsIdle) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, poolModeAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
+	dp.Attributes().PutStr("user_name", userNameAttributeValue)
+	dp.Attributes().PutStr("pool_mode", poolModeAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPgbouncerPoolsServerConnectionsIdle) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPgbouncerPoolsServerConnectionsIdle) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPgbouncerPoolsServerConnectionsIdle(cfg MetricConfig) metricPgbouncerPoolsServerConnectionsIdle {
+	m := metricPgbouncerPoolsServerConnectionsIdle{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPgbouncerPoolsServerConnectionsLogin struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills pgbouncer.pools.server_connections_login metric with initial data.
+func (m *metricPgbouncerPoolsServerConnectionsLogin) init() {
+	m.data.SetName("pgbouncer.pools.server_connections_login")
+	m.data.SetDescription("Number of server connections currently logging in (PgBouncer 1.8+)")
+	m.data.SetUnit("{connections}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPgbouncerPoolsServerConnectionsLogin) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, poolModeAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
+	dp.Attributes().PutStr("user_name", userNameAttributeValue)
+	dp.Attributes().PutStr("pool_mode", poolModeAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPgbouncerPoolsServerConnectionsLogin) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPgbouncerPoolsServerConnectionsLogin) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPgbouncerPoolsServerConnectionsLogin(cfg MetricConfig) metricPgbouncerPoolsServerConnectionsLogin {
+	m := metricPgbouncerPoolsServerConnectionsLogin{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPgbouncerPoolsServerConnectionsTested struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills pgbouncer.pools.server_connections_tested metric with initial data.
+func (m *metricPgbouncerPoolsServerConnectionsTested) init() {
+	m.data.SetName("pgbouncer.pools.server_connections_tested")
+	m.data.SetDescription("Number of server connections currently being tested (PgBouncer 1.8+)")
+	m.data.SetUnit("{connections}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPgbouncerPoolsServerConnectionsTested) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, poolModeAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
+	dp.Attributes().PutStr("user_name", userNameAttributeValue)
+	dp.Attributes().PutStr("pool_mode", poolModeAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPgbouncerPoolsServerConnectionsTested) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPgbouncerPoolsServerConnectionsTested) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPgbouncerPoolsServerConnectionsTested(cfg MetricConfig) metricPgbouncerPoolsServerConnectionsTested {
+	m := metricPgbouncerPoolsServerConnectionsTested{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPgbouncerPoolsServerConnectionsUsed struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills pgbouncer.pools.server_connections_used metric with initial data.
+func (m *metricPgbouncerPoolsServerConnectionsUsed) init() {
+	m.data.SetName("pgbouncer.pools.server_connections_used")
+	m.data.SetDescription("Number of server connections idle more than server_check_delay (PgBouncer 1.8+)")
+	m.data.SetUnit("{connections}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPgbouncerPoolsServerConnectionsUsed) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, poolModeAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
+	dp.Attributes().PutStr("user_name", userNameAttributeValue)
+	dp.Attributes().PutStr("pool_mode", poolModeAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPgbouncerPoolsServerConnectionsUsed) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPgbouncerPoolsServerConnectionsUsed) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPgbouncerPoolsServerConnectionsUsed(cfg MetricConfig) metricPgbouncerPoolsServerConnectionsUsed {
+	m := metricPgbouncerPoolsServerConnectionsUsed{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
 }
 
 type metricPgbouncerStatsAvgBytesIn struct {
@@ -11171,6 +11867,18 @@ type MetricsBuilder struct {
 	buildInfo                                               component.BuildInfo  // contains version information.
 	resourceAttributeIncludeFilter                          map[string]filter.Filter
 	resourceAttributeExcludeFilter                          map[string]filter.Filter
+	metricPgbouncerPoolsClientConnectionsActive             metricPgbouncerPoolsClientConnectionsActive
+	metricPgbouncerPoolsClientConnectionsActiveCancelReq    metricPgbouncerPoolsClientConnectionsActiveCancelReq
+	metricPgbouncerPoolsClientConnectionsWaiting            metricPgbouncerPoolsClientConnectionsWaiting
+	metricPgbouncerPoolsClientConnectionsWaitingCancelReq   metricPgbouncerPoolsClientConnectionsWaitingCancelReq
+	metricPgbouncerPoolsMaxwaitInMilliseconds               metricPgbouncerPoolsMaxwaitInMilliseconds
+	metricPgbouncerPoolsServerConnectionsActive             metricPgbouncerPoolsServerConnectionsActive
+	metricPgbouncerPoolsServerConnectionsActiveCancel       metricPgbouncerPoolsServerConnectionsActiveCancel
+	metricPgbouncerPoolsServerConnectionsBeingCancel        metricPgbouncerPoolsServerConnectionsBeingCancel
+	metricPgbouncerPoolsServerConnectionsIdle               metricPgbouncerPoolsServerConnectionsIdle
+	metricPgbouncerPoolsServerConnectionsLogin              metricPgbouncerPoolsServerConnectionsLogin
+	metricPgbouncerPoolsServerConnectionsTested             metricPgbouncerPoolsServerConnectionsTested
+	metricPgbouncerPoolsServerConnectionsUsed               metricPgbouncerPoolsServerConnectionsUsed
 	metricPgbouncerStatsAvgBytesIn                          metricPgbouncerStatsAvgBytesIn
 	metricPgbouncerStatsAvgBytesOut                         metricPgbouncerStatsAvgBytesOut
 	metricPgbouncerStatsAvgRequestsPerSecond                metricPgbouncerStatsAvgRequestsPerSecond
@@ -11386,13 +12094,25 @@ func WithStartTime(startTime pcommon.Timestamp) MetricBuilderOption {
 }
 func NewMetricsBuilder(mbc MetricsBuilderConfig, settings receiver.Settings, options ...MetricBuilderOption) *MetricsBuilder {
 	mb := &MetricsBuilder{
-		config:                                   mbc,
-		startTime:                                pcommon.NewTimestampFromTime(time.Now()),
-		metricsBuffer:                            pmetric.NewMetrics(),
-		buildInfo:                                settings.BuildInfo,
-		metricPgbouncerStatsAvgBytesIn:           newMetricPgbouncerStatsAvgBytesIn(mbc.Metrics.PgbouncerStatsAvgBytesIn),
-		metricPgbouncerStatsAvgBytesOut:          newMetricPgbouncerStatsAvgBytesOut(mbc.Metrics.PgbouncerStatsAvgBytesOut),
-		metricPgbouncerStatsAvgRequestsPerSecond: newMetricPgbouncerStatsAvgRequestsPerSecond(mbc.Metrics.PgbouncerStatsAvgRequestsPerSecond),
+		config:        mbc,
+		startTime:     pcommon.NewTimestampFromTime(time.Now()),
+		metricsBuffer: pmetric.NewMetrics(),
+		buildInfo:     settings.BuildInfo,
+		metricPgbouncerPoolsClientConnectionsActive:             newMetricPgbouncerPoolsClientConnectionsActive(mbc.Metrics.PgbouncerPoolsClientConnectionsActive),
+		metricPgbouncerPoolsClientConnectionsActiveCancelReq:    newMetricPgbouncerPoolsClientConnectionsActiveCancelReq(mbc.Metrics.PgbouncerPoolsClientConnectionsActiveCancelReq),
+		metricPgbouncerPoolsClientConnectionsWaiting:            newMetricPgbouncerPoolsClientConnectionsWaiting(mbc.Metrics.PgbouncerPoolsClientConnectionsWaiting),
+		metricPgbouncerPoolsClientConnectionsWaitingCancelReq:   newMetricPgbouncerPoolsClientConnectionsWaitingCancelReq(mbc.Metrics.PgbouncerPoolsClientConnectionsWaitingCancelReq),
+		metricPgbouncerPoolsMaxwaitInMilliseconds:               newMetricPgbouncerPoolsMaxwaitInMilliseconds(mbc.Metrics.PgbouncerPoolsMaxwaitInMilliseconds),
+		metricPgbouncerPoolsServerConnectionsActive:             newMetricPgbouncerPoolsServerConnectionsActive(mbc.Metrics.PgbouncerPoolsServerConnectionsActive),
+		metricPgbouncerPoolsServerConnectionsActiveCancel:       newMetricPgbouncerPoolsServerConnectionsActiveCancel(mbc.Metrics.PgbouncerPoolsServerConnectionsActiveCancel),
+		metricPgbouncerPoolsServerConnectionsBeingCancel:        newMetricPgbouncerPoolsServerConnectionsBeingCancel(mbc.Metrics.PgbouncerPoolsServerConnectionsBeingCancel),
+		metricPgbouncerPoolsServerConnectionsIdle:               newMetricPgbouncerPoolsServerConnectionsIdle(mbc.Metrics.PgbouncerPoolsServerConnectionsIdle),
+		metricPgbouncerPoolsServerConnectionsLogin:              newMetricPgbouncerPoolsServerConnectionsLogin(mbc.Metrics.PgbouncerPoolsServerConnectionsLogin),
+		metricPgbouncerPoolsServerConnectionsTested:             newMetricPgbouncerPoolsServerConnectionsTested(mbc.Metrics.PgbouncerPoolsServerConnectionsTested),
+		metricPgbouncerPoolsServerConnectionsUsed:               newMetricPgbouncerPoolsServerConnectionsUsed(mbc.Metrics.PgbouncerPoolsServerConnectionsUsed),
+		metricPgbouncerStatsAvgBytesIn:                          newMetricPgbouncerStatsAvgBytesIn(mbc.Metrics.PgbouncerStatsAvgBytesIn),
+		metricPgbouncerStatsAvgBytesOut:                         newMetricPgbouncerStatsAvgBytesOut(mbc.Metrics.PgbouncerStatsAvgBytesOut),
+		metricPgbouncerStatsAvgRequestsPerSecond:                newMetricPgbouncerStatsAvgRequestsPerSecond(mbc.Metrics.PgbouncerStatsAvgRequestsPerSecond),
 		metricPgbouncerStatsAvgServerAssignmentCount:            newMetricPgbouncerStatsAvgServerAssignmentCount(mbc.Metrics.PgbouncerStatsAvgServerAssignmentCount),
 		metricPgbouncerStatsAvgTransactionCount:                 newMetricPgbouncerStatsAvgTransactionCount(mbc.Metrics.PgbouncerStatsAvgTransactionCount),
 		metricPgbouncerStatsAvgTransactionDurationMilliseconds:  newMetricPgbouncerStatsAvgTransactionDurationMilliseconds(mbc.Metrics.PgbouncerStatsAvgTransactionDurationMilliseconds),
@@ -11692,6 +12412,18 @@ func (mb *MetricsBuilder) EmitForResource(options ...ResourceMetricsOption) {
 	ils.Scope().SetName(ScopeName)
 	ils.Scope().SetVersion(mb.buildInfo.Version)
 	ils.Metrics().EnsureCapacity(mb.metricsCapacity)
+	mb.metricPgbouncerPoolsClientConnectionsActive.emit(ils.Metrics())
+	mb.metricPgbouncerPoolsClientConnectionsActiveCancelReq.emit(ils.Metrics())
+	mb.metricPgbouncerPoolsClientConnectionsWaiting.emit(ils.Metrics())
+	mb.metricPgbouncerPoolsClientConnectionsWaitingCancelReq.emit(ils.Metrics())
+	mb.metricPgbouncerPoolsMaxwaitInMilliseconds.emit(ils.Metrics())
+	mb.metricPgbouncerPoolsServerConnectionsActive.emit(ils.Metrics())
+	mb.metricPgbouncerPoolsServerConnectionsActiveCancel.emit(ils.Metrics())
+	mb.metricPgbouncerPoolsServerConnectionsBeingCancel.emit(ils.Metrics())
+	mb.metricPgbouncerPoolsServerConnectionsIdle.emit(ils.Metrics())
+	mb.metricPgbouncerPoolsServerConnectionsLogin.emit(ils.Metrics())
+	mb.metricPgbouncerPoolsServerConnectionsTested.emit(ils.Metrics())
+	mb.metricPgbouncerPoolsServerConnectionsUsed.emit(ils.Metrics())
 	mb.metricPgbouncerStatsAvgBytesIn.emit(ils.Metrics())
 	mb.metricPgbouncerStatsAvgBytesOut.emit(ils.Metrics())
 	mb.metricPgbouncerStatsAvgRequestsPerSecond.emit(ils.Metrics())
@@ -11915,6 +12647,66 @@ func (mb *MetricsBuilder) Emit(options ...ResourceMetricsOption) pmetric.Metrics
 	metrics := mb.metricsBuffer
 	mb.metricsBuffer = pmetric.NewMetrics()
 	return metrics
+}
+
+// RecordPgbouncerPoolsClientConnectionsActiveDataPoint adds a data point to pgbouncer.pools.client_connections_active metric.
+func (mb *MetricsBuilder) RecordPgbouncerPoolsClientConnectionsActiveDataPoint(ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, poolModeAttributeValue string) {
+	mb.metricPgbouncerPoolsClientConnectionsActive.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue, databaseNameAttributeValue, userNameAttributeValue, poolModeAttributeValue)
+}
+
+// RecordPgbouncerPoolsClientConnectionsActiveCancelReqDataPoint adds a data point to pgbouncer.pools.client_connections_active_cancel_req metric.
+func (mb *MetricsBuilder) RecordPgbouncerPoolsClientConnectionsActiveCancelReqDataPoint(ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, poolModeAttributeValue string) {
+	mb.metricPgbouncerPoolsClientConnectionsActiveCancelReq.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue, databaseNameAttributeValue, userNameAttributeValue, poolModeAttributeValue)
+}
+
+// RecordPgbouncerPoolsClientConnectionsWaitingDataPoint adds a data point to pgbouncer.pools.client_connections_waiting metric.
+func (mb *MetricsBuilder) RecordPgbouncerPoolsClientConnectionsWaitingDataPoint(ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, poolModeAttributeValue string) {
+	mb.metricPgbouncerPoolsClientConnectionsWaiting.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue, databaseNameAttributeValue, userNameAttributeValue, poolModeAttributeValue)
+}
+
+// RecordPgbouncerPoolsClientConnectionsWaitingCancelReqDataPoint adds a data point to pgbouncer.pools.client_connections_waiting_cancel_req metric.
+func (mb *MetricsBuilder) RecordPgbouncerPoolsClientConnectionsWaitingCancelReqDataPoint(ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, poolModeAttributeValue string) {
+	mb.metricPgbouncerPoolsClientConnectionsWaitingCancelReq.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue, databaseNameAttributeValue, userNameAttributeValue, poolModeAttributeValue)
+}
+
+// RecordPgbouncerPoolsMaxwaitInMillisecondsDataPoint adds a data point to pgbouncer.pools.maxwait_in_milliseconds metric.
+func (mb *MetricsBuilder) RecordPgbouncerPoolsMaxwaitInMillisecondsDataPoint(ts pcommon.Timestamp, val float64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, poolModeAttributeValue string) {
+	mb.metricPgbouncerPoolsMaxwaitInMilliseconds.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue, databaseNameAttributeValue, userNameAttributeValue, poolModeAttributeValue)
+}
+
+// RecordPgbouncerPoolsServerConnectionsActiveDataPoint adds a data point to pgbouncer.pools.server_connections_active metric.
+func (mb *MetricsBuilder) RecordPgbouncerPoolsServerConnectionsActiveDataPoint(ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, poolModeAttributeValue string) {
+	mb.metricPgbouncerPoolsServerConnectionsActive.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue, databaseNameAttributeValue, userNameAttributeValue, poolModeAttributeValue)
+}
+
+// RecordPgbouncerPoolsServerConnectionsActiveCancelDataPoint adds a data point to pgbouncer.pools.server_connections_active_cancel metric.
+func (mb *MetricsBuilder) RecordPgbouncerPoolsServerConnectionsActiveCancelDataPoint(ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, poolModeAttributeValue string) {
+	mb.metricPgbouncerPoolsServerConnectionsActiveCancel.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue, databaseNameAttributeValue, userNameAttributeValue, poolModeAttributeValue)
+}
+
+// RecordPgbouncerPoolsServerConnectionsBeingCancelDataPoint adds a data point to pgbouncer.pools.server_connections_being_cancel metric.
+func (mb *MetricsBuilder) RecordPgbouncerPoolsServerConnectionsBeingCancelDataPoint(ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, poolModeAttributeValue string) {
+	mb.metricPgbouncerPoolsServerConnectionsBeingCancel.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue, databaseNameAttributeValue, userNameAttributeValue, poolModeAttributeValue)
+}
+
+// RecordPgbouncerPoolsServerConnectionsIdleDataPoint adds a data point to pgbouncer.pools.server_connections_idle metric.
+func (mb *MetricsBuilder) RecordPgbouncerPoolsServerConnectionsIdleDataPoint(ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, poolModeAttributeValue string) {
+	mb.metricPgbouncerPoolsServerConnectionsIdle.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue, databaseNameAttributeValue, userNameAttributeValue, poolModeAttributeValue)
+}
+
+// RecordPgbouncerPoolsServerConnectionsLoginDataPoint adds a data point to pgbouncer.pools.server_connections_login metric.
+func (mb *MetricsBuilder) RecordPgbouncerPoolsServerConnectionsLoginDataPoint(ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, poolModeAttributeValue string) {
+	mb.metricPgbouncerPoolsServerConnectionsLogin.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue, databaseNameAttributeValue, userNameAttributeValue, poolModeAttributeValue)
+}
+
+// RecordPgbouncerPoolsServerConnectionsTestedDataPoint adds a data point to pgbouncer.pools.server_connections_tested metric.
+func (mb *MetricsBuilder) RecordPgbouncerPoolsServerConnectionsTestedDataPoint(ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, poolModeAttributeValue string) {
+	mb.metricPgbouncerPoolsServerConnectionsTested.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue, databaseNameAttributeValue, userNameAttributeValue, poolModeAttributeValue)
+}
+
+// RecordPgbouncerPoolsServerConnectionsUsedDataPoint adds a data point to pgbouncer.pools.server_connections_used metric.
+func (mb *MetricsBuilder) RecordPgbouncerPoolsServerConnectionsUsedDataPoint(ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, poolModeAttributeValue string) {
+	mb.metricPgbouncerPoolsServerConnectionsUsed.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue, databaseNameAttributeValue, userNameAttributeValue, poolModeAttributeValue)
 }
 
 // RecordPgbouncerStatsAvgBytesInDataPoint adds a data point to pgbouncer.stats.avg_bytes_in metric.

@@ -689,6 +689,18 @@ func (s *newRelicPostgreSQLScraper) scrape(ctx context.Context) (pmetric.Metrics
 		} else {
 			s.logger.Info("Successfully scraped PgBouncer stats")
 		}
+
+		// Scrape PgBouncer pools (optional, fails gracefully if PgBouncer not available)
+		s.logger.Info("Attempting to scrape PgBouncer pools")
+		pgbouncerPoolsErrs := s.pgbouncerScraper.ScrapePgBouncerPools(scrapeCtx)
+		if len(pgbouncerPoolsErrs) > 0 {
+			s.logger.Warn("PgBouncer pools not available or query failed",
+				zap.Int("error_count", len(pgbouncerPoolsErrs)),
+				zap.Errors("errors", pgbouncerPoolsErrs))
+			// Don't append to scrapeErrors - PgBouncer may not be configured, which is acceptable
+		} else {
+			s.logger.Info("Successfully scraped PgBouncer pools")
+		}
 	} else {
 		s.logger.Warn("PgBouncer scraper is nil - this should not happen if admin connection was established")
 	}

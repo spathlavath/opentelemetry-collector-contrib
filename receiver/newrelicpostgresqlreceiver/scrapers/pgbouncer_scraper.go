@@ -87,3 +87,50 @@ func (s *PgBouncerScraper) recordPgBouncerStatsMetrics(now pcommon.Timestamp, me
 	s.mb.RecordPgbouncerStatsTotalServerAssignmentCountDataPoint(now, getInt64(metric.TotalServerAssignmentCount), s.instanceName, database)
 	s.mb.RecordPgbouncerStatsAvgServerAssignmentCountDataPoint(now, getInt64(metric.AvgServerAssignmentCount), s.instanceName, database)
 }
+
+// ScrapePgBouncerPools scrapes PgBouncer per-pool connection details
+func (s *PgBouncerScraper) ScrapePgBouncerPools(ctx context.Context) []error {
+	now := pcommon.NewTimestampFromTime(time.Now())
+
+	metrics, err := s.client.QueryPgBouncerPools(ctx)
+	if err != nil {
+		s.logger.Debug("Failed to query PgBouncer pools (PgBouncer may not be available)", zap.Error(err))
+		return []error{err}
+	}
+
+	for _, metric := range metrics {
+		s.recordPgBouncerPoolsMetrics(now, metric)
+	}
+
+	s.logger.Debug("PgBouncer pools scrape completed",
+		zap.Int("pools", len(metrics)))
+
+	return nil
+}
+
+// recordPgBouncerPoolsMetrics records all PgBouncer pool metrics for a single database/user combination
+func (s *PgBouncerScraper) recordPgBouncerPoolsMetrics(now pcommon.Timestamp, metric models.PgBouncerPoolsMetric) {
+	database := metric.Database
+	user := metric.User
+	poolMode := metric.PoolMode
+
+	// Record client connection metrics
+	s.mb.RecordPgbouncerPoolsClientConnectionsActiveDataPoint(now, getInt64(metric.ClActive), s.instanceName, database, user, poolMode)
+	s.mb.RecordPgbouncerPoolsClientConnectionsWaitingDataPoint(now, getInt64(metric.ClWaiting), s.instanceName, database, user, poolMode)
+	s.mb.RecordPgbouncerPoolsClientConnectionsActiveCancelReqDataPoint(now, getInt64(metric.ClActiveCancelReq), s.instanceName, database, user, poolMode)
+	s.mb.RecordPgbouncerPoolsClientConnectionsWaitingCancelReqDataPoint(now, getInt64(metric.ClWaitingCancelReq), s.instanceName, database, user, poolMode)
+
+	// Record server connection metrics
+	s.mb.RecordPgbouncerPoolsServerConnectionsActiveDataPoint(now, getInt64(metric.SvActive), s.instanceName, database, user, poolMode)
+	s.mb.RecordPgbouncerPoolsServerConnectionsIdleDataPoint(now, getInt64(metric.SvIdle), s.instanceName, database, user, poolMode)
+	s.mb.RecordPgbouncerPoolsServerConnectionsUsedDataPoint(now, getInt64(metric.SvUsed), s.instanceName, database, user, poolMode)
+	s.mb.RecordPgbouncerPoolsServerConnectionsTestedDataPoint(now, getInt64(metric.SvTested), s.instanceName, database, user, poolMode)
+	s.mb.RecordPgbouncerPoolsServerConnectionsLoginDataPoint(now, getInt64(metric.SvLogin), s.instanceName, database, user, poolMode)
+	s.mb.RecordPgbouncerPoolsServerConnectionsActiveCancelDataPoint(now, getInt64(metric.SvActiveCancel), s.instanceName, database, user, poolMode)
+	s.mb.RecordPgbouncerPoolsServerConnectionsBeingCancelDataPoint(now, getInt64(metric.SvBeingCancel), s.instanceName, database, user, poolMode)
+
+	// Convert maxwait from microseconds to milliseconds
+	maxwaitUs := getInt64(metric.Maxwait)
+	maxwaitMs := float64(maxwaitUs) / 1000.0
+	s.mb.RecordPgbouncerPoolsMaxwaitInMillisecondsDataPoint(now, maxwaitMs, s.instanceName, database, user, poolMode)
+}

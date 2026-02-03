@@ -1,6 +1,30 @@
 default:
 all_set:
   metrics:
+    pgbouncer.pools.client_connections_active:
+      enabled: true
+    pgbouncer.pools.client_connections_active_cancel_req:
+      enabled: true
+    pgbouncer.pools.client_connections_waiting:
+      enabled: true
+    pgbouncer.pools.client_connections_waiting_cancel_req:
+      enabled: true
+    pgbouncer.pools.maxwait_in_milliseconds:
+      enabled: true
+    pgbouncer.pools.server_connections_active:
+      enabled: true
+    pgbouncer.pools.server_connections_active_cancel:
+      enabled: true
+    pgbouncer.pools.server_connections_being_cancel:
+      enabled: true
+    pgbouncer.pools.server_connections_idle:
+      enabled: true
+    pgbouncer.pools.server_connections_login:
+      enabled: true
+    pgbouncer.pools.server_connections_tested:
+      enabled: true
+    pgbouncer.pools.server_connections_used:
+      enabled: true
     pgbouncer.stats.avg_bytes_in:
       enabled: true
     pgbouncer.stats.avg_bytes_out:
@@ -404,6 +428,30 @@ all_set:
       enabled: true
 none_set:
   metrics:
+    pgbouncer.pools.client_connections_active:
+      enabled: false
+    pgbouncer.pools.client_connections_active_cancel_req:
+      enabled: false
+    pgbouncer.pools.client_connections_waiting:
+      enabled: false
+    pgbouncer.pools.client_connections_waiting_cancel_req:
+      enabled: false
+    pgbouncer.pools.maxwait_in_milliseconds:
+      enabled: false
+    pgbouncer.pools.server_connections_active:
+      enabled: false
+    pgbouncer.pools.server_connections_active_cancel:
+      enabled: false
+    pgbouncer.pools.server_connections_being_cancel:
+      enabled: false
+    pgbouncer.pools.server_connections_idle:
+      enabled: false
+    pgbouncer.pools.server_connections_login:
+      enabled: false
+    pgbouncer.pools.server_connections_tested:
+      enabled: false
+    pgbouncer.pools.server_connections_used:
+      enabled: false
     pgbouncer.stats.avg_bytes_in:
       enabled: false
     pgbouncer.stats.avg_bytes_out:
