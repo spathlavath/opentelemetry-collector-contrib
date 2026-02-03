@@ -62,8 +62,6 @@ func (s *TablespaceScraper) ScrapeTablespaceMetrics(ctx context.Context) []error
 	now := pcommon.NewTimestampFromTime(time.Now())
 
 	errors = append(errors, s.scrapeTablespaceUsageMetrics(ctx, now, &metricCount)...)
-	errors = append(errors, s.scrapeGlobalNameTablespaceMetrics(ctx, now, &metricCount)...)
-	errors = append(errors, s.scrapeDBIDTablespaceMetrics(ctx, now, &metricCount)...)
 
 	if s.isCDBSupported() {
 		errors = append(errors, s.scrapeCDBDatafilesOfflineTablespaceMetrics(ctx, now, &metricCount)...)
@@ -115,42 +113,6 @@ func (s *TablespaceScraper) processTablespaceUsage(tablespaces []models.Tablespa
 			s.mb.RecordNewrelicoracledbTablespaceIsOfflineDataPoint(now, int64(ts.Offline), ts.TablespaceName)
 		}
 
-		*metricCount++
-	}
-
-	return nil
-}
-
-func (s *TablespaceScraper) scrapeGlobalNameTablespaceMetrics(ctx context.Context, now pcommon.Timestamp, metricCount *int) []error {
-	if !s.config.Metrics.NewrelicoracledbTablespaceGlobalName.Enabled {
-		return nil
-	}
-
-	tablespaces, err := s.client.QueryTablespaceGlobalName(ctx, s.includeTablespaces, s.excludeTablespaces)
-	if err != nil {
-		return []error{fmt.Errorf("error executing global name tablespace query: %w", err)}
-	}
-
-	for _, ts := range tablespaces {
-		s.mb.RecordNewrelicoracledbTablespaceGlobalNameDataPoint(now, 1, ts.TablespaceName, ts.GlobalName)
-		*metricCount++
-	}
-
-	return nil
-}
-
-func (s *TablespaceScraper) scrapeDBIDTablespaceMetrics(ctx context.Context, now pcommon.Timestamp, metricCount *int) []error {
-	if !s.config.Metrics.NewrelicoracledbTablespaceDbID.Enabled {
-		return nil
-	}
-
-	tablespaces, err := s.client.QueryTablespaceDBID(ctx, s.includeTablespaces, s.excludeTablespaces)
-	if err != nil {
-		return []error{fmt.Errorf("error executing DB ID tablespace query: %w", err)}
-	}
-
-	for _, ts := range tablespaces {
-		s.mb.RecordNewrelicoracledbTablespaceDbIDDataPoint(now, ts.DBID, ts.TablespaceName, strconv.FormatInt(ts.DBID, 10))
 		*metricCount++
 	}
 

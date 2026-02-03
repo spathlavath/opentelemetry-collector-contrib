@@ -142,9 +142,6 @@ var MetricsInfo = metricsInfo{
 	NewrelicoracledbDatafileUsedBytes: metricInfo{
 		Name: "newrelicoracledb.datafile.used_bytes",
 	},
-	NewrelicoracledbDbID: metricInfo{
-		Name: "newrelicoracledb.db_id",
-	},
 	NewrelicoracledbDiskBlocksRead: metricInfo{
 		Name: "newrelicoracledb.disk.blocks_read",
 	},
@@ -165,9 +162,6 @@ var MetricsInfo = metricsInfo{
 	},
 	NewrelicoracledbExecutionPlan: metricInfo{
 		Name: "newrelicoracledb.execution_plan",
-	},
-	NewrelicoracledbGlobalName: metricInfo{
-		Name: "newrelicoracledb.global_name",
 	},
 	NewrelicoracledbLockedAccounts: metricInfo{
 		Name: "newrelicoracledb.locked_accounts",
@@ -931,12 +925,6 @@ var MetricsInfo = metricsInfo{
 	NewrelicoracledbSystemUserRollbacksPercentage: metricInfo{
 		Name: "newrelicoracledb.system.user_rollbacks_percentage",
 	},
-	NewrelicoracledbTablespaceDbID: metricInfo{
-		Name: "newrelicoracledb.tablespace.db_id",
-	},
-	NewrelicoracledbTablespaceGlobalName: metricInfo{
-		Name: "newrelicoracledb.tablespace.global_name",
-	},
 	NewrelicoracledbTablespaceIsOffline: metricInfo{
 		Name: "newrelicoracledb.tablespace.is_offline",
 	},
@@ -1016,7 +1004,6 @@ type metricsInfo struct {
 	NewrelicoracledbDatafileAutoextensible                             metricInfo
 	NewrelicoracledbDatafileSizeBytes                                  metricInfo
 	NewrelicoracledbDatafileUsedBytes                                  metricInfo
-	NewrelicoracledbDbID                                               metricInfo
 	NewrelicoracledbDiskBlocksRead                                     metricInfo
 	NewrelicoracledbDiskBlocksWritten                                  metricInfo
 	NewrelicoracledbDiskReadTimeMilliseconds                           metricInfo
@@ -1024,7 +1011,6 @@ type metricsInfo struct {
 	NewrelicoracledbDiskWriteTimeMilliseconds                          metricInfo
 	NewrelicoracledbDiskWrites                                         metricInfo
 	NewrelicoracledbExecutionPlan                                      metricInfo
-	NewrelicoracledbGlobalName                                         metricInfo
 	NewrelicoracledbLockedAccounts                                     metricInfo
 	NewrelicoracledbLongRunningQueries                                 metricInfo
 	NewrelicoracledbMemoryPgaAllocatedBytes                            metricInfo
@@ -1279,8 +1265,6 @@ type metricsInfo struct {
 	NewrelicoracledbSystemUserRollbackUndoRecordsAppliedPerTransaction metricInfo
 	NewrelicoracledbSystemUserRollbacksPerSecond                       metricInfo
 	NewrelicoracledbSystemUserRollbacksPercentage                      metricInfo
-	NewrelicoracledbTablespaceDbID                                     metricInfo
-	NewrelicoracledbTablespaceGlobalName                               metricInfo
 	NewrelicoracledbTablespaceIsOffline                                metricInfo
 	NewrelicoracledbTablespaceOfflineCdbDatafiles                      metricInfo
 	NewrelicoracledbTablespaceOfflinePdbDatafiles                      metricInfo
@@ -3558,57 +3542,6 @@ func newMetricNewrelicoracledbDatafileUsedBytes(cfg MetricConfig) metricNewrelic
 	return m
 }
 
-type metricNewrelicoracledbDbID struct {
-	data     pmetric.Metric // data buffer for generated metric.
-	config   MetricConfig   // metric config provided by user.
-	capacity int            // max observed number of data points added to the metric.
-}
-
-// init fills newrelicoracledb.db_id metric with initial data.
-func (m *metricNewrelicoracledbDbID) init() {
-	m.data.SetName("newrelicoracledb.db_id")
-	m.data.SetDescription("Oracle database ID information")
-	m.data.SetUnit("1")
-	m.data.SetEmptyGauge()
-	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
-}
-
-func (m *metricNewrelicoracledbDbID) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbIDAttributeValue string) {
-	if !m.config.Enabled {
-		return
-	}
-	dp := m.data.Gauge().DataPoints().AppendEmpty()
-	dp.SetStartTimestamp(start)
-	dp.SetTimestamp(ts)
-	dp.SetIntValue(val)
-	dp.Attributes().PutStr("db.id", dbIDAttributeValue)
-}
-
-// updateCapacity saves max length of data point slices that will be used for the slice capacity.
-func (m *metricNewrelicoracledbDbID) updateCapacity() {
-	if m.data.Gauge().DataPoints().Len() > m.capacity {
-		m.capacity = m.data.Gauge().DataPoints().Len()
-	}
-}
-
-// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
-func (m *metricNewrelicoracledbDbID) emit(metrics pmetric.MetricSlice) {
-	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
-		m.updateCapacity()
-		m.data.MoveTo(metrics.AppendEmpty())
-		m.init()
-	}
-}
-
-func newMetricNewrelicoracledbDbID(cfg MetricConfig) metricNewrelicoracledbDbID {
-	m := metricNewrelicoracledbDbID{config: cfg}
-	if cfg.Enabled {
-		m.data = pmetric.NewMetric()
-		m.init()
-	}
-	return m
-}
-
 type metricNewrelicoracledbDiskBlocksRead struct {
 	data     pmetric.Metric // data buffer for generated metric.
 	config   MetricConfig   // metric config provided by user.
@@ -3982,57 +3915,6 @@ func (m *metricNewrelicoracledbExecutionPlan) emit(metrics pmetric.MetricSlice) 
 
 func newMetricNewrelicoracledbExecutionPlan(cfg MetricConfig) metricNewrelicoracledbExecutionPlan {
 	m := metricNewrelicoracledbExecutionPlan{config: cfg}
-	if cfg.Enabled {
-		m.data = pmetric.NewMetric()
-		m.init()
-	}
-	return m
-}
-
-type metricNewrelicoracledbGlobalName struct {
-	data     pmetric.Metric // data buffer for generated metric.
-	config   MetricConfig   // metric config provided by user.
-	capacity int            // max observed number of data points added to the metric.
-}
-
-// init fills newrelicoracledb.global_name metric with initial data.
-func (m *metricNewrelicoracledbGlobalName) init() {
-	m.data.SetName("newrelicoracledb.global_name")
-	m.data.SetDescription("Oracle database global name information")
-	m.data.SetUnit("1")
-	m.data.SetEmptyGauge()
-	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
-}
-
-func (m *metricNewrelicoracledbGlobalName) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, globalNameAttributeValue string) {
-	if !m.config.Enabled {
-		return
-	}
-	dp := m.data.Gauge().DataPoints().AppendEmpty()
-	dp.SetStartTimestamp(start)
-	dp.SetTimestamp(ts)
-	dp.SetIntValue(val)
-	dp.Attributes().PutStr("global.name", globalNameAttributeValue)
-}
-
-// updateCapacity saves max length of data point slices that will be used for the slice capacity.
-func (m *metricNewrelicoracledbGlobalName) updateCapacity() {
-	if m.data.Gauge().DataPoints().Len() > m.capacity {
-		m.capacity = m.data.Gauge().DataPoints().Len()
-	}
-}
-
-// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
-func (m *metricNewrelicoracledbGlobalName) emit(metrics pmetric.MetricSlice) {
-	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
-		m.updateCapacity()
-		m.data.MoveTo(metrics.AppendEmpty())
-		m.init()
-	}
-}
-
-func newMetricNewrelicoracledbGlobalName(cfg MetricConfig) metricNewrelicoracledbGlobalName {
-	m := metricNewrelicoracledbGlobalName{config: cfg}
 	if cfg.Enabled {
 		m.data = pmetric.NewMetric()
 		m.init()
@@ -17099,110 +16981,6 @@ func newMetricNewrelicoracledbSystemUserRollbacksPercentage(cfg MetricConfig) me
 	return m
 }
 
-type metricNewrelicoracledbTablespaceDbID struct {
-	data     pmetric.Metric // data buffer for generated metric.
-	config   MetricConfig   // metric config provided by user.
-	capacity int            // max observed number of data points added to the metric.
-}
-
-// init fills newrelicoracledb.tablespace.db_id metric with initial data.
-func (m *metricNewrelicoracledbTablespaceDbID) init() {
-	m.data.SetName("newrelicoracledb.tablespace.db_id")
-	m.data.SetDescription("Database ID information for tablespace")
-	m.data.SetUnit("1")
-	m.data.SetEmptyGauge()
-	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
-}
-
-func (m *metricNewrelicoracledbTablespaceDbID) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, tablespaceNameAttributeValue string, dbIDAttributeValue string) {
-	if !m.config.Enabled {
-		return
-	}
-	dp := m.data.Gauge().DataPoints().AppendEmpty()
-	dp.SetStartTimestamp(start)
-	dp.SetTimestamp(ts)
-	dp.SetIntValue(val)
-	dp.Attributes().PutStr("tablespace.name", tablespaceNameAttributeValue)
-	dp.Attributes().PutStr("db.id", dbIDAttributeValue)
-}
-
-// updateCapacity saves max length of data point slices that will be used for the slice capacity.
-func (m *metricNewrelicoracledbTablespaceDbID) updateCapacity() {
-	if m.data.Gauge().DataPoints().Len() > m.capacity {
-		m.capacity = m.data.Gauge().DataPoints().Len()
-	}
-}
-
-// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
-func (m *metricNewrelicoracledbTablespaceDbID) emit(metrics pmetric.MetricSlice) {
-	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
-		m.updateCapacity()
-		m.data.MoveTo(metrics.AppendEmpty())
-		m.init()
-	}
-}
-
-func newMetricNewrelicoracledbTablespaceDbID(cfg MetricConfig) metricNewrelicoracledbTablespaceDbID {
-	m := metricNewrelicoracledbTablespaceDbID{config: cfg}
-	if cfg.Enabled {
-		m.data = pmetric.NewMetric()
-		m.init()
-	}
-	return m
-}
-
-type metricNewrelicoracledbTablespaceGlobalName struct {
-	data     pmetric.Metric // data buffer for generated metric.
-	config   MetricConfig   // metric config provided by user.
-	capacity int            // max observed number of data points added to the metric.
-}
-
-// init fills newrelicoracledb.tablespace.global_name metric with initial data.
-func (m *metricNewrelicoracledbTablespaceGlobalName) init() {
-	m.data.SetName("newrelicoracledb.tablespace.global_name")
-	m.data.SetDescription("Global name information for tablespace")
-	m.data.SetUnit("1")
-	m.data.SetEmptyGauge()
-	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
-}
-
-func (m *metricNewrelicoracledbTablespaceGlobalName) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, tablespaceNameAttributeValue string, globalNameAttributeValue string) {
-	if !m.config.Enabled {
-		return
-	}
-	dp := m.data.Gauge().DataPoints().AppendEmpty()
-	dp.SetStartTimestamp(start)
-	dp.SetTimestamp(ts)
-	dp.SetIntValue(val)
-	dp.Attributes().PutStr("tablespace.name", tablespaceNameAttributeValue)
-	dp.Attributes().PutStr("global.name", globalNameAttributeValue)
-}
-
-// updateCapacity saves max length of data point slices that will be used for the slice capacity.
-func (m *metricNewrelicoracledbTablespaceGlobalName) updateCapacity() {
-	if m.data.Gauge().DataPoints().Len() > m.capacity {
-		m.capacity = m.data.Gauge().DataPoints().Len()
-	}
-}
-
-// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
-func (m *metricNewrelicoracledbTablespaceGlobalName) emit(metrics pmetric.MetricSlice) {
-	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
-		m.updateCapacity()
-		m.data.MoveTo(metrics.AppendEmpty())
-		m.init()
-	}
-}
-
-func newMetricNewrelicoracledbTablespaceGlobalName(cfg MetricConfig) metricNewrelicoracledbTablespaceGlobalName {
-	m := metricNewrelicoracledbTablespaceGlobalName{config: cfg}
-	if cfg.Enabled {
-		m.data = pmetric.NewMetric()
-		m.init()
-	}
-	return m
-}
-
 type metricNewrelicoracledbTablespaceIsOffline struct {
 	data     pmetric.Metric // data buffer for generated metric.
 	config   MetricConfig   // metric config provided by user.
@@ -17840,7 +17618,6 @@ type MetricsBuilder struct {
 	metricNewrelicoracledbDatafileAutoextensible                             metricNewrelicoracledbDatafileAutoextensible
 	metricNewrelicoracledbDatafileSizeBytes                                  metricNewrelicoracledbDatafileSizeBytes
 	metricNewrelicoracledbDatafileUsedBytes                                  metricNewrelicoracledbDatafileUsedBytes
-	metricNewrelicoracledbDbID                                               metricNewrelicoracledbDbID
 	metricNewrelicoracledbDiskBlocksRead                                     metricNewrelicoracledbDiskBlocksRead
 	metricNewrelicoracledbDiskBlocksWritten                                  metricNewrelicoracledbDiskBlocksWritten
 	metricNewrelicoracledbDiskReadTimeMilliseconds                           metricNewrelicoracledbDiskReadTimeMilliseconds
@@ -17848,7 +17625,6 @@ type MetricsBuilder struct {
 	metricNewrelicoracledbDiskWriteTimeMilliseconds                          metricNewrelicoracledbDiskWriteTimeMilliseconds
 	metricNewrelicoracledbDiskWrites                                         metricNewrelicoracledbDiskWrites
 	metricNewrelicoracledbExecutionPlan                                      metricNewrelicoracledbExecutionPlan
-	metricNewrelicoracledbGlobalName                                         metricNewrelicoracledbGlobalName
 	metricNewrelicoracledbLockedAccounts                                     metricNewrelicoracledbLockedAccounts
 	metricNewrelicoracledbLongRunningQueries                                 metricNewrelicoracledbLongRunningQueries
 	metricNewrelicoracledbMemoryPgaAllocatedBytes                            metricNewrelicoracledbMemoryPgaAllocatedBytes
@@ -18103,8 +17879,6 @@ type MetricsBuilder struct {
 	metricNewrelicoracledbSystemUserRollbackUndoRecordsAppliedPerTransaction metricNewrelicoracledbSystemUserRollbackUndoRecordsAppliedPerTransaction
 	metricNewrelicoracledbSystemUserRollbacksPerSecond                       metricNewrelicoracledbSystemUserRollbacksPerSecond
 	metricNewrelicoracledbSystemUserRollbacksPercentage                      metricNewrelicoracledbSystemUserRollbacksPercentage
-	metricNewrelicoracledbTablespaceDbID                                     metricNewrelicoracledbTablespaceDbID
-	metricNewrelicoracledbTablespaceGlobalName                               metricNewrelicoracledbTablespaceGlobalName
 	metricNewrelicoracledbTablespaceIsOffline                                metricNewrelicoracledbTablespaceIsOffline
 	metricNewrelicoracledbTablespaceOfflineCdbDatafiles                      metricNewrelicoracledbTablespaceOfflineCdbDatafiles
 	metricNewrelicoracledbTablespaceOfflinePdbDatafiles                      metricNewrelicoracledbTablespaceOfflinePdbDatafiles
@@ -18184,7 +17958,6 @@ func NewMetricsBuilder(mbc MetricsBuilderConfig, settings receiver.Settings, opt
 		metricNewrelicoracledbDatafileAutoextensible:                             newMetricNewrelicoracledbDatafileAutoextensible(mbc.Metrics.NewrelicoracledbDatafileAutoextensible),
 		metricNewrelicoracledbDatafileSizeBytes:                                  newMetricNewrelicoracledbDatafileSizeBytes(mbc.Metrics.NewrelicoracledbDatafileSizeBytes),
 		metricNewrelicoracledbDatafileUsedBytes:                                  newMetricNewrelicoracledbDatafileUsedBytes(mbc.Metrics.NewrelicoracledbDatafileUsedBytes),
-		metricNewrelicoracledbDbID:                                               newMetricNewrelicoracledbDbID(mbc.Metrics.NewrelicoracledbDbID),
 		metricNewrelicoracledbDiskBlocksRead:                                     newMetricNewrelicoracledbDiskBlocksRead(mbc.Metrics.NewrelicoracledbDiskBlocksRead),
 		metricNewrelicoracledbDiskBlocksWritten:                                  newMetricNewrelicoracledbDiskBlocksWritten(mbc.Metrics.NewrelicoracledbDiskBlocksWritten),
 		metricNewrelicoracledbDiskReadTimeMilliseconds:                           newMetricNewrelicoracledbDiskReadTimeMilliseconds(mbc.Metrics.NewrelicoracledbDiskReadTimeMilliseconds),
@@ -18192,7 +17965,6 @@ func NewMetricsBuilder(mbc MetricsBuilderConfig, settings receiver.Settings, opt
 		metricNewrelicoracledbDiskWriteTimeMilliseconds:                          newMetricNewrelicoracledbDiskWriteTimeMilliseconds(mbc.Metrics.NewrelicoracledbDiskWriteTimeMilliseconds),
 		metricNewrelicoracledbDiskWrites:                                         newMetricNewrelicoracledbDiskWrites(mbc.Metrics.NewrelicoracledbDiskWrites),
 		metricNewrelicoracledbExecutionPlan:                                      newMetricNewrelicoracledbExecutionPlan(mbc.Metrics.NewrelicoracledbExecutionPlan),
-		metricNewrelicoracledbGlobalName:                                         newMetricNewrelicoracledbGlobalName(mbc.Metrics.NewrelicoracledbGlobalName),
 		metricNewrelicoracledbLockedAccounts:                                     newMetricNewrelicoracledbLockedAccounts(mbc.Metrics.NewrelicoracledbLockedAccounts),
 		metricNewrelicoracledbLongRunningQueries:                                 newMetricNewrelicoracledbLongRunningQueries(mbc.Metrics.NewrelicoracledbLongRunningQueries),
 		metricNewrelicoracledbMemoryPgaAllocatedBytes:                            newMetricNewrelicoracledbMemoryPgaAllocatedBytes(mbc.Metrics.NewrelicoracledbMemoryPgaAllocatedBytes),
@@ -18447,8 +18219,6 @@ func NewMetricsBuilder(mbc MetricsBuilderConfig, settings receiver.Settings, opt
 		metricNewrelicoracledbSystemUserRollbackUndoRecordsAppliedPerTransaction: newMetricNewrelicoracledbSystemUserRollbackUndoRecordsAppliedPerTransaction(mbc.Metrics.NewrelicoracledbSystemUserRollbackUndoRecordsAppliedPerTransaction),
 		metricNewrelicoracledbSystemUserRollbacksPerSecond:                       newMetricNewrelicoracledbSystemUserRollbacksPerSecond(mbc.Metrics.NewrelicoracledbSystemUserRollbacksPerSecond),
 		metricNewrelicoracledbSystemUserRollbacksPercentage:                      newMetricNewrelicoracledbSystemUserRollbacksPercentage(mbc.Metrics.NewrelicoracledbSystemUserRollbacksPercentage),
-		metricNewrelicoracledbTablespaceDbID:                                     newMetricNewrelicoracledbTablespaceDbID(mbc.Metrics.NewrelicoracledbTablespaceDbID),
-		metricNewrelicoracledbTablespaceGlobalName:                               newMetricNewrelicoracledbTablespaceGlobalName(mbc.Metrics.NewrelicoracledbTablespaceGlobalName),
 		metricNewrelicoracledbTablespaceIsOffline:                                newMetricNewrelicoracledbTablespaceIsOffline(mbc.Metrics.NewrelicoracledbTablespaceIsOffline),
 		metricNewrelicoracledbTablespaceOfflineCdbDatafiles:                      newMetricNewrelicoracledbTablespaceOfflineCdbDatafiles(mbc.Metrics.NewrelicoracledbTablespaceOfflineCdbDatafiles),
 		metricNewrelicoracledbTablespaceOfflinePdbDatafiles:                      newMetricNewrelicoracledbTablespaceOfflinePdbDatafiles(mbc.Metrics.NewrelicoracledbTablespaceOfflinePdbDatafiles),
@@ -18593,7 +18363,6 @@ func (mb *MetricsBuilder) EmitForResource(options ...ResourceMetricsOption) {
 	mb.metricNewrelicoracledbDatafileAutoextensible.emit(ils.Metrics())
 	mb.metricNewrelicoracledbDatafileSizeBytes.emit(ils.Metrics())
 	mb.metricNewrelicoracledbDatafileUsedBytes.emit(ils.Metrics())
-	mb.metricNewrelicoracledbDbID.emit(ils.Metrics())
 	mb.metricNewrelicoracledbDiskBlocksRead.emit(ils.Metrics())
 	mb.metricNewrelicoracledbDiskBlocksWritten.emit(ils.Metrics())
 	mb.metricNewrelicoracledbDiskReadTimeMilliseconds.emit(ils.Metrics())
@@ -18601,7 +18370,6 @@ func (mb *MetricsBuilder) EmitForResource(options ...ResourceMetricsOption) {
 	mb.metricNewrelicoracledbDiskWriteTimeMilliseconds.emit(ils.Metrics())
 	mb.metricNewrelicoracledbDiskWrites.emit(ils.Metrics())
 	mb.metricNewrelicoracledbExecutionPlan.emit(ils.Metrics())
-	mb.metricNewrelicoracledbGlobalName.emit(ils.Metrics())
 	mb.metricNewrelicoracledbLockedAccounts.emit(ils.Metrics())
 	mb.metricNewrelicoracledbLongRunningQueries.emit(ils.Metrics())
 	mb.metricNewrelicoracledbMemoryPgaAllocatedBytes.emit(ils.Metrics())
@@ -18856,8 +18624,6 @@ func (mb *MetricsBuilder) EmitForResource(options ...ResourceMetricsOption) {
 	mb.metricNewrelicoracledbSystemUserRollbackUndoRecordsAppliedPerTransaction.emit(ils.Metrics())
 	mb.metricNewrelicoracledbSystemUserRollbacksPerSecond.emit(ils.Metrics())
 	mb.metricNewrelicoracledbSystemUserRollbacksPercentage.emit(ils.Metrics())
-	mb.metricNewrelicoracledbTablespaceDbID.emit(ils.Metrics())
-	mb.metricNewrelicoracledbTablespaceGlobalName.emit(ils.Metrics())
 	mb.metricNewrelicoracledbTablespaceIsOffline.emit(ils.Metrics())
 	mb.metricNewrelicoracledbTablespaceOfflineCdbDatafiles.emit(ils.Metrics())
 	mb.metricNewrelicoracledbTablespaceOfflinePdbDatafiles.emit(ils.Metrics())
@@ -19115,11 +18881,6 @@ func (mb *MetricsBuilder) RecordNewrelicoracledbDatafileUsedBytesDataPoint(ts pc
 	mb.metricNewrelicoracledbDatafileUsedBytes.recordDataPoint(mb.startTime, ts, val, conIDAttributeValue, tablespaceNameAttributeValue, fileNameAttributeValue)
 }
 
-// RecordNewrelicoracledbDbIDDataPoint adds a data point to newrelicoracledb.db_id metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbDbIDDataPoint(ts pcommon.Timestamp, val int64, dbIDAttributeValue string) {
-	mb.metricNewrelicoracledbDbID.recordDataPoint(mb.startTime, ts, val, dbIDAttributeValue)
-}
-
 // RecordNewrelicoracledbDiskBlocksReadDataPoint adds a data point to newrelicoracledb.disk.blocks_read metric.
 func (mb *MetricsBuilder) RecordNewrelicoracledbDiskBlocksReadDataPoint(ts pcommon.Timestamp, val int64, instanceIDAttributeValue string) {
 	mb.metricNewrelicoracledbDiskBlocksRead.recordDataPoint(mb.startTime, ts, val, instanceIDAttributeValue)
@@ -19153,11 +18914,6 @@ func (mb *MetricsBuilder) RecordNewrelicoracledbDiskWritesDataPoint(ts pcommon.T
 // RecordNewrelicoracledbExecutionPlanDataPoint adds a data point to newrelicoracledb.execution_plan metric.
 func (mb *MetricsBuilder) RecordNewrelicoracledbExecutionPlanDataPoint(ts pcommon.Timestamp, val int64, newrelicEventTypeAttributeValue string, queryIDAttributeValue string, planHashValueAttributeValue string, childNumberAttributeValue int64, planIDAttributeValue int64, parentIDAttributeValue int64, depthAttributeValue int64, operationAttributeValue string, optionsAttributeValue string, objectOwnerAttributeValue string, objectNameAttributeValue string, positionAttributeValue int64, costAttributeValue int64, cardinalityAttributeValue int64, bytesAttributeValue int64, cpuCostAttributeValue int64, ioCostAttributeValue int64, timestampAttributeValue string, planGeneratedTimestampAttributeValue string, tempSpaceAttributeValue int64, accessPredicatesAttributeValue string, projectionAttributeValue string, timeAttributeValue int64, filterPredicatesAttributeValue string) {
 	mb.metricNewrelicoracledbExecutionPlan.recordDataPoint(mb.startTime, ts, val, newrelicEventTypeAttributeValue, queryIDAttributeValue, planHashValueAttributeValue, childNumberAttributeValue, planIDAttributeValue, parentIDAttributeValue, depthAttributeValue, operationAttributeValue, optionsAttributeValue, objectOwnerAttributeValue, objectNameAttributeValue, positionAttributeValue, costAttributeValue, cardinalityAttributeValue, bytesAttributeValue, cpuCostAttributeValue, ioCostAttributeValue, timestampAttributeValue, planGeneratedTimestampAttributeValue, tempSpaceAttributeValue, accessPredicatesAttributeValue, projectionAttributeValue, timeAttributeValue, filterPredicatesAttributeValue)
-}
-
-// RecordNewrelicoracledbGlobalNameDataPoint adds a data point to newrelicoracledb.global_name metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbGlobalNameDataPoint(ts pcommon.Timestamp, val int64, globalNameAttributeValue string) {
-	mb.metricNewrelicoracledbGlobalName.recordDataPoint(mb.startTime, ts, val, globalNameAttributeValue)
 }
 
 // RecordNewrelicoracledbLockedAccountsDataPoint adds a data point to newrelicoracledb.locked_accounts metric.
@@ -20428,16 +20184,6 @@ func (mb *MetricsBuilder) RecordNewrelicoracledbSystemUserRollbacksPerSecondData
 // RecordNewrelicoracledbSystemUserRollbacksPercentageDataPoint adds a data point to newrelicoracledb.system.user_rollbacks_percentage metric.
 func (mb *MetricsBuilder) RecordNewrelicoracledbSystemUserRollbacksPercentageDataPoint(ts pcommon.Timestamp, val float64, instanceIDAttributeValue string) {
 	mb.metricNewrelicoracledbSystemUserRollbacksPercentage.recordDataPoint(mb.startTime, ts, val, instanceIDAttributeValue)
-}
-
-// RecordNewrelicoracledbTablespaceDbIDDataPoint adds a data point to newrelicoracledb.tablespace.db_id metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbTablespaceDbIDDataPoint(ts pcommon.Timestamp, val int64, tablespaceNameAttributeValue string, dbIDAttributeValue string) {
-	mb.metricNewrelicoracledbTablespaceDbID.recordDataPoint(mb.startTime, ts, val, tablespaceNameAttributeValue, dbIDAttributeValue)
-}
-
-// RecordNewrelicoracledbTablespaceGlobalNameDataPoint adds a data point to newrelicoracledb.tablespace.global_name metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbTablespaceGlobalNameDataPoint(ts pcommon.Timestamp, val int64, tablespaceNameAttributeValue string, globalNameAttributeValue string) {
-	mb.metricNewrelicoracledbTablespaceGlobalName.recordDataPoint(mb.startTime, ts, val, tablespaceNameAttributeValue, globalNameAttributeValue)
 }
 
 // RecordNewrelicoracledbTablespaceIsOfflineDataPoint adds a data point to newrelicoracledb.tablespace.is_offline metric.

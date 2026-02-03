@@ -1,0 +1,90 @@
+receivers:
+  newrelicoracledb/cdb:
+    endpoint: "10.0.1.221:1521"
+    username: "C##DB_MONITOR"
+    password: "NewRelic123##"
+    service: "DB1218_mpn_iad.privatetb.oracletb.oraclevcn.com"
+    collection_interval: 45s
+    timeout: 45s
+    enable_tablespace_scraper: true
+    enable_core_scraper: true
+    enable_system_scraper: true
+    enable_connection_scraper: true
+    enable_container_scraper: true
+
+  newrelicoracledb/pdb:
+    endpoint: "10.0.1.221:1521"
+    username: "C##DB_MONITOR"
+    password: "NewRelic123##"
+    service: "DB1218_mpn_iad.privatetb.oracletb.oraclevcn.com"
+    collection_interval: 45s
+    query_monitoring_response_time_threshold: 0
+    query_monitoring_count_threshold: 49
+    enable_query_monitoring: true
+    timeout: 45s
+    pdb_services: ["ALL"]
+    enable_session_scraper: true
+    enable_pdb_scraper: true
+
+processors:
+  transform/clear_metadata:
+    metric_statements:
+      - context: metric
+        statements:
+          - set(metric.description, "")
+          - set(metric.unit, "")
+    
+    log_statements:
+      - context: log
+        statements:
+          - set(body, "")
+  filter/exec_plan_and_query_details_include:
+    metrics:
+      include:
+        match_type: strict
+        metric_names:
+          - newrelicoracledb.execution_plan
+          - newrelicoracledb.slow_queries.query_details
+
+  filter/exec_plan_and_query_details_exclude:
+    metrics:
+      exclude:
+        match_type: strict
+        metric_names:
+          - newrelicoracledb.execution_plan
+          - newrelicoracledb.slow_queries.query_details
+
+connectors:
+  metricsaslogs:
+    include_resource_attributes: true
+    include_scope_info: true
+
+exporters:
+  debug:
+    verbosity: detailed
+  otlp:
+    endpoint: "https://staging-otlp.nr-data.net:4317"
+    headers:
+      api-key: ""
+    compression: gzip
+
+service:
+  pipelines:
+    metrics:
+      receivers: [newrelicoracledb/cdb, newrelicoracledb/pdb]
+      processors: [transform/clear_metadata, filter/exec_plan_and_query_details_exclude]
+      exporters: [debug, otlp]
+    metrics/exec_plan_and_query_details_to_logs:
+      receivers: [newrelicoracledb/cdb, newrelicoracledb/pdb]
+      processors: [filter/exec_plan_and_query_details_include]
+      exporters: [metricsaslogs]
+    logs/newrelicoracledb:
+      receivers: [metricsaslogs]
+      processors: [transform/clear_metadata]
+      exporters: [otlp, debug]
+
+  telemetry:
+    logs:
+      level: debug
+    metrics:
+      level: detailed

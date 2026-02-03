@@ -71,7 +71,6 @@ type MetricsConfig struct {
 	NewrelicoracledbDatafileAutoextensible                             MetricConfig `mapstructure:"newrelicoracledb.datafile.autoextensible"`
 	NewrelicoracledbDatafileSizeBytes                                  MetricConfig `mapstructure:"newrelicoracledb.datafile.size_bytes"`
 	NewrelicoracledbDatafileUsedBytes                                  MetricConfig `mapstructure:"newrelicoracledb.datafile.used_bytes"`
-	NewrelicoracledbDbID                                               MetricConfig `mapstructure:"newrelicoracledb.db_id"`
 	NewrelicoracledbDiskBlocksRead                                     MetricConfig `mapstructure:"newrelicoracledb.disk.blocks_read"`
 	NewrelicoracledbDiskBlocksWritten                                  MetricConfig `mapstructure:"newrelicoracledb.disk.blocks_written"`
 	NewrelicoracledbDiskReadTimeMilliseconds                           MetricConfig `mapstructure:"newrelicoracledb.disk.read_time_milliseconds"`
@@ -79,7 +78,6 @@ type MetricsConfig struct {
 	NewrelicoracledbDiskWriteTimeMilliseconds                          MetricConfig `mapstructure:"newrelicoracledb.disk.write_time_milliseconds"`
 	NewrelicoracledbDiskWrites                                         MetricConfig `mapstructure:"newrelicoracledb.disk.writes"`
 	NewrelicoracledbExecutionPlan                                      MetricConfig `mapstructure:"newrelicoracledb.execution_plan"`
-	NewrelicoracledbGlobalName                                         MetricConfig `mapstructure:"newrelicoracledb.global_name"`
 	NewrelicoracledbLockedAccounts                                     MetricConfig `mapstructure:"newrelicoracledb.locked_accounts"`
 	NewrelicoracledbLongRunningQueries                                 MetricConfig `mapstructure:"newrelicoracledb.long_running_queries"`
 	NewrelicoracledbMemoryPgaAllocatedBytes                            MetricConfig `mapstructure:"newrelicoracledb.memory.pga_allocated_bytes"`
@@ -334,8 +332,6 @@ type MetricsConfig struct {
 	NewrelicoracledbSystemUserRollbackUndoRecordsAppliedPerTransaction MetricConfig `mapstructure:"newrelicoracledb.system.user_rollback_undo_records_applied_per_transaction"`
 	NewrelicoracledbSystemUserRollbacksPerSecond                       MetricConfig `mapstructure:"newrelicoracledb.system.user_rollbacks_per_second"`
 	NewrelicoracledbSystemUserRollbacksPercentage                      MetricConfig `mapstructure:"newrelicoracledb.system.user_rollbacks_percentage"`
-	NewrelicoracledbTablespaceDbID                                     MetricConfig `mapstructure:"newrelicoracledb.tablespace.db_id"`
-	NewrelicoracledbTablespaceGlobalName                               MetricConfig `mapstructure:"newrelicoracledb.tablespace.global_name"`
 	NewrelicoracledbTablespaceIsOffline                                MetricConfig `mapstructure:"newrelicoracledb.tablespace.is_offline"`
 	NewrelicoracledbTablespaceOfflineCdbDatafiles                      MetricConfig `mapstructure:"newrelicoracledb.tablespace.offline_cdb_datafiles"`
 	NewrelicoracledbTablespaceOfflinePdbDatafiles                      MetricConfig `mapstructure:"newrelicoracledb.tablespace.offline_pdb_datafiles"`
@@ -480,9 +476,6 @@ func DefaultMetricsConfig() MetricsConfig {
 		NewrelicoracledbDatafileUsedBytes: MetricConfig{
 			Enabled: true,
 		},
-		NewrelicoracledbDbID: MetricConfig{
-			Enabled: false,
-		},
 		NewrelicoracledbDiskBlocksRead: MetricConfig{
 			Enabled: true,
 		},
@@ -503,9 +496,6 @@ func DefaultMetricsConfig() MetricsConfig {
 		},
 		NewrelicoracledbExecutionPlan: MetricConfig{
 			Enabled: true,
-		},
-		NewrelicoracledbGlobalName: MetricConfig{
-			Enabled: false,
 		},
 		NewrelicoracledbLockedAccounts: MetricConfig{
 			Enabled: false,
@@ -1267,12 +1257,6 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		NewrelicoracledbSystemUserRollbacksPercentage: MetricConfig{
-			Enabled: true,
-		},
-		NewrelicoracledbTablespaceDbID: MetricConfig{
-			Enabled: true,
-		},
-		NewrelicoracledbTablespaceGlobalName: MetricConfig{
 			Enabled: true,
 		},
 		NewrelicoracledbTablespaceIsOffline: MetricConfig{

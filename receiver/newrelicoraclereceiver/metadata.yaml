@@ -206,12 +206,6 @@ attributes:
   instance.id:
     description: Oracle database instance ID
     type: string
-  global.name:
-    description: Oracle database global name
-    type: string
-  db.id:
-    description: Oracle database ID
-    type: string
   session.status:
     description: Oracle session status (ACTIVE, INACTIVE, etc.)
     type: string
@@ -386,26 +380,6 @@ metrics:
     attributes:
       - tablespace.name
 
-  newrelicoracledb.tablespace.global_name:
-    description: Global name information for tablespace
-    enabled: true
-    gauge:
-      value_type: int
-    unit: "1"
-    attributes:
-      - tablespace.name
-      - global.name
-
-  newrelicoracledb.tablespace.db_id:
-    description: Database ID information for tablespace
-    enabled: true
-    gauge:
-      value_type: int
-    unit: "1"
-    attributes:
-      - tablespace.name
-      - db.id
-
   newrelicoracledb.tablespace.offline_cdb_datafiles:
     description: Count of offline CDB datafiles by tablespace
     enabled: true
@@ -531,24 +505,6 @@ metrics:
     unit: "By"
     attributes:
       - instance.id
-
-  newrelicoracledb.global_name:
-    description: Oracle database global name information
-    enabled: false
-    gauge:
-      value_type: int
-    unit: "1"
-    attributes:
-      - global.name
-
-  newrelicoracledb.db_id:
-    description: Oracle database ID information
-    enabled: false
-    gauge:
-      value_type: int
-    unit: "1"
-    attributes:
-      - db.id
 
   newrelicoracledb.long_running_queries:
     description: Number of long running queries (active sessions running for more than 60 seconds)

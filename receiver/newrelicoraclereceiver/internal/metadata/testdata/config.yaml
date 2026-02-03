@@ -87,8 +87,6 @@ all_set:
       enabled: true
     newrelicoracledb.datafile.used_bytes:
       enabled: true
-    newrelicoracledb.db_id:
-      enabled: true
     newrelicoracledb.disk.blocks_read:
       enabled: true
     newrelicoracledb.disk.blocks_written:
@@ -102,8 +100,6 @@ all_set:
     newrelicoracledb.disk.writes:
       enabled: true
     newrelicoracledb.execution_plan:
-      enabled: true
-    newrelicoracledb.global_name:
       enabled: true
     newrelicoracledb.locked_accounts:
       enabled: true
@@ -612,10 +608,6 @@ all_set:
     newrelicoracledb.system.user_rollbacks_per_second:
       enabled: true
     newrelicoracledb.system.user_rollbacks_percentage:
-      enabled: true
-    newrelicoracledb.tablespace.db_id:
-      enabled: true
-    newrelicoracledb.tablespace.global_name:
       enabled: true
     newrelicoracledb.tablespace.is_offline:
       enabled: true
@@ -734,8 +726,6 @@ none_set:
       enabled: false
     newrelicoracledb.datafile.used_bytes:
       enabled: false
-    newrelicoracledb.db_id:
-      enabled: false
     newrelicoracledb.disk.blocks_read:
       enabled: false
     newrelicoracledb.disk.blocks_written:
@@ -749,8 +739,6 @@ none_set:
     newrelicoracledb.disk.writes:
       enabled: false
     newrelicoracledb.execution_plan:
-      enabled: false
-    newrelicoracledb.global_name:
       enabled: false
     newrelicoracledb.locked_accounts:
       enabled: false
@@ -1259,10 +1247,6 @@ none_set:
     newrelicoracledb.system.user_rollbacks_per_second:
       enabled: false
     newrelicoracledb.system.user_rollbacks_percentage:
-      enabled: false
-    newrelicoracledb.tablespace.db_id:
-      enabled: false
-    newrelicoracledb.tablespace.global_name:
       enabled: false
     newrelicoracledb.tablespace.is_offline:
       enabled: false

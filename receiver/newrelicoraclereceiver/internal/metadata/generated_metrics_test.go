@@ -240,9 +240,6 @@ func TestMetricsBuilder(t *testing.T) {
 			allMetricsCount++
 			mb.RecordNewrelicoracledbDatafileUsedBytesDataPoint(ts, 1, "con.id-val", "tablespace.name-val", "file.name-val")
 
-			allMetricsCount++
-			mb.RecordNewrelicoracledbDbIDDataPoint(ts, 1, "db.id-val")
-
 			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicoracledbDiskBlocksReadDataPoint(ts, 1, "instance.id-val")
@@ -270,9 +267,6 @@ func TestMetricsBuilder(t *testing.T) {
 			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicoracledbExecutionPlanDataPoint(ts, 1, "newrelic.event.type-val", "query_id-val", "plan_hash_value-val", 12, 7, 9, 5, "operation-val", "options-val", "object_owner-val", "object_name-val", 8, 4, 11, 5, 8, 7, "timestamp-val", "plan_generated_timestamp-val", 10, "access_predicates-val", "projection-val", 4, "filter_predicates-val")
-
-			allMetricsCount++
-			mb.RecordNewrelicoracledbGlobalNameDataPoint(ts, 1, "global.name-val")
 
 			allMetricsCount++
 			mb.RecordNewrelicoracledbLockedAccountsDataPoint(ts, 1, "instance.id-val")
@@ -1290,14 +1284,6 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbTablespaceDbIDDataPoint(ts, 1, "tablespace.name-val", "db.id-val")
-
-			defaultMetricsCount++
-			allMetricsCount++
-			mb.RecordNewrelicoracledbTablespaceGlobalNameDataPoint(ts, 1, "tablespace.name-val", "global.name-val")
-
-			defaultMetricsCount++
-			allMetricsCount++
 			mb.RecordNewrelicoracledbTablespaceIsOfflineDataPoint(ts, 1, "tablespace.name-val")
 
 			defaultMetricsCount++
@@ -2216,21 +2202,6 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("file.name")
 					assert.True(t, ok)
 					assert.Equal(t, "file.name-val", attrVal.Str())
-				case "newrelicoracledb.db_id":
-					assert.False(t, validatedMetrics["newrelicoracledb.db_id"], "Found a duplicate in the metrics slice: newrelicoracledb.db_id")
-					validatedMetrics["newrelicoracledb.db_id"] = true
-					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
-					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
-					assert.Equal(t, "Oracle database ID information", ms.At(i).Description())
-					assert.Equal(t, "1", ms.At(i).Unit())
-					dp := ms.At(i).Gauge().DataPoints().At(0)
-					assert.Equal(t, start, dp.StartTimestamp())
-					assert.Equal(t, ts, dp.Timestamp())
-					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
-					assert.Equal(t, int64(1), dp.IntValue())
-					attrVal, ok := dp.Attributes().Get("db.id")
-					assert.True(t, ok)
-					assert.Equal(t, "db.id-val", attrVal.Str())
 				case "newrelicoracledb.disk.blocks_read":
 					assert.False(t, validatedMetrics["newrelicoracledb.disk.blocks_read"], "Found a duplicate in the metrics slice: newrelicoracledb.disk.blocks_read")
 					validatedMetrics["newrelicoracledb.disk.blocks_read"] = true
@@ -2405,21 +2376,6 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("filter_predicates")
 					assert.True(t, ok)
 					assert.Equal(t, "filter_predicates-val", attrVal.Str())
-				case "newrelicoracledb.global_name":
-					assert.False(t, validatedMetrics["newrelicoracledb.global_name"], "Found a duplicate in the metrics slice: newrelicoracledb.global_name")
-					validatedMetrics["newrelicoracledb.global_name"] = true
-					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
-					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
-					assert.Equal(t, "Oracle database global name information", ms.At(i).Description())
-					assert.Equal(t, "1", ms.At(i).Unit())
-					dp := ms.At(i).Gauge().DataPoints().At(0)
-					assert.Equal(t, start, dp.StartTimestamp())
-					assert.Equal(t, ts, dp.Timestamp())
-					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
-					assert.Equal(t, int64(1), dp.IntValue())
-					attrVal, ok := dp.Attributes().Get("global.name")
-					assert.True(t, ok)
-					assert.Equal(t, "global.name-val", attrVal.Str())
 				case "newrelicoracledb.locked_accounts":
 					assert.False(t, validatedMetrics["newrelicoracledb.locked_accounts"], "Found a duplicate in the metrics slice: newrelicoracledb.locked_accounts")
 					validatedMetrics["newrelicoracledb.locked_accounts"] = true
@@ -6548,42 +6504,6 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok := dp.Attributes().Get("instance.id")
 					assert.True(t, ok)
 					assert.Equal(t, "instance.id-val", attrVal.Str())
-				case "newrelicoracledb.tablespace.db_id":
-					assert.False(t, validatedMetrics["newrelicoracledb.tablespace.db_id"], "Found a duplicate in the metrics slice: newrelicoracledb.tablespace.db_id")
-					validatedMetrics["newrelicoracledb.tablespace.db_id"] = true
-					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
-					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
-					assert.Equal(t, "Database ID information for tablespace", ms.At(i).Description())
-					assert.Equal(t, "1", ms.At(i).Unit())
-					dp := ms.At(i).Gauge().DataPoints().At(0)
-					assert.Equal(t, start, dp.StartTimestamp())
-					assert.Equal(t, ts, dp.Timestamp())
-					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
-					assert.Equal(t, int64(1), dp.IntValue())
-					attrVal, ok := dp.Attributes().Get("tablespace.name")
-					assert.True(t, ok)
-					assert.Equal(t, "tablespace.name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("db.id")
-					assert.True(t, ok)
-					assert.Equal(t, "db.id-val", attrVal.Str())
-				case "newrelicoracledb.tablespace.global_name":
-					assert.False(t, validatedMetrics["newrelicoracledb.tablespace.global_name"], "Found a duplicate in the metrics slice: newrelicoracledb.tablespace.global_name")
-					validatedMetrics["newrelicoracledb.tablespace.global_name"] = true
-					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
-					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
-					assert.Equal(t, "Global name information for tablespace", ms.At(i).Description())
-					assert.Equal(t, "1", ms.At(i).Unit())
-					dp := ms.At(i).Gauge().DataPoints().At(0)
-					assert.Equal(t, start, dp.StartTimestamp())
-					assert.Equal(t, ts, dp.Timestamp())
-					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
-					assert.Equal(t, int64(1), dp.IntValue())
-					attrVal, ok := dp.Attributes().Get("tablespace.name")
-					assert.True(t, ok)
-					assert.Equal(t, "tablespace.name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("global.name")
-					assert.True(t, ok)
-					assert.Equal(t, "global.name-val", attrVal.Str())
 				case "newrelicoracledb.tablespace.is_offline":
 					assert.False(t, validatedMetrics["newrelicoracledb.tablespace.is_offline"], "Found a duplicate in the metrics slice: newrelicoracledb.tablespace.is_offline")
 					validatedMetrics["newrelicoracledb.tablespace.is_offline"] = true

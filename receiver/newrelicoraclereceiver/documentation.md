@@ -4353,36 +4353,6 @@ User Rollbacks Percentage
 | ---- | ----------- | ------ | -------- |
 | instance.id | Oracle database instance ID | Any Str | false |
 
-### newrelicoracledb.tablespace.db_id
-
-Database ID information for tablespace
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| tablespace.name | Name of the Oracle tablespace | Any Str | false |
-| db.id | Oracle database ID | Any Str | false |
-
-### newrelicoracledb.tablespace.global_name
-
-Global name information for tablespace
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| tablespace.name | Name of the Oracle tablespace | Any Str | false |
-| global.name | Oracle database global name | Any Str | false |
-
 ### newrelicoracledb.tablespace.is_offline
 
 Whether the tablespace is offline (1) or online (0)
@@ -4576,34 +4546,6 @@ metrics:
   <metric_name>:
     enabled: true
 ```
-
-### newrelicoracledb.db_id
-
-Oracle database ID information
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.id | Oracle database ID | Any Str | false |
-
-### newrelicoracledb.global_name
-
-Oracle database global name information
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| global.name | Oracle database global name | Any Str | false |
 
 ### newrelicoracledb.locked_accounts
 
