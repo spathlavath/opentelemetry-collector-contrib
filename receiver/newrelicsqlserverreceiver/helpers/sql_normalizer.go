@@ -47,18 +47,17 @@ func GenerateMD5Hash(normalizedSQL string) string {
 // REQUIRED FORMAT: Values must be enclosed in double quotes to handle commas and special characters
 //
 // Supported formats:
-// 1. Full format: /* nr_apm_guid="MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI5MjMzNDQwNw", nr_service="order-service" */
-// 2. Short format: /* nr_guid="MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI5MjMzNDQwNw", nr_service="order-service" */
-// 3. Service only: /* nr_service="MyApp-SQLServer, Background Job" */
-// 4. Any order: /* nr_service="MyApp", nr_guid="XYZ789" */
-// 5. With spaces: /* nr_service = "MyApp" , nr_apm_guid = "ABC" */
-// 6. GUID only: /* nr_guid="ABC123" */
+// 1. APM GUID and Service: /* nr_apm_guid="MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI5MjMzNDQwNw", nr_service="order-service" */
+// 2. Service only: /* nr_service="MyApp-SQLServer, Background Job" */
+// 3. Any order: /* nr_service="MyApp", nr_apm_guid="XYZ789" */
+// 4. With spaces: /* nr_service = "MyApp" , nr_apm_guid = "ABC" */
+// 5. APM GUID only: /* nr_apm_guid="ABC123" */
 //
 // Returns: (nr_apm_guid, client_name)
 func ExtractNewRelicMetadata(sql string) (nrApmGuid, nrService string) {
-	// Match nr_guid OR nr_apm_guid with quoted values (spaces around = are optional)
-	// Format: nr_guid = "base64_encoded_guid" OR nr_apm_guid = "base64_encoded_guid"
-	apmGuidRegex := regexp.MustCompile(`nr_(?:apm_)?guid\s*=\s*"([^"]+)"`)
+	// Match nr_apm_guid with quoted values (spaces around = are optional)
+	// Format: nr_apm_guid = "base64_encoded_guid"
+	apmGuidRegex := regexp.MustCompile(`nr_apm_guid\s*=\s*"([^"]+)"`)
 
 	// Match nr_service with quoted values (spaces around = are optional)
 	// Format: nr_service = "value with, commas and special chars"

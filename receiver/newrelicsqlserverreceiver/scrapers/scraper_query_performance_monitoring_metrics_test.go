@@ -179,14 +179,14 @@ func TestMetadataExtractionEdgeCases(t *testing.T) {
 		expectedService string
 	}{
 		{
-			name:            "Metadata in middle of query with nr_guid",
-			inputSQL:        `SELECT /* nr_guid="ABC123", nr_service="MyApp" */ * FROM users`,
+			name:            "Metadata in middle of query",
+			inputSQL:        `SELECT /* nr_apm_guid="ABC123", nr_service="MyApp" */ * FROM users`,
 			expectedGuid:    "ABC123",
 			expectedService: "MyApp",
 		},
 		{
 			name:            "Metadata with extra spaces",
-			inputSQL:        `/*  nr_service = "MyApp"  ,  nr_guid = "XYZ789"  */  SELECT * FROM orders`,
+			inputSQL:        `/*  nr_service = "MyApp"  ,  nr_apm_guid = "XYZ789"  */  SELECT * FROM orders`,
 			expectedGuid:    "XYZ789",
 			expectedService: "MyApp",
 		},
@@ -215,10 +215,22 @@ func TestMetadataExtractionEdgeCases(t *testing.T) {
 			expectedService: "",
 		},
 		{
-			name:            "Full format nr_apm_guid with service",
+			name:            "nr_apm_guid with service",
 			inputSQL:        `/* nr_apm_guid="DEF456", nr_service="BackgroundJob" */ SELECT 1`,
 			expectedGuid:    "DEF456",
 			expectedService: "BackgroundJob",
+		},
+		{
+			name:            "nr_apm_guid only (no service)",
+			inputSQL:        `/* nr_apm_guid="GHI789" */ UPDATE users SET status = 'active'`,
+			expectedGuid:    "GHI789",
+			expectedService: "",
+		},
+		{
+			name:            "Base64 encoded nr_apm_guid",
+			inputSQL:        `/* nr_apm_guid="MjU2NHxBUE18QVBQTElDQVRJT058MTIzNDU2Nzg5", nr_service="payment-api" */ INSERT INTO transactions VALUES (1, 100)`,
+			expectedGuid:    "MjU2NHxBUE18QVBQTElDQVRJT058MTIzNDU2Nzg5",
+			expectedService: "payment-api",
 		},
 	}
 

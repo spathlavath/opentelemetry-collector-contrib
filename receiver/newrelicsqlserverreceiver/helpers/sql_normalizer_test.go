@@ -193,64 +193,33 @@ func TestExtractNewRelicMetadata(t *testing.T) {
 		expectedNrApmGuid string
 		expectedNrService string
 	}{
-		// Test cases for nr_guid (short format)
+		// Test cases for nr_apm_guid
 		{
-			name:              "Short format: nr_guid with nr_service",
-			input:             `/* nr_guid="MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI5MjMzNDQwNw", nr_service="order-service" */ SELECT * FROM orders`,
-			expectedNrApmGuid: "MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI5MjMzNDQwNw",
-			expectedNrService: "order-service",
-		},
-		{
-			name:              "Short format: nr_guid only",
-			input:             `/* nr_guid="MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI5MjMzNDQwNw" */ SELECT * FROM orders`,
-			expectedNrApmGuid: "MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI5MjMzNDQwNw",
-			expectedNrService: "",
-		},
-		{
-			name:              "Short format: reversed order (nr_service first)",
-			input:             `/* nr_service="order-service", nr_guid="MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI5MjMzNDQwNw" */ SELECT * FROM orders`,
-			expectedNrApmGuid: "MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI5MjMzNDQwNw",
-			expectedNrService: "order-service",
-		},
-		{
-			name:              "Short format: with extra spaces",
-			input:             `/*  nr_guid = "ABC123" , nr_service = "my-service"  */ SELECT * FROM data`,
-			expectedNrApmGuid: "ABC123",
-			expectedNrService: "my-service",
-		},
-		{
-			name:              "Short format: no spaces around equals",
-			input:             `/* nr_guid="XYZ789",nr_service="test-service" */ SELECT * FROM test`,
-			expectedNrApmGuid: "XYZ789",
-			expectedNrService: "test-service",
-		},
-		// Test cases for nr_apm_guid (full format)
-		{
-			name:              "Full format: nr_apm_guid with nr_service",
+			name:              "nr_apm_guid with nr_service",
 			input:             `/* nr_apm_guid="MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI5MjMzNDQwNw", nr_service="order-service" */ SELECT * FROM orders`,
 			expectedNrApmGuid: "MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI5MjMzNDQwNw",
 			expectedNrService: "order-service",
 		},
 		{
-			name:              "Full format: nr_apm_guid only",
+			name:              "nr_apm_guid only",
 			input:             `/* nr_apm_guid="MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI5MjMzNDQwNw" */ SELECT * FROM orders`,
 			expectedNrApmGuid: "MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI5MjMzNDQwNw",
 			expectedNrService: "",
 		},
 		{
-			name:              "Full format: reversed order (nr_service first)",
+			name:              "reversed order (nr_service first)",
 			input:             `/* nr_service="order-service", nr_apm_guid="MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI5MjMzNDQwNw" */ SELECT * FROM orders`,
 			expectedNrApmGuid: "MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI5MjMzNDQwNw",
 			expectedNrService: "order-service",
 		},
 		{
-			name:              "Full format: with extra spaces",
+			name:              "with extra spaces",
 			input:             `/*  nr_apm_guid = "ABC123" , nr_service = "my-service"  */ SELECT * FROM data`,
 			expectedNrApmGuid: "ABC123",
 			expectedNrService: "my-service",
 		},
 		{
-			name:              "Full format: no spaces around equals",
+			name:              "no spaces around equals",
 			input:             `/* nr_apm_guid="XYZ789",nr_service="test-service" */ SELECT * FROM test`,
 			expectedNrApmGuid: "XYZ789",
 			expectedNrService: "test-service",
@@ -317,28 +286,28 @@ func TestExtractNewRelicMetadata(t *testing.T) {
 			expectedNrService: "",
 		},
 		{
-			name:              "Complex real-world example with short format",
-			input:             `/* nr_guid="ABC123XYZ789",nr_service="ECommerce-API-Prod" */ EXEC ProcessOrder @orderId = @p1, @userId = @p2`,
-			expectedNrApmGuid: "ABC123XYZ789",
-			expectedNrService: "ECommerce-API-Prod",
-		},
-		{
-			name:              "Complex real-world example with full format",
+			name:              "Complex real-world example",
 			input:             `/* nr_apm_guid="ABC123XYZ789",nr_service="ECommerce-API-Prod" */ EXEC ProcessOrder @orderId = @p1, @userId = @p2`,
 			expectedNrApmGuid: "ABC123XYZ789",
 			expectedNrService: "ECommerce-API-Prod",
 		},
 		{
-			name:              "Mixed spacing with short format",
-			input:             `/* nr_service = "MyApp, Background" , nr_guid = "TEST123" */ SELECT * FROM test`,
+			name:              "Mixed spacing",
+			input:             `/* nr_service = "MyApp, Background" , nr_apm_guid = "TEST123" */ SELECT * FROM test`,
 			expectedNrApmGuid: "TEST123",
 			expectedNrService: "MyApp, Background",
 		},
 		{
-			name:              "Mixed spacing with full format",
-			input:             `/* nr_service = "MyApp, Background" , nr_apm_guid = "TEST123" */ SELECT * FROM test`,
-			expectedNrApmGuid: "TEST123",
-			expectedNrService: "MyApp, Background",
+			name:              "Base64 encoded GUID",
+			input:             `/* nr_apm_guid="MjU2NHxBUE18QVBQTElDQVRJT058MTIzNDU2Nzg5", nr_service="payment-service" */ SELECT * FROM payments`,
+			expectedNrApmGuid: "MjU2NHxBUE18QVBQTElDQVRJT058MTIzNDU2Nzg5",
+			expectedNrService: "payment-service",
+		},
+		{
+			name:              "Long service name with multiple segments",
+			input:             `/* nr_apm_guid="XYZ999", nr_service="MyCompany-Production-API-Gateway-v2" */ SELECT 1`,
+			expectedNrApmGuid: "XYZ999",
+			expectedNrService: "MyCompany-Production-API-Gateway-v2",
 		},
 	}
 

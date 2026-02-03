@@ -123,8 +123,30 @@ func (s *QueryPerformanceScraper) ScrapeSlowQueryMetrics(ctx context.Context, in
 				continue
 			}
 
+			// Populate interval metrics in the model
 			rawQuery.IntervalAvgElapsedTimeMS = &metrics.IntervalAvgElapsedTimeMs
 			rawQuery.IntervalExecutionCount = &metrics.IntervalExecutionCount
+
+			// Populate new interval metrics
+			rawQuery.IntervalWorkerTimeMS = &metrics.IntervalWorkerTimeMs
+			rawQuery.IntervalAvgWorkerTimeMS = &metrics.IntervalAvgWorkerTimeMs
+			rawQuery.IntervalRows = &metrics.IntervalRows
+			rawQuery.IntervalAvgRows = &metrics.IntervalAvgRows
+			rawQuery.IntervalLogicalReads = &metrics.IntervalLogicalReads
+			rawQuery.IntervalAvgLogicalReads = &metrics.IntervalAvgLogicalReads
+			rawQuery.IntervalPhysicalReads = &metrics.IntervalPhysicalReads
+			rawQuery.IntervalAvgPhysicalReads = &metrics.IntervalAvgPhysicalReads
+			rawQuery.IntervalLogicalWrites = &metrics.IntervalLogicalWrites
+			rawQuery.IntervalAvgLogicalWrites = &metrics.IntervalAvgLogicalWrites
+			rawQuery.IntervalWaitTimeMS = &metrics.IntervalWaitTimeMs
+			rawQuery.IntervalAvgWaitTimeMS = &metrics.IntervalAvgWaitTimeMs
+
+			// Calculate and populate historical wait time (total_elapsed - total_worker)
+			// Note: Both are float64 in milliseconds, convert result to int64
+			if rawQuery.TotalElapsedTimeMS != nil && rawQuery.TotalWorkerTimeMS != nil {
+				waitTimeMs := int64(*rawQuery.TotalElapsedTimeMS - *rawQuery.TotalWorkerTimeMS)
+				rawQuery.TotalWaitTimeMS = &waitTimeMs
+			}
 
 			resultsWithIntervalMetrics = append(resultsWithIntervalMetrics, rawQuery)
 		}
@@ -494,6 +516,225 @@ func (s *QueryPerformanceScraper) processSlowQueryMetrics(result models.SlowQuer
 		s.mb.RecordSqlserverSlowqueryIntervalExecutionCountDataPoint(
 			timestamp,
 			*result.IntervalExecutionCount,
+			queryID,
+			databaseName,
+			normalisedSqlHash,
+			nrApmGuid,
+			clientName,
+		)
+	}
+
+	// New historical metrics
+	// Note: TotalWorkerTimeMS is *float64 from SQL (ms), cast to int64 for emission
+	if result.TotalWorkerTimeMS != nil {
+		s.mb.RecordSqlserverSlowqueryHistoricalWorkerTimeMsDataPoint(
+			timestamp,
+			int64(*result.TotalWorkerTimeMS),
+			queryID,
+			databaseName,
+			normalisedSqlHash,
+			nrApmGuid,
+			clientName,
+		)
+	}
+
+	if result.TotalRows != nil {
+		s.mb.RecordSqlserverSlowqueryHistoricalRowsDataPoint(
+			timestamp,
+			*result.TotalRows,
+			queryID,
+			databaseName,
+			normalisedSqlHash,
+			nrApmGuid,
+			clientName,
+		)
+	}
+
+	if result.TotalLogicalReads != nil {
+		s.mb.RecordSqlserverSlowqueryHistoricalLogicalReadsDataPoint(
+			timestamp,
+			*result.TotalLogicalReads,
+			queryID,
+			databaseName,
+			normalisedSqlHash,
+			nrApmGuid,
+			clientName,
+		)
+	}
+
+	if result.TotalPhysicalReads != nil {
+		s.mb.RecordSqlserverSlowqueryHistoricalPhysicalReadsDataPoint(
+			timestamp,
+			*result.TotalPhysicalReads,
+			queryID,
+			databaseName,
+			normalisedSqlHash,
+			nrApmGuid,
+			clientName,
+		)
+	}
+
+	if result.TotalLogicalWrites != nil {
+		s.mb.RecordSqlserverSlowqueryHistoricalLogicalWritesDataPoint(
+			timestamp,
+			*result.TotalLogicalWrites,
+			queryID,
+			databaseName,
+			normalisedSqlHash,
+			nrApmGuid,
+			clientName,
+		)
+	}
+
+	if result.TotalWaitTimeMS != nil {
+		s.mb.RecordSqlserverSlowqueryHistoricalWaitTimeMsDataPoint(
+			timestamp,
+			*result.TotalWaitTimeMS,
+			queryID,
+			databaseName,
+			normalisedSqlHash,
+			nrApmGuid,
+			clientName,
+		)
+	}
+
+	// New interval metrics
+	if result.IntervalWorkerTimeMS != nil {
+		s.mb.RecordSqlserverSlowqueryIntervalWorkerTimeMsDataPoint(
+			timestamp,
+			*result.IntervalWorkerTimeMS,
+			queryID,
+			databaseName,
+			normalisedSqlHash,
+			nrApmGuid,
+			clientName,
+		)
+	}
+
+	if result.IntervalAvgWorkerTimeMS != nil {
+		s.mb.RecordSqlserverSlowqueryIntervalAvgWorkerTimeMsDataPoint(
+			timestamp,
+			*result.IntervalAvgWorkerTimeMS,
+			queryID,
+			databaseName,
+			normalisedSqlHash,
+			nrApmGuid,
+			clientName,
+		)
+	}
+
+	if result.IntervalRows != nil {
+		s.mb.RecordSqlserverSlowqueryIntervalRowsDataPoint(
+			timestamp,
+			*result.IntervalRows,
+			queryID,
+			databaseName,
+			normalisedSqlHash,
+			nrApmGuid,
+			clientName,
+		)
+	}
+
+	if result.IntervalAvgRows != nil {
+		s.mb.RecordSqlserverSlowqueryIntervalAvgRowsDataPoint(
+			timestamp,
+			*result.IntervalAvgRows,
+			queryID,
+			databaseName,
+			normalisedSqlHash,
+			nrApmGuid,
+			clientName,
+		)
+	}
+
+	if result.IntervalLogicalReads != nil {
+		s.mb.RecordSqlserverSlowqueryIntervalLogicalReadsDataPoint(
+			timestamp,
+			*result.IntervalLogicalReads,
+			queryID,
+			databaseName,
+			normalisedSqlHash,
+			nrApmGuid,
+			clientName,
+		)
+	}
+
+	if result.IntervalAvgLogicalReads != nil {
+		s.mb.RecordSqlserverSlowqueryIntervalAvgLogicalReadsDataPoint(
+			timestamp,
+			*result.IntervalAvgLogicalReads,
+			queryID,
+			databaseName,
+			normalisedSqlHash,
+			nrApmGuid,
+			clientName,
+		)
+	}
+
+	if result.IntervalPhysicalReads != nil {
+		s.mb.RecordSqlserverSlowqueryIntervalPhysicalReadsDataPoint(
+			timestamp,
+			*result.IntervalPhysicalReads,
+			queryID,
+			databaseName,
+			normalisedSqlHash,
+			nrApmGuid,
+			clientName,
+		)
+	}
+
+	if result.IntervalAvgPhysicalReads != nil {
+		s.mb.RecordSqlserverSlowqueryIntervalAvgPhysicalReadsDataPoint(
+			timestamp,
+			*result.IntervalAvgPhysicalReads,
+			queryID,
+			databaseName,
+			normalisedSqlHash,
+			nrApmGuid,
+			clientName,
+		)
+	}
+
+	if result.IntervalLogicalWrites != nil {
+		s.mb.RecordSqlserverSlowqueryIntervalLogicalWritesDataPoint(
+			timestamp,
+			*result.IntervalLogicalWrites,
+			queryID,
+			databaseName,
+			normalisedSqlHash,
+			nrApmGuid,
+			clientName,
+		)
+	}
+
+	if result.IntervalAvgLogicalWrites != nil {
+		s.mb.RecordSqlserverSlowqueryIntervalAvgLogicalWritesDataPoint(
+			timestamp,
+			*result.IntervalAvgLogicalWrites,
+			queryID,
+			databaseName,
+			normalisedSqlHash,
+			nrApmGuid,
+			clientName,
+		)
+	}
+
+	if result.IntervalWaitTimeMS != nil {
+		s.mb.RecordSqlserverSlowqueryIntervalWaitTimeMsDataPoint(
+			timestamp,
+			*result.IntervalWaitTimeMS,
+			queryID,
+			databaseName,
+			normalisedSqlHash,
+			nrApmGuid,
+			clientName,
+		)
+	}
+
+	if result.IntervalAvgWaitTimeMS != nil {
+		s.mb.RecordSqlserverSlowqueryIntervalAvgWaitTimeMsDataPoint(
+			timestamp,
+			*result.IntervalAvgWaitTimeMS,
 			queryID,
 			databaseName,
 			normalisedSqlHash,

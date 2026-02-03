@@ -31,6 +31,12 @@ WITH StatementDetails AS (
 		(qs.total_elapsed_time / qs.execution_count) / 1000.0 AS avg_elapsed_time_ms,
 		-- Total elapsed time for precise delta calculation (avoids floating point precision loss)
 		qs.total_elapsed_time / 1000.0 AS total_elapsed_time_ms,
+		-- New metrics from dm_exec_query_stats (for historical and interval calculations)
+		qs.total_worker_time / 1000.0 AS total_worker_time_ms,
+		qs.total_rows,
+		qs.total_logical_reads,
+		qs.total_physical_reads,
+		qs.total_logical_writes,
 		CONVERT(INT, pa.value) AS database_id,
 		qt.objectid
 	FROM
@@ -65,6 +71,11 @@ SELECT
     s.execution_count,
     s.avg_elapsed_time_ms,
     s.total_elapsed_time_ms,
+    s.total_worker_time_ms,
+    s.total_rows,
+    s.total_logical_reads,
+    s.total_physical_reads,
+    s.total_logical_writes,
     CONVERT(VARCHAR(25), SWITCHOFFSET(SYSDATETIMEOFFSET(), '+00:00'), 127) + 'Z' AS collection_timestamp
 FROM
     StatementDetails s`
