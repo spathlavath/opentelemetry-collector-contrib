@@ -28,6 +28,30 @@ func (ms *MetricConfig) Unmarshal(parser *confmap.Conf) error {
 
 // MetricsConfig provides config for newrelicpostgresql metrics.
 type MetricsConfig struct {
+	PgbouncerPoolsClientConnectionsActive             MetricConfig `mapstructure:"pgbouncer.pools.client_connections_active"`
+	PgbouncerPoolsClientConnectionsActiveCancelReq    MetricConfig `mapstructure:"pgbouncer.pools.client_connections_active_cancel_req"`
+	PgbouncerPoolsClientConnectionsWaiting            MetricConfig `mapstructure:"pgbouncer.pools.client_connections_waiting"`
+	PgbouncerPoolsClientConnectionsWaitingCancelReq   MetricConfig `mapstructure:"pgbouncer.pools.client_connections_waiting_cancel_req"`
+	PgbouncerPoolsMaxwaitInMilliseconds               MetricConfig `mapstructure:"pgbouncer.pools.maxwait_in_milliseconds"`
+	PgbouncerPoolsServerConnectionsActive             MetricConfig `mapstructure:"pgbouncer.pools.server_connections_active"`
+	PgbouncerPoolsServerConnectionsActiveCancel       MetricConfig `mapstructure:"pgbouncer.pools.server_connections_active_cancel"`
+	PgbouncerPoolsServerConnectionsBeingCancel        MetricConfig `mapstructure:"pgbouncer.pools.server_connections_being_cancel"`
+	PgbouncerPoolsServerConnectionsIdle               MetricConfig `mapstructure:"pgbouncer.pools.server_connections_idle"`
+	PgbouncerPoolsServerConnectionsLogin              MetricConfig `mapstructure:"pgbouncer.pools.server_connections_login"`
+	PgbouncerPoolsServerConnectionsTested             MetricConfig `mapstructure:"pgbouncer.pools.server_connections_tested"`
+	PgbouncerPoolsServerConnectionsUsed               MetricConfig `mapstructure:"pgbouncer.pools.server_connections_used"`
+	PgbouncerStatsAvgBytesIn                          MetricConfig `mapstructure:"pgbouncer.stats.avg_bytes_in"`
+	PgbouncerStatsAvgBytesOut                         MetricConfig `mapstructure:"pgbouncer.stats.avg_bytes_out"`
+	PgbouncerStatsAvgRequestsPerSecond                MetricConfig `mapstructure:"pgbouncer.stats.avg_requests_per_second"`
+	PgbouncerStatsAvgServerAssignmentCount            MetricConfig `mapstructure:"pgbouncer.stats.avg_server_assignment_count"`
+	PgbouncerStatsAvgTransactionCount                 MetricConfig `mapstructure:"pgbouncer.stats.avg_transaction_count"`
+	PgbouncerStatsAvgTransactionDurationMilliseconds  MetricConfig `mapstructure:"pgbouncer.stats.avg_transaction_duration_milliseconds"`
+	PgbouncerStatsBytesInPerSecond                    MetricConfig `mapstructure:"pgbouncer.stats.bytes_in_per_second"`
+	PgbouncerStatsBytesOutPerSecond                   MetricConfig `mapstructure:"pgbouncer.stats.bytes_out_per_second"`
+	PgbouncerStatsQueriesPerSecond                    MetricConfig `mapstructure:"pgbouncer.stats.queries_per_second"`
+	PgbouncerStatsRequestsPerSecond                   MetricConfig `mapstructure:"pgbouncer.stats.requests_per_second"`
+	PgbouncerStatsTotalServerAssignmentCount          MetricConfig `mapstructure:"pgbouncer.stats.total_server_assignment_count"`
+	PgbouncerStatsTransactionsPerSecond               MetricConfig `mapstructure:"pgbouncer.stats.transactions_per_second"`
 	PostgresqlActiveWaitingQueries                    MetricConfig `mapstructure:"postgresql.active_waiting_queries"`
 	PostgresqlActivityBackendXidAge                   MetricConfig `mapstructure:"postgresql.activity.backend_xid_age"`
 	PostgresqlActivityBackendXminAge                  MetricConfig `mapstructure:"postgresql.activity.backend_xmin_age"`
@@ -214,6 +238,78 @@ type MetricsConfig struct {
 
 func DefaultMetricsConfig() MetricsConfig {
 	return MetricsConfig{
+		PgbouncerPoolsClientConnectionsActive: MetricConfig{
+			Enabled: true,
+		},
+		PgbouncerPoolsClientConnectionsActiveCancelReq: MetricConfig{
+			Enabled: true,
+		},
+		PgbouncerPoolsClientConnectionsWaiting: MetricConfig{
+			Enabled: true,
+		},
+		PgbouncerPoolsClientConnectionsWaitingCancelReq: MetricConfig{
+			Enabled: true,
+		},
+		PgbouncerPoolsMaxwaitInMilliseconds: MetricConfig{
+			Enabled: true,
+		},
+		PgbouncerPoolsServerConnectionsActive: MetricConfig{
+			Enabled: true,
+		},
+		PgbouncerPoolsServerConnectionsActiveCancel: MetricConfig{
+			Enabled: true,
+		},
+		PgbouncerPoolsServerConnectionsBeingCancel: MetricConfig{
+			Enabled: true,
+		},
+		PgbouncerPoolsServerConnectionsIdle: MetricConfig{
+			Enabled: true,
+		},
+		PgbouncerPoolsServerConnectionsLogin: MetricConfig{
+			Enabled: true,
+		},
+		PgbouncerPoolsServerConnectionsTested: MetricConfig{
+			Enabled: true,
+		},
+		PgbouncerPoolsServerConnectionsUsed: MetricConfig{
+			Enabled: true,
+		},
+		PgbouncerStatsAvgBytesIn: MetricConfig{
+			Enabled: true,
+		},
+		PgbouncerStatsAvgBytesOut: MetricConfig{
+			Enabled: true,
+		},
+		PgbouncerStatsAvgRequestsPerSecond: MetricConfig{
+			Enabled: true,
+		},
+		PgbouncerStatsAvgServerAssignmentCount: MetricConfig{
+			Enabled: true,
+		},
+		PgbouncerStatsAvgTransactionCount: MetricConfig{
+			Enabled: true,
+		},
+		PgbouncerStatsAvgTransactionDurationMilliseconds: MetricConfig{
+			Enabled: true,
+		},
+		PgbouncerStatsBytesInPerSecond: MetricConfig{
+			Enabled: true,
+		},
+		PgbouncerStatsBytesOutPerSecond: MetricConfig{
+			Enabled: true,
+		},
+		PgbouncerStatsQueriesPerSecond: MetricConfig{
+			Enabled: true,
+		},
+		PgbouncerStatsRequestsPerSecond: MetricConfig{
+			Enabled: true,
+		},
+		PgbouncerStatsTotalServerAssignmentCount: MetricConfig{
+			Enabled: true,
+		},
+		PgbouncerStatsTransactionsPerSecond: MetricConfig{
+			Enabled: true,
+		},
 		PostgresqlActiveWaitingQueries: MetricConfig{
 			Enabled: true,
 		},

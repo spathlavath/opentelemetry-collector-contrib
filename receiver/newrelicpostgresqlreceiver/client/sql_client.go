@@ -14,7 +14,8 @@ import (
 
 // SQLClient implements the PostgreSQLClient interface using database/sql
 type SQLClient struct {
-	db *sql.DB
+	db           *sql.DB
+	pgBouncerDB  *sql.DB // Optional separate connection for PgBouncer admin commands
 }
 
 // NewSQLClient creates a new SQLClient instance
@@ -22,12 +23,25 @@ func NewSQLClient(db *sql.DB) *SQLClient {
 	return &SQLClient{db: db}
 }
 
+// SetPgBouncerDB sets a separate database connection for PgBouncer admin commands
+func (c *SQLClient) SetPgBouncerDB(pgBouncerDB *sql.DB) {
+	c.pgBouncerDB = pgBouncerDB
+}
+
 // Close closes the database connection
 func (c *SQLClient) Close() error {
-	if c.db != nil {
-		return c.db.Close()
+	var err error
+	if c.pgBouncerDB != nil {
+		if closeErr := c.pgBouncerDB.Close(); closeErr != nil {
+			err = closeErr
+		}
 	}
-	return nil
+	if c.db != nil {
+		if closeErr := c.db.Close(); closeErr != nil {
+			err = closeErr
+		}
+	}
+	return err
 }
 
 // Ping verifies the database connection is alive
@@ -1214,6 +1228,125 @@ func (c *SQLClient) QueryVacuumProgress(ctx context.Context) ([]models.PgStatPro
 
 	if err := rows.Err(); err != nil {
 		return nil, fmt.Errorf("error iterating pg_stat_progress_vacuum rows: %w", err)
+	}
+
+	return metrics, nil
+}
+
+// QueryPgBouncerStats retrieves connection pool statistics from PgBouncer
+// Returns statistics from SHOW STATS command
+// Uses pgBouncerDB connection if available, otherwise uses main db connection
+func (c *SQLClient) QueryPgBouncerStats(ctx context.Context) ([]models.PgBouncerStatsMetric, error) {
+	// Use PgBouncer admin connection if available, otherwise use main connection
+	db := c.db
+	if c.pgBouncerDB != nil {
+		db = c.pgBouncerDB
+	}
+
+	rows, err := db.QueryContext(ctx, queries.PgBouncerStatsSQL)
+	if err != nil {
+		return nil, fmt.Errorf("failed to query PgBouncer stats: %w", err)
+	}
+	defer rows.Close()
+
+	var metrics []models.PgBouncerStatsMetric
+
+	for rows.Next() {
+		var metric models.PgBouncerStatsMetric
+		err := rows.Scan(
+			&metric.Database,
+			// Total counters (must match SHOW STATS column order)
+			&metric.TotalServerAssignmentCount,
+			&metric.TotalXactCount,
+			&metric.TotalQueryCount,
+			&metric.TotalReceived,
+			&metric.TotalSent,
+			&metric.TotalXactTime,
+			&metric.TotalQueryTime,
+			&metric.TotalWaitTime,
+			&metric.TotalClientParseCount,
+			&metric.TotalServerParseCount,
+			&metric.TotalBindCount,
+			// Average metrics (must match SHOW STATS column order)
+			&metric.AvgServerAssignmentCount,
+			&metric.AvgXactCount,
+			&metric.AvgQueryCount,
+			&metric.AvgRecv,
+			&metric.AvgSent,
+			&metric.AvgXactTime,
+			&metric.AvgQueryTime,
+			&metric.AvgWaitTime,
+			&metric.AvgClientParseCount,
+			&metric.AvgServerParseCount,
+			&metric.AvgBindCount,
+		)
+		if err != nil {
+			return nil, fmt.Errorf("failed to scan PgBouncer stats row: %w", err)
+		}
+		metrics = append(metrics, metric)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("error iterating PgBouncer stats rows: %w", err)
+	}
+
+	return metrics, nil
+}
+
+// QueryPgBouncerPools retrieves per-pool connection details from PgBouncer
+// Returns connection pool status from SHOW POOLS command
+// Uses pgBouncerDB connection if available, otherwise uses main db connection
+func (c *SQLClient) QueryPgBouncerPools(ctx context.Context) ([]models.PgBouncerPoolsMetric, error) {
+	// Use PgBouncer admin connection if available, otherwise use main connection
+	db := c.db
+	if c.pgBouncerDB != nil {
+		db = c.pgBouncerDB
+	}
+
+	rows, err := db.QueryContext(ctx, queries.PgBouncerPoolsSQL)
+	if err != nil {
+		return nil, fmt.Errorf("failed to query PgBouncer pools: %w", err)
+	}
+	defer rows.Close()
+
+	var metrics []models.PgBouncerPoolsMetric
+
+	for rows.Next() {
+		var metric models.PgBouncerPoolsMetric
+		// SHOW POOLS column order (PgBouncer 1.21+):
+		// database, user, cl_active, cl_waiting, cl_active_cancel_req, cl_waiting_cancel_req,
+		// sv_active, sv_active_cancel, sv_being_cancel, sv_idle, sv_used, sv_tested, sv_login,
+		// maxwait, maxwait_us, pool_mode, min_pool_size (17 columns in recent versions)
+		err := rows.Scan(
+			&metric.Database,           // 1. database
+			&metric.User,               // 2. user
+			// Client connection counters
+			&metric.ClActive,           // 3. cl_active
+			&metric.ClWaiting,          // 4. cl_waiting
+			&metric.ClActiveCancelReq,  // 5. cl_active_cancel_req (PgBouncer 1.18+)
+			&metric.ClWaitingCancelReq, // 6. cl_waiting_cancel_req (PgBouncer 1.18+)
+			// Server connection counters (ORDER IS CRITICAL!)
+			&metric.SvActive,           // 7. sv_active
+			&metric.SvActiveCancel,     // 8. sv_active_cancel (PgBouncer 1.18+)
+			&metric.SvBeingCancel,      // 9. sv_being_cancel (PgBouncer 1.18+)
+			&metric.SvIdle,             // 10. sv_idle
+			&metric.SvUsed,             // 11. sv_used
+			&metric.SvTested,           // 12. sv_tested
+			&metric.SvLogin,            // 13. sv_login
+			// Pool status
+			&metric.Maxwait,            // 14. maxwait (integer seconds)
+			&metric.MaxwaitUs,          // 15. maxwait_us (microseconds, PgBouncer 1.21+)
+			&metric.PoolMode,           // 16. pool_mode
+			&metric.MinPoolSize,        // 17. min_pool_size (might be in newer versions)
+		)
+		if err != nil {
+			return nil, fmt.Errorf("failed to scan PgBouncer pools row: %w", err)
+		}
+		metrics = append(metrics, metric)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("error iterating PgBouncer pools rows: %w", err)
 	}
 
 	return metrics, nil

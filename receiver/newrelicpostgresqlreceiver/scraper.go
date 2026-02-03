@@ -47,6 +47,7 @@ type newRelicPostgreSQLScraper struct {
 	bgwriterScraper           *scrapers.BgwriterScraper
 	vacuumMaintenanceScraper  *scrapers.VacuumMaintenanceScraper
 	tableIOScraper            *scrapers.TableIOScraper
+	pgbouncerScraper          *scrapers.PgBouncerScraper
 
 	// Database and configuration
 	db             *sql.DB
@@ -126,8 +127,83 @@ func (s *newRelicPostgreSQLScraper) initializeDatabase() error {
 		return fmt.Errorf("failed to open db connection: %w", err)
 	}
 	s.db = db
-	s.client = client.NewSQLClient(db)
+	sqlClient := client.NewSQLClient(db)
+	s.client = sqlClient
+
+	// Log database configuration for debugging
+	s.logger.Info("Database connection initialized",
+		zap.String("database", s.config.Database),
+		zap.String("hostname", s.config.Hostname),
+		zap.String("port", s.config.Port))
+
+	// If connected to a regular database (not pgbouncer admin DB),
+	// create a separate connection to pgbouncer admin DB for SHOW STATS commands
+	if s.config.Database != "pgbouncer" {
+		s.logger.Info("Attempting to create PgBouncer admin connection",
+			zap.String("current_database", s.config.Database))
+		pgBouncerDB, err := s.createPgBouncerConnection()
+		if err != nil {
+			// Log the error but don't fail - PgBouncer may not be available
+			s.logger.Warn("Failed to create PgBouncer admin connection, PgBouncer metrics will not be available",
+				zap.Error(err))
+		} else {
+			sqlClient.SetPgBouncerDB(pgBouncerDB)
+			s.logger.Info("PgBouncer admin connection established for metrics collection")
+		}
+	} else {
+		s.logger.Info("Connected directly to pgbouncer admin database, skipping separate admin connection")
+	}
+
 	return nil
+}
+
+// createPgBouncerConnection creates a connection to the PgBouncer admin database
+func (s *newRelicPostgreSQLScraper) createPgBouncerConnection() (*sql.DB, error) {
+	// Build connection string for pgbouncer admin database
+	connStr := fmt.Sprintf("host=%s port=%s user=%s dbname=pgbouncer sslmode=%s",
+		s.config.Hostname,
+		s.config.Port,
+		s.config.Username,
+		s.config.SSLMode,
+	)
+
+	if s.config.Password != "" {
+		connStr += fmt.Sprintf(" password=%s", s.config.Password)
+	}
+
+	if s.config.SSLCert != "" {
+		connStr += fmt.Sprintf(" sslcert=%s", s.config.SSLCert)
+	}
+
+	if s.config.SSLKey != "" {
+		connStr += fmt.Sprintf(" sslkey=%s", s.config.SSLKey)
+	}
+
+	if s.config.SSLRootCert != "" {
+		connStr += fmt.Sprintf(" sslrootcert=%s", s.config.SSLRootCert)
+	}
+
+	if s.config.Timeout > 0 {
+		connStr += fmt.Sprintf(" connect_timeout=%d", int(s.config.Timeout.Seconds()))
+	}
+
+	db, err := sql.Open("postgres", connStr)
+	if err != nil {
+		return nil, fmt.Errorf("failed to open PgBouncer admin connection: %w", err)
+	}
+
+	// Configure connection pool settings (smaller pool for admin commands)
+	db.SetMaxOpenConns(2)
+	db.SetMaxIdleConns(1)
+	db.SetConnMaxLifetime(10 * time.Minute)
+	db.SetConnMaxIdleTime(30 * time.Second)
+
+	// Note: We don't call PingContext() here because PgBouncer's admin database
+	// only supports SHOW commands (SHOW STATS, SHOW POOLS, etc.) and rejects
+	// regular SQL queries that Ping() would execute. The connection will be
+	// tested when we actually run SHOW STATS during scraping.
+
+	return db, nil
 }
 
 // initializeScrapers initializes all metric scrapers
@@ -245,6 +321,16 @@ func (s *newRelicPostgreSQLScraper) initializeScrapers() error {
 			s.logger.Info("Table IO scraper initialized (relations not configured)")
 		}
 	}
+
+	// Initialize PgBouncer scraper (optional, for connection pooler monitoring)
+	// This scraper collects statistics from PgBouncer if available
+	s.pgbouncerScraper = scrapers.NewPgBouncerScraper(
+		s.client,
+		s.mb,
+		s.logger,
+		s.instanceName,
+	)
+	s.logger.Info("PgBouncer scraper initialized (will fail gracefully if PgBouncer not available)")
 
 	return nil
 }
@@ -589,6 +675,34 @@ func (s *newRelicPostgreSQLScraper) scrape(ctx context.Context) (pmetric.Metrics
 		} else {
 			s.logger.Debug("Per-table metrics skipped (no tables configured)")
 		}
+	}
+
+	// Scrape PgBouncer statistics (optional, fails gracefully if PgBouncer not available)
+	if s.pgbouncerScraper != nil {
+		s.logger.Info("Attempting to scrape PgBouncer stats")
+		pgbouncerErrs := s.pgbouncerScraper.ScrapePgBouncerStats(scrapeCtx)
+		if len(pgbouncerErrs) > 0 {
+			s.logger.Warn("PgBouncer stats not available or query failed",
+				zap.Int("error_count", len(pgbouncerErrs)),
+				zap.Errors("errors", pgbouncerErrs))
+			// Don't append to scrapeErrors - PgBouncer may not be configured, which is acceptable
+		} else {
+			s.logger.Info("Successfully scraped PgBouncer stats")
+		}
+
+		// Scrape PgBouncer pools (optional, fails gracefully if PgBouncer not available)
+		s.logger.Info("Attempting to scrape PgBouncer pools")
+		pgbouncerPoolsErrs := s.pgbouncerScraper.ScrapePgBouncerPools(scrapeCtx)
+		if len(pgbouncerPoolsErrs) > 0 {
+			s.logger.Warn("PgBouncer pools not available or query failed",
+				zap.Int("error_count", len(pgbouncerPoolsErrs)),
+				zap.Errors("errors", pgbouncerPoolsErrs))
+			// Don't append to scrapeErrors - PgBouncer may not be configured, which is acceptable
+		} else {
+			s.logger.Info("Successfully scraped PgBouncer pools")
+		}
+	} else {
+		s.logger.Warn("PgBouncer scraper is nil - this should not happen if admin connection was established")
 	}
 
 	metrics := s.buildMetrics()

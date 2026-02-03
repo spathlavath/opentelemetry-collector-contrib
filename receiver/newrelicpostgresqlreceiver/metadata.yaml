@@ -59,6 +59,9 @@ attributes:
   plugin:
     description: Name of the output plugin for logical replication slot (NULL for physical slots)
     type: string
+  pool_mode:
+    description: PgBouncer pool mode (session, transaction, or statement)
+    type: string
   replication_state:
     description: State of the replication connection (streaming, catchup, etc.)
     type: string
@@ -94,6 +97,248 @@ attributes:
     type: string
 
 metrics:
+  pgbouncer.pools.client_connections_active:
+    description: Number of active client connections (PgBouncer 1.8+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, database_name, user_name, pool_mode]
+    unit: "{connections}"
+    stability:
+      level: alpha
+
+  pgbouncer.pools.client_connections_active_cancel_req:
+    description: Number of client connections with active cancel requests (PgBouncer 1.8+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, database_name, user_name, pool_mode]
+    unit: "{connections}"
+    stability:
+      level: alpha
+
+  pgbouncer.pools.client_connections_waiting:
+    description: Number of client connections waiting for a server connection (PgBouncer 1.8+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, database_name, user_name, pool_mode]
+    unit: "{connections}"
+    stability:
+      level: alpha
+
+  pgbouncer.pools.client_connections_waiting_cancel_req:
+    description: Number of client connections waiting with cancel requests (PgBouncer 1.8+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, database_name, user_name, pool_mode]
+    unit: "{connections}"
+    stability:
+      level: alpha
+
+  pgbouncer.pools.maxwait_in_milliseconds:
+    description: Maximum wait time for clients in milliseconds (PgBouncer 1.8+)
+    enabled: true
+    gauge:
+      value_type: double
+    attributes: [newrelicpostgresql.instance_name, database_name, user_name, pool_mode]
+    unit: ms
+    stability:
+      level: alpha
+
+  pgbouncer.pools.server_connections_active:
+    description: Number of server connections actively linked to a client (PgBouncer 1.8+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, database_name, user_name, pool_mode]
+    unit: "{connections}"
+    stability:
+      level: alpha
+
+  pgbouncer.pools.server_connections_active_cancel:
+    description: Number of server connections currently being canceled (PgBouncer 1.8+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, database_name, user_name, pool_mode]
+    unit: "{connections}"
+    stability:
+      level: alpha
+
+  pgbouncer.pools.server_connections_being_cancel:
+    description: Number of server connections in the process of being canceled (PgBouncer 1.8+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, database_name, user_name, pool_mode]
+    unit: "{connections}"
+    stability:
+      level: alpha
+
+  pgbouncer.pools.server_connections_idle:
+    description: Number of server connections idle and ready (PgBouncer 1.8+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, database_name, user_name, pool_mode]
+    unit: "{connections}"
+    stability:
+      level: alpha
+
+  pgbouncer.pools.server_connections_login:
+    description: Number of server connections currently logging in (PgBouncer 1.8+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, database_name, user_name, pool_mode]
+    unit: "{connections}"
+    stability:
+      level: alpha
+
+  pgbouncer.pools.server_connections_tested:
+    description: Number of server connections currently being tested (PgBouncer 1.8+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, database_name, user_name, pool_mode]
+    unit: "{connections}"
+    stability:
+      level: alpha
+
+  pgbouncer.pools.server_connections_used:
+    description: Number of server connections idle more than server_check_delay (PgBouncer 1.8+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, database_name, user_name, pool_mode]
+    unit: "{connections}"
+    stability:
+      level: alpha
+
+  pgbouncer.stats.avg_bytes_in:
+    description: Average bytes received per request (PgBouncer 1.8+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, database_name]
+    unit: By
+    stability:
+      level: alpha
+
+  pgbouncer.stats.avg_bytes_out:
+    description: Average bytes sent per request (PgBouncer 1.8+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, database_name]
+    unit: By
+    stability:
+      level: alpha
+
+  pgbouncer.stats.avg_requests_per_second:
+    description: Average requests per second (PgBouncer 1.8+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, database_name]
+    unit: "{requests}/s"
+    stability:
+      level: alpha
+
+  pgbouncer.stats.avg_server_assignment_count:
+    description: Average number of server assignments per transaction (PgBouncer 1.8+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, database_name]
+    unit: "{assignments}"
+    stability:
+      level: alpha
+
+  pgbouncer.stats.avg_transaction_count:
+    description: Average transaction count (PgBouncer 1.8+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, database_name]
+    unit: "{transactions}"
+    stability:
+      level: alpha
+
+  pgbouncer.stats.avg_transaction_duration_milliseconds:
+    description: Average transaction duration in milliseconds (PgBouncer 1.8+)
+    enabled: true
+    gauge:
+      value_type: double
+    attributes: [newrelicpostgresql.instance_name, database_name]
+    unit: ms
+    stability:
+      level: alpha
+
+  pgbouncer.stats.bytes_in_per_second:
+    description: Average bytes received per second from clients (PgBouncer 1.8+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, database_name]
+    unit: By/s
+    stability:
+      level: alpha
+
+  pgbouncer.stats.bytes_out_per_second:
+    description: Average bytes sent per second to clients (PgBouncer 1.8+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, database_name]
+    unit: By/s
+    stability:
+      level: alpha
+
+  pgbouncer.stats.queries_per_second:
+    description: Average SQL queries per second (PgBouncer 1.8+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, database_name]
+    unit: "{queries}/s"
+    stability:
+      level: alpha
+
+  pgbouncer.stats.requests_per_second:
+    description: Average client requests per second (PgBouncer 1.8+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, database_name]
+    unit: "{requests}/s"
+    stability:
+      level: alpha
+
+  pgbouncer.stats.total_server_assignment_count:
+    description: Total number of server assignments since PgBouncer start (PgBouncer 1.8+)
+    enabled: true
+    sum:
+      aggregation_temporality: cumulative
+      monotonic: true
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, database_name]
+    unit: "{assignments}"
+    stability:
+      level: alpha
+
+  pgbouncer.stats.transactions_per_second:
+    description: Average transactions per second (PgBouncer 1.8+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, database_name]
+    unit: "{transactions}/s"
+    stability:
+      level: alpha
+
   postgresql.active_waiting_queries:
     description: Number of active queries currently waiting on locks or other resources (PostgreSQL 9.6+)
     enabled: true

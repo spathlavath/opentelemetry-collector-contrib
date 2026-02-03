@@ -70,6 +70,102 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
+			mb.RecordPgbouncerPoolsClientConnectionsActiveDataPoint(ts, 1, "newrelicpostgresql.instance_name-val", "database_name-val", "user_name-val", "pool_mode-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordPgbouncerPoolsClientConnectionsActiveCancelReqDataPoint(ts, 1, "newrelicpostgresql.instance_name-val", "database_name-val", "user_name-val", "pool_mode-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordPgbouncerPoolsClientConnectionsWaitingDataPoint(ts, 1, "newrelicpostgresql.instance_name-val", "database_name-val", "user_name-val", "pool_mode-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordPgbouncerPoolsClientConnectionsWaitingCancelReqDataPoint(ts, 1, "newrelicpostgresql.instance_name-val", "database_name-val", "user_name-val", "pool_mode-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordPgbouncerPoolsMaxwaitInMillisecondsDataPoint(ts, 1, "newrelicpostgresql.instance_name-val", "database_name-val", "user_name-val", "pool_mode-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordPgbouncerPoolsServerConnectionsActiveDataPoint(ts, 1, "newrelicpostgresql.instance_name-val", "database_name-val", "user_name-val", "pool_mode-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordPgbouncerPoolsServerConnectionsActiveCancelDataPoint(ts, 1, "newrelicpostgresql.instance_name-val", "database_name-val", "user_name-val", "pool_mode-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordPgbouncerPoolsServerConnectionsBeingCancelDataPoint(ts, 1, "newrelicpostgresql.instance_name-val", "database_name-val", "user_name-val", "pool_mode-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordPgbouncerPoolsServerConnectionsIdleDataPoint(ts, 1, "newrelicpostgresql.instance_name-val", "database_name-val", "user_name-val", "pool_mode-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordPgbouncerPoolsServerConnectionsLoginDataPoint(ts, 1, "newrelicpostgresql.instance_name-val", "database_name-val", "user_name-val", "pool_mode-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordPgbouncerPoolsServerConnectionsTestedDataPoint(ts, 1, "newrelicpostgresql.instance_name-val", "database_name-val", "user_name-val", "pool_mode-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordPgbouncerPoolsServerConnectionsUsedDataPoint(ts, 1, "newrelicpostgresql.instance_name-val", "database_name-val", "user_name-val", "pool_mode-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordPgbouncerStatsAvgBytesInDataPoint(ts, 1, "newrelicpostgresql.instance_name-val", "database_name-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordPgbouncerStatsAvgBytesOutDataPoint(ts, 1, "newrelicpostgresql.instance_name-val", "database_name-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordPgbouncerStatsAvgRequestsPerSecondDataPoint(ts, 1, "newrelicpostgresql.instance_name-val", "database_name-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordPgbouncerStatsAvgServerAssignmentCountDataPoint(ts, 1, "newrelicpostgresql.instance_name-val", "database_name-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordPgbouncerStatsAvgTransactionCountDataPoint(ts, 1, "newrelicpostgresql.instance_name-val", "database_name-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordPgbouncerStatsAvgTransactionDurationMillisecondsDataPoint(ts, 1, "newrelicpostgresql.instance_name-val", "database_name-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordPgbouncerStatsBytesInPerSecondDataPoint(ts, 1, "newrelicpostgresql.instance_name-val", "database_name-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordPgbouncerStatsBytesOutPerSecondDataPoint(ts, 1, "newrelicpostgresql.instance_name-val", "database_name-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordPgbouncerStatsQueriesPerSecondDataPoint(ts, 1, "newrelicpostgresql.instance_name-val", "database_name-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordPgbouncerStatsRequestsPerSecondDataPoint(ts, 1, "newrelicpostgresql.instance_name-val", "database_name-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordPgbouncerStatsTotalServerAssignmentCountDataPoint(ts, 1, "newrelicpostgresql.instance_name-val", "database_name-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordPgbouncerStatsTransactionsPerSecondDataPoint(ts, 1, "newrelicpostgresql.instance_name-val", "database_name-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
 			mb.RecordPostgresqlActiveWaitingQueriesDataPoint(ts, 1, "newrelicpostgresql.instance_name-val", "database_name-val", "user_name-val", "application_name-val", "backend_type-val")
 
 			defaultMetricsCount++
@@ -825,6 +921,512 @@ func TestMetricsBuilder(t *testing.T) {
 			validatedMetrics := make(map[string]bool)
 			for i := 0; i < ms.Len(); i++ {
 				switch ms.At(i).Name() {
+				case "pgbouncer.pools.client_connections_active":
+					assert.False(t, validatedMetrics["pgbouncer.pools.client_connections_active"], "Found a duplicate in the metrics slice: pgbouncer.pools.client_connections_active")
+					validatedMetrics["pgbouncer.pools.client_connections_active"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Number of active client connections (PgBouncer 1.8+)", ms.At(i).Description())
+					assert.Equal(t, "{connections}", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("newrelicpostgresql.instance_name")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("user_name")
+					assert.True(t, ok)
+					assert.Equal(t, "user_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("pool_mode")
+					assert.True(t, ok)
+					assert.Equal(t, "pool_mode-val", attrVal.Str())
+				case "pgbouncer.pools.client_connections_active_cancel_req":
+					assert.False(t, validatedMetrics["pgbouncer.pools.client_connections_active_cancel_req"], "Found a duplicate in the metrics slice: pgbouncer.pools.client_connections_active_cancel_req")
+					validatedMetrics["pgbouncer.pools.client_connections_active_cancel_req"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Number of client connections with active cancel requests (PgBouncer 1.8+)", ms.At(i).Description())
+					assert.Equal(t, "{connections}", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("newrelicpostgresql.instance_name")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("user_name")
+					assert.True(t, ok)
+					assert.Equal(t, "user_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("pool_mode")
+					assert.True(t, ok)
+					assert.Equal(t, "pool_mode-val", attrVal.Str())
+				case "pgbouncer.pools.client_connections_waiting":
+					assert.False(t, validatedMetrics["pgbouncer.pools.client_connections_waiting"], "Found a duplicate in the metrics slice: pgbouncer.pools.client_connections_waiting")
+					validatedMetrics["pgbouncer.pools.client_connections_waiting"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Number of client connections waiting for a server connection (PgBouncer 1.8+)", ms.At(i).Description())
+					assert.Equal(t, "{connections}", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("newrelicpostgresql.instance_name")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("user_name")
+					assert.True(t, ok)
+					assert.Equal(t, "user_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("pool_mode")
+					assert.True(t, ok)
+					assert.Equal(t, "pool_mode-val", attrVal.Str())
+				case "pgbouncer.pools.client_connections_waiting_cancel_req":
+					assert.False(t, validatedMetrics["pgbouncer.pools.client_connections_waiting_cancel_req"], "Found a duplicate in the metrics slice: pgbouncer.pools.client_connections_waiting_cancel_req")
+					validatedMetrics["pgbouncer.pools.client_connections_waiting_cancel_req"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Number of client connections waiting with cancel requests (PgBouncer 1.8+)", ms.At(i).Description())
+					assert.Equal(t, "{connections}", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("newrelicpostgresql.instance_name")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("user_name")
+					assert.True(t, ok)
+					assert.Equal(t, "user_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("pool_mode")
+					assert.True(t, ok)
+					assert.Equal(t, "pool_mode-val", attrVal.Str())
+				case "pgbouncer.pools.maxwait_in_milliseconds":
+					assert.False(t, validatedMetrics["pgbouncer.pools.maxwait_in_milliseconds"], "Found a duplicate in the metrics slice: pgbouncer.pools.maxwait_in_milliseconds")
+					validatedMetrics["pgbouncer.pools.maxwait_in_milliseconds"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Maximum wait time for clients in milliseconds (PgBouncer 1.8+)", ms.At(i).Description())
+					assert.Equal(t, "ms", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
+					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
+					attrVal, ok := dp.Attributes().Get("newrelicpostgresql.instance_name")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("user_name")
+					assert.True(t, ok)
+					assert.Equal(t, "user_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("pool_mode")
+					assert.True(t, ok)
+					assert.Equal(t, "pool_mode-val", attrVal.Str())
+				case "pgbouncer.pools.server_connections_active":
+					assert.False(t, validatedMetrics["pgbouncer.pools.server_connections_active"], "Found a duplicate in the metrics slice: pgbouncer.pools.server_connections_active")
+					validatedMetrics["pgbouncer.pools.server_connections_active"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Number of server connections actively linked to a client (PgBouncer 1.8+)", ms.At(i).Description())
+					assert.Equal(t, "{connections}", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("newrelicpostgresql.instance_name")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("user_name")
+					assert.True(t, ok)
+					assert.Equal(t, "user_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("pool_mode")
+					assert.True(t, ok)
+					assert.Equal(t, "pool_mode-val", attrVal.Str())
+				case "pgbouncer.pools.server_connections_active_cancel":
+					assert.False(t, validatedMetrics["pgbouncer.pools.server_connections_active_cancel"], "Found a duplicate in the metrics slice: pgbouncer.pools.server_connections_active_cancel")
+					validatedMetrics["pgbouncer.pools.server_connections_active_cancel"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Number of server connections currently being canceled (PgBouncer 1.8+)", ms.At(i).Description())
+					assert.Equal(t, "{connections}", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("newrelicpostgresql.instance_name")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("user_name")
+					assert.True(t, ok)
+					assert.Equal(t, "user_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("pool_mode")
+					assert.True(t, ok)
+					assert.Equal(t, "pool_mode-val", attrVal.Str())
+				case "pgbouncer.pools.server_connections_being_cancel":
+					assert.False(t, validatedMetrics["pgbouncer.pools.server_connections_being_cancel"], "Found a duplicate in the metrics slice: pgbouncer.pools.server_connections_being_cancel")
+					validatedMetrics["pgbouncer.pools.server_connections_being_cancel"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Number of server connections in the process of being canceled (PgBouncer 1.8+)", ms.At(i).Description())
+					assert.Equal(t, "{connections}", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("newrelicpostgresql.instance_name")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("user_name")
+					assert.True(t, ok)
+					assert.Equal(t, "user_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("pool_mode")
+					assert.True(t, ok)
+					assert.Equal(t, "pool_mode-val", attrVal.Str())
+				case "pgbouncer.pools.server_connections_idle":
+					assert.False(t, validatedMetrics["pgbouncer.pools.server_connections_idle"], "Found a duplicate in the metrics slice: pgbouncer.pools.server_connections_idle")
+					validatedMetrics["pgbouncer.pools.server_connections_idle"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Number of server connections idle and ready (PgBouncer 1.8+)", ms.At(i).Description())
+					assert.Equal(t, "{connections}", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("newrelicpostgresql.instance_name")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("user_name")
+					assert.True(t, ok)
+					assert.Equal(t, "user_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("pool_mode")
+					assert.True(t, ok)
+					assert.Equal(t, "pool_mode-val", attrVal.Str())
+				case "pgbouncer.pools.server_connections_login":
+					assert.False(t, validatedMetrics["pgbouncer.pools.server_connections_login"], "Found a duplicate in the metrics slice: pgbouncer.pools.server_connections_login")
+					validatedMetrics["pgbouncer.pools.server_connections_login"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Number of server connections currently logging in (PgBouncer 1.8+)", ms.At(i).Description())
+					assert.Equal(t, "{connections}", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("newrelicpostgresql.instance_name")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("user_name")
+					assert.True(t, ok)
+					assert.Equal(t, "user_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("pool_mode")
+					assert.True(t, ok)
+					assert.Equal(t, "pool_mode-val", attrVal.Str())
+				case "pgbouncer.pools.server_connections_tested":
+					assert.False(t, validatedMetrics["pgbouncer.pools.server_connections_tested"], "Found a duplicate in the metrics slice: pgbouncer.pools.server_connections_tested")
+					validatedMetrics["pgbouncer.pools.server_connections_tested"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Number of server connections currently being tested (PgBouncer 1.8+)", ms.At(i).Description())
+					assert.Equal(t, "{connections}", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("newrelicpostgresql.instance_name")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("user_name")
+					assert.True(t, ok)
+					assert.Equal(t, "user_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("pool_mode")
+					assert.True(t, ok)
+					assert.Equal(t, "pool_mode-val", attrVal.Str())
+				case "pgbouncer.pools.server_connections_used":
+					assert.False(t, validatedMetrics["pgbouncer.pools.server_connections_used"], "Found a duplicate in the metrics slice: pgbouncer.pools.server_connections_used")
+					validatedMetrics["pgbouncer.pools.server_connections_used"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Number of server connections idle more than server_check_delay (PgBouncer 1.8+)", ms.At(i).Description())
+					assert.Equal(t, "{connections}", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("newrelicpostgresql.instance_name")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("user_name")
+					assert.True(t, ok)
+					assert.Equal(t, "user_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("pool_mode")
+					assert.True(t, ok)
+					assert.Equal(t, "pool_mode-val", attrVal.Str())
+				case "pgbouncer.stats.avg_bytes_in":
+					assert.False(t, validatedMetrics["pgbouncer.stats.avg_bytes_in"], "Found a duplicate in the metrics slice: pgbouncer.stats.avg_bytes_in")
+					validatedMetrics["pgbouncer.stats.avg_bytes_in"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Average bytes received per request (PgBouncer 1.8+)", ms.At(i).Description())
+					assert.Equal(t, "By", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("newrelicpostgresql.instance_name")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+				case "pgbouncer.stats.avg_bytes_out":
+					assert.False(t, validatedMetrics["pgbouncer.stats.avg_bytes_out"], "Found a duplicate in the metrics slice: pgbouncer.stats.avg_bytes_out")
+					validatedMetrics["pgbouncer.stats.avg_bytes_out"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Average bytes sent per request (PgBouncer 1.8+)", ms.At(i).Description())
+					assert.Equal(t, "By", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("newrelicpostgresql.instance_name")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+				case "pgbouncer.stats.avg_requests_per_second":
+					assert.False(t, validatedMetrics["pgbouncer.stats.avg_requests_per_second"], "Found a duplicate in the metrics slice: pgbouncer.stats.avg_requests_per_second")
+					validatedMetrics["pgbouncer.stats.avg_requests_per_second"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Average requests per second (PgBouncer 1.8+)", ms.At(i).Description())
+					assert.Equal(t, "{requests}/s", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("newrelicpostgresql.instance_name")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+				case "pgbouncer.stats.avg_server_assignment_count":
+					assert.False(t, validatedMetrics["pgbouncer.stats.avg_server_assignment_count"], "Found a duplicate in the metrics slice: pgbouncer.stats.avg_server_assignment_count")
+					validatedMetrics["pgbouncer.stats.avg_server_assignment_count"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Average number of server assignments per transaction (PgBouncer 1.8+)", ms.At(i).Description())
+					assert.Equal(t, "{assignments}", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("newrelicpostgresql.instance_name")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+				case "pgbouncer.stats.avg_transaction_count":
+					assert.False(t, validatedMetrics["pgbouncer.stats.avg_transaction_count"], "Found a duplicate in the metrics slice: pgbouncer.stats.avg_transaction_count")
+					validatedMetrics["pgbouncer.stats.avg_transaction_count"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Average transaction count (PgBouncer 1.8+)", ms.At(i).Description())
+					assert.Equal(t, "{transactions}", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("newrelicpostgresql.instance_name")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+				case "pgbouncer.stats.avg_transaction_duration_milliseconds":
+					assert.False(t, validatedMetrics["pgbouncer.stats.avg_transaction_duration_milliseconds"], "Found a duplicate in the metrics slice: pgbouncer.stats.avg_transaction_duration_milliseconds")
+					validatedMetrics["pgbouncer.stats.avg_transaction_duration_milliseconds"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Average transaction duration in milliseconds (PgBouncer 1.8+)", ms.At(i).Description())
+					assert.Equal(t, "ms", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
+					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
+					attrVal, ok := dp.Attributes().Get("newrelicpostgresql.instance_name")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+				case "pgbouncer.stats.bytes_in_per_second":
+					assert.False(t, validatedMetrics["pgbouncer.stats.bytes_in_per_second"], "Found a duplicate in the metrics slice: pgbouncer.stats.bytes_in_per_second")
+					validatedMetrics["pgbouncer.stats.bytes_in_per_second"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Average bytes received per second from clients (PgBouncer 1.8+)", ms.At(i).Description())
+					assert.Equal(t, "By/s", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("newrelicpostgresql.instance_name")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+				case "pgbouncer.stats.bytes_out_per_second":
+					assert.False(t, validatedMetrics["pgbouncer.stats.bytes_out_per_second"], "Found a duplicate in the metrics slice: pgbouncer.stats.bytes_out_per_second")
+					validatedMetrics["pgbouncer.stats.bytes_out_per_second"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Average bytes sent per second to clients (PgBouncer 1.8+)", ms.At(i).Description())
+					assert.Equal(t, "By/s", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("newrelicpostgresql.instance_name")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+				case "pgbouncer.stats.queries_per_second":
+					assert.False(t, validatedMetrics["pgbouncer.stats.queries_per_second"], "Found a duplicate in the metrics slice: pgbouncer.stats.queries_per_second")
+					validatedMetrics["pgbouncer.stats.queries_per_second"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Average SQL queries per second (PgBouncer 1.8+)", ms.At(i).Description())
+					assert.Equal(t, "{queries}/s", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("newrelicpostgresql.instance_name")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+				case "pgbouncer.stats.requests_per_second":
+					assert.False(t, validatedMetrics["pgbouncer.stats.requests_per_second"], "Found a duplicate in the metrics slice: pgbouncer.stats.requests_per_second")
+					validatedMetrics["pgbouncer.stats.requests_per_second"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Average client requests per second (PgBouncer 1.8+)", ms.At(i).Description())
+					assert.Equal(t, "{requests}/s", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("newrelicpostgresql.instance_name")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+				case "pgbouncer.stats.total_server_assignment_count":
+					assert.False(t, validatedMetrics["pgbouncer.stats.total_server_assignment_count"], "Found a duplicate in the metrics slice: pgbouncer.stats.total_server_assignment_count")
+					validatedMetrics["pgbouncer.stats.total_server_assignment_count"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "Total number of server assignments since PgBouncer start (PgBouncer 1.8+)", ms.At(i).Description())
+					assert.Equal(t, "{assignments}", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("newrelicpostgresql.instance_name")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+				case "pgbouncer.stats.transactions_per_second":
+					assert.False(t, validatedMetrics["pgbouncer.stats.transactions_per_second"], "Found a duplicate in the metrics slice: pgbouncer.stats.transactions_per_second")
+					validatedMetrics["pgbouncer.stats.transactions_per_second"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Average transactions per second (PgBouncer 1.8+)", ms.At(i).Description())
+					assert.Equal(t, "{transactions}/s", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("newrelicpostgresql.instance_name")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
 				case "postgresql.active_waiting_queries":
 					assert.False(t, validatedMetrics["postgresql.active_waiting_queries"], "Found a duplicate in the metrics slice: postgresql.active_waiting_queries")
 					validatedMetrics["postgresql.active_waiting_queries"] = true
