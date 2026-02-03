@@ -399,6 +399,22 @@ all_set:
       enabled: true
     newrelicmysql.replication.exec_master_log_pos:
       enabled: true
+    newrelicmysql.replication.group.conflicts_detected:
+      enabled: true
+    newrelicmysql.replication.group.transactions:
+      enabled: true
+    newrelicmysql.replication.group.transactions_applied:
+      enabled: true
+    newrelicmysql.replication.group.transactions_check:
+      enabled: true
+    newrelicmysql.replication.group.transactions_in_applier_queue:
+      enabled: true
+    newrelicmysql.replication.group.transactions_proposed:
+      enabled: true
+    newrelicmysql.replication.group.transactions_rollback:
+      enabled: true
+    newrelicmysql.replication.group.transactions_validating:
+      enabled: true
     newrelicmysql.replication.last_io_errno:
       enabled: true
     newrelicmysql.replication.last_sql_errno:
@@ -407,13 +423,19 @@ all_set:
       enabled: true
     newrelicmysql.replication.relay_log_space:
       enabled: true
+    newrelicmysql.replication.replicas_connected:
+      enabled: true
     newrelicmysql.replication.seconds_behind_master:
+      enabled: true
+    newrelicmysql.replication.seconds_behind_source:
       enabled: true
     newrelicmysql.replication.slave_io_running:
       enabled: true
     newrelicmysql.replication.slave_running:
       enabled: true
     newrelicmysql.replication.slave_sql_running:
+      enabled: true
+    newrelicmysql.replication.slaves_connected:
       enabled: true
     newrelicmysql.uptime:
       enabled: true
@@ -820,6 +842,22 @@ none_set:
       enabled: false
     newrelicmysql.replication.exec_master_log_pos:
       enabled: false
+    newrelicmysql.replication.group.conflicts_detected:
+      enabled: false
+    newrelicmysql.replication.group.transactions:
+      enabled: false
+    newrelicmysql.replication.group.transactions_applied:
+      enabled: false
+    newrelicmysql.replication.group.transactions_check:
+      enabled: false
+    newrelicmysql.replication.group.transactions_in_applier_queue:
+      enabled: false
+    newrelicmysql.replication.group.transactions_proposed:
+      enabled: false
+    newrelicmysql.replication.group.transactions_rollback:
+      enabled: false
+    newrelicmysql.replication.group.transactions_validating:
+      enabled: false
     newrelicmysql.replication.last_io_errno:
       enabled: false
     newrelicmysql.replication.last_sql_errno:
@@ -828,13 +866,19 @@ none_set:
       enabled: false
     newrelicmysql.replication.relay_log_space:
       enabled: false
+    newrelicmysql.replication.replicas_connected:
+      enabled: false
     newrelicmysql.replication.seconds_behind_master:
+      enabled: false
+    newrelicmysql.replication.seconds_behind_source:
       enabled: false
     newrelicmysql.replication.slave_io_running:
       enabled: false
     newrelicmysql.replication.slave_running:
       enabled: false
     newrelicmysql.replication.slave_sql_running:
+      enabled: false
+    newrelicmysql.replication.slaves_connected:
       enabled: false
     newrelicmysql.uptime:
       enabled: false

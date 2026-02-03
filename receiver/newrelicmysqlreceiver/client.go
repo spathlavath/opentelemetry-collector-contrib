@@ -158,6 +158,55 @@ func (c *mySQLClient) GetReplicationStatus() (map[string]string, error) {
 	return result, rows.Err()
 }
 
+// GetMasterStatus retrieves master/source status information.
+func (c *mySQLClient) GetMasterStatus() (map[string]string, error) {
+	// Get the number of connected slaves/replicas
+	var slavesConnected string
+	err := c.db.QueryRow("SHOW STATUS LIKE 'Slaves_connected'").Scan(new(string), &slavesConnected)
+	if err != nil {
+		// Try newer syntax for MySQL 8.0.22+
+		err = c.db.QueryRow("SHOW STATUS LIKE 'Replicas_connected'").Scan(new(string), &slavesConnected)
+		if err != nil && err != sql.ErrNoRows {
+			return nil, err
+		}
+	}
+
+	result := make(map[string]string)
+	if slavesConnected != "" {
+		result["Slaves_Connected"] = slavesConnected
+		result["Replicas_Connected"] = slavesConnected
+	}
+
+	return result, nil
+}
+
+// GetGroupReplicationStats retrieves group replication statistics from performance schema.
+func (c *mySQLClient) GetGroupReplicationStats() (map[string]string, error) {
+	result := make(map[string]string)
+
+	// Check if group replication is enabled
+	query := `SELECT VARIABLE_NAME, VARIABLE_VALUE 
+              FROM performance_schema.global_status 
+              WHERE VARIABLE_NAME LIKE 'group_replication%'`
+
+	rows, err := c.db.Query(query)
+	if err != nil {
+		// Performance schema might not be available or group replication not installed
+		return result, nil
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var name, value string
+		if err := rows.Scan(&name, &value); err != nil {
+			return nil, err
+		}
+		result[name] = value
+	}
+
+	return result, rows.Err()
+}
+
 // GetVersion retrieves the MySQL server version string.
 func (c *mySQLClient) GetVersion() (string, error) {
 	var version string

@@ -45,6 +45,14 @@ func (m *mockInnoDBClient) GetReplicationStatus() (map[string]string, error) {
 	return nil, nil
 }
 
+func (m *mockInnoDBClient) GetMasterStatus() (map[string]string, error) {
+	return nil, nil
+}
+
+func (m *mockInnoDBClient) GetGroupReplicationStats() (map[string]string, error) {
+	return nil, nil
+}
+
 func (m *mockInnoDBClient) GetVersion() (string, error) {
 	return "8.0.0", nil
 }

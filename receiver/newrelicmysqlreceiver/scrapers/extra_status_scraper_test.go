@@ -43,6 +43,14 @@ func (m *mockExtraStatusClient) GetReplicationStatus() (map[string]string, error
 	return nil, nil
 }
 
+func (m *mockExtraStatusClient) GetMasterStatus() (map[string]string, error) {
+	return nil, nil
+}
+
+func (m *mockExtraStatusClient) GetGroupReplicationStats() (map[string]string, error) {
+	return nil, nil
+}
+
 func (m *mockExtraStatusClient) GetVersion() (string, error) {
 	return "8.0.0", nil
 }
