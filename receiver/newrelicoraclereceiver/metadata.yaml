@@ -471,7 +471,7 @@ metrics:
 
   newrelicoracledb.locked_accounts:
     description: Count of locked user accounts in the database
-    enabled: true
+    enabled: false
     gauge:
       value_type: int
     unit: "1"
@@ -570,7 +570,7 @@ metrics:
 
   newrelicoracledb.global_name:
     description: Oracle database global name information
-    enabled: true
+    enabled: false
     gauge:
       value_type: int
     unit: "1"
@@ -579,7 +579,7 @@ metrics:
 
   newrelicoracledb.db_id:
     description: Oracle database ID information
-    enabled: true
+    enabled: false
     gauge:
       value_type: int
     unit: "1"
@@ -588,7 +588,7 @@ metrics:
 
   newrelicoracledb.long_running_queries:
     description: Number of long running queries (active sessions running for more than 60 seconds)
-    enabled: true
+    enabled: false
     gauge:
       value_type: int
     unit: "1"

@@ -490,7 +490,7 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		NewrelicoracledbDbID: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbDiskBlocksRead: MetricConfig{
 			Enabled: true,
@@ -514,16 +514,16 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		NewrelicoracledbGlobalName: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbHostingInfo: MetricConfig{
 			Enabled: true,
 		},
 		NewrelicoracledbLockedAccounts: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbLongRunningQueries: MetricConfig{
-			Enabled: true,
+			Enabled: false,
 		},
 		NewrelicoracledbMemoryPgaAllocatedBytes: MetricConfig{
 			Enabled: true,

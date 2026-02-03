@@ -641,20 +641,6 @@ Used bytes in data file
 | tablespace.name | Name of the Oracle tablespace | Any Str | false |
 | file.name | Oracle data file name | Any Str | false |
 
-### newrelicoracledb.db_id
-
-Oracle database ID information
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.id | Oracle database ID | Any Str | false |
-
 ### newrelicoracledb.disk.blocks_read
 
 Number of physical blocks read from disk
@@ -776,20 +762,6 @@ Oracle SQL execution plan details including operation costs, cardinality, and re
 | time | Estimated elapsed time for the operation (in seconds) | Any Int | false |
 | filter_predicates | Filter predicates applied after accessing rows | Any Str | false |
 
-### newrelicoracledb.global_name
-
-Oracle database global name information
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| global.name | Oracle database global name | Any Str | false |
-
 ### newrelicoracledb.hosting.info
 
 Database hosting and platform information
@@ -806,34 +778,6 @@ Provides information about the host architecture and operating system platform
 | ---- | ----------- | ------ | -------- |
 | host.arch | The CPU architecture the host system is running on | Any Str | false |
 | platform.name | Operating system platform name | Any Str | false |
-
-### newrelicoracledb.locked_accounts
-
-Count of locked user accounts in the database
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
-
-### newrelicoracledb.long_running_queries
-
-Number of long running queries (active sessions running for more than 60 seconds)
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
 
 ### newrelicoracledb.memory.pga_allocated_bytes
 
@@ -4677,6 +4621,72 @@ Source: WAIT_TIME_MICRO / 1000 (rounded to 2 decimal places).
 | row_wait_obj_id | Object ID of the row being waited on | Any Str | false |
 | row_wait_file_id | File ID of the row being waited on | Any Str | false |
 | row_wait_block_id | Block ID of the row being waited on | Any Str | false |
+
+## Optional Metrics
+
+The following metrics are not emitted by default. Each of them can be enabled by applying the following configuration:
+
+```yaml
+metrics:
+  <metric_name>:
+    enabled: true
+```
+
+### newrelicoracledb.db_id
+
+Oracle database ID information
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| db.id | Oracle database ID | Any Str | false |
+
+### newrelicoracledb.global_name
+
+Oracle database global name information
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| global.name | Oracle database global name | Any Str | false |
+
+### newrelicoracledb.locked_accounts
+
+Count of locked user accounts in the database
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| instance.id | Oracle database instance ID | Any Str | false |
+
+### newrelicoracledb.long_running_queries
+
+Number of long running queries (active sessions running for more than 60 seconds)
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| 1 | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| instance.id | Oracle database instance ID | Any Str | false |
 
 ## Resource Attributes
 

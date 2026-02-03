@@ -49,23 +49,11 @@ func (s *CoreScraper) ScrapeCoreMetrics(ctx context.Context) []error {
 	s.logger.Debug("Scraping Oracle core database metrics")
 	now := pcommon.NewTimestampFromTime(time.Now())
 
-	// Scrape locked accounts metrics
-	errors = append(errors, s.scrapeLockedAccountsMetrics(ctx, now)...)
-
 	// Scrape read/write disk I/O metrics
 	errors = append(errors, s.scrapeReadWriteMetrics(ctx, now)...)
 
 	// Scrape PGA memory metrics
 	errors = append(errors, s.scrapePGAMetrics(ctx, now)...)
-
-	// Scrape global name instance metrics
-	errors = append(errors, s.scrapeGlobalNameInstanceMetrics(ctx, now)...)
-
-	// Scrape database ID instance metrics
-	errors = append(errors, s.scrapeDBIDInstanceMetrics(ctx, now)...)
-
-	// Scrape long running queries metrics
-	errors = append(errors, s.scrapeLongRunningQueriesMetrics(ctx, now)...)
 
 	// Scrape SGA UGA total memory metrics
 	errors = append(errors, s.scrapeSGAUGATotalMemoryMetrics(ctx, now)...)

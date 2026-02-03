@@ -248,7 +248,6 @@ func TestMetricsBuilder(t *testing.T) {
 			allMetricsCount++
 			mb.RecordNewrelicoracledbDatafileUsedBytesDataPoint(ts, 1, "con.id-val", "tablespace.name-val", "file.name-val")
 
-			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicoracledbDbIDDataPoint(ts, 1, "db.id-val")
 
@@ -280,7 +279,6 @@ func TestMetricsBuilder(t *testing.T) {
 			allMetricsCount++
 			mb.RecordNewrelicoracledbExecutionPlanDataPoint(ts, 1, "newrelic.event.type-val", "query_id-val", "plan_hash_value-val", 12, 7, 9, 5, "operation-val", "options-val", "object_owner-val", "object_name-val", 8, 4, 11, 5, 8, 7, "timestamp-val", "plan_generated_timestamp-val", 10, "access_predicates-val", "projection-val", 4, "filter_predicates-val")
 
-			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicoracledbGlobalNameDataPoint(ts, 1, "global.name-val")
 
@@ -288,11 +286,9 @@ func TestMetricsBuilder(t *testing.T) {
 			allMetricsCount++
 			mb.RecordNewrelicoracledbHostingInfoDataPoint(ts, 1, "host.arch-val", "platform.name-val")
 
-			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicoracledbLockedAccountsDataPoint(ts, 1, "instance.id-val")
 
-			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicoracledbLongRunningQueriesDataPoint(ts, 1, "instance.id-val")
 

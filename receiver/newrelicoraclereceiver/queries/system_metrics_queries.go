@@ -32,17 +32,6 @@ const (
 			SUM(WRITETIM) * 10 AS WriteTime
 		FROM gv$filestat
 		GROUP BY INST_ID`
-
-	// LongRunningQueriesSQL returns count of long-running queries per instance
-	// Returns count of ACTIVE non-BACKGROUND sessions that have been running for more than 60 seconds
-	LongRunningQueriesSQL = `
-		SELECT i.inst_id, COUNT(s.sid) AS total
-		FROM gv$instance i
-		LEFT JOIN gv$session s ON i.inst_id = s.inst_id
-			AND s.status = 'ACTIVE'
-			AND s.type <> 'BACKGROUND'
-			AND s.last_call_et > 60
-		GROUP BY i.inst_id`
 )
 
 // System Statistics Queries
@@ -61,22 +50,6 @@ const (
 				'sorts (memory)', 
 				'sorts (disk)'
 			)`
-
-	// GlobalNameInstanceSQL returns instance info with global database name
-	GlobalNameInstanceSQL = `
-		SELECT
-			t1.INST_ID,
-			t2.GLOBAL_NAME
-		FROM (SELECT INST_ID FROM gv$instance) t1,
-			 (SELECT GLOBAL_NAME FROM global_name) t2`
-
-	// DBIDInstanceSQL returns instance info with database ID
-	DBIDInstanceSQL = `
-		SELECT
-			t1.INST_ID,
-			t2.DBID
-		FROM (SELECT INST_ID FROM gv$instance) t1,
-			 (SELECT DBID FROM v$database) t2`
 )
 
 // Wait Events and Lock Queries
@@ -107,32 +80,4 @@ const (
 		FROM GV$ROLLSTAT stat, GV$INSTANCE inst
 		WHERE stat.inst_id = inst.inst_id
 		GROUP BY inst.inst_id`
-)
-
-// User Account Metrics
-const (
-	// LockedAccountsSQL returns count of locked user accounts (CDB context)
-	LockedAccountsSQL = `
-		SELECT
-			INST_ID, 
-			LOCKED_ACCOUNTS
-		FROM (
-			SELECT COUNT(1) AS LOCKED_ACCOUNTS
-			FROM cdb_users a, cdb_pdbs b
-			WHERE a.con_id = b.con_id
-				AND a.account_status != 'OPEN'
-		) l,
-		gv$instance i`
-
-	// LockedAccountsCurrentContainerSQL returns locked accounts for current container
-	LockedAccountsCurrentContainerSQL = `
-		SELECT
-			INST_ID, 
-			LOCKED_ACCOUNTS
-		FROM (
-			SELECT COUNT(1) AS LOCKED_ACCOUNTS
-			FROM dba_users
-			WHERE account_status != 'OPEN'
-		) l,
-		gv$instance i`
 )
