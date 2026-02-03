@@ -362,6 +362,10 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
+			mb.RecordPostgresqlConnectionsActiveDataPoint(ts, 1, "database_name-val", "newrelicpostgresql.instance_name-val", "user_name-val", "application_name-val", "backend_type-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
 			mb.RecordPostgresqlControlCheckpointDelayDataPoint(ts, 1, "newrelicpostgresql.instance_name-val")
 
 			defaultMetricsCount++
@@ -2566,6 +2570,33 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("newrelicpostgresql.instance_name")
 					assert.True(t, ok)
 					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
+				case "postgresql.connections.active":
+					assert.False(t, validatedMetrics["postgresql.connections.active"], "Found a duplicate in the metrics slice: postgresql.connections.active")
+					validatedMetrics["postgresql.connections.active"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Number of active connections to the database (state='active')", ms.At(i).Description())
+					assert.Equal(t, "{connections}", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("newrelicpostgresql.instance_name")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("user_name")
+					assert.True(t, ok)
+					assert.Equal(t, "user_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("application_name")
+					assert.True(t, ok)
+					assert.Equal(t, "application_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("backend_type")
+					assert.True(t, ok)
+					assert.Equal(t, "backend_type-val", attrVal.Str())
 				case "postgresql.control.checkpoint_delay":
 					assert.False(t, validatedMetrics["postgresql.control.checkpoint_delay"], "Found a duplicate in the metrics slice: postgresql.control.checkpoint_delay")
 					validatedMetrics["postgresql.control.checkpoint_delay"] = true

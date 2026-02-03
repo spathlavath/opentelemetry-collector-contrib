@@ -227,6 +227,7 @@ func (c *SQLClient) QueryActivityMetrics(ctx context.Context) ([]models.PgStatAc
 			&metric.UserName,
 			&metric.ApplicationName,
 			&metric.BackendType,
+			&metric.ActiveConnections,
 			&metric.ActiveWaitingQueries,
 			&metric.XactStartAge,
 			&metric.BackendXIDAge,
@@ -1375,4 +1376,21 @@ func (c *SQLClient) QueryLocks(ctx context.Context) (*models.PgLocksMetric, erro
 	}
 
 	return &metric, nil
+}
+
+// QueryIndexSize retrieves the size of an index using pg_relation_size
+func (c *SQLClient) QueryIndexSize(ctx context.Context, indexOID int64) (int64, error) {
+	query := "SELECT pg_relation_size($1)"
+
+	var size sql.NullInt64
+	err := c.db.QueryRowContext(ctx, query, indexOID).Scan(&size)
+	if err != nil {
+		return 0, fmt.Errorf("failed to query index size for OID %d: %w", indexOID, err)
+	}
+
+	if !size.Valid {
+		return 0, nil
+	}
+
+	return size.Int64, nil
 }

@@ -101,6 +101,7 @@ type MetricsConfig struct {
 	PostgresqlConflictsSnapshot                       MetricConfig `mapstructure:"postgresql.conflicts.snapshot"`
 	PostgresqlConflictsTablespace                     MetricConfig `mapstructure:"postgresql.conflicts.tablespace"`
 	PostgresqlConnections                             MetricConfig `mapstructure:"postgresql.connections"`
+	PostgresqlConnectionsActive                       MetricConfig `mapstructure:"postgresql.connections.active"`
 	PostgresqlControlCheckpointDelay                  MetricConfig `mapstructure:"postgresql.control.checkpoint_delay"`
 	PostgresqlControlCheckpointDelayBytes             MetricConfig `mapstructure:"postgresql.control.checkpoint_delay_bytes"`
 	PostgresqlControlRedoDelayBytes                   MetricConfig `mapstructure:"postgresql.control.redo_delay_bytes"`
@@ -476,6 +477,9 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		PostgresqlConnections: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlConnectionsActive: MetricConfig{
 			Enabled: true,
 		},
 		PostgresqlControlCheckpointDelay: MetricConfig{

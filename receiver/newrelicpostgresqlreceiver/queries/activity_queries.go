@@ -17,6 +17,7 @@ const (
 			usename,
 			application_name,
 			backend_type,
+			COUNT(*) FILTER (WHERE state = 'active') as active_connections,
 			COUNT(*) FILTER (WHERE state = 'active' AND wait_event IS NOT NULL) as active_waiting_queries,
 			MAX(EXTRACT(EPOCH FROM (now() - xact_start))) FILTER (WHERE xact_start IS NOT NULL) as xact_start_age,
 			MAX(GREATEST(0, age(backend_xid))) as backend_xid_age,

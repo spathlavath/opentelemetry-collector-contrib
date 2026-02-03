@@ -248,4 +248,9 @@ type PostgreSQLClient interface {
 	// Returns lock counts grouped by lock mode for the current database
 	// Available in PostgreSQL 9.6+
 	QueryLocks(ctx context.Context) (*models.PgLocksMetric, error)
+
+	// QueryIndexSize retrieves the size of an index using pg_relation_size
+	// Takes an index OID and returns the size in bytes
+	// Available in PostgreSQL 9.6+
+	QueryIndexSize(ctx context.Context, indexOID int64) (int64, error)
 }

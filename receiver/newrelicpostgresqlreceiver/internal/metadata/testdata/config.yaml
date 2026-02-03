@@ -147,6 +147,8 @@ all_set:
       enabled: true
     postgresql.connections:
       enabled: true
+    postgresql.connections.active:
+      enabled: true
     postgresql.control.checkpoint_delay:
       enabled: true
     postgresql.control.checkpoint_delay_bytes:
@@ -615,6 +617,8 @@ none_set:
     postgresql.conflicts.tablespace:
       enabled: false
     postgresql.connections:
+      enabled: false
+    postgresql.connections.active:
       enabled: false
     postgresql.control.checkpoint_delay:
       enabled: false

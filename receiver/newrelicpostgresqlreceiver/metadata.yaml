@@ -879,6 +879,16 @@ metrics:
     stability:
       level: alpha
 
+  postgresql.connections.active:
+    description: Number of active connections to the database (state='active')
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [database_name, newrelicpostgresql.instance_name, user_name, application_name, backend_type]
+    unit: "{connections}"
+    stability:
+      level: alpha
+
   postgresql.control.checkpoint_delay:
     description: Time elapsed since the last checkpoint in seconds (PostgreSQL 10+)
     enabled: true

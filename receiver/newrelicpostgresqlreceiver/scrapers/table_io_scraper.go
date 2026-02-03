@@ -182,13 +182,13 @@ func (s *TableIOScraper) recordUserIndexesMetrics(now pcommon.Timestamp, metric 
 }
 
 // getIndexSize retrieves the size of an index using pg_relation_size
-// This is a simplified implementation that returns 0 for now
-// TODO: Implement proper size calculation using client query method
-func (s *TableIOScraper) getIndexSize(_ context.Context, indexRelID int64) int64 {
-	// Placeholder: Will implement proper pg_relation_size query
-	// query := "SELECT pg_relation_size($1)"
-	s.logger.Debug("Index size calculation not yet implemented", zap.Int64("indexRelID", indexRelID))
-	return 0
+func (s *TableIOScraper) getIndexSize(ctx context.Context, indexRelID int64) int64 {
+	size, err := s.client.QueryIndexSize(ctx, indexRelID)
+	if err != nil {
+		s.logger.Debug("Failed to query index size", zap.Int64("indexRelID", indexRelID), zap.Error(err))
+		return 0
+	}
+	return size
 }
 
 // ScrapeToastTables scrapes TOAST table vacuum statistics

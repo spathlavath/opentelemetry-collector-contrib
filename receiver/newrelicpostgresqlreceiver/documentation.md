@@ -1172,6 +1172,24 @@ Number of active connections (backends) to the database
 | database_name | Name of the PostgreSQL database | Any Str | Recommended |
 | newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
 
+### postgresql.connections.active
+
+Number of active connections to the database (state='active')
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {connections} | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| database_name | Name of the PostgreSQL database | Any Str | Recommended |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| user_name | Name of the user/role connected to the database | Any Str | Recommended |
+| application_name | Name of the replication application | Any Str | Recommended |
+| backend_type | Type of backend process (client backend, autovacuum worker, logical replication worker, parallel worker, background writer, etc.) | Any Str | Recommended |
+
 ### postgresql.control.checkpoint_delay
 
 Time elapsed since the last checkpoint in seconds (PostgreSQL 10+)
