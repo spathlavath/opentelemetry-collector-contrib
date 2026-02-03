@@ -16,7 +16,7 @@ const (
 			RESTRICTED,
 			OPEN_TIME
 		FROM GV$CONTAINERS
-		WHERE ROWNUM <= 1000`
+		WHERE ROWNUM <= 100`
 
 	// PDBStatusSQL returns status of all pluggable databases
 	PDBStatusSQL = `
@@ -29,7 +29,7 @@ const (
 			OPEN_TIME,
 			TOTAL_SIZE
 		FROM GV$PDBS
-		WHERE ROWNUM <= 1000`
+		WHERE ROWNUM <= 100`
 
 	// CDBServicesSQL returns services across all containers
 	CDBServicesSQL = `
@@ -41,7 +41,7 @@ const (
 			pdb,
 			enabled
 		FROM CDB_SERVICES
-		WHERE ROWNUM <= 1000`
+		WHERE ROWNUM <= 500`
 )
 
 // Container Metrics Queries
