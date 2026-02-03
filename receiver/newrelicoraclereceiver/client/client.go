@@ -70,12 +70,6 @@ type OracleClient interface {
 	// Disk I/O metrics
 	QueryDiskIOMetrics(ctx context.Context) ([]models.DiskIOMetrics, error)
 
-	// Instance metrics
-	QueryLockedAccounts(ctx context.Context) ([]models.LockedAccountsMetric, error)
-	QueryGlobalName(ctx context.Context) ([]models.GlobalNameMetric, error)
-	QueryDBID(ctx context.Context) ([]models.DBIDMetric, error)
-	QueryLongRunningQueries(ctx context.Context) ([]models.LongRunningQueriesMetric, error)
-
 	// Memory metrics
 	QueryPGAMetrics(ctx context.Context) ([]models.PGAMetric, error)
 	QuerySGAUGATotalMemory(ctx context.Context) ([]models.SGAUGATotalMemoryMetric, error)

@@ -309,42 +309,6 @@ attributes:
     description: Application Continuity replay initiation timeout in seconds
     type: string
 
-  # Database Version Attributes (OpenTelemetry semantic conventions)
-  db.version:
-    description: The version of the database management system (DBMS) product
-    type: string
-  db.version.full:
-    description: Full version string of the database including patch information
-    type: string
-  db.edition:
-    description: Oracle database edition (Enterprise, Standard, Express)
-    type: string
-  db.compatible:
-    description: Oracle database compatible parameter setting
-    type: string
-
-  # Platform Attributes
-  host.arch:
-    description: The CPU architecture the host system is running on
-    type: string
-  platform.name:
-    description: Operating system platform name
-    type: string
-  
-  # Database Role and Data Guard Attributes
-  db.role:
-    description: Oracle database role (PRIMARY, PHYSICAL STANDBY, LOGICAL STANDBY, SNAPSHOT STANDBY)
-    type: string
-  db.open_mode:
-    description: Database open mode (READ WRITE, READ ONLY, MOUNTED, etc.)
-    type: string
-  db.protection_mode:
-    description: Oracle Data Guard protection mode (MAXIMUM PROTECTION, MAXIMUM AVAILABILITY, MAXIMUM PERFORMANCE)
-    type: string
-  db.protection_level:
-    description: Oracle Data Guard protection level
-    type: string
-
 metrics:
   newrelicoracledb.execution_plan:
     description: Oracle SQL execution plan details including operation costs, cardinality, and resource estimates
@@ -3474,46 +3438,6 @@ metrics:
   #     - query_id
   #     - wait_event_name
   #     - wait_category
-
-  # Database Version and Configuration Information
-  newrelicoracledb.database.info:
-    description: Database version and configuration information
-    extended_documentation: Provides database version, edition, and configuration details following OpenTelemetry semantic conventions
-    enabled: true
-    gauge:
-      value_type: int
-    unit: "1"
-    attributes:
-      - db.version
-      - db.version.full
-      - db.edition
-      - db.compatible
-
-  # Database Hosting and Platform Information
-  newrelicoracledb.hosting.info:
-    description: Database hosting and platform information
-    extended_documentation: Provides information about the host architecture and operating system platform
-    enabled: true
-    gauge:
-      value_type: int
-    unit: "1"
-    attributes:
-      - host.arch
-      - platform.name
-
-  # Database Role and Protection Information
-  newrelicoracledb.database.role:
-    description: Database role and Data Guard configuration
-    extended_documentation: Provides information about the database role (PRIMARY, PHYSICAL STANDBY, LOGICAL STANDBY, SNAPSHOT STANDBY), open mode, and protection mode for Oracle Data Guard configurations
-    enabled: true
-    gauge:
-      value_type: int
-    unit: "1"
-    attributes:
-      - db.role
-      - db.open_mode
-      - db.protection_mode
-      - db.protection_level
 
   newrelicoracledb.wait_events.current_wait_time_ms:
     description: Current wait time in milliseconds for active wait events

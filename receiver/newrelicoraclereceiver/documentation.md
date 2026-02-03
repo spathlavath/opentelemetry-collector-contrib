@@ -554,44 +554,6 @@ Oracle container status (1=READ WRITE, 0=other)
 | container.name | Oracle container name | Any Str | false |
 | open.mode | Oracle container open mode (READ WRITE, READ ONLY, etc.) | Any Str | false |
 
-### newrelicoracledb.database.info
-
-Database version and configuration information
-
-Provides database version, edition, and configuration details following OpenTelemetry semantic conventions
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.version | The version of the database management system (DBMS) product | Any Str | false |
-| db.version.full | Full version string of the database including patch information | Any Str | false |
-| db.edition | Oracle database edition (Enterprise, Standard, Express) | Any Str | false |
-| db.compatible | Oracle database compatible parameter setting | Any Str | false |
-
-### newrelicoracledb.database.role
-
-Database role and Data Guard configuration
-
-Provides information about the database role (PRIMARY, PHYSICAL STANDBY, LOGICAL STANDBY, SNAPSHOT STANDBY), open mode, and protection mode for Oracle Data Guard configurations
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| db.role | Oracle database role (PRIMARY, PHYSICAL STANDBY, LOGICAL STANDBY, SNAPSHOT STANDBY) | Any Str | false |
-| db.open_mode | Database open mode (READ WRITE, READ ONLY, MOUNTED, etc.) | Any Str | false |
-| db.protection_mode | Oracle Data Guard protection mode (MAXIMUM PROTECTION, MAXIMUM AVAILABILITY, MAXIMUM PERFORMANCE) | Any Str | false |
-| db.protection_level | Oracle Data Guard protection level | Any Str | false |
-
 ### newrelicoracledb.datafile.autoextensible
 
 Data file autoextensible status (1=YES, 0=NO)
@@ -761,23 +723,6 @@ Oracle SQL execution plan details including operation costs, cardinality, and re
 | projection | Column projection information from the operation | Any Str | false |
 | time | Estimated elapsed time for the operation (in seconds) | Any Int | false |
 | filter_predicates | Filter predicates applied after accessing rows | Any Str | false |
-
-### newrelicoracledb.hosting.info
-
-Database hosting and platform information
-
-Provides information about the host architecture and operating system platform
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| host.arch | The CPU architecture the host system is running on | Any Str | false |
-| platform.name | Operating system platform name | Any Str | false |
 
 ### newrelicoracledb.memory.pga_allocated_bytes
 

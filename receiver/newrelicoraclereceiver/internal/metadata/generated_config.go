@@ -68,8 +68,6 @@ type MetricsConfig struct {
 	NewrelicoracledbConnectionWaitEvents                               MetricConfig `mapstructure:"newrelicoracledb.connection.wait_events"`
 	NewrelicoracledbContainerRestricted                                MetricConfig `mapstructure:"newrelicoracledb.container.restricted"`
 	NewrelicoracledbContainerStatus                                    MetricConfig `mapstructure:"newrelicoracledb.container.status"`
-	NewrelicoracledbDatabaseInfo                                       MetricConfig `mapstructure:"newrelicoracledb.database.info"`
-	NewrelicoracledbDatabaseRole                                       MetricConfig `mapstructure:"newrelicoracledb.database.role"`
 	NewrelicoracledbDatafileAutoextensible                             MetricConfig `mapstructure:"newrelicoracledb.datafile.autoextensible"`
 	NewrelicoracledbDatafileSizeBytes                                  MetricConfig `mapstructure:"newrelicoracledb.datafile.size_bytes"`
 	NewrelicoracledbDatafileUsedBytes                                  MetricConfig `mapstructure:"newrelicoracledb.datafile.used_bytes"`
@@ -82,7 +80,6 @@ type MetricsConfig struct {
 	NewrelicoracledbDiskWrites                                         MetricConfig `mapstructure:"newrelicoracledb.disk.writes"`
 	NewrelicoracledbExecutionPlan                                      MetricConfig `mapstructure:"newrelicoracledb.execution_plan"`
 	NewrelicoracledbGlobalName                                         MetricConfig `mapstructure:"newrelicoracledb.global_name"`
-	NewrelicoracledbHostingInfo                                        MetricConfig `mapstructure:"newrelicoracledb.hosting.info"`
 	NewrelicoracledbLockedAccounts                                     MetricConfig `mapstructure:"newrelicoracledb.locked_accounts"`
 	NewrelicoracledbLongRunningQueries                                 MetricConfig `mapstructure:"newrelicoracledb.long_running_queries"`
 	NewrelicoracledbMemoryPgaAllocatedBytes                            MetricConfig `mapstructure:"newrelicoracledb.memory.pga_allocated_bytes"`
@@ -474,12 +471,6 @@ func DefaultMetricsConfig() MetricsConfig {
 		NewrelicoracledbContainerStatus: MetricConfig{
 			Enabled: true,
 		},
-		NewrelicoracledbDatabaseInfo: MetricConfig{
-			Enabled: true,
-		},
-		NewrelicoracledbDatabaseRole: MetricConfig{
-			Enabled: true,
-		},
 		NewrelicoracledbDatafileAutoextensible: MetricConfig{
 			Enabled: true,
 		},
@@ -515,9 +506,6 @@ func DefaultMetricsConfig() MetricsConfig {
 		},
 		NewrelicoracledbGlobalName: MetricConfig{
 			Enabled: false,
-		},
-		NewrelicoracledbHostingInfo: MetricConfig{
-			Enabled: true,
 		},
 		NewrelicoracledbLockedAccounts: MetricConfig{
 			Enabled: false,

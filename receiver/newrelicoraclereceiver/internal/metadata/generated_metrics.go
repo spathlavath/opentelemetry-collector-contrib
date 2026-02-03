@@ -133,12 +133,6 @@ var MetricsInfo = metricsInfo{
 	NewrelicoracledbContainerStatus: metricInfo{
 		Name: "newrelicoracledb.container.status",
 	},
-	NewrelicoracledbDatabaseInfo: metricInfo{
-		Name: "newrelicoracledb.database.info",
-	},
-	NewrelicoracledbDatabaseRole: metricInfo{
-		Name: "newrelicoracledb.database.role",
-	},
 	NewrelicoracledbDatafileAutoextensible: metricInfo{
 		Name: "newrelicoracledb.datafile.autoextensible",
 	},
@@ -174,9 +168,6 @@ var MetricsInfo = metricsInfo{
 	},
 	NewrelicoracledbGlobalName: metricInfo{
 		Name: "newrelicoracledb.global_name",
-	},
-	NewrelicoracledbHostingInfo: metricInfo{
-		Name: "newrelicoracledb.hosting.info",
 	},
 	NewrelicoracledbLockedAccounts: metricInfo{
 		Name: "newrelicoracledb.locked_accounts",
@@ -1022,8 +1013,6 @@ type metricsInfo struct {
 	NewrelicoracledbConnectionWaitEvents                               metricInfo
 	NewrelicoracledbContainerRestricted                                metricInfo
 	NewrelicoracledbContainerStatus                                    metricInfo
-	NewrelicoracledbDatabaseInfo                                       metricInfo
-	NewrelicoracledbDatabaseRole                                       metricInfo
 	NewrelicoracledbDatafileAutoextensible                             metricInfo
 	NewrelicoracledbDatafileSizeBytes                                  metricInfo
 	NewrelicoracledbDatafileUsedBytes                                  metricInfo
@@ -1036,7 +1025,6 @@ type metricsInfo struct {
 	NewrelicoracledbDiskWrites                                         metricInfo
 	NewrelicoracledbExecutionPlan                                      metricInfo
 	NewrelicoracledbGlobalName                                         metricInfo
-	NewrelicoracledbHostingInfo                                        metricInfo
 	NewrelicoracledbLockedAccounts                                     metricInfo
 	NewrelicoracledbLongRunningQueries                                 metricInfo
 	NewrelicoracledbMemoryPgaAllocatedBytes                            metricInfo
@@ -3410,114 +3398,6 @@ func newMetricNewrelicoracledbContainerStatus(cfg MetricConfig) metricNewrelicor
 	return m
 }
 
-type metricNewrelicoracledbDatabaseInfo struct {
-	data     pmetric.Metric // data buffer for generated metric.
-	config   MetricConfig   // metric config provided by user.
-	capacity int            // max observed number of data points added to the metric.
-}
-
-// init fills newrelicoracledb.database.info metric with initial data.
-func (m *metricNewrelicoracledbDatabaseInfo) init() {
-	m.data.SetName("newrelicoracledb.database.info")
-	m.data.SetDescription("Database version and configuration information")
-	m.data.SetUnit("1")
-	m.data.SetEmptyGauge()
-	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
-}
-
-func (m *metricNewrelicoracledbDatabaseInfo) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbVersionAttributeValue string, dbVersionFullAttributeValue string, dbEditionAttributeValue string, dbCompatibleAttributeValue string) {
-	if !m.config.Enabled {
-		return
-	}
-	dp := m.data.Gauge().DataPoints().AppendEmpty()
-	dp.SetStartTimestamp(start)
-	dp.SetTimestamp(ts)
-	dp.SetIntValue(val)
-	dp.Attributes().PutStr("db.version", dbVersionAttributeValue)
-	dp.Attributes().PutStr("db.version.full", dbVersionFullAttributeValue)
-	dp.Attributes().PutStr("db.edition", dbEditionAttributeValue)
-	dp.Attributes().PutStr("db.compatible", dbCompatibleAttributeValue)
-}
-
-// updateCapacity saves max length of data point slices that will be used for the slice capacity.
-func (m *metricNewrelicoracledbDatabaseInfo) updateCapacity() {
-	if m.data.Gauge().DataPoints().Len() > m.capacity {
-		m.capacity = m.data.Gauge().DataPoints().Len()
-	}
-}
-
-// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
-func (m *metricNewrelicoracledbDatabaseInfo) emit(metrics pmetric.MetricSlice) {
-	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
-		m.updateCapacity()
-		m.data.MoveTo(metrics.AppendEmpty())
-		m.init()
-	}
-}
-
-func newMetricNewrelicoracledbDatabaseInfo(cfg MetricConfig) metricNewrelicoracledbDatabaseInfo {
-	m := metricNewrelicoracledbDatabaseInfo{config: cfg}
-	if cfg.Enabled {
-		m.data = pmetric.NewMetric()
-		m.init()
-	}
-	return m
-}
-
-type metricNewrelicoracledbDatabaseRole struct {
-	data     pmetric.Metric // data buffer for generated metric.
-	config   MetricConfig   // metric config provided by user.
-	capacity int            // max observed number of data points added to the metric.
-}
-
-// init fills newrelicoracledb.database.role metric with initial data.
-func (m *metricNewrelicoracledbDatabaseRole) init() {
-	m.data.SetName("newrelicoracledb.database.role")
-	m.data.SetDescription("Database role and Data Guard configuration")
-	m.data.SetUnit("1")
-	m.data.SetEmptyGauge()
-	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
-}
-
-func (m *metricNewrelicoracledbDatabaseRole) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, dbRoleAttributeValue string, dbOpenModeAttributeValue string, dbProtectionModeAttributeValue string, dbProtectionLevelAttributeValue string) {
-	if !m.config.Enabled {
-		return
-	}
-	dp := m.data.Gauge().DataPoints().AppendEmpty()
-	dp.SetStartTimestamp(start)
-	dp.SetTimestamp(ts)
-	dp.SetIntValue(val)
-	dp.Attributes().PutStr("db.role", dbRoleAttributeValue)
-	dp.Attributes().PutStr("db.open_mode", dbOpenModeAttributeValue)
-	dp.Attributes().PutStr("db.protection_mode", dbProtectionModeAttributeValue)
-	dp.Attributes().PutStr("db.protection_level", dbProtectionLevelAttributeValue)
-}
-
-// updateCapacity saves max length of data point slices that will be used for the slice capacity.
-func (m *metricNewrelicoracledbDatabaseRole) updateCapacity() {
-	if m.data.Gauge().DataPoints().Len() > m.capacity {
-		m.capacity = m.data.Gauge().DataPoints().Len()
-	}
-}
-
-// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
-func (m *metricNewrelicoracledbDatabaseRole) emit(metrics pmetric.MetricSlice) {
-	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
-		m.updateCapacity()
-		m.data.MoveTo(metrics.AppendEmpty())
-		m.init()
-	}
-}
-
-func newMetricNewrelicoracledbDatabaseRole(cfg MetricConfig) metricNewrelicoracledbDatabaseRole {
-	m := metricNewrelicoracledbDatabaseRole{config: cfg}
-	if cfg.Enabled {
-		m.data = pmetric.NewMetric()
-		m.init()
-	}
-	return m
-}
-
 type metricNewrelicoracledbDatafileAutoextensible struct {
 	data     pmetric.Metric // data buffer for generated metric.
 	config   MetricConfig   // metric config provided by user.
@@ -4153,58 +4033,6 @@ func (m *metricNewrelicoracledbGlobalName) emit(metrics pmetric.MetricSlice) {
 
 func newMetricNewrelicoracledbGlobalName(cfg MetricConfig) metricNewrelicoracledbGlobalName {
 	m := metricNewrelicoracledbGlobalName{config: cfg}
-	if cfg.Enabled {
-		m.data = pmetric.NewMetric()
-		m.init()
-	}
-	return m
-}
-
-type metricNewrelicoracledbHostingInfo struct {
-	data     pmetric.Metric // data buffer for generated metric.
-	config   MetricConfig   // metric config provided by user.
-	capacity int            // max observed number of data points added to the metric.
-}
-
-// init fills newrelicoracledb.hosting.info metric with initial data.
-func (m *metricNewrelicoracledbHostingInfo) init() {
-	m.data.SetName("newrelicoracledb.hosting.info")
-	m.data.SetDescription("Database hosting and platform information")
-	m.data.SetUnit("1")
-	m.data.SetEmptyGauge()
-	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
-}
-
-func (m *metricNewrelicoracledbHostingInfo) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, hostArchAttributeValue string, platformNameAttributeValue string) {
-	if !m.config.Enabled {
-		return
-	}
-	dp := m.data.Gauge().DataPoints().AppendEmpty()
-	dp.SetStartTimestamp(start)
-	dp.SetTimestamp(ts)
-	dp.SetIntValue(val)
-	dp.Attributes().PutStr("host.arch", hostArchAttributeValue)
-	dp.Attributes().PutStr("platform.name", platformNameAttributeValue)
-}
-
-// updateCapacity saves max length of data point slices that will be used for the slice capacity.
-func (m *metricNewrelicoracledbHostingInfo) updateCapacity() {
-	if m.data.Gauge().DataPoints().Len() > m.capacity {
-		m.capacity = m.data.Gauge().DataPoints().Len()
-	}
-}
-
-// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
-func (m *metricNewrelicoracledbHostingInfo) emit(metrics pmetric.MetricSlice) {
-	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
-		m.updateCapacity()
-		m.data.MoveTo(metrics.AppendEmpty())
-		m.init()
-	}
-}
-
-func newMetricNewrelicoracledbHostingInfo(cfg MetricConfig) metricNewrelicoracledbHostingInfo {
-	m := metricNewrelicoracledbHostingInfo{config: cfg}
 	if cfg.Enabled {
 		m.data = pmetric.NewMetric()
 		m.init()
@@ -18009,8 +17837,6 @@ type MetricsBuilder struct {
 	metricNewrelicoracledbConnectionWaitEvents                               metricNewrelicoracledbConnectionWaitEvents
 	metricNewrelicoracledbContainerRestricted                                metricNewrelicoracledbContainerRestricted
 	metricNewrelicoracledbContainerStatus                                    metricNewrelicoracledbContainerStatus
-	metricNewrelicoracledbDatabaseInfo                                       metricNewrelicoracledbDatabaseInfo
-	metricNewrelicoracledbDatabaseRole                                       metricNewrelicoracledbDatabaseRole
 	metricNewrelicoracledbDatafileAutoextensible                             metricNewrelicoracledbDatafileAutoextensible
 	metricNewrelicoracledbDatafileSizeBytes                                  metricNewrelicoracledbDatafileSizeBytes
 	metricNewrelicoracledbDatafileUsedBytes                                  metricNewrelicoracledbDatafileUsedBytes
@@ -18023,7 +17849,6 @@ type MetricsBuilder struct {
 	metricNewrelicoracledbDiskWrites                                         metricNewrelicoracledbDiskWrites
 	metricNewrelicoracledbExecutionPlan                                      metricNewrelicoracledbExecutionPlan
 	metricNewrelicoracledbGlobalName                                         metricNewrelicoracledbGlobalName
-	metricNewrelicoracledbHostingInfo                                        metricNewrelicoracledbHostingInfo
 	metricNewrelicoracledbLockedAccounts                                     metricNewrelicoracledbLockedAccounts
 	metricNewrelicoracledbLongRunningQueries                                 metricNewrelicoracledbLongRunningQueries
 	metricNewrelicoracledbMemoryPgaAllocatedBytes                            metricNewrelicoracledbMemoryPgaAllocatedBytes
@@ -18356,8 +18181,6 @@ func NewMetricsBuilder(mbc MetricsBuilderConfig, settings receiver.Settings, opt
 		metricNewrelicoracledbConnectionWaitEvents:                               newMetricNewrelicoracledbConnectionWaitEvents(mbc.Metrics.NewrelicoracledbConnectionWaitEvents),
 		metricNewrelicoracledbContainerRestricted:                                newMetricNewrelicoracledbContainerRestricted(mbc.Metrics.NewrelicoracledbContainerRestricted),
 		metricNewrelicoracledbContainerStatus:                                    newMetricNewrelicoracledbContainerStatus(mbc.Metrics.NewrelicoracledbContainerStatus),
-		metricNewrelicoracledbDatabaseInfo:                                       newMetricNewrelicoracledbDatabaseInfo(mbc.Metrics.NewrelicoracledbDatabaseInfo),
-		metricNewrelicoracledbDatabaseRole:                                       newMetricNewrelicoracledbDatabaseRole(mbc.Metrics.NewrelicoracledbDatabaseRole),
 		metricNewrelicoracledbDatafileAutoextensible:                             newMetricNewrelicoracledbDatafileAutoextensible(mbc.Metrics.NewrelicoracledbDatafileAutoextensible),
 		metricNewrelicoracledbDatafileSizeBytes:                                  newMetricNewrelicoracledbDatafileSizeBytes(mbc.Metrics.NewrelicoracledbDatafileSizeBytes),
 		metricNewrelicoracledbDatafileUsedBytes:                                  newMetricNewrelicoracledbDatafileUsedBytes(mbc.Metrics.NewrelicoracledbDatafileUsedBytes),
@@ -18370,7 +18193,6 @@ func NewMetricsBuilder(mbc MetricsBuilderConfig, settings receiver.Settings, opt
 		metricNewrelicoracledbDiskWrites:                                         newMetricNewrelicoracledbDiskWrites(mbc.Metrics.NewrelicoracledbDiskWrites),
 		metricNewrelicoracledbExecutionPlan:                                      newMetricNewrelicoracledbExecutionPlan(mbc.Metrics.NewrelicoracledbExecutionPlan),
 		metricNewrelicoracledbGlobalName:                                         newMetricNewrelicoracledbGlobalName(mbc.Metrics.NewrelicoracledbGlobalName),
-		metricNewrelicoracledbHostingInfo:                                        newMetricNewrelicoracledbHostingInfo(mbc.Metrics.NewrelicoracledbHostingInfo),
 		metricNewrelicoracledbLockedAccounts:                                     newMetricNewrelicoracledbLockedAccounts(mbc.Metrics.NewrelicoracledbLockedAccounts),
 		metricNewrelicoracledbLongRunningQueries:                                 newMetricNewrelicoracledbLongRunningQueries(mbc.Metrics.NewrelicoracledbLongRunningQueries),
 		metricNewrelicoracledbMemoryPgaAllocatedBytes:                            newMetricNewrelicoracledbMemoryPgaAllocatedBytes(mbc.Metrics.NewrelicoracledbMemoryPgaAllocatedBytes),
@@ -18768,8 +18590,6 @@ func (mb *MetricsBuilder) EmitForResource(options ...ResourceMetricsOption) {
 	mb.metricNewrelicoracledbConnectionWaitEvents.emit(ils.Metrics())
 	mb.metricNewrelicoracledbContainerRestricted.emit(ils.Metrics())
 	mb.metricNewrelicoracledbContainerStatus.emit(ils.Metrics())
-	mb.metricNewrelicoracledbDatabaseInfo.emit(ils.Metrics())
-	mb.metricNewrelicoracledbDatabaseRole.emit(ils.Metrics())
 	mb.metricNewrelicoracledbDatafileAutoextensible.emit(ils.Metrics())
 	mb.metricNewrelicoracledbDatafileSizeBytes.emit(ils.Metrics())
 	mb.metricNewrelicoracledbDatafileUsedBytes.emit(ils.Metrics())
@@ -18782,7 +18602,6 @@ func (mb *MetricsBuilder) EmitForResource(options ...ResourceMetricsOption) {
 	mb.metricNewrelicoracledbDiskWrites.emit(ils.Metrics())
 	mb.metricNewrelicoracledbExecutionPlan.emit(ils.Metrics())
 	mb.metricNewrelicoracledbGlobalName.emit(ils.Metrics())
-	mb.metricNewrelicoracledbHostingInfo.emit(ils.Metrics())
 	mb.metricNewrelicoracledbLockedAccounts.emit(ils.Metrics())
 	mb.metricNewrelicoracledbLongRunningQueries.emit(ils.Metrics())
 	mb.metricNewrelicoracledbMemoryPgaAllocatedBytes.emit(ils.Metrics())
@@ -19281,16 +19100,6 @@ func (mb *MetricsBuilder) RecordNewrelicoracledbContainerStatusDataPoint(ts pcom
 	mb.metricNewrelicoracledbContainerStatus.recordDataPoint(mb.startTime, ts, val, conIDAttributeValue, containerNameAttributeValue, openModeAttributeValue)
 }
 
-// RecordNewrelicoracledbDatabaseInfoDataPoint adds a data point to newrelicoracledb.database.info metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbDatabaseInfoDataPoint(ts pcommon.Timestamp, val int64, dbVersionAttributeValue string, dbVersionFullAttributeValue string, dbEditionAttributeValue string, dbCompatibleAttributeValue string) {
-	mb.metricNewrelicoracledbDatabaseInfo.recordDataPoint(mb.startTime, ts, val, dbVersionAttributeValue, dbVersionFullAttributeValue, dbEditionAttributeValue, dbCompatibleAttributeValue)
-}
-
-// RecordNewrelicoracledbDatabaseRoleDataPoint adds a data point to newrelicoracledb.database.role metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbDatabaseRoleDataPoint(ts pcommon.Timestamp, val int64, dbRoleAttributeValue string, dbOpenModeAttributeValue string, dbProtectionModeAttributeValue string, dbProtectionLevelAttributeValue string) {
-	mb.metricNewrelicoracledbDatabaseRole.recordDataPoint(mb.startTime, ts, val, dbRoleAttributeValue, dbOpenModeAttributeValue, dbProtectionModeAttributeValue, dbProtectionLevelAttributeValue)
-}
-
 // RecordNewrelicoracledbDatafileAutoextensibleDataPoint adds a data point to newrelicoracledb.datafile.autoextensible metric.
 func (mb *MetricsBuilder) RecordNewrelicoracledbDatafileAutoextensibleDataPoint(ts pcommon.Timestamp, val int64, conIDAttributeValue string, tablespaceNameAttributeValue string, fileNameAttributeValue string, containerStatusAttributeValue string) {
 	mb.metricNewrelicoracledbDatafileAutoextensible.recordDataPoint(mb.startTime, ts, val, conIDAttributeValue, tablespaceNameAttributeValue, fileNameAttributeValue, containerStatusAttributeValue)
@@ -19349,11 +19158,6 @@ func (mb *MetricsBuilder) RecordNewrelicoracledbExecutionPlanDataPoint(ts pcommo
 // RecordNewrelicoracledbGlobalNameDataPoint adds a data point to newrelicoracledb.global_name metric.
 func (mb *MetricsBuilder) RecordNewrelicoracledbGlobalNameDataPoint(ts pcommon.Timestamp, val int64, globalNameAttributeValue string) {
 	mb.metricNewrelicoracledbGlobalName.recordDataPoint(mb.startTime, ts, val, globalNameAttributeValue)
-}
-
-// RecordNewrelicoracledbHostingInfoDataPoint adds a data point to newrelicoracledb.hosting.info metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbHostingInfoDataPoint(ts pcommon.Timestamp, val int64, hostArchAttributeValue string, platformNameAttributeValue string) {
-	mb.metricNewrelicoracledbHostingInfo.recordDataPoint(mb.startTime, ts, val, hostArchAttributeValue, platformNameAttributeValue)
 }
 
 // RecordNewrelicoracledbLockedAccountsDataPoint adds a data point to newrelicoracledb.locked_accounts metric.

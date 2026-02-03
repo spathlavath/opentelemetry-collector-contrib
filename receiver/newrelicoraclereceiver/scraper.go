@@ -44,15 +44,14 @@ type (
 // newRelicOracleScraper orchestrates all metric collection scrapers for Oracle database monitoring
 type newRelicOracleScraper struct {
 	// Core scrapers for basic database metrics
-	sessionScraper      *scrapers.SessionScraper
-	tablespaceScraper   *scrapers.TablespaceScraper
-	coreScraper         *scrapers.CoreScraper
-	pdbScraper          *scrapers.PdbScraper
-	systemScraper       *scrapers.SystemScraper
-	connectionScraper   *scrapers.ConnectionScraper
-	containerScraper    *scrapers.ContainerScraper
-	racScraper          *scrapers.RacScraper
-	databaseInfoScraper *scrapers.DatabaseInfoScraper
+	sessionScraper    *scrapers.SessionScraper
+	tablespaceScraper *scrapers.TablespaceScraper
+	coreScraper       *scrapers.CoreScraper
+	pdbScraper        *scrapers.PdbScraper
+	systemScraper     *scrapers.SystemScraper
+	connectionScraper *scrapers.ConnectionScraper
+	containerScraper  *scrapers.ContainerScraper
+	racScraper        *scrapers.RacScraper
 
 	// Query Performance Monitoring (QPM) scrapers
 	slowQueriesScraper       *scrapers.SlowQueriesScraper
@@ -197,10 +196,6 @@ func (s *newRelicOracleScraper) initializeCoreScrapers() error {
 
 	if s.config.EnableRacScraper {
 		s.racScraper = scrapers.NewRacScraper(s.client, s.mb, s.logger, s.metricsBuilderConfig)
-	}
-
-	if s.config.EnableDatabaseInfoScraper {
-		s.databaseInfoScraper = scrapers.NewDatabaseInfoScraper(s.client, s.mb, s.logger, s.metricsBuilderConfig)
 	}
 
 	return nil
@@ -359,12 +354,6 @@ func (s *newRelicOracleScraper) getIndependentScraperFunctions() []ScraperFunc {
 
 	if s.config.EnableRacScraper && s.racScraper != nil {
 		scraperFuncs = append(scraperFuncs, s.racScraper.ScrapeRacMetrics)
-	}
-
-	if s.config.EnableDatabaseInfoScraper && s.databaseInfoScraper != nil {
-		scraperFuncs = append(scraperFuncs, s.databaseInfoScraper.ScrapeDatabaseInfo)
-		scraperFuncs = append(scraperFuncs, s.databaseInfoScraper.ScrapeHostingInfo)
-		scraperFuncs = append(scraperFuncs, s.databaseInfoScraper.ScrapeDatabaseRole)
 	}
 
 	return scraperFuncs

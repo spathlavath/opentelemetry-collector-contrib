@@ -327,38 +327,6 @@ func (m *MockClient) QueryDiskIOMetrics(ctx context.Context) ([]models.DiskIOMet
 	return m.DiskIOMetricsList, nil
 }
 
-// QueryLockedAccounts mock
-func (m *MockClient) QueryLockedAccounts(ctx context.Context) ([]models.LockedAccountsMetric, error) {
-	if m.QueryErr != nil {
-		return nil, m.QueryErr
-	}
-	return m.LockedAccountsList, nil
-}
-
-// QueryGlobalName mock
-func (m *MockClient) QueryGlobalName(ctx context.Context) ([]models.GlobalNameMetric, error) {
-	if m.QueryErr != nil {
-		return nil, m.QueryErr
-	}
-	return m.GlobalNameList, nil
-}
-
-// QueryDBID mock
-func (m *MockClient) QueryDBID(ctx context.Context) ([]models.DBIDMetric, error) {
-	if m.QueryErr != nil {
-		return nil, m.QueryErr
-	}
-	return m.DBIDList, nil
-}
-
-// QueryLongRunningQueries mock
-func (m *MockClient) QueryLongRunningQueries(_ context.Context) ([]models.LongRunningQueriesMetric, error) {
-	if m.QueryErr != nil {
-		return nil, m.QueryErr
-	}
-	return m.LongRunningQueriesList, nil
-}
-
 func (m *MockClient) QueryPGAMetrics(_ context.Context) ([]models.PGAMetric, error) {
 	if m.QueryErr != nil {
 		return nil, m.QueryErr
