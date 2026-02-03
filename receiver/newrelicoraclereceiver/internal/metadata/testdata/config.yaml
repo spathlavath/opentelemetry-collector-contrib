@@ -55,14 +55,6 @@ all_set:
       enabled: true
     newrelicoracledb.connection.resource_max_utilization:
       enabled: true
-    newrelicoracledb.connection.session_cpu_usage:
-      enabled: true
-    newrelicoracledb.connection.session_idle_time:
-      enabled: true
-    newrelicoracledb.connection.session_logical_reads:
-      enabled: true
-    newrelicoracledb.connection.session_pga_memory:
-      enabled: true
     newrelicoracledb.connection.sessions_by_status:
       enabled: true
     newrelicoracledb.connection.sessions_by_type:
@@ -715,14 +707,6 @@ none_set:
     newrelicoracledb.connection.resource_limit:
       enabled: false
     newrelicoracledb.connection.resource_max_utilization:
-      enabled: false
-    newrelicoracledb.connection.session_cpu_usage:
-      enabled: false
-    newrelicoracledb.connection.session_idle_time:
-      enabled: false
-    newrelicoracledb.connection.session_logical_reads:
-      enabled: false
-    newrelicoracledb.connection.session_pga_memory:
       enabled: false
     newrelicoracledb.connection.sessions_by_status:
       enabled: false

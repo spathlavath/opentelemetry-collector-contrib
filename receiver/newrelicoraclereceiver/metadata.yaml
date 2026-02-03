@@ -2642,55 +2642,6 @@ metrics:
     unit: "{logons}"
     attributes:
 
-  # Session Resource Consumption
-  newrelicoracledb.connection.session_cpu_usage:
-    description: CPU usage by session in seconds
-    enabled: true
-    gauge:
-      value_type: double
-    unit: s
-    attributes:
-      - session.id
-      - username
-      - session.status
-      - program
-
-  newrelicoracledb.connection.session_pga_memory:
-    description: PGA memory usage by session
-    enabled: true
-    gauge:
-      value_type: double
-    unit: By
-    attributes:
-      - session.id
-      - username
-      - session.status
-      - program
-
-  newrelicoracledb.connection.session_logical_reads:
-    description: Logical reads by session
-    enabled: true
-    gauge:
-      value_type: double
-    unit: "{reads}"
-    attributes:
-      - session.id
-      - username
-      - session.status
-      - program
-
-  newrelicoracledb.connection.session_idle_time:
-    description: Session idle time in seconds
-    enabled: true
-    gauge:
-      value_type: double
-    unit: s
-    attributes:
-      - session.id
-      - username
-      - session.status
-      - program
-
   # Wait Events
   newrelicoracledb.connection.wait_events:
     description: Current wait events and wait time

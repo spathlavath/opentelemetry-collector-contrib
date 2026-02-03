@@ -55,10 +55,6 @@ type MetricsConfig struct {
 	NewrelicoracledbConnectionResourceCurrentUtilization               MetricConfig `mapstructure:"newrelicoracledb.connection.resource_current_utilization"`
 	NewrelicoracledbConnectionResourceLimit                            MetricConfig `mapstructure:"newrelicoracledb.connection.resource_limit"`
 	NewrelicoracledbConnectionResourceMaxUtilization                   MetricConfig `mapstructure:"newrelicoracledb.connection.resource_max_utilization"`
-	NewrelicoracledbConnectionSessionCPUUsage                          MetricConfig `mapstructure:"newrelicoracledb.connection.session_cpu_usage"`
-	NewrelicoracledbConnectionSessionIdleTime                          MetricConfig `mapstructure:"newrelicoracledb.connection.session_idle_time"`
-	NewrelicoracledbConnectionSessionLogicalReads                      MetricConfig `mapstructure:"newrelicoracledb.connection.session_logical_reads"`
-	NewrelicoracledbConnectionSessionPgaMemory                         MetricConfig `mapstructure:"newrelicoracledb.connection.session_pga_memory"`
 	NewrelicoracledbConnectionSessionsByStatus                         MetricConfig `mapstructure:"newrelicoracledb.connection.sessions_by_status"`
 	NewrelicoracledbConnectionSessionsByType                           MetricConfig `mapstructure:"newrelicoracledb.connection.sessions_by_type"`
 	NewrelicoracledbConnectionSharedServers                            MetricConfig `mapstructure:"newrelicoracledb.connection.shared_servers"`
@@ -437,18 +433,6 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		NewrelicoracledbConnectionResourceMaxUtilization: MetricConfig{
-			Enabled: true,
-		},
-		NewrelicoracledbConnectionSessionCPUUsage: MetricConfig{
-			Enabled: true,
-		},
-		NewrelicoracledbConnectionSessionIdleTime: MetricConfig{
-			Enabled: true,
-		},
-		NewrelicoracledbConnectionSessionLogicalReads: MetricConfig{
-			Enabled: true,
-		},
-		NewrelicoracledbConnectionSessionPgaMemory: MetricConfig{
 			Enabled: true,
 		},
 		NewrelicoracledbConnectionSessionsByStatus: MetricConfig{

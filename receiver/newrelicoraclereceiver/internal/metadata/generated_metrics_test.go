@@ -178,22 +178,6 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbConnectionSessionCPUUsageDataPoint(ts, 1, "session.id-val", "username-val", "session.status-val", "program-val")
-
-			defaultMetricsCount++
-			allMetricsCount++
-			mb.RecordNewrelicoracledbConnectionSessionIdleTimeDataPoint(ts, 1, "session.id-val", "username-val", "session.status-val", "program-val")
-
-			defaultMetricsCount++
-			allMetricsCount++
-			mb.RecordNewrelicoracledbConnectionSessionLogicalReadsDataPoint(ts, 1, "session.id-val", "username-val", "session.status-val", "program-val")
-
-			defaultMetricsCount++
-			allMetricsCount++
-			mb.RecordNewrelicoracledbConnectionSessionPgaMemoryDataPoint(ts, 1, "session.id-val", "username-val", "session.status-val", "program-val")
-
-			defaultMetricsCount++
-			allMetricsCount++
 			mb.RecordNewrelicoracledbConnectionSessionsByStatusDataPoint(ts, 1, "session.status-val")
 
 			defaultMetricsCount++
@@ -1959,102 +1943,6 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok := dp.Attributes().Get("resource.name")
 					assert.True(t, ok)
 					assert.Equal(t, "resource.name-val", attrVal.Str())
-				case "newrelicoracledb.connection.session_cpu_usage":
-					assert.False(t, validatedMetrics["newrelicoracledb.connection.session_cpu_usage"], "Found a duplicate in the metrics slice: newrelicoracledb.connection.session_cpu_usage")
-					validatedMetrics["newrelicoracledb.connection.session_cpu_usage"] = true
-					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
-					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
-					assert.Equal(t, "CPU usage by session in seconds", ms.At(i).Description())
-					assert.Equal(t, "s", ms.At(i).Unit())
-					dp := ms.At(i).Gauge().DataPoints().At(0)
-					assert.Equal(t, start, dp.StartTimestamp())
-					assert.Equal(t, ts, dp.Timestamp())
-					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
-					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("session.id")
-					assert.True(t, ok)
-					assert.Equal(t, "session.id-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("username")
-					assert.True(t, ok)
-					assert.Equal(t, "username-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("session.status")
-					assert.True(t, ok)
-					assert.Equal(t, "session.status-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("program")
-					assert.True(t, ok)
-					assert.Equal(t, "program-val", attrVal.Str())
-				case "newrelicoracledb.connection.session_idle_time":
-					assert.False(t, validatedMetrics["newrelicoracledb.connection.session_idle_time"], "Found a duplicate in the metrics slice: newrelicoracledb.connection.session_idle_time")
-					validatedMetrics["newrelicoracledb.connection.session_idle_time"] = true
-					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
-					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
-					assert.Equal(t, "Session idle time in seconds", ms.At(i).Description())
-					assert.Equal(t, "s", ms.At(i).Unit())
-					dp := ms.At(i).Gauge().DataPoints().At(0)
-					assert.Equal(t, start, dp.StartTimestamp())
-					assert.Equal(t, ts, dp.Timestamp())
-					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
-					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("session.id")
-					assert.True(t, ok)
-					assert.Equal(t, "session.id-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("username")
-					assert.True(t, ok)
-					assert.Equal(t, "username-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("session.status")
-					assert.True(t, ok)
-					assert.Equal(t, "session.status-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("program")
-					assert.True(t, ok)
-					assert.Equal(t, "program-val", attrVal.Str())
-				case "newrelicoracledb.connection.session_logical_reads":
-					assert.False(t, validatedMetrics["newrelicoracledb.connection.session_logical_reads"], "Found a duplicate in the metrics slice: newrelicoracledb.connection.session_logical_reads")
-					validatedMetrics["newrelicoracledb.connection.session_logical_reads"] = true
-					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
-					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
-					assert.Equal(t, "Logical reads by session", ms.At(i).Description())
-					assert.Equal(t, "{reads}", ms.At(i).Unit())
-					dp := ms.At(i).Gauge().DataPoints().At(0)
-					assert.Equal(t, start, dp.StartTimestamp())
-					assert.Equal(t, ts, dp.Timestamp())
-					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
-					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("session.id")
-					assert.True(t, ok)
-					assert.Equal(t, "session.id-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("username")
-					assert.True(t, ok)
-					assert.Equal(t, "username-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("session.status")
-					assert.True(t, ok)
-					assert.Equal(t, "session.status-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("program")
-					assert.True(t, ok)
-					assert.Equal(t, "program-val", attrVal.Str())
-				case "newrelicoracledb.connection.session_pga_memory":
-					assert.False(t, validatedMetrics["newrelicoracledb.connection.session_pga_memory"], "Found a duplicate in the metrics slice: newrelicoracledb.connection.session_pga_memory")
-					validatedMetrics["newrelicoracledb.connection.session_pga_memory"] = true
-					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
-					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
-					assert.Equal(t, "PGA memory usage by session", ms.At(i).Description())
-					assert.Equal(t, "By", ms.At(i).Unit())
-					dp := ms.At(i).Gauge().DataPoints().At(0)
-					assert.Equal(t, start, dp.StartTimestamp())
-					assert.Equal(t, ts, dp.Timestamp())
-					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
-					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("session.id")
-					assert.True(t, ok)
-					assert.Equal(t, "session.id-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("username")
-					assert.True(t, ok)
-					assert.Equal(t, "username-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("session.status")
-					assert.True(t, ok)
-					assert.Equal(t, "session.status-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("program")
-					assert.True(t, ok)
-					assert.Equal(t, "program-val", attrVal.Str())
 				case "newrelicoracledb.connection.sessions_by_status":
 					assert.False(t, validatedMetrics["newrelicoracledb.connection.sessions_by_status"], "Found a duplicate in the metrics slice: newrelicoracledb.connection.sessions_by_status")
 					validatedMetrics["newrelicoracledb.connection.sessions_by_status"] = true
