@@ -423,6 +423,22 @@ func (s *QueryPerformanceScraper) processSlowQueryMetrics(result models.SlowQuer
 		lastExecutionTimestamp = *result.LastExecutionTimestamp
 	}
 
+	// Extract APM metadata attributes
+	clientName := ""
+	if result.ClientName != nil {
+		clientName = *result.ClientName
+	}
+
+	transactionName := ""
+	if result.TransactionName != nil {
+		transactionName = *result.TransactionName
+	}
+
+	normalisedSqlHash := ""
+	if result.NormalisedSqlHash != nil {
+		normalisedSqlHash = *result.NormalisedSqlHash
+	}
+
 	// Emit a single metric with all query details (non-numeric attributes)
 	s.mb.RecordSqlserverSlowqueryQueryDetailsDataPoint(
 		timestamp,
@@ -433,6 +449,9 @@ func (s *QueryPerformanceScraper) processSlowQueryMetrics(result models.SlowQuer
 		queryText,
 		collectionTimestamp,
 		lastExecutionTimestamp,
+		clientName,
+		transactionName,
+		normalisedSqlHash,
 		"SqlServerSlowQueryDetails",
 	)
 
@@ -442,6 +461,9 @@ func (s *QueryPerformanceScraper) processSlowQueryMetrics(result models.SlowQuer
 			*result.AvgElapsedTimeMS,
 			queryID,
 			databaseName,
+			clientName,
+			transactionName,
+			normalisedSqlHash,
 		)
 	}
 
@@ -451,6 +473,9 @@ func (s *QueryPerformanceScraper) processSlowQueryMetrics(result models.SlowQuer
 			*result.IntervalAvgElapsedTimeMS,
 			queryID,
 			databaseName,
+			clientName,
+			transactionName,
+			normalisedSqlHash,
 		)
 	}
 
@@ -460,6 +485,9 @@ func (s *QueryPerformanceScraper) processSlowQueryMetrics(result models.SlowQuer
 			*result.ExecutionCount,
 			queryID,
 			databaseName,
+			clientName,
+			transactionName,
+			normalisedSqlHash,
 		)
 	}
 
@@ -469,6 +497,9 @@ func (s *QueryPerformanceScraper) processSlowQueryMetrics(result models.SlowQuer
 			*result.IntervalExecutionCount,
 			queryID,
 			databaseName,
+			clientName,
+			transactionName,
+			normalisedSqlHash,
 		)
 	}
 

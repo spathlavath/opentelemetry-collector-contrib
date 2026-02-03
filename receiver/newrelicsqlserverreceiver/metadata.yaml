@@ -1198,7 +1198,7 @@ metrics:
     unit: ms
     gauge:
       value_type: double
-    attributes: [query_id, database_name]
+    attributes: [query_id, database_name, client_name, transaction_name, normalised_sql_hash]
 
   sqlserver.slowquery.historical_execution_count:
     enabled: true
@@ -1208,7 +1208,7 @@ metrics:
     unit: "{executions}"
     gauge:
       value_type: int
-    attributes: [query_id, database_name]
+    attributes: [query_id, database_name, client_name, transaction_name, normalised_sql_hash]
 
   sqlserver.slowquery.interval_avg_elapsed_time_ms:
     enabled: true
@@ -1218,7 +1218,7 @@ metrics:
     unit: ms
     gauge:
       value_type: double
-    attributes: [query_id, database_name]
+    attributes: [query_id, database_name, client_name, transaction_name, normalised_sql_hash]
 
   sqlserver.slowquery.interval_execution_count:
     enabled: true
@@ -1228,7 +1228,7 @@ metrics:
     unit: "{executions}"
     gauge:
       value_type: int
-    attributes: [query_id, database_name]
+    attributes: [query_id, database_name, client_name, transaction_name, normalised_sql_hash]
 
   sqlserver.slowquery.query_details:
     enabled: true
@@ -1246,6 +1246,9 @@ metrics:
         query_text,
         collection_timestamp,
         last_execution_timestamp,
+        client_name,
+        transaction_name,
+        normalised_sql_hash,
         newrelic.event.type,
       ]
 
@@ -1827,15 +1830,6 @@ attributes:
   transaction_id:
     description: Transaction identifier
     type: int
-<<<<<<< HEAD
-=======
-  transaction_isolation_level:
-    description: Transaction isolation level
-    type: int
-  transaction_name:
-    description: Transaction name extracted from New Relic query comments (nr_txn)
-    type: string
->>>>>>> 351c9b6168 (Implementation of generating normalised query hash for APM - DB linking and extracting client name and transaction name for service identification)
   wait_resource:
     description: Resource being waited on
     type: string

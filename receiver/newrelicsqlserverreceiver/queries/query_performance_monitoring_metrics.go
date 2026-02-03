@@ -142,6 +142,13 @@ SELECT TOP (@Limit)
     -- C. QUERY CORRELATION (Required for slow query correlation)
     r_wait.query_hash AS query_id,
 
+    -- C2. QUERY STATEMENT TEXT (Required for APM metadata extraction)
+    CASE
+        WHEN st_wait.text IS NOT NULL THEN st_wait.text
+        WHEN ib_wait.event_info IS NOT NULL THEN ib_wait.event_info
+        ELSE NULL
+    END AS query_statement_text,
+
     -- D. WAIT DETAILS (Required by NRQL Query 1)
     r_wait.wait_type AS wait_type,
     r_wait.wait_time / 1000.0 AS wait_time_s,
@@ -215,6 +222,10 @@ LEFT JOIN
     sys.dm_exec_requests AS r_blocker ON r_wait.blocking_session_id = r_blocker.session_id
 LEFT JOIN
     sys.dm_exec_sessions AS s_blocker ON r_wait.blocking_session_id = s_blocker.session_id
+OUTER APPLY
+    sys.dm_exec_sql_text(r_wait.sql_handle) AS st_wait
+OUTER APPLY
+    sys.dm_exec_input_buffer(r_wait.session_id, NULL) AS ib_wait
 OUTER APPLY
     sys.dm_exec_sql_text(r_blocker.sql_handle) AS st_blocker
 OUTER APPLY

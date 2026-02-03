@@ -135,7 +135,8 @@ type ActiveRunningQuery struct {
 	HostName     *string `db:"host_name" metric_name:"host_name" source_type:"attribute"`
 
 	// C. QUERY CORRELATION (Required for slow query correlation)
-	QueryID *QueryID `db:"query_id" metric_name:"query_id" source_type:"attribute"`
+	QueryID            *QueryID `db:"query_id" metric_name:"query_id" source_type:"attribute"`
+	QueryStatementText *string  `db:"query_statement_text" metric_name:"query_statement_text" source_type:"attribute"`
 
 	// D. WAIT DETAILS (Required by NRQL Query 1)
 	WaitType               *string  `db:"wait_type" metric_name:"wait_type" source_type:"attribute"`
