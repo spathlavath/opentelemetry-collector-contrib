@@ -37,16 +37,16 @@ const (
 	// Note: QueryMonitoringIntervalSeconds default is set dynamically based on collection_interval
 	// in SetDefaults() to ensure it's always >= collection_interval
 
-	// Feature-level scraper defaults (all enabled by default)
-	defaultEnableSessionScraper      = true
-	defaultEnableTablespaceScraper   = true
-	defaultEnableCoreScraper         = true
-	defaultEnablePdbScraper          = true
-	defaultEnableSystemScraper       = true
-	defaultEnableConnectionScraper   = true
-	defaultEnableContainerScraper    = true
-	defaultEnableRacScraper          = true
-	defaultEnableDatabaseInfoScraper = true
+	// Feature-level scraper defaults (all disabled by default)
+	defaultEnableSessionScraper      = false
+	defaultEnableTablespaceScraper   = false
+	defaultEnableCoreScraper         = false
+	defaultEnablePdbScraper          = false
+	defaultEnableSystemScraper       = false
+	defaultEnableConnectionScraper   = false
+	defaultEnableContainerScraper    = false
+	defaultEnableRacScraper          = false
+	defaultEnableDatabaseInfoScraper = false
 
 	// Validation ranges
 	minCollectionInterval                   = 10 * time.Second
