@@ -20,7 +20,7 @@ import (
 // - Removes comments (single-line and multi-line)
 // - Normalizes whitespace (collapses multiple spaces into single space)
 // - Normalizes IN clauses with multiple values to IN (?)
-func NormalizeSqlAndHash(sql string) (normalizedSQL string, hash string) {
+func NormalizeSqlAndHash(sql string) (normalizedSQL, hash string) {
 	normalizedSQL = NormalizeSql(sql)
 	hash = GenerateMD5Hash(normalizedSQL)
 	return normalizedSQL, hash
@@ -43,33 +43,27 @@ func GenerateMD5Hash(normalizedSQL string) string {
 	return hex.EncodeToString(hash[:])
 }
 
-// ExtractNewRelicMetadata extracts nr_service and optionally nr_txn from New Relic query comments
-// Supports only quoted values, with fields in any order:
-// 1. Quoted: /* nr_service="pet-clinic" */
-// 2. Quoted with commas: /* nr_service="pet,,,clinic" */
-// 3. Both quoted: /* nr_service="My,App",nr_txn="Web,Transaction" */
-// 4. Any field order: /* nr_txn="Web",nr_service="App" */
-// Returns: (client_name, transaction_name)
-func ExtractNewRelicMetadata(sql string) (nrService string, nrTxn string) {
-	// Match nr_service with quoted values only
-	// Format: nr_service="value" - stops at closing quote
-	serviceRegex := regexp.MustCompile(`nr_service="([^"]*)"`)
-
-	// Match nr_txn with quoted values only
-	// Format: nr_txn="value" - stops at closing quote
-	txnRegex := regexp.MustCompile(`nr_txn="([^"]*)"`)
-
-	serviceMatch := serviceRegex.FindStringSubmatch(sql)
-	if len(serviceMatch) > 1 {
-		nrService = serviceMatch[1]
+// ExtractNewRelicMetadata extracts nr_guid from New Relic query comments
+// Supports both quoted and unquoted values:
+// 1. Quoted: /* nr_guid="MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI4MzA5MDIxMQ" */
+// 2. Unquoted: /* nr_guid=MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI4MzA5MDIxMQ */
+// Returns: nr_guid value or empty string if not found
+func ExtractNewRelicMetadata(sql string) string {
+	// First try to match quoted values: nr_guid="value"
+	quotedGuidRegex := regexp.MustCompile(`nr_guid="([^"]*)"`)
+	quotedMatch := quotedGuidRegex.FindStringSubmatch(sql)
+	if len(quotedMatch) > 1 {
+		return quotedMatch[1]
 	}
 
-	txnMatch := txnRegex.FindStringSubmatch(sql)
-	if len(txnMatch) > 1 {
-		nrTxn = txnMatch[1]
+	// Then try to match unquoted values: nr_guid=value (stops at whitespace, comma, or end of comment)
+	unquotedGuidRegex := regexp.MustCompile(`nr_guid=([^\s,\*]+)`)
+	unquotedMatch := unquotedGuidRegex.FindStringSubmatch(sql)
+	if len(unquotedMatch) > 1 {
+		return unquotedMatch[1]
 	}
 
-	return nrService, nrTxn
+	return ""
 }
 
 // sqlNormalizerState holds state during SQL normalization
@@ -186,7 +180,7 @@ func isPrecededByIn(result *strings.Builder) bool {
 
 // isIdentifierChar checks if a character is valid in an identifier
 func isIdentifierChar(c rune) bool {
-    // Added backtick (`) to match isNumericLiteral logic
+	// Added backtick (`) to match isNumericLiteral logic
 	return unicode.IsLetter(c) || unicode.IsDigit(c) || c == '_' || c == '`'
 }
 

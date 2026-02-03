@@ -178,7 +178,6 @@ func (c *Config) SetDefaults() {
 	if c.IntervalCalculatorCacheTTLMinutes <= 0 {
 		c.IntervalCalculatorCacheTTLMinutes = defaultIntervalCalculatorCacheTTLMinutes
 	}
-
 }
 
 func (c Config) Validate() error {

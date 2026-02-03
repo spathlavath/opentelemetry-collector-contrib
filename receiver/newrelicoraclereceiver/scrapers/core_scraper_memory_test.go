@@ -78,6 +78,7 @@ func TestScrapeSGAMetrics_Success(t *testing.T) {
 	errs := scraper.scrapeSGAMetrics(ctx, testTimestamp())
 	require.Empty(t, errs)
 }
+
 func TestScrapeSGAMetrics_QueryError(t *testing.T) {
 	expectedErr := errors.New("query failed")
 	mockClient := &client.MockClient{QueryErr: expectedErr}

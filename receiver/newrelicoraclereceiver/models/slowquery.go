@@ -10,7 +10,7 @@ type SlowQuery struct {
 	SchemaName          sql.NullString
 	UserName            sql.NullString // NEW: The user who parsed the statement
 	ExecutionCount      sql.NullInt64
-	QueryText           sql.NullString  // Full query text from sql_fulltext (used for metadata extraction, normalization, and hash generation)
+	QueryText           sql.NullString // Full query text from sql_fulltext (used for metadata extraction, normalization, and hash generation)
 	LastActiveTime      sql.NullString
 	TotalElapsedTimeMS  sql.NullFloat64 // Total elapsed time - used for precise delta calculation
 	TotalCPUTimeMS      sql.NullFloat64 // Total CPU time - used for delta calculation
@@ -98,7 +98,6 @@ func (sq *SlowQuery) GetLastActiveTime() string {
 	}
 	return ""
 }
-
 
 // HasValidQueryID checks if the query has a valid query ID
 func (sq *SlowQuery) HasValidQueryID() bool {

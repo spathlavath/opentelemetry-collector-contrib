@@ -162,6 +162,7 @@ func TestScrapeRedoLogWaitsMetrics_QueryError(t *testing.T) {
 	errs := scraper.scrapeRedoLogWaitsMetrics(ctx, testTS())
 	require.Len(t, errs, 1)
 }
+
 func TestScrapeRedoLogWaitsMetrics_AllEventTypes(t *testing.T) {
 	mockClient := &client.MockClient{
 		RedoLogWaitsMetricsList: []models.RedoLogWaitsMetric{

@@ -153,112 +153,87 @@ func TestGenerateMD5Hash(t *testing.T) {
 
 func TestExtractNewRelicMetadata(t *testing.T) {
 	tests := []struct {
-		name              string
-		input             string
-		expectedNrService string
-		expectedNrTxn     string
+		name         string
+		input        string
+		expectedGuid string
 	}{
 		{
-			name:              "No New Relic metadata",
-			input:             "SELECT * FROM employees WHERE id = 1",
-			expectedNrService: "",
-			expectedNrTxn:     "",
+			name:         "No New Relic metadata",
+			input:        "SELECT * FROM employees WHERE id = 1",
+			expectedGuid: "",
 		},
 		{
-			name:              "Comment without New Relic metadata",
-			input:             "/* This is a regular comment */ SELECT * FROM employees",
-			expectedNrService: "",
-			expectedNrTxn:     "",
+			name:         "Comment without New Relic metadata",
+			input:        "/* This is a regular comment */ SELECT * FROM employees",
+			expectedGuid: "",
 		},
 		{
-			name:              "Empty query",
-			input:             "",
-			expectedNrService: "",
-			expectedNrTxn:     "",
-		},
-		// Quoted value test cases
-		{
-			name:              "Quoted service name (basic)",
-			input:             "/*nr_service=\"pet-clinic\"*/ SELECT * FROM pets",
-			expectedNrService: "pet-clinic",
-			expectedNrTxn:     "",
+			name:         "Empty query",
+			input:        "",
+			expectedGuid: "",
 		},
 		{
-			name:              "Quoted service name with multiple commas",
-			input:             "/*nr_service=\"pet,,,clinic\"*/ SELECT * FROM pets",
-			expectedNrService: "pet,,,clinic",
-			expectedNrTxn:     "",
+			name:         "Quoted GUID (basic)",
+			input:        "/*nr_guid=\"MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI4MzA5MDIxMQ\"*/ SELECT * FROM pets",
+			expectedGuid: "MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI4MzA5MDIxMQ",
 		},
 		{
-			name:              "Quoted transaction name with commas",
-			input:             "/*nr_txn=\"Web,Transaction,API\"*/ SELECT * FROM users",
-			expectedNrService: "",
-			expectedNrTxn:     "Web,Transaction,API",
+			name:         "Quoted GUID with spaces in comment",
+			input:        "/* nr_guid=\"MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI4MzA5MDIxMQ\" */ SELECT * FROM pets",
+			expectedGuid: "MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI4MzA5MDIxMQ",
 		},
 		{
-			name:              "Both service and transaction quoted",
-			input:             "/* nr_service=\"My,App,Service\",nr_txn=\"Web,Transaction,v2\" */ SELECT * FROM users",
-			expectedNrService: "My,App,Service",
-			expectedNrTxn:     "Web,Transaction,v2",
+			name:         "GUID with different base64 value",
+			input:        "/* nr_guid=\"ABC123XYZ789==\",other=\"value\" */ SELECT * FROM users",
+			expectedGuid: "ABC123XYZ789==",
 		},
 		{
-			name:              "Quoted service with spaces",
-			input:             "/* nr_service=\"pet clinic service\" */ SELECT * FROM pets",
-			expectedNrService: "pet clinic service",
-			expectedNrTxn:     "",
+			name:         "Empty quoted GUID",
+			input:        "/* nr_guid=\"\" */ SELECT * FROM users",
+			expectedGuid: "",
 		},
 		{
-			name:              "Quoted transaction with spaces and commas",
-			input:             "/* nr_txn=\"Web Transaction, API v2\" */ SELECT * FROM users",
-			expectedNrService: "",
-			expectedNrTxn:     "Web Transaction, API v2",
+			name:         "GUID in middle of query",
+			input:        "SELECT /* nr_guid=\"MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI4MzA5MDIxMQ\" */ * FROM users",
+			expectedGuid: "MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI4MzA5MDIxMQ",
 		},
 		{
-			name:              "Empty quoted service",
-			input:             "/* nr_service=\"\" */ SELECT * FROM users",
-			expectedNrService: "",
-			expectedNrTxn:     "",
+			name:         "Real-world GUID with UPDATE statement",
+			input:        "/* nr_guid=\"MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI4MzA5MDIxMQ\" */ UPDATE payments SET status = ?",
+			expectedGuid: "MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI4MzA5MDIxMQ",
 		},
 		{
-			name:              "Empty quoted transaction",
-			input:             "/* nr_txn=\"\" */ SELECT * FROM users",
-			expectedNrService: "",
-			expectedNrTxn:     "",
+			name:         "Unquoted GUID (basic)",
+			input:        "/* nr_guid=MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI4MzA5MDIxMQ */ SELECT * FROM pets",
+			expectedGuid: "MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI4MzA5MDIxMQ",
 		},
 		{
-			name:              "Quoted values in reverse order",
-			input:             "/* nr_txn=\"Web,Txn,v2\",nr_service=\"My,App,Prod\" */ SELECT * FROM users",
-			expectedNrService: "My,App,Prod",
-			expectedNrTxn:     "Web,Txn,v2",
+			name:         "Unquoted GUID with comma separator",
+			input:        "/* nr_guid=ABC123XYZ789==,other=value */ SELECT * FROM users",
+			expectedGuid: "ABC123XYZ789==",
 		},
 		{
-			name:              "Quoted service with special characters",
-			input:             "/* nr_service=\"pet-clinic_v2.production\" */ SELECT * FROM pets",
-			expectedNrService: "pet-clinic_v2.production",
-			expectedNrTxn:     "",
+			name:         "Unquoted GUID at end of comment",
+			input:        "/* other=value,nr_guid=MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI4MzA5MDIxMQ*/ SELECT * FROM users",
+			expectedGuid: "MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI4MzA5MDIxMQ",
 		},
 		{
-			name:              "Quoted transaction with slashes and commas",
-			input:             "/* nr_txn=\"WebTransaction/REST/api/v2/users,beta\" */ SELECT * FROM users",
-			expectedNrService: "",
-			expectedNrTxn:     "WebTransaction/REST/api/v2/users,beta",
+			name:         "Unquoted GUID with spaces",
+			input:        "/* nr_guid=MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI4MzA5MDIxMQ other=value */ SELECT * FROM users",
+			expectedGuid: "MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI4MzA5MDIxMQ",
 		},
 		{
-			name:              "Complex real-world: quoted with spaces and commas",
-			input:             "/* nr_service=\"Payment Service, US-EAST-1, Production\",nr_txn=\"Web Transaction/API/payments, v2 (POST)\" */ UPDATE payments SET status = ?",
-			expectedNrService: "Payment Service, US-EAST-1, Production",
-			expectedNrTxn:     "Web Transaction/API/payments, v2 (POST)",
+			name:         "Prefer quoted over unquoted when both present",
+			input:        "/* nr_guid=\"QuotedGUID123\" nr_guid=UnquotedGUID456 */ SELECT * FROM users",
+			expectedGuid: "QuotedGUID123",
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			nrService, nrTxn := ExtractNewRelicMetadata(tt.input)
-			if nrService != tt.expectedNrService {
-				t.Errorf("ExtractNewRelicMetadata(%q) nrService = %q; want %q", tt.input, nrService, tt.expectedNrService)
-			}
-			if nrTxn != tt.expectedNrTxn {
-				t.Errorf("ExtractNewRelicMetadata(%q) nrTxn = %q; want %q", tt.input, nrTxn, tt.expectedNrTxn)
+			nrGuid := ExtractNewRelicMetadata(tt.input)
+			if nrGuid != tt.expectedGuid {
+				t.Errorf("ExtractNewRelicMetadata(%q) = %q; want %q", tt.input, nrGuid, tt.expectedGuid)
 			}
 		})
 	}

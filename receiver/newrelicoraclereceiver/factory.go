@@ -214,7 +214,7 @@ func getDataSourceWithService(cfg Config, serviceName string) string {
 }
 
 // determineMonitoredServices determines which services to monitor based on pdb_services configuration
-func determineMonitoredServices(sqlOpenerFunc sqlOpenerFunc, dataSource string, configuredService string, pdbServices []string, logger *zap.Logger) ([]string, error) {
+func determineMonitoredServices(sqlOpenerFunc sqlOpenerFunc, dataSource, configuredService string, pdbServices []string, logger *zap.Logger) ([]string, error) {
 	// Case 1: Empty pdb_services - collect only configured service data (CDB or PDB)
 	if len(pdbServices) == 0 {
 		logger.Info("PDB services not configured, collecting configured service data only", zap.String("service", configuredService))
@@ -251,7 +251,7 @@ func determineMonitoredServices(sqlOpenerFunc sqlOpenerFunc, dataSource string, 
 }
 
 // filterServices filters services based on requested names (case-insensitive)
-func filterServices(allServices []string, requestedServices []string, logger *zap.Logger) []string {
+func filterServices(allServices, requestedServices []string, logger *zap.Logger) []string {
 	// Create a map for case-insensitive lookup
 	requestMap := make(map[string]string) // lowercase -> original
 	for _, req := range requestedServices {
