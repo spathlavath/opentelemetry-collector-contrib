@@ -171,13 +171,48 @@ func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) ([]models.SQ
 		// The anonymized query text is derived from the normalized SQL (for attribute display)
 		var queryHash, nrService, nrTxn, qText string
 		if slowQuery.QueryText.Valid && slowQuery.QueryText.String != "" {
+			// DEBUG: Log original query text (first 200 characters)
+			queryTextPreview := slowQuery.QueryText.String
+			if len(queryTextPreview) > 200 {
+				queryTextPreview = queryTextPreview[:200] + "..."
+			}
+			s.logger.Debug("Processing query text",
+				zap.String("query_id", qID),
+				zap.String("query_text_preview", queryTextPreview))
+
 			// Extract New Relic metadata from comment
 			nrService, nrTxn = commonutils.ExtractNewRelicMetadata(slowQuery.QueryText.String)
+
+			// DEBUG: Log extracted metadata
+			if nrService != "" || nrTxn != "" {
+				s.logger.Info("Extracted New Relic metadata from query",
+					zap.String("query_id", qID),
+					zap.String("nr_service", nrService),
+					zap.String("nr_txn", nrTxn))
+			} else {
+				s.logger.Debug("No New Relic metadata found in query",
+					zap.String("query_id", qID))
+			}
+
 			// Generate normalized SQL and hash
 			normalizedSQL, hash := commonutils.NormalizeSqlAndHash(slowQuery.QueryText.String)
 			queryHash = hash
+
+			// DEBUG: Log normalized SQL and hash
+			normalizedPreview := normalizedSQL
+			if len(normalizedPreview) > 150 {
+				normalizedPreview = normalizedPreview[:150] + "..."
+			}
+			s.logger.Debug("Generated normalized SQL",
+				zap.String("query_id", qID),
+				zap.String("normalized_sql_preview", normalizedPreview),
+				zap.String("sql_hash", queryHash))
+
 			// Use normalized SQL as the query text attribute (anonymized)
 			qText = normalizedSQL
+		} else {
+			s.logger.Debug("Query text is null or empty",
+				zap.String("query_id", qID))
 		}
 
 		if err := s.recordMetrics(now, &slowQuery, collectionTimestamp, dbName, qID, qText, userName, schName, lastActiveTime, queryHash, nrService, nrTxn); err != nil {
@@ -211,6 +246,15 @@ func (s *SlowQueriesScraper) recordMetrics(now pcommon.Timestamp, slowQuery *mod
 		s.logger.Warn("Attempted to record metrics for nil slow query")
 		return fmt.Errorf("slow query is nil")
 	}
+
+	// DEBUG: Log attributes being sent with metrics
+	s.logger.Debug("Recording metrics with attributes",
+		zap.String("query_id", qID),
+		zap.String("database_name", dbName),
+		zap.String("user_name", userName),
+		zap.String("normalised_sql_hash", queryHash),
+		zap.String("client_name", nrService),
+		zap.String("transaction_name", nrTxn))
 	if slowQuery.ExecutionCount.Valid {
 		s.mb.RecordNewrelicoracledbSlowQueriesExecutionCountDataPoint(
 			now,
