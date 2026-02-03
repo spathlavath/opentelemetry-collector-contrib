@@ -1,4 +1,4 @@
-// Copyright 2025 New Relic Corporation. All rights reserved.
+// Copyright New Relic, Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
 package scrapers
@@ -58,7 +58,6 @@ func (s *ConnectionScraper) ScrapeConnectionMetrics(ctx context.Context) []error
 	scrapeErrors = append(scrapeErrors, s.scrapeCoreConnectionCounts(ctx, now)...)
 	scrapeErrors = append(scrapeErrors, s.scrapeSessionBreakdown(ctx, now)...)
 	scrapeErrors = append(scrapeErrors, s.scrapeLogonStats(ctx, now)...)
-	scrapeErrors = append(scrapeErrors, s.scrapeSessionResourceConsumption(ctx, now)...)
 	scrapeErrors = append(scrapeErrors, s.scrapeWaitEvents(ctx, now)...)
 	scrapeErrors = append(scrapeErrors, s.scrapeBlockingSessions(ctx, now)...)
 	scrapeErrors = append(scrapeErrors, s.scrapeWaitEventSummary(ctx, now)...)
@@ -164,70 +163,6 @@ func (s *ConnectionScraper) scrapeLogonStats(ctx context.Context, timestamp pcom
 			s.mb.RecordNewrelicoracledbConnectionLogonsCurrentDataPoint(
 				timestamp,
 				stat.Value.Float64,
-			)
-		}
-	}
-
-	return errors
-}
-
-// scrapeSessionResourceConsumption scrapes top resource consuming sessions
-func (s *ConnectionScraper) scrapeSessionResourceConsumption(ctx context.Context, timestamp pcommon.Timestamp) []error {
-	var errors []error
-
-	resources, err := s.client.QuerySessionResources(ctx)
-	if err != nil {
-		s.logger.Debug("Failed to query session resource consumption", zap.Error(err))
-		return []error{err}
-	}
-
-	for _, resource := range resources {
-		sidStr := s.formatInt64(resource.SID)
-		userStr := s.formatString(resource.Username)
-		statusStr := s.formatString(resource.Status)
-		programStr := s.formatString(resource.Program)
-
-		if resource.CPUUsageSeconds.Valid {
-			s.mb.RecordNewrelicoracledbConnectionSessionCPUUsageDataPoint(
-				timestamp,
-				resource.CPUUsageSeconds.Float64,
-				sidStr,
-				userStr,
-				statusStr,
-				programStr,
-			)
-		}
-
-		if resource.PGAMemoryBytes.Valid {
-			s.mb.RecordNewrelicoracledbConnectionSessionPgaMemoryDataPoint(
-				timestamp,
-				float64(resource.PGAMemoryBytes.Int64),
-				sidStr,
-				userStr,
-				statusStr,
-				programStr,
-			)
-		}
-
-		if resource.LogicalReads.Valid {
-			s.mb.RecordNewrelicoracledbConnectionSessionLogicalReadsDataPoint(
-				timestamp,
-				float64(resource.LogicalReads.Int64),
-				sidStr,
-				userStr,
-				statusStr,
-				programStr,
-			)
-		}
-
-		if resource.LastCallET.Valid {
-			s.mb.RecordNewrelicoracledbConnectionSessionIdleTimeDataPoint(
-				timestamp,
-				float64(resource.LastCallET.Int64),
-				sidStr,
-				userStr,
-				statusStr,
-				programStr,
 			)
 		}
 	}

@@ -196,9 +196,6 @@ attributes:
   final_blocker_query_id:
     description: SQL query ID of the final blocking session's query
     type: string
-  final_blocker_query_text:
-    description: SQL query text of the final blocking session's query
-    type: string
   blocking_session_status:
     description: Status of the blocking session (VALID, NO HOLDER, etc.)
     type: string
@@ -2650,55 +2647,6 @@ metrics:
       value_type: double
     unit: "{logons}"
     attributes:
-
-  # Session Resource Consumption
-  newrelicoracledb.connection.session_cpu_usage:
-    description: CPU usage by session in seconds
-    enabled: true
-    gauge:
-      value_type: double
-    unit: s
-    attributes:
-      - session.id
-      - username
-      - session.status
-      - program
-
-  newrelicoracledb.connection.session_pga_memory:
-    description: PGA memory usage by session
-    enabled: true
-    gauge:
-      value_type: double
-    unit: By
-    attributes:
-      - session.id
-      - username
-      - session.status
-      - program
-
-  newrelicoracledb.connection.session_logical_reads:
-    description: Logical reads by session
-    enabled: true
-    gauge:
-      value_type: double
-    unit: "{reads}"
-    attributes:
-      - session.id
-      - username
-      - session.status
-      - program
-
-  newrelicoracledb.connection.session_idle_time:
-    description: Session idle time in seconds
-    enabled: true
-    gauge:
-      value_type: double
-    unit: s
-    attributes:
-      - session.id
-      - username
-      - session.status
-      - program
 
   # Wait Events
   newrelicoracledb.connection.wait_events:

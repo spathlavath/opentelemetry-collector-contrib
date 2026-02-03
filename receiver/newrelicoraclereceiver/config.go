@@ -1,4 +1,4 @@
-// Copyright 2025 New Relic Corporation. All rights reserved.
+// Copyright New Relic, Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
 package newrelicoraclereceiver // import "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver"
@@ -37,16 +37,16 @@ const (
 	// Note: QueryMonitoringIntervalSeconds default is set dynamically based on collection_interval
 	// in SetDefaults() to ensure it's always >= collection_interval
 
-	// Feature-level scraper defaults (all enabled by default)
-	defaultEnableSessionScraper      = true
-	defaultEnableTablespaceScraper   = true
-	defaultEnableCoreScraper         = true
-	defaultEnablePdbScraper          = true
-	defaultEnableSystemScraper       = true
-	defaultEnableConnectionScraper   = true
-	defaultEnableContainerScraper    = true
-	defaultEnableRacScraper          = true
-	defaultEnableDatabaseInfoScraper = true
+	// Feature-level scraper defaults (all disabled by default)
+	defaultEnableSessionScraper      = false
+	defaultEnableTablespaceScraper   = false
+	defaultEnableCoreScraper         = false
+	defaultEnablePdbScraper          = false
+	defaultEnableSystemScraper       = false
+	defaultEnableConnectionScraper   = false
+	defaultEnableContainerScraper    = false
+	defaultEnableRacScraper          = false
+	defaultEnableDatabaseInfoScraper = false
 
 	// Validation ranges
 	minCollectionInterval                   = 10 * time.Second
@@ -74,9 +74,6 @@ var (
 	errInvalidTimeout                          = errors.New("collection_interval must be between 10s and 3600s")
 	errInvalidUsername                         = errors.New("username cannot contain special characters that could cause SQL injection")
 	errInvalidService                          = errors.New("service name cannot contain special characters")
-	errInvalidQueryMonitoringResponseThreshold = errors.New("query_monitoring_response_time_threshold must be between 1ms and 5000ms")
-	errInvalidQueryMonitoringCountThreshold    = errors.New("query_monitoring_count_threshold must be between 10 and 50")
-	errInvalidChildCursorsPerSQLID             = errors.New("child_cursors_per_sql_id must be between 3 and 20")
 )
 
 // TablespaceFilterConfig defines tablespace filtering options

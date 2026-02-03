@@ -94,18 +94,6 @@ var MetricsInfo = metricsInfo{
 	NewrelicoracledbConnectionResourceMaxUtilization: metricInfo{
 		Name: "newrelicoracledb.connection.resource_max_utilization",
 	},
-	NewrelicoracledbConnectionSessionCPUUsage: metricInfo{
-		Name: "newrelicoracledb.connection.session_cpu_usage",
-	},
-	NewrelicoracledbConnectionSessionIdleTime: metricInfo{
-		Name: "newrelicoracledb.connection.session_idle_time",
-	},
-	NewrelicoracledbConnectionSessionLogicalReads: metricInfo{
-		Name: "newrelicoracledb.connection.session_logical_reads",
-	},
-	NewrelicoracledbConnectionSessionPgaMemory: metricInfo{
-		Name: "newrelicoracledb.connection.session_pga_memory",
-	},
 	NewrelicoracledbConnectionSessionsByStatus: metricInfo{
 		Name: "newrelicoracledb.connection.sessions_by_status",
 	},
@@ -1063,10 +1051,6 @@ type metricsInfo struct {
 	NewrelicoracledbConnectionResourceCurrentUtilization               metricInfo
 	NewrelicoracledbConnectionResourceLimit                            metricInfo
 	NewrelicoracledbConnectionResourceMaxUtilization                   metricInfo
-	NewrelicoracledbConnectionSessionCPUUsage                          metricInfo
-	NewrelicoracledbConnectionSessionIdleTime                          metricInfo
-	NewrelicoracledbConnectionSessionLogicalReads                      metricInfo
-	NewrelicoracledbConnectionSessionPgaMemory                         metricInfo
 	NewrelicoracledbConnectionSessionsByStatus                         metricInfo
 	NewrelicoracledbConnectionSessionsByType                           metricInfo
 	NewrelicoracledbConnectionSharedServers                            metricInfo
@@ -2804,222 +2788,6 @@ func (m *metricNewrelicoracledbConnectionResourceMaxUtilization) emit(metrics pm
 
 func newMetricNewrelicoracledbConnectionResourceMaxUtilization(cfg MetricConfig) metricNewrelicoracledbConnectionResourceMaxUtilization {
 	m := metricNewrelicoracledbConnectionResourceMaxUtilization{config: cfg}
-	if cfg.Enabled {
-		m.data = pmetric.NewMetric()
-		m.init()
-	}
-	return m
-}
-
-type metricNewrelicoracledbConnectionSessionCPUUsage struct {
-	data     pmetric.Metric // data buffer for generated metric.
-	config   MetricConfig   // metric config provided by user.
-	capacity int            // max observed number of data points added to the metric.
-}
-
-// init fills newrelicoracledb.connection.session_cpu_usage metric with initial data.
-func (m *metricNewrelicoracledbConnectionSessionCPUUsage) init() {
-	m.data.SetName("newrelicoracledb.connection.session_cpu_usage")
-	m.data.SetDescription("CPU usage by session in seconds")
-	m.data.SetUnit("s")
-	m.data.SetEmptyGauge()
-	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
-}
-
-func (m *metricNewrelicoracledbConnectionSessionCPUUsage) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, sessionIDAttributeValue string, usernameAttributeValue string, sessionStatusAttributeValue string, programAttributeValue string) {
-	if !m.config.Enabled {
-		return
-	}
-	dp := m.data.Gauge().DataPoints().AppendEmpty()
-	dp.SetStartTimestamp(start)
-	dp.SetTimestamp(ts)
-	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("session.id", sessionIDAttributeValue)
-	dp.Attributes().PutStr("username", usernameAttributeValue)
-	dp.Attributes().PutStr("session.status", sessionStatusAttributeValue)
-	dp.Attributes().PutStr("program", programAttributeValue)
-}
-
-// updateCapacity saves max length of data point slices that will be used for the slice capacity.
-func (m *metricNewrelicoracledbConnectionSessionCPUUsage) updateCapacity() {
-	if m.data.Gauge().DataPoints().Len() > m.capacity {
-		m.capacity = m.data.Gauge().DataPoints().Len()
-	}
-}
-
-// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
-func (m *metricNewrelicoracledbConnectionSessionCPUUsage) emit(metrics pmetric.MetricSlice) {
-	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
-		m.updateCapacity()
-		m.data.MoveTo(metrics.AppendEmpty())
-		m.init()
-	}
-}
-
-func newMetricNewrelicoracledbConnectionSessionCPUUsage(cfg MetricConfig) metricNewrelicoracledbConnectionSessionCPUUsage {
-	m := metricNewrelicoracledbConnectionSessionCPUUsage{config: cfg}
-	if cfg.Enabled {
-		m.data = pmetric.NewMetric()
-		m.init()
-	}
-	return m
-}
-
-type metricNewrelicoracledbConnectionSessionIdleTime struct {
-	data     pmetric.Metric // data buffer for generated metric.
-	config   MetricConfig   // metric config provided by user.
-	capacity int            // max observed number of data points added to the metric.
-}
-
-// init fills newrelicoracledb.connection.session_idle_time metric with initial data.
-func (m *metricNewrelicoracledbConnectionSessionIdleTime) init() {
-	m.data.SetName("newrelicoracledb.connection.session_idle_time")
-	m.data.SetDescription("Session idle time in seconds")
-	m.data.SetUnit("s")
-	m.data.SetEmptyGauge()
-	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
-}
-
-func (m *metricNewrelicoracledbConnectionSessionIdleTime) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, sessionIDAttributeValue string, usernameAttributeValue string, sessionStatusAttributeValue string, programAttributeValue string) {
-	if !m.config.Enabled {
-		return
-	}
-	dp := m.data.Gauge().DataPoints().AppendEmpty()
-	dp.SetStartTimestamp(start)
-	dp.SetTimestamp(ts)
-	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("session.id", sessionIDAttributeValue)
-	dp.Attributes().PutStr("username", usernameAttributeValue)
-	dp.Attributes().PutStr("session.status", sessionStatusAttributeValue)
-	dp.Attributes().PutStr("program", programAttributeValue)
-}
-
-// updateCapacity saves max length of data point slices that will be used for the slice capacity.
-func (m *metricNewrelicoracledbConnectionSessionIdleTime) updateCapacity() {
-	if m.data.Gauge().DataPoints().Len() > m.capacity {
-		m.capacity = m.data.Gauge().DataPoints().Len()
-	}
-}
-
-// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
-func (m *metricNewrelicoracledbConnectionSessionIdleTime) emit(metrics pmetric.MetricSlice) {
-	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
-		m.updateCapacity()
-		m.data.MoveTo(metrics.AppendEmpty())
-		m.init()
-	}
-}
-
-func newMetricNewrelicoracledbConnectionSessionIdleTime(cfg MetricConfig) metricNewrelicoracledbConnectionSessionIdleTime {
-	m := metricNewrelicoracledbConnectionSessionIdleTime{config: cfg}
-	if cfg.Enabled {
-		m.data = pmetric.NewMetric()
-		m.init()
-	}
-	return m
-}
-
-type metricNewrelicoracledbConnectionSessionLogicalReads struct {
-	data     pmetric.Metric // data buffer for generated metric.
-	config   MetricConfig   // metric config provided by user.
-	capacity int            // max observed number of data points added to the metric.
-}
-
-// init fills newrelicoracledb.connection.session_logical_reads metric with initial data.
-func (m *metricNewrelicoracledbConnectionSessionLogicalReads) init() {
-	m.data.SetName("newrelicoracledb.connection.session_logical_reads")
-	m.data.SetDescription("Logical reads by session")
-	m.data.SetUnit("{reads}")
-	m.data.SetEmptyGauge()
-	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
-}
-
-func (m *metricNewrelicoracledbConnectionSessionLogicalReads) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, sessionIDAttributeValue string, usernameAttributeValue string, sessionStatusAttributeValue string, programAttributeValue string) {
-	if !m.config.Enabled {
-		return
-	}
-	dp := m.data.Gauge().DataPoints().AppendEmpty()
-	dp.SetStartTimestamp(start)
-	dp.SetTimestamp(ts)
-	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("session.id", sessionIDAttributeValue)
-	dp.Attributes().PutStr("username", usernameAttributeValue)
-	dp.Attributes().PutStr("session.status", sessionStatusAttributeValue)
-	dp.Attributes().PutStr("program", programAttributeValue)
-}
-
-// updateCapacity saves max length of data point slices that will be used for the slice capacity.
-func (m *metricNewrelicoracledbConnectionSessionLogicalReads) updateCapacity() {
-	if m.data.Gauge().DataPoints().Len() > m.capacity {
-		m.capacity = m.data.Gauge().DataPoints().Len()
-	}
-}
-
-// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
-func (m *metricNewrelicoracledbConnectionSessionLogicalReads) emit(metrics pmetric.MetricSlice) {
-	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
-		m.updateCapacity()
-		m.data.MoveTo(metrics.AppendEmpty())
-		m.init()
-	}
-}
-
-func newMetricNewrelicoracledbConnectionSessionLogicalReads(cfg MetricConfig) metricNewrelicoracledbConnectionSessionLogicalReads {
-	m := metricNewrelicoracledbConnectionSessionLogicalReads{config: cfg}
-	if cfg.Enabled {
-		m.data = pmetric.NewMetric()
-		m.init()
-	}
-	return m
-}
-
-type metricNewrelicoracledbConnectionSessionPgaMemory struct {
-	data     pmetric.Metric // data buffer for generated metric.
-	config   MetricConfig   // metric config provided by user.
-	capacity int            // max observed number of data points added to the metric.
-}
-
-// init fills newrelicoracledb.connection.session_pga_memory metric with initial data.
-func (m *metricNewrelicoracledbConnectionSessionPgaMemory) init() {
-	m.data.SetName("newrelicoracledb.connection.session_pga_memory")
-	m.data.SetDescription("PGA memory usage by session")
-	m.data.SetUnit("By")
-	m.data.SetEmptyGauge()
-	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
-}
-
-func (m *metricNewrelicoracledbConnectionSessionPgaMemory) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, sessionIDAttributeValue string, usernameAttributeValue string, sessionStatusAttributeValue string, programAttributeValue string) {
-	if !m.config.Enabled {
-		return
-	}
-	dp := m.data.Gauge().DataPoints().AppendEmpty()
-	dp.SetStartTimestamp(start)
-	dp.SetTimestamp(ts)
-	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("session.id", sessionIDAttributeValue)
-	dp.Attributes().PutStr("username", usernameAttributeValue)
-	dp.Attributes().PutStr("session.status", sessionStatusAttributeValue)
-	dp.Attributes().PutStr("program", programAttributeValue)
-}
-
-// updateCapacity saves max length of data point slices that will be used for the slice capacity.
-func (m *metricNewrelicoracledbConnectionSessionPgaMemory) updateCapacity() {
-	if m.data.Gauge().DataPoints().Len() > m.capacity {
-		m.capacity = m.data.Gauge().DataPoints().Len()
-	}
-}
-
-// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
-func (m *metricNewrelicoracledbConnectionSessionPgaMemory) emit(metrics pmetric.MetricSlice) {
-	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
-		m.updateCapacity()
-		m.data.MoveTo(metrics.AppendEmpty())
-		m.init()
-	}
-}
-
-func newMetricNewrelicoracledbConnectionSessionPgaMemory(cfg MetricConfig) metricNewrelicoracledbConnectionSessionPgaMemory {
-	m := metricNewrelicoracledbConnectionSessionPgaMemory{config: cfg}
 	if cfg.Enabled {
 		m.data = pmetric.NewMetric()
 		m.init()
@@ -19093,10 +18861,6 @@ type MetricsBuilder struct {
 	metricNewrelicoracledbConnectionResourceCurrentUtilization               metricNewrelicoracledbConnectionResourceCurrentUtilization
 	metricNewrelicoracledbConnectionResourceLimit                            metricNewrelicoracledbConnectionResourceLimit
 	metricNewrelicoracledbConnectionResourceMaxUtilization                   metricNewrelicoracledbConnectionResourceMaxUtilization
-	metricNewrelicoracledbConnectionSessionCPUUsage                          metricNewrelicoracledbConnectionSessionCPUUsage
-	metricNewrelicoracledbConnectionSessionIdleTime                          metricNewrelicoracledbConnectionSessionIdleTime
-	metricNewrelicoracledbConnectionSessionLogicalReads                      metricNewrelicoracledbConnectionSessionLogicalReads
-	metricNewrelicoracledbConnectionSessionPgaMemory                         metricNewrelicoracledbConnectionSessionPgaMemory
 	metricNewrelicoracledbConnectionSessionsByStatus                         metricNewrelicoracledbConnectionSessionsByStatus
 	metricNewrelicoracledbConnectionSessionsByType                           metricNewrelicoracledbConnectionSessionsByType
 	metricNewrelicoracledbConnectionSharedServers                            metricNewrelicoracledbConnectionSharedServers
@@ -19458,10 +19222,6 @@ func NewMetricsBuilder(mbc MetricsBuilderConfig, settings receiver.Settings, opt
 		metricNewrelicoracledbConnectionResourceCurrentUtilization:               newMetricNewrelicoracledbConnectionResourceCurrentUtilization(mbc.Metrics.NewrelicoracledbConnectionResourceCurrentUtilization),
 		metricNewrelicoracledbConnectionResourceLimit:                            newMetricNewrelicoracledbConnectionResourceLimit(mbc.Metrics.NewrelicoracledbConnectionResourceLimit),
 		metricNewrelicoracledbConnectionResourceMaxUtilization:                   newMetricNewrelicoracledbConnectionResourceMaxUtilization(mbc.Metrics.NewrelicoracledbConnectionResourceMaxUtilization),
-		metricNewrelicoracledbConnectionSessionCPUUsage:                          newMetricNewrelicoracledbConnectionSessionCPUUsage(mbc.Metrics.NewrelicoracledbConnectionSessionCPUUsage),
-		metricNewrelicoracledbConnectionSessionIdleTime:                          newMetricNewrelicoracledbConnectionSessionIdleTime(mbc.Metrics.NewrelicoracledbConnectionSessionIdleTime),
-		metricNewrelicoracledbConnectionSessionLogicalReads:                      newMetricNewrelicoracledbConnectionSessionLogicalReads(mbc.Metrics.NewrelicoracledbConnectionSessionLogicalReads),
-		metricNewrelicoracledbConnectionSessionPgaMemory:                         newMetricNewrelicoracledbConnectionSessionPgaMemory(mbc.Metrics.NewrelicoracledbConnectionSessionPgaMemory),
 		metricNewrelicoracledbConnectionSessionsByStatus:                         newMetricNewrelicoracledbConnectionSessionsByStatus(mbc.Metrics.NewrelicoracledbConnectionSessionsByStatus),
 		metricNewrelicoracledbConnectionSessionsByType:                           newMetricNewrelicoracledbConnectionSessionsByType(mbc.Metrics.NewrelicoracledbConnectionSessionsByType),
 		metricNewrelicoracledbConnectionSharedServers:                            newMetricNewrelicoracledbConnectionSharedServers(mbc.Metrics.NewrelicoracledbConnectionSharedServers),
@@ -19888,10 +19648,6 @@ func (mb *MetricsBuilder) EmitForResource(options ...ResourceMetricsOption) {
 	mb.metricNewrelicoracledbConnectionResourceCurrentUtilization.emit(ils.Metrics())
 	mb.metricNewrelicoracledbConnectionResourceLimit.emit(ils.Metrics())
 	mb.metricNewrelicoracledbConnectionResourceMaxUtilization.emit(ils.Metrics())
-	mb.metricNewrelicoracledbConnectionSessionCPUUsage.emit(ils.Metrics())
-	mb.metricNewrelicoracledbConnectionSessionIdleTime.emit(ils.Metrics())
-	mb.metricNewrelicoracledbConnectionSessionLogicalReads.emit(ils.Metrics())
-	mb.metricNewrelicoracledbConnectionSessionPgaMemory.emit(ils.Metrics())
 	mb.metricNewrelicoracledbConnectionSessionsByStatus.emit(ils.Metrics())
 	mb.metricNewrelicoracledbConnectionSessionsByType.emit(ils.Metrics())
 	mb.metricNewrelicoracledbConnectionSharedServers.emit(ils.Metrics())
@@ -20365,26 +20121,6 @@ func (mb *MetricsBuilder) RecordNewrelicoracledbConnectionResourceLimitDataPoint
 // RecordNewrelicoracledbConnectionResourceMaxUtilizationDataPoint adds a data point to newrelicoracledb.connection.resource_max_utilization metric.
 func (mb *MetricsBuilder) RecordNewrelicoracledbConnectionResourceMaxUtilizationDataPoint(ts pcommon.Timestamp, val float64, resourceNameAttributeValue string) {
 	mb.metricNewrelicoracledbConnectionResourceMaxUtilization.recordDataPoint(mb.startTime, ts, val, resourceNameAttributeValue)
-}
-
-// RecordNewrelicoracledbConnectionSessionCPUUsageDataPoint adds a data point to newrelicoracledb.connection.session_cpu_usage metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbConnectionSessionCPUUsageDataPoint(ts pcommon.Timestamp, val float64, sessionIDAttributeValue string, usernameAttributeValue string, sessionStatusAttributeValue string, programAttributeValue string) {
-	mb.metricNewrelicoracledbConnectionSessionCPUUsage.recordDataPoint(mb.startTime, ts, val, sessionIDAttributeValue, usernameAttributeValue, sessionStatusAttributeValue, programAttributeValue)
-}
-
-// RecordNewrelicoracledbConnectionSessionIdleTimeDataPoint adds a data point to newrelicoracledb.connection.session_idle_time metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbConnectionSessionIdleTimeDataPoint(ts pcommon.Timestamp, val float64, sessionIDAttributeValue string, usernameAttributeValue string, sessionStatusAttributeValue string, programAttributeValue string) {
-	mb.metricNewrelicoracledbConnectionSessionIdleTime.recordDataPoint(mb.startTime, ts, val, sessionIDAttributeValue, usernameAttributeValue, sessionStatusAttributeValue, programAttributeValue)
-}
-
-// RecordNewrelicoracledbConnectionSessionLogicalReadsDataPoint adds a data point to newrelicoracledb.connection.session_logical_reads metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbConnectionSessionLogicalReadsDataPoint(ts pcommon.Timestamp, val float64, sessionIDAttributeValue string, usernameAttributeValue string, sessionStatusAttributeValue string, programAttributeValue string) {
-	mb.metricNewrelicoracledbConnectionSessionLogicalReads.recordDataPoint(mb.startTime, ts, val, sessionIDAttributeValue, usernameAttributeValue, sessionStatusAttributeValue, programAttributeValue)
-}
-
-// RecordNewrelicoracledbConnectionSessionPgaMemoryDataPoint adds a data point to newrelicoracledb.connection.session_pga_memory metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbConnectionSessionPgaMemoryDataPoint(ts pcommon.Timestamp, val float64, sessionIDAttributeValue string, usernameAttributeValue string, sessionStatusAttributeValue string, programAttributeValue string) {
-	mb.metricNewrelicoracledbConnectionSessionPgaMemory.recordDataPoint(mb.startTime, ts, val, sessionIDAttributeValue, usernameAttributeValue, sessionStatusAttributeValue, programAttributeValue)
 }
 
 // RecordNewrelicoracledbConnectionSessionsByStatusDataPoint adds a data point to newrelicoracledb.connection.sessions_by_status metric.
