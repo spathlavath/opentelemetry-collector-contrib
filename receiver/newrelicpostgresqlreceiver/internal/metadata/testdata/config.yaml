@@ -203,6 +203,22 @@ all_set:
       enabled: true
     postgresql.last_vacuum_age:
       enabled: true
+    postgresql.locks.access_exclusive:
+      enabled: true
+    postgresql.locks.access_share:
+      enabled: true
+    postgresql.locks.exclusive:
+      enabled: true
+    postgresql.locks.row_exclusive:
+      enabled: true
+    postgresql.locks.row_share:
+      enabled: true
+    postgresql.locks.share:
+      enabled: true
+    postgresql.locks.share_row_exclusive:
+      enabled: true
+    postgresql.locks.share_update_exclusive:
+      enabled: true
     postgresql.max_connections:
       enabled: true
     postgresql.percent_usage_connections:
@@ -629,6 +645,22 @@ none_set:
     postgresql.last_autovacuum_age:
       enabled: false
     postgresql.last_vacuum_age:
+      enabled: false
+    postgresql.locks.access_exclusive:
+      enabled: false
+    postgresql.locks.access_share:
+      enabled: false
+    postgresql.locks.exclusive:
+      enabled: false
+    postgresql.locks.row_exclusive:
+      enabled: false
+    postgresql.locks.row_share:
+      enabled: false
+    postgresql.locks.share:
+      enabled: false
+    postgresql.locks.share_row_exclusive:
+      enabled: false
+    postgresql.locks.share_update_exclusive:
       enabled: false
     postgresql.max_connections:
       enabled: false

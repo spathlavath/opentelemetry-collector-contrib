@@ -243,4 +243,9 @@ type PostgreSQLClient interface {
 	// Returns empty slice if PgBouncer is not available
 	// Available in PgBouncer 1.8+
 	QueryPgBouncerPools(ctx context.Context) ([]models.PgBouncerPoolsMetric, error)
+
+	// QueryLocks retrieves lock statistics from pg_locks
+	// Returns lock counts grouped by lock mode for the current database
+	// Available in PostgreSQL 9.6+
+	QueryLocks(ctx context.Context) (*models.PgLocksMetric, error)
 }

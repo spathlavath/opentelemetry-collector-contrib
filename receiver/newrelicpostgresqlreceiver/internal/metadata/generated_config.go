@@ -129,6 +129,14 @@ type MetricsConfig struct {
 	PostgresqlLastAutoanalyzeAge                      MetricConfig `mapstructure:"postgresql.last_autoanalyze_age"`
 	PostgresqlLastAutovacuumAge                       MetricConfig `mapstructure:"postgresql.last_autovacuum_age"`
 	PostgresqlLastVacuumAge                           MetricConfig `mapstructure:"postgresql.last_vacuum_age"`
+	PostgresqlLocksAccessExclusive                    MetricConfig `mapstructure:"postgresql.locks.access_exclusive"`
+	PostgresqlLocksAccessShare                        MetricConfig `mapstructure:"postgresql.locks.access_share"`
+	PostgresqlLocksExclusive                          MetricConfig `mapstructure:"postgresql.locks.exclusive"`
+	PostgresqlLocksRowExclusive                       MetricConfig `mapstructure:"postgresql.locks.row_exclusive"`
+	PostgresqlLocksRowShare                           MetricConfig `mapstructure:"postgresql.locks.row_share"`
+	PostgresqlLocksShare                              MetricConfig `mapstructure:"postgresql.locks.share"`
+	PostgresqlLocksShareRowExclusive                  MetricConfig `mapstructure:"postgresql.locks.share_row_exclusive"`
+	PostgresqlLocksShareUpdateExclusive               MetricConfig `mapstructure:"postgresql.locks.share_update_exclusive"`
 	PostgresqlMaxConnections                          MetricConfig `mapstructure:"postgresql.max_connections"`
 	PostgresqlPercentUsageConnections                 MetricConfig `mapstructure:"postgresql.percent_usage_connections"`
 	PostgresqlPgStatStatementsDealloc                 MetricConfig `mapstructure:"postgresql.pg_stat_statements.dealloc"`
@@ -539,6 +547,30 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		PostgresqlLastVacuumAge: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlLocksAccessExclusive: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlLocksAccessShare: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlLocksExclusive: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlLocksRowExclusive: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlLocksRowShare: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlLocksShare: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlLocksShareRowExclusive: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlLocksShareUpdateExclusive: MetricConfig{
 			Enabled: true,
 		},
 		PostgresqlMaxConnections: MetricConfig{

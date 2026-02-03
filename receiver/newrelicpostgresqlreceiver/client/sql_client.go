@@ -1351,3 +1351,26 @@ func (c *SQLClient) QueryPgBouncerPools(ctx context.Context) ([]models.PgBouncer
 
 	return metrics, nil
 }
+
+// QueryLocks retrieves lock statistics from pg_locks
+func (c *SQLClient) QueryLocks(ctx context.Context) (*models.PgLocksMetric, error) {
+	row := c.db.QueryRowContext(ctx, queries.PgLocksSQL)
+
+	var metric models.PgLocksMetric
+	err := row.Scan(
+		&metric.Database,
+		&metric.AccessShareLock,
+		&metric.RowShareLock,
+		&metric.RowExclusiveLock,
+		&metric.ShareUpdateExclusiveLock,
+		&metric.ShareLock,
+		&metric.ShareRowExclusiveLock,
+		&metric.ExclusiveLock,
+		&metric.AccessExclusiveLock,
+	)
+	if err != nil {
+		return nil, fmt.Errorf("failed to scan lock statistics: %w", err)
+	}
+
+	return &metric, nil
+}

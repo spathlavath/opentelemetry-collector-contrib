@@ -1177,6 +1177,86 @@ metrics:
     stability:
       level: alpha
 
+  postgresql.locks.access_exclusive:
+    description: Number of AccessExclusiveLock locks held on the database (PostgreSQL 9.6+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, database_name]
+    unit: "{locks}"
+    stability:
+      level: alpha
+
+  postgresql.locks.access_share:
+    description: Number of AccessShareLock locks held on the database (PostgreSQL 9.6+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, database_name]
+    unit: "{locks}"
+    stability:
+      level: alpha
+
+  postgresql.locks.exclusive:
+    description: Number of ExclusiveLock locks held on the database (PostgreSQL 9.6+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, database_name]
+    unit: "{locks}"
+    stability:
+      level: alpha
+
+  postgresql.locks.row_exclusive:
+    description: Number of RowExclusiveLock locks held on the database (PostgreSQL 9.6+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, database_name]
+    unit: "{locks}"
+    stability:
+      level: alpha
+
+  postgresql.locks.row_share:
+    description: Number of RowShareLock locks held on the database (PostgreSQL 9.6+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, database_name]
+    unit: "{locks}"
+    stability:
+      level: alpha
+
+  postgresql.locks.share:
+    description: Number of ShareLock locks held on the database (PostgreSQL 9.6+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, database_name]
+    unit: "{locks}"
+    stability:
+      level: alpha
+
+  postgresql.locks.share_row_exclusive:
+    description: Number of ShareRowExclusiveLock locks held on the database (PostgreSQL 9.6+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, database_name]
+    unit: "{locks}"
+    stability:
+      level: alpha
+
+  postgresql.locks.share_update_exclusive:
+    description: Number of ShareUpdateExclusiveLock locks held on the database (PostgreSQL 9.6+)
+    enabled: true
+    gauge:
+      value_type: int
+    attributes: [newrelicpostgresql.instance_name, database_name]
+    unit: "{locks}"
+    stability:
+      level: alpha
+
   postgresql.max_connections:
     description: Maximum number of concurrent connections allowed to the server (PostgreSQL 9.6+)
     enabled: true

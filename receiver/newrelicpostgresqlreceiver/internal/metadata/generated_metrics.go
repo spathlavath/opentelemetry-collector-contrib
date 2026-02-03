@@ -316,6 +316,30 @@ var MetricsInfo = metricsInfo{
 	PostgresqlLastVacuumAge: metricInfo{
 		Name: "postgresql.last_vacuum_age",
 	},
+	PostgresqlLocksAccessExclusive: metricInfo{
+		Name: "postgresql.locks.access_exclusive",
+	},
+	PostgresqlLocksAccessShare: metricInfo{
+		Name: "postgresql.locks.access_share",
+	},
+	PostgresqlLocksExclusive: metricInfo{
+		Name: "postgresql.locks.exclusive",
+	},
+	PostgresqlLocksRowExclusive: metricInfo{
+		Name: "postgresql.locks.row_exclusive",
+	},
+	PostgresqlLocksRowShare: metricInfo{
+		Name: "postgresql.locks.row_share",
+	},
+	PostgresqlLocksShare: metricInfo{
+		Name: "postgresql.locks.share",
+	},
+	PostgresqlLocksShareRowExclusive: metricInfo{
+		Name: "postgresql.locks.share_row_exclusive",
+	},
+	PostgresqlLocksShareUpdateExclusive: metricInfo{
+		Name: "postgresql.locks.share_update_exclusive",
+	},
 	PostgresqlMaxConnections: metricInfo{
 		Name: "postgresql.max_connections",
 	},
@@ -735,6 +759,14 @@ type metricsInfo struct {
 	PostgresqlLastAutoanalyzeAge                      metricInfo
 	PostgresqlLastAutovacuumAge                       metricInfo
 	PostgresqlLastVacuumAge                           metricInfo
+	PostgresqlLocksAccessExclusive                    metricInfo
+	PostgresqlLocksAccessShare                        metricInfo
+	PostgresqlLocksExclusive                          metricInfo
+	PostgresqlLocksRowExclusive                       metricInfo
+	PostgresqlLocksRowShare                           metricInfo
+	PostgresqlLocksShare                              metricInfo
+	PostgresqlLocksShareRowExclusive                  metricInfo
+	PostgresqlLocksShareUpdateExclusive               metricInfo
 	PostgresqlMaxConnections                          metricInfo
 	PostgresqlPercentUsageConnections                 metricInfo
 	PostgresqlPgStatStatementsDealloc                 metricInfo
@@ -6261,6 +6293,422 @@ func (m *metricPostgresqlLastVacuumAge) emit(metrics pmetric.MetricSlice) {
 
 func newMetricPostgresqlLastVacuumAge(cfg MetricConfig) metricPostgresqlLastVacuumAge {
 	m := metricPostgresqlLastVacuumAge{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlLocksAccessExclusive struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.locks.access_exclusive metric with initial data.
+func (m *metricPostgresqlLocksAccessExclusive) init() {
+	m.data.SetName("postgresql.locks.access_exclusive")
+	m.data.SetDescription("Number of AccessExclusiveLock locks held on the database (PostgreSQL 9.6+)")
+	m.data.SetUnit("{locks}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlLocksAccessExclusive) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlLocksAccessExclusive) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlLocksAccessExclusive) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlLocksAccessExclusive(cfg MetricConfig) metricPostgresqlLocksAccessExclusive {
+	m := metricPostgresqlLocksAccessExclusive{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlLocksAccessShare struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.locks.access_share metric with initial data.
+func (m *metricPostgresqlLocksAccessShare) init() {
+	m.data.SetName("postgresql.locks.access_share")
+	m.data.SetDescription("Number of AccessShareLock locks held on the database (PostgreSQL 9.6+)")
+	m.data.SetUnit("{locks}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlLocksAccessShare) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlLocksAccessShare) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlLocksAccessShare) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlLocksAccessShare(cfg MetricConfig) metricPostgresqlLocksAccessShare {
+	m := metricPostgresqlLocksAccessShare{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlLocksExclusive struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.locks.exclusive metric with initial data.
+func (m *metricPostgresqlLocksExclusive) init() {
+	m.data.SetName("postgresql.locks.exclusive")
+	m.data.SetDescription("Number of ExclusiveLock locks held on the database (PostgreSQL 9.6+)")
+	m.data.SetUnit("{locks}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlLocksExclusive) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlLocksExclusive) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlLocksExclusive) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlLocksExclusive(cfg MetricConfig) metricPostgresqlLocksExclusive {
+	m := metricPostgresqlLocksExclusive{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlLocksRowExclusive struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.locks.row_exclusive metric with initial data.
+func (m *metricPostgresqlLocksRowExclusive) init() {
+	m.data.SetName("postgresql.locks.row_exclusive")
+	m.data.SetDescription("Number of RowExclusiveLock locks held on the database (PostgreSQL 9.6+)")
+	m.data.SetUnit("{locks}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlLocksRowExclusive) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlLocksRowExclusive) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlLocksRowExclusive) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlLocksRowExclusive(cfg MetricConfig) metricPostgresqlLocksRowExclusive {
+	m := metricPostgresqlLocksRowExclusive{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlLocksRowShare struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.locks.row_share metric with initial data.
+func (m *metricPostgresqlLocksRowShare) init() {
+	m.data.SetName("postgresql.locks.row_share")
+	m.data.SetDescription("Number of RowShareLock locks held on the database (PostgreSQL 9.6+)")
+	m.data.SetUnit("{locks}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlLocksRowShare) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlLocksRowShare) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlLocksRowShare) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlLocksRowShare(cfg MetricConfig) metricPostgresqlLocksRowShare {
+	m := metricPostgresqlLocksRowShare{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlLocksShare struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.locks.share metric with initial data.
+func (m *metricPostgresqlLocksShare) init() {
+	m.data.SetName("postgresql.locks.share")
+	m.data.SetDescription("Number of ShareLock locks held on the database (PostgreSQL 9.6+)")
+	m.data.SetUnit("{locks}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlLocksShare) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlLocksShare) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlLocksShare) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlLocksShare(cfg MetricConfig) metricPostgresqlLocksShare {
+	m := metricPostgresqlLocksShare{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlLocksShareRowExclusive struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.locks.share_row_exclusive metric with initial data.
+func (m *metricPostgresqlLocksShareRowExclusive) init() {
+	m.data.SetName("postgresql.locks.share_row_exclusive")
+	m.data.SetDescription("Number of ShareRowExclusiveLock locks held on the database (PostgreSQL 9.6+)")
+	m.data.SetUnit("{locks}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlLocksShareRowExclusive) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlLocksShareRowExclusive) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlLocksShareRowExclusive) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlLocksShareRowExclusive(cfg MetricConfig) metricPostgresqlLocksShareRowExclusive {
+	m := metricPostgresqlLocksShareRowExclusive{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlLocksShareUpdateExclusive struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.locks.share_update_exclusive metric with initial data.
+func (m *metricPostgresqlLocksShareUpdateExclusive) init() {
+	m.data.SetName("postgresql.locks.share_update_exclusive")
+	m.data.SetDescription("Number of ShareUpdateExclusiveLock locks held on the database (PostgreSQL 9.6+)")
+	m.data.SetUnit("{locks}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlLocksShareUpdateExclusive) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlLocksShareUpdateExclusive) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlLocksShareUpdateExclusive) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlLocksShareUpdateExclusive(cfg MetricConfig) metricPostgresqlLocksShareUpdateExclusive {
+	m := metricPostgresqlLocksShareUpdateExclusive{config: cfg}
 	if cfg.Enabled {
 		m.data = pmetric.NewMetric()
 		m.init()
@@ -11968,6 +12416,14 @@ type MetricsBuilder struct {
 	metricPostgresqlLastAutoanalyzeAge                      metricPostgresqlLastAutoanalyzeAge
 	metricPostgresqlLastAutovacuumAge                       metricPostgresqlLastAutovacuumAge
 	metricPostgresqlLastVacuumAge                           metricPostgresqlLastVacuumAge
+	metricPostgresqlLocksAccessExclusive                    metricPostgresqlLocksAccessExclusive
+	metricPostgresqlLocksAccessShare                        metricPostgresqlLocksAccessShare
+	metricPostgresqlLocksExclusive                          metricPostgresqlLocksExclusive
+	metricPostgresqlLocksRowExclusive                       metricPostgresqlLocksRowExclusive
+	metricPostgresqlLocksRowShare                           metricPostgresqlLocksRowShare
+	metricPostgresqlLocksShare                              metricPostgresqlLocksShare
+	metricPostgresqlLocksShareRowExclusive                  metricPostgresqlLocksShareRowExclusive
+	metricPostgresqlLocksShareUpdateExclusive               metricPostgresqlLocksShareUpdateExclusive
 	metricPostgresqlMaxConnections                          metricPostgresqlMaxConnections
 	metricPostgresqlPercentUsageConnections                 metricPostgresqlPercentUsageConnections
 	metricPostgresqlPgStatStatementsDealloc                 metricPostgresqlPgStatStatementsDealloc
@@ -12199,6 +12655,14 @@ func NewMetricsBuilder(mbc MetricsBuilderConfig, settings receiver.Settings, opt
 		metricPostgresqlLastAutoanalyzeAge:                      newMetricPostgresqlLastAutoanalyzeAge(mbc.Metrics.PostgresqlLastAutoanalyzeAge),
 		metricPostgresqlLastAutovacuumAge:                       newMetricPostgresqlLastAutovacuumAge(mbc.Metrics.PostgresqlLastAutovacuumAge),
 		metricPostgresqlLastVacuumAge:                           newMetricPostgresqlLastVacuumAge(mbc.Metrics.PostgresqlLastVacuumAge),
+		metricPostgresqlLocksAccessExclusive:                    newMetricPostgresqlLocksAccessExclusive(mbc.Metrics.PostgresqlLocksAccessExclusive),
+		metricPostgresqlLocksAccessShare:                        newMetricPostgresqlLocksAccessShare(mbc.Metrics.PostgresqlLocksAccessShare),
+		metricPostgresqlLocksExclusive:                          newMetricPostgresqlLocksExclusive(mbc.Metrics.PostgresqlLocksExclusive),
+		metricPostgresqlLocksRowExclusive:                       newMetricPostgresqlLocksRowExclusive(mbc.Metrics.PostgresqlLocksRowExclusive),
+		metricPostgresqlLocksRowShare:                           newMetricPostgresqlLocksRowShare(mbc.Metrics.PostgresqlLocksRowShare),
+		metricPostgresqlLocksShare:                              newMetricPostgresqlLocksShare(mbc.Metrics.PostgresqlLocksShare),
+		metricPostgresqlLocksShareRowExclusive:                  newMetricPostgresqlLocksShareRowExclusive(mbc.Metrics.PostgresqlLocksShareRowExclusive),
+		metricPostgresqlLocksShareUpdateExclusive:               newMetricPostgresqlLocksShareUpdateExclusive(mbc.Metrics.PostgresqlLocksShareUpdateExclusive),
 		metricPostgresqlMaxConnections:                          newMetricPostgresqlMaxConnections(mbc.Metrics.PostgresqlMaxConnections),
 		metricPostgresqlPercentUsageConnections:                 newMetricPostgresqlPercentUsageConnections(mbc.Metrics.PostgresqlPercentUsageConnections),
 		metricPostgresqlPgStatStatementsDealloc:                 newMetricPostgresqlPgStatStatementsDealloc(mbc.Metrics.PostgresqlPgStatStatementsDealloc),
@@ -12513,6 +12977,14 @@ func (mb *MetricsBuilder) EmitForResource(options ...ResourceMetricsOption) {
 	mb.metricPostgresqlLastAutoanalyzeAge.emit(ils.Metrics())
 	mb.metricPostgresqlLastAutovacuumAge.emit(ils.Metrics())
 	mb.metricPostgresqlLastVacuumAge.emit(ils.Metrics())
+	mb.metricPostgresqlLocksAccessExclusive.emit(ils.Metrics())
+	mb.metricPostgresqlLocksAccessShare.emit(ils.Metrics())
+	mb.metricPostgresqlLocksExclusive.emit(ils.Metrics())
+	mb.metricPostgresqlLocksRowExclusive.emit(ils.Metrics())
+	mb.metricPostgresqlLocksRowShare.emit(ils.Metrics())
+	mb.metricPostgresqlLocksShare.emit(ils.Metrics())
+	mb.metricPostgresqlLocksShareRowExclusive.emit(ils.Metrics())
+	mb.metricPostgresqlLocksShareUpdateExclusive.emit(ils.Metrics())
 	mb.metricPostgresqlMaxConnections.emit(ils.Metrics())
 	mb.metricPostgresqlPercentUsageConnections.emit(ils.Metrics())
 	mb.metricPostgresqlPgStatStatementsDealloc.emit(ils.Metrics())
@@ -13152,6 +13624,46 @@ func (mb *MetricsBuilder) RecordPostgresqlLastAutovacuumAgeDataPoint(ts pcommon.
 // RecordPostgresqlLastVacuumAgeDataPoint adds a data point to postgresql.last_vacuum_age metric.
 func (mb *MetricsBuilder) RecordPostgresqlLastVacuumAgeDataPoint(ts pcommon.Timestamp, val float64, newrelicpostgresqlInstanceNameAttributeValue string, schemaNameAttributeValue string, tableNameAttributeValue string) {
 	mb.metricPostgresqlLastVacuumAge.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue, schemaNameAttributeValue, tableNameAttributeValue)
+}
+
+// RecordPostgresqlLocksAccessExclusiveDataPoint adds a data point to postgresql.locks.access_exclusive metric.
+func (mb *MetricsBuilder) RecordPostgresqlLocksAccessExclusiveDataPoint(ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string) {
+	mb.metricPostgresqlLocksAccessExclusive.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue, databaseNameAttributeValue)
+}
+
+// RecordPostgresqlLocksAccessShareDataPoint adds a data point to postgresql.locks.access_share metric.
+func (mb *MetricsBuilder) RecordPostgresqlLocksAccessShareDataPoint(ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string) {
+	mb.metricPostgresqlLocksAccessShare.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue, databaseNameAttributeValue)
+}
+
+// RecordPostgresqlLocksExclusiveDataPoint adds a data point to postgresql.locks.exclusive metric.
+func (mb *MetricsBuilder) RecordPostgresqlLocksExclusiveDataPoint(ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string) {
+	mb.metricPostgresqlLocksExclusive.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue, databaseNameAttributeValue)
+}
+
+// RecordPostgresqlLocksRowExclusiveDataPoint adds a data point to postgresql.locks.row_exclusive metric.
+func (mb *MetricsBuilder) RecordPostgresqlLocksRowExclusiveDataPoint(ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string) {
+	mb.metricPostgresqlLocksRowExclusive.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue, databaseNameAttributeValue)
+}
+
+// RecordPostgresqlLocksRowShareDataPoint adds a data point to postgresql.locks.row_share metric.
+func (mb *MetricsBuilder) RecordPostgresqlLocksRowShareDataPoint(ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string) {
+	mb.metricPostgresqlLocksRowShare.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue, databaseNameAttributeValue)
+}
+
+// RecordPostgresqlLocksShareDataPoint adds a data point to postgresql.locks.share metric.
+func (mb *MetricsBuilder) RecordPostgresqlLocksShareDataPoint(ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string) {
+	mb.metricPostgresqlLocksShare.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue, databaseNameAttributeValue)
+}
+
+// RecordPostgresqlLocksShareRowExclusiveDataPoint adds a data point to postgresql.locks.share_row_exclusive metric.
+func (mb *MetricsBuilder) RecordPostgresqlLocksShareRowExclusiveDataPoint(ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string) {
+	mb.metricPostgresqlLocksShareRowExclusive.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue, databaseNameAttributeValue)
+}
+
+// RecordPostgresqlLocksShareUpdateExclusiveDataPoint adds a data point to postgresql.locks.share_update_exclusive metric.
+func (mb *MetricsBuilder) RecordPostgresqlLocksShareUpdateExclusiveDataPoint(ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string) {
+	mb.metricPostgresqlLocksShareUpdateExclusive.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue, databaseNameAttributeValue)
 }
 
 // RecordPostgresqlMaxConnectionsDataPoint adds a data point to postgresql.max_connections metric.
