@@ -14,8 +14,8 @@ import (
 
 // SQLClient implements the PostgreSQLClient interface using database/sql
 type SQLClient struct {
-	db           *sql.DB
-	pgBouncerDB  *sql.DB // Optional separate connection for PgBouncer admin commands
+	db          *sql.DB
+	pgBouncerDB *sql.DB // Optional separate connection for PgBouncer admin commands
 }
 
 // NewSQLClient creates a new SQLClient instance
@@ -1031,6 +1031,8 @@ func (c *SQLClient) QueryTableSizes(ctx context.Context, schemas, tables []strin
 			&metric.TableName,
 			&metric.RelationSize,
 			&metric.ToastSize,
+			&metric.TotalSize,
+			&metric.IndexesSize,
 		)
 		if err != nil {
 			return nil, fmt.Errorf("failed to scan table sizes row: %w", err)
@@ -1318,26 +1320,26 @@ func (c *SQLClient) QueryPgBouncerPools(ctx context.Context) ([]models.PgBouncer
 		// sv_active, sv_active_cancel, sv_being_cancel, sv_idle, sv_used, sv_tested, sv_login,
 		// maxwait, maxwait_us, pool_mode, min_pool_size (17 columns in recent versions)
 		err := rows.Scan(
-			&metric.Database,           // 1. database
-			&metric.User,               // 2. user
+			&metric.Database, // 1. database
+			&metric.User,     // 2. user
 			// Client connection counters
 			&metric.ClActive,           // 3. cl_active
 			&metric.ClWaiting,          // 4. cl_waiting
 			&metric.ClActiveCancelReq,  // 5. cl_active_cancel_req (PgBouncer 1.18+)
 			&metric.ClWaitingCancelReq, // 6. cl_waiting_cancel_req (PgBouncer 1.18+)
 			// Server connection counters (ORDER IS CRITICAL!)
-			&metric.SvActive,           // 7. sv_active
-			&metric.SvActiveCancel,     // 8. sv_active_cancel (PgBouncer 1.18+)
-			&metric.SvBeingCancel,      // 9. sv_being_cancel (PgBouncer 1.18+)
-			&metric.SvIdle,             // 10. sv_idle
-			&metric.SvUsed,             // 11. sv_used
-			&metric.SvTested,           // 12. sv_tested
-			&metric.SvLogin,            // 13. sv_login
+			&metric.SvActive,       // 7. sv_active
+			&metric.SvActiveCancel, // 8. sv_active_cancel (PgBouncer 1.18+)
+			&metric.SvBeingCancel,  // 9. sv_being_cancel (PgBouncer 1.18+)
+			&metric.SvIdle,         // 10. sv_idle
+			&metric.SvUsed,         // 11. sv_used
+			&metric.SvTested,       // 12. sv_tested
+			&metric.SvLogin,        // 13. sv_login
 			// Pool status
-			&metric.Maxwait,            // 14. maxwait (integer seconds)
-			&metric.MaxwaitUs,          // 15. maxwait_us (microseconds, PgBouncer 1.21+)
-			&metric.PoolMode,           // 16. pool_mode
-			&metric.MinPoolSize,        // 17. min_pool_size (might be in newer versions)
+			&metric.Maxwait,     // 14. maxwait (integer seconds)
+			&metric.MaxwaitUs,   // 15. maxwait_us (microseconds, PgBouncer 1.21+)
+			&metric.PoolMode,    // 16. pool_mode
+			&metric.MinPoolSize, // 17. min_pool_size (might be in newer versions)
 		)
 		if err != nil {
 			return nil, fmt.Errorf("failed to scan PgBouncer pools row: %w", err)

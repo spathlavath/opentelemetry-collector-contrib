@@ -131,7 +131,7 @@ type PgStatToastTables struct {
 }
 
 // PgClassSizes represents table size statistics from pg_class
-// This struct captures relation and TOAST sizes for tables
+// This struct captures relation, TOAST, total, and indexes sizes for tables
 // Available in PostgreSQL 9.6+
 type PgClassSizes struct {
 	// Database name
@@ -148,6 +148,12 @@ type PgClassSizes struct {
 
 	// ToastSize is the size of TOAST data for this table in bytes
 	ToastSize sql.NullInt64
+
+	// TotalSize is the total size including table, indexes, and TOAST in bytes
+	TotalSize sql.NullInt64
+
+	// IndexesSize is the total size of all indexes for this table in bytes
+	IndexesSize sql.NullInt64
 }
 
 // PgClassStats represents relation statistics from pg_class

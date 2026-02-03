@@ -205,6 +205,19 @@ type MetricsConfig struct {
 	PostgresqlSubscriptionLastMsgSendAge              MetricConfig `mapstructure:"postgresql.subscription.last_msg_send_age"`
 	PostgresqlSubscriptionLatestEndAge                MetricConfig `mapstructure:"postgresql.subscription.latest_end_age"`
 	PostgresqlSubscriptionSyncError                   MetricConfig `mapstructure:"postgresql.subscription.sync_error"`
+	PostgresqlTableDeadRows                           MetricConfig `mapstructure:"postgresql.table.dead_rows"`
+	PostgresqlTableHotUpdates                         MetricConfig `mapstructure:"postgresql.table.hot_updates"`
+	PostgresqlTableIndexScanRowsFetched               MetricConfig `mapstructure:"postgresql.table.index_scan_rows_fetched"`
+	PostgresqlTableIndexScans                         MetricConfig `mapstructure:"postgresql.table.index_scans"`
+	PostgresqlTableIndexesSize                        MetricConfig `mapstructure:"postgresql.table.indexes_size"`
+	PostgresqlTableLiveRows                           MetricConfig `mapstructure:"postgresql.table.live_rows"`
+	PostgresqlTableModifiedSinceAnalyze               MetricConfig `mapstructure:"postgresql.table.modified_since_analyze"`
+	PostgresqlTableRowsDeleted                        MetricConfig `mapstructure:"postgresql.table.rows_deleted"`
+	PostgresqlTableRowsInserted                       MetricConfig `mapstructure:"postgresql.table.rows_inserted"`
+	PostgresqlTableRowsUpdated                        MetricConfig `mapstructure:"postgresql.table.rows_updated"`
+	PostgresqlTableSequentialScanRowsFetched          MetricConfig `mapstructure:"postgresql.table.sequential_scan_rows_fetched"`
+	PostgresqlTableSequentialScans                    MetricConfig `mapstructure:"postgresql.table.sequential_scans"`
+	PostgresqlTableTotalSize                          MetricConfig `mapstructure:"postgresql.table.total_size"`
 	PostgresqlTempBytes                               MetricConfig `mapstructure:"postgresql.temp_bytes"`
 	PostgresqlTempFiles                               MetricConfig `mapstructure:"postgresql.temp_files"`
 	PostgresqlToastAutovacuumed                       MetricConfig `mapstructure:"postgresql.toast.autovacuumed"`
@@ -775,6 +788,45 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		PostgresqlSubscriptionSyncError: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlTableDeadRows: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlTableHotUpdates: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlTableIndexScanRowsFetched: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlTableIndexScans: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlTableIndexesSize: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlTableLiveRows: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlTableModifiedSinceAnalyze: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlTableRowsDeleted: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlTableRowsInserted: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlTableRowsUpdated: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlTableSequentialScanRowsFetched: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlTableSequentialScans: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlTableTotalSize: MetricConfig{
 			Enabled: true,
 		},
 		PostgresqlTempBytes: MetricConfig{

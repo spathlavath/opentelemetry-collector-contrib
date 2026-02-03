@@ -355,6 +355,32 @@ all_set:
       enabled: true
     postgresql.subscription.sync_error:
       enabled: true
+    postgresql.table.dead_rows:
+      enabled: true
+    postgresql.table.hot_updates:
+      enabled: true
+    postgresql.table.index_scan_rows_fetched:
+      enabled: true
+    postgresql.table.index_scans:
+      enabled: true
+    postgresql.table.indexes_size:
+      enabled: true
+    postgresql.table.live_rows:
+      enabled: true
+    postgresql.table.modified_since_analyze:
+      enabled: true
+    postgresql.table.rows_deleted:
+      enabled: true
+    postgresql.table.rows_inserted:
+      enabled: true
+    postgresql.table.rows_updated:
+      enabled: true
+    postgresql.table.sequential_scan_rows_fetched:
+      enabled: true
+    postgresql.table.sequential_scans:
+      enabled: true
+    postgresql.table.total_size:
+      enabled: true
     postgresql.temp_bytes:
       enabled: true
     postgresql.temp_files:
@@ -797,6 +823,32 @@ none_set:
     postgresql.subscription.latest_end_age:
       enabled: false
     postgresql.subscription.sync_error:
+      enabled: false
+    postgresql.table.dead_rows:
+      enabled: false
+    postgresql.table.hot_updates:
+      enabled: false
+    postgresql.table.index_scan_rows_fetched:
+      enabled: false
+    postgresql.table.index_scans:
+      enabled: false
+    postgresql.table.indexes_size:
+      enabled: false
+    postgresql.table.live_rows:
+      enabled: false
+    postgresql.table.modified_since_analyze:
+      enabled: false
+    postgresql.table.rows_deleted:
+      enabled: false
+    postgresql.table.rows_inserted:
+      enabled: false
+    postgresql.table.rows_updated:
+      enabled: false
+    postgresql.table.sequential_scan_rows_fetched:
+      enabled: false
+    postgresql.table.sequential_scans:
+      enabled: false
+    postgresql.table.total_size:
       enabled: false
     postgresql.temp_bytes:
       enabled: false

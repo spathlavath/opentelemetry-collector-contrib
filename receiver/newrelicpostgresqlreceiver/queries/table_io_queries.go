@@ -150,7 +150,7 @@ func PgStatToastTablesSQL(schemas, tables []string) string {
 }
 
 // PgClassSizesSQL returns table size statistics from pg_class (PostgreSQL 9.6+)
-// This query retrieves relation and TOAST sizes for tables
+// This query retrieves relation, TOAST, total, and indexes sizes for tables
 // The WHERE clause is dynamically built based on schema and table filters
 func PgClassSizesSQL(schemas, tables []string) string {
 	whereClause := buildTableFilterClause(schemas, tables)
@@ -165,7 +165,9 @@ func PgClassSizesSQL(schemas, tables []string) string {
 			n.nspname as schema_name,
 			c.relname as table_name,
 			pg_relation_size(c.oid) as relation_size,
-			COALESCE(pg_relation_size(c.reltoastrelid), 0) as toast_size
+			COALESCE(pg_relation_size(c.reltoastrelid), 0) as toast_size,
+			pg_total_relation_size(c.oid) as total_size,
+			pg_indexes_size(c.oid) as indexes_size
 		FROM pg_class c
 		JOIN pg_namespace n ON n.oid = c.relnamespace
 		WHERE c.relkind = 'r'
