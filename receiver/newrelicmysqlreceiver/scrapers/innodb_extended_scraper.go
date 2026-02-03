@@ -15,7 +15,6 @@ import (
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicmysqlreceiver/internal/metadata"
 )
 
-// This scraper is only initialized when extra_innodb_metrics flag is enabled.
 type InnoDBExtendedScraper struct {
 	client common.Client
 	mb     *metadata.MetricsBuilder
