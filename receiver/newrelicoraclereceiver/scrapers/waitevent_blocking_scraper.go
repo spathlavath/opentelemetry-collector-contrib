@@ -106,11 +106,11 @@ func (s *WaitEventBlockingScraper) recordWaitEventMetrics(now pcommon.Timestamp,
 	rowWaitFileID := commonutils.FormatInt64(event.GetLockedFileID())
 	rowWaitBlockID := commonutils.FormatInt64(event.GetLockedBlockID())
 
-	// Get nr_guid and normalised_sql_hash from sqlIDMap
+	// Get nr_apm_guid and normalised_sql_hash from sqlIDMap
 	// These will be empty strings if not present in the map or if the metadata values were empty
-	var nrGuid, normalisedSQLHash string
+	var nrServiceGuid, normalisedSQLHash string
 	if metadata, exists := sqlIDMap[queryID]; exists {
-		nrGuid = metadata.NRGuid
+		nrServiceGuid = metadata.NRServiceGuid
 		normalisedSQLHash = metadata.NormalisedSQLHash
 	}
 
@@ -138,8 +138,8 @@ func (s *WaitEventBlockingScraper) recordWaitEventMetrics(now pcommon.Timestamp,
 		rowWaitObjID,
 		rowWaitFileID,
 		rowWaitBlockID,
-		nrGuid,
-		
+		nrServiceGuid,
+
 		normalisedSQLHash,
 	)
 }
@@ -219,9 +219,9 @@ func (s *WaitEventBlockingScraper) extractSQLIdentifiers(
 
 			// Get metadata from slow queries if available
 			// These will be empty strings if not present
-			var nrGuid, normalisedSQLHash string
+			var nrServiceGuid, normalisedSQLHash string
 			if metadata, exists := sqlIDMap[sqlID]; exists {
-				nrGuid = metadata.NRGuid
+				nrServiceGuid = metadata.NRServiceGuid
 				normalisedSQLHash = metadata.NormalisedSQLHash
 			}
 
@@ -229,7 +229,7 @@ func (s *WaitEventBlockingScraper) extractSQLIdentifiers(
 				SQLID:             sqlID,
 				ChildNumber:       childNumber,
 				Timestamp:         timestamp,
-				NRGuid:            nrGuid,
+				NRServiceGuid:     nrServiceGuid,
 				NormalisedSQLHash: normalisedSQLHash,
 			}
 		}
@@ -274,11 +274,11 @@ func (s *WaitEventBlockingScraper) recordBlockingMetrics(now pcommon.Timestamp, 
 	finalBlockerQueryID := event.GetFinalBlockerQueryID()
 	finalBlockerQueryText := commonutils.AnonymizeAndNormalize(event.GetFinalBlockerQueryText())
 
-	// Get nr_guid and normalised_sql_hash from sqlIDMap
+	// Get nr_apm_guid and normalised_sql_hash from sqlIDMap
 	// These will be empty strings if not present in the map or if the metadata values were empty
-	var nrGuid, normalisedSQLHash string
+	var nrServiceGuid, normalisedSQLHash string
 	if metadata, exists := sqlIDMap[queryID]; exists {
-		nrGuid = metadata.NRGuid
+		nrServiceGuid = metadata.NRServiceGuid
 		normalisedSQLHash = metadata.NormalisedSQLHash
 	}
 
@@ -308,17 +308,17 @@ func (s *WaitEventBlockingScraper) recordBlockingMetrics(now pcommon.Timestamp, 
 		finalBlockerSerial,
 		finalBlockerQueryID,
 		finalBlockerQueryText,
-		nrGuid,
-		
+		nrServiceGuid,
+
 		normalisedSQLHash,
 	)
 
 	// Record the final blocker query details if we have a valid query ID and text
 	if finalBlockerQueryID != "" && finalBlockerQueryText != "" {
-		// Get nr_guid and normalised_sql_hash for the final blocker query
-		var finalBlockerNRGuid, finalBlockerHash string
+		// Get nr_apm_guid and normalised_sql_hash for the final blocker query
+		var finalBlockerNRServiceGuid, finalBlockerHash string
 		if metadata, exists := sqlIDMap[finalBlockerQueryID]; exists {
-			finalBlockerNRGuid = metadata.NRGuid
+			finalBlockerNRServiceGuid = metadata.NRServiceGuid
 			finalBlockerHash = metadata.NormalisedSQLHash
 		}
 
@@ -334,7 +334,7 @@ func (s *WaitEventBlockingScraper) recordBlockingMetrics(now pcommon.Timestamp, 
 			finalBlockerUser,
 			sqlExecStart, // using blocked query's execution start as approximate last active time
 			finalBlockerHash,
-			finalBlockerNRGuid,
+			finalBlockerNRServiceGuid,
 		)
 	}
 }

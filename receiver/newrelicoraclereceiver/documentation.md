@@ -97,7 +97,7 @@ Source: Same as current_wait_time_ms (WAIT_TIME_MICRO / 1000).
 | final_blocker_serial | Serial number of the final blocking session (root cause) | Any Str | false |
 | final_blocker_query_id | SQL query ID of the final blocking session's query | Any Str | false |
 | final_blocker_query_text | SQL query text of the final blocking session's query | Any Str | false |
-| nr_guid | New Relic entity GUID | Any Str | false |
+| nr_service_guid | New Relic Service entity GUID | Any Str | false |
 | normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | false |
 
 ### newrelicoracledb.child_cursors.buffer_gets
@@ -2308,7 +2308,7 @@ Number of executions for slow queries
 | query_id | SQL query identifier | Any Str | false |
 | user_name | Oracle username for slow queries | Any Str | false |
 | normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | false |
-| nr_guid | New Relic entity GUID | Any Str | false |
+| nr_service_guid | New Relic Service entity GUID | Any Str | false |
 
 ### newrelicoracledb.slow_queries.interval_avg_buffer_gets
 
@@ -2327,7 +2327,7 @@ Average buffer gets (logical reads) per execution in the last polling interval (
 | query_id | SQL query identifier | Any Str | false |
 | user_name | Oracle username for slow queries | Any Str | false |
 | normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | false |
-| nr_guid | New Relic entity GUID | Any Str | false |
+| nr_service_guid | New Relic Service entity GUID | Any Str | false |
 
 ### newrelicoracledb.slow_queries.interval_avg_cpu_time
 
@@ -2346,7 +2346,7 @@ Average CPU time per execution in the last polling interval (delta metric)
 | query_id | SQL query identifier | Any Str | false |
 | user_name | Oracle username for slow queries | Any Str | false |
 | normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | false |
-| nr_guid | New Relic entity GUID | Any Str | false |
+| nr_service_guid | New Relic Service entity GUID | Any Str | false |
 
 ### newrelicoracledb.slow_queries.interval_avg_disk_reads
 
@@ -2365,7 +2365,7 @@ Average disk reads per execution in the last polling interval (delta metric)
 | query_id | SQL query identifier | Any Str | false |
 | user_name | Oracle username for slow queries | Any Str | false |
 | normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | false |
-| nr_guid | New Relic entity GUID | Any Str | false |
+| nr_service_guid | New Relic Service entity GUID | Any Str | false |
 
 ### newrelicoracledb.slow_queries.interval_avg_disk_writes
 
@@ -2384,7 +2384,7 @@ Average direct writes per execution in the last polling interval - writes bypass
 | query_id | SQL query identifier | Any Str | false |
 | user_name | Oracle username for slow queries | Any Str | false |
 | normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | false |
-| nr_guid | New Relic entity GUID | Any Str | false |
+| nr_service_guid | New Relic Service entity GUID | Any Str | false |
 
 ### newrelicoracledb.slow_queries.interval_avg_elapsed_time
 
@@ -2403,7 +2403,7 @@ Average elapsed time per execution in the last polling interval (delta metric)
 | query_id | SQL query identifier | Any Str | false |
 | user_name | Oracle username for slow queries | Any Str | false |
 | normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | false |
-| nr_guid | New Relic entity GUID | Any Str | false |
+| nr_service_guid | New Relic Service entity GUID | Any Str | false |
 
 ### newrelicoracledb.slow_queries.interval_avg_rows_processed
 
@@ -2422,7 +2422,7 @@ Average rows processed (returned) per execution in the last polling interval (de
 | query_id | SQL query identifier | Any Str | false |
 | user_name | Oracle username for slow queries | Any Str | false |
 | normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | false |
-| nr_guid | New Relic entity GUID | Any Str | false |
+| nr_service_guid | New Relic Service entity GUID | Any Str | false |
 
 ### newrelicoracledb.slow_queries.interval_avg_wait_time
 
@@ -2441,7 +2441,7 @@ Average wait time per execution in the last polling interval (delta metric)
 | query_id | SQL query identifier | Any Str | false |
 | user_name | Oracle username for slow queries | Any Str | false |
 | normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | false |
-| nr_guid | New Relic entity GUID | Any Str | false |
+| nr_service_guid | New Relic Service entity GUID | Any Str | false |
 
 ### newrelicoracledb.slow_queries.interval_buffer_gets
 
@@ -2460,7 +2460,7 @@ Total buffer gets (logical reads) in the last polling interval (delta metric, no
 | query_id | SQL query identifier | Any Str | false |
 | user_name | Oracle username for slow queries | Any Str | false |
 | normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | false |
-| nr_guid | New Relic entity GUID | Any Str | false |
+| nr_service_guid | New Relic Service entity GUID | Any Str | false |
 
 ### newrelicoracledb.slow_queries.interval_cpu_time
 
@@ -2479,7 +2479,7 @@ Total CPU time in the last polling interval (delta metric, not averaged)
 | query_id | SQL query identifier | Any Str | false |
 | user_name | Oracle username for slow queries | Any Str | false |
 | normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | false |
-| nr_guid | New Relic entity GUID | Any Str | false |
+| nr_service_guid | New Relic Service entity GUID | Any Str | false |
 
 ### newrelicoracledb.slow_queries.interval_disk_reads
 
@@ -2498,7 +2498,7 @@ Total disk reads in the last polling interval (delta metric, not averaged)
 | query_id | SQL query identifier | Any Str | false |
 | user_name | Oracle username for slow queries | Any Str | false |
 | normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | false |
-| nr_guid | New Relic entity GUID | Any Str | false |
+| nr_service_guid | New Relic Service entity GUID | Any Str | false |
 
 ### newrelicoracledb.slow_queries.interval_disk_writes
 
@@ -2517,7 +2517,7 @@ Total direct writes in the last polling interval - writes bypassing buffer cache
 | query_id | SQL query identifier | Any Str | false |
 | user_name | Oracle username for slow queries | Any Str | false |
 | normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | false |
-| nr_guid | New Relic entity GUID | Any Str | false |
+| nr_service_guid | New Relic Service entity GUID | Any Str | false |
 
 ### newrelicoracledb.slow_queries.interval_elapsed_time
 
@@ -2536,7 +2536,7 @@ Total elapsed time in the last polling interval (delta metric, not averaged)
 | query_id | SQL query identifier | Any Str | false |
 | user_name | Oracle username for slow queries | Any Str | false |
 | normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | false |
-| nr_guid | New Relic entity GUID | Any Str | false |
+| nr_service_guid | New Relic Service entity GUID | Any Str | false |
 
 ### newrelicoracledb.slow_queries.interval_execution_count
 
@@ -2555,7 +2555,7 @@ Number of new executions since last scrape (delta metric). On first scrape or af
 | query_id | SQL query identifier | Any Str | false |
 | user_name | Oracle username for slow queries | Any Str | false |
 | normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | false |
-| nr_guid | New Relic entity GUID | Any Str | false |
+| nr_service_guid | New Relic Service entity GUID | Any Str | false |
 
 ### newrelicoracledb.slow_queries.interval_rows_processed
 
@@ -2574,7 +2574,7 @@ Total rows processed (returned) in the last polling interval (delta metric, not 
 | query_id | SQL query identifier | Any Str | false |
 | user_name | Oracle username for slow queries | Any Str | false |
 | normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | false |
-| nr_guid | New Relic entity GUID | Any Str | false |
+| nr_service_guid | New Relic Service entity GUID | Any Str | false |
 
 ### newrelicoracledb.slow_queries.interval_wait_time
 
@@ -2593,7 +2593,7 @@ Total wait time in the last polling interval (delta metric, not averaged)
 | query_id | SQL query identifier | Any Str | false |
 | user_name | Oracle username for slow queries | Any Str | false |
 | normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | false |
-| nr_guid | New Relic entity GUID | Any Str | false |
+| nr_service_guid | New Relic Service entity GUID | Any Str | false |
 
 ### newrelicoracledb.slow_queries.query_details
 
@@ -2616,7 +2616,7 @@ Slow Query Details
 | user_name | Oracle username for slow queries | Any Str | false |
 | last_active_time | Last active time for the SQL query | Any Str | false |
 | normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | false |
-| nr_guid | New Relic entity GUID | Any Str | false |
+| nr_service_guid | New Relic Service entity GUID | Any Str | false |
 
 ### newrelicoracledb.slow_queries.total_cpu_time
 
@@ -2635,7 +2635,7 @@ Total cumulative CPU time for slow queries (raw value from V$SQLAREA)
 | query_id | SQL query identifier | Any Str | false |
 | user_name | Oracle username for slow queries | Any Str | false |
 | normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | false |
-| nr_guid | New Relic entity GUID | Any Str | false |
+| nr_service_guid | New Relic Service entity GUID | Any Str | false |
 
 ### newrelicoracledb.slow_queries.total_disk_reads
 
@@ -2654,7 +2654,7 @@ Total cumulative disk reads for slow queries (raw value from V$SQLAREA)
 | query_id | SQL query identifier | Any Str | false |
 | user_name | Oracle username for slow queries | Any Str | false |
 | normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | false |
-| nr_guid | New Relic entity GUID | Any Str | false |
+| nr_service_guid | New Relic Service entity GUID | Any Str | false |
 
 ### newrelicoracledb.slow_queries.total_disk_writes
 
@@ -2673,7 +2673,7 @@ Total cumulative direct writes for slow queries - writes bypassing buffer cache 
 | query_id | SQL query identifier | Any Str | false |
 | user_name | Oracle username for slow queries | Any Str | false |
 | normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | false |
-| nr_guid | New Relic entity GUID | Any Str | false |
+| nr_service_guid | New Relic Service entity GUID | Any Str | false |
 
 ### newrelicoracledb.slow_queries.total_elapsed_time
 
@@ -2692,7 +2692,7 @@ Total cumulative elapsed time for slow queries (raw value from V$SQLAREA)
 | query_id | SQL query identifier | Any Str | false |
 | user_name | Oracle username for slow queries | Any Str | false |
 | normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | false |
-| nr_guid | New Relic entity GUID | Any Str | false |
+| nr_service_guid | New Relic Service entity GUID | Any Str | false |
 
 ### newrelicoracledb.slow_queries.total_rows_examined
 
@@ -2711,7 +2711,7 @@ Total cumulative rows examined for slow queries (buffer gets/logical reads, raw 
 | query_id | SQL query identifier | Any Str | false |
 | user_name | Oracle username for slow queries | Any Str | false |
 | normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | false |
-| nr_guid | New Relic entity GUID | Any Str | false |
+| nr_service_guid | New Relic Service entity GUID | Any Str | false |
 
 ### newrelicoracledb.slow_queries.total_rows_returned
 
@@ -2730,7 +2730,7 @@ Total cumulative rows returned for slow queries (rows processed, raw value from 
 | query_id | SQL query identifier | Any Str | false |
 | user_name | Oracle username for slow queries | Any Str | false |
 | normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | false |
-| nr_guid | New Relic entity GUID | Any Str | false |
+| nr_service_guid | New Relic Service entity GUID | Any Str | false |
 
 ### newrelicoracledb.slow_queries.total_wait_time
 
@@ -2749,7 +2749,7 @@ Total cumulative wait time for slow queries (elapsed_time - cpu_time, raw value 
 | query_id | SQL query identifier | Any Str | false |
 | user_name | Oracle username for slow queries | Any Str | false |
 | normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | false |
-| nr_guid | New Relic entity GUID | Any Str | false |
+| nr_service_guid | New Relic Service entity GUID | Any Str | false |
 
 ### newrelicoracledb.sorts_disk
 
@@ -4966,7 +4966,7 @@ Source: WAIT_TIME_MICRO / 1000 (rounded to 2 decimal places).
 | row_wait_obj_id | Object ID of the row being waited on | Any Str | false |
 | row_wait_file_id | File ID of the row being waited on | Any Str | false |
 | row_wait_block_id | Block ID of the row being waited on | Any Str | false |
-| nr_guid | New Relic entity GUID | Any Str | false |
+| nr_service_guid | New Relic Service entity GUID | Any Str | false |
 | normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | false |
 
 ## Resource Attributes

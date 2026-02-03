@@ -53,8 +53,8 @@ attributes:
   normalised_sql_hash:
     description: "MD5 hash of normalized SQL query following New Relic Java agent normalization logic"
     type: string
-  nr_guid:
-    description: "New Relic entity GUID"
+  nr_service_guid:
+    description: "New Relic Service entity GUID"
     type: string
   plan_hash_value:
     description: Oracle execution plan hash value
@@ -195,6 +195,9 @@ attributes:
     type: string
   final_blocker_query_id:
     description: SQL query ID of the final blocking session's query
+    type: string
+  final_blocker_query_text:
+    description: SQL query text of the final blocking session's query
     type: string
   blocking_session_status:
     description: Status of the blocking session (VALID, NO HOLDER, etc.)
@@ -3210,7 +3213,7 @@ metrics:
       - query_id
       - user_name
       - normalised_sql_hash
-      - nr_guid
+      - nr_service_guid
       
 
   newrelicoracledb.slow_queries.total_cpu_time:
@@ -3225,7 +3228,7 @@ metrics:
       - query_id
       - user_name
       - normalised_sql_hash
-      - nr_guid
+      - nr_service_guid
       
 
   newrelicoracledb.slow_queries.total_disk_reads:
@@ -3240,7 +3243,7 @@ metrics:
       - query_id
       - user_name
       - normalised_sql_hash
-      - nr_guid
+      - nr_service_guid
       
 
   newrelicoracledb.slow_queries.total_disk_writes:
@@ -3255,7 +3258,7 @@ metrics:
       - query_id
       - user_name
       - normalised_sql_hash
-      - nr_guid
+      - nr_service_guid
       
 
   newrelicoracledb.slow_queries.total_elapsed_time:
@@ -3270,7 +3273,7 @@ metrics:
       - query_id
       - user_name
       - normalised_sql_hash
-      - nr_guid
+      - nr_service_guid
       
 
   newrelicoracledb.slow_queries.total_rows_examined:
@@ -3285,7 +3288,7 @@ metrics:
       - query_id
       - user_name
       - normalised_sql_hash
-      - nr_guid
+      - nr_service_guid
       
 
   newrelicoracledb.slow_queries.total_rows_returned:
@@ -3300,7 +3303,7 @@ metrics:
       - query_id
       - user_name
       - normalised_sql_hash
-      - nr_guid
+      - nr_service_guid
       
 
   newrelicoracledb.slow_queries.total_wait_time:
@@ -3315,7 +3318,7 @@ metrics:
       - query_id
       - user_name
       - normalised_sql_hash
-      - nr_guid
+      - nr_service_guid
       
 
   newrelicoracledb.slow_queries.query_details:
@@ -3334,7 +3337,7 @@ metrics:
       - user_name
       - last_active_time
       - normalised_sql_hash
-      - nr_guid
+      - nr_service_guid
       
 
   # Interval-based (delta) metrics - showing what happened in the LAST polling interval
@@ -3351,7 +3354,7 @@ metrics:
       - query_id
       - user_name
       - normalised_sql_hash
-      - nr_guid
+      - nr_service_guid
       
 
   newrelicoracledb.slow_queries.interval_execution_count:
@@ -3366,7 +3369,7 @@ metrics:
       - query_id
       - user_name
       - normalised_sql_hash
-      - nr_guid
+      - nr_service_guid
       
 
   newrelicoracledb.slow_queries.interval_avg_cpu_time:
@@ -3381,7 +3384,7 @@ metrics:
       - query_id
       - user_name
       - normalised_sql_hash
-      - nr_guid
+      - nr_service_guid
       
 
   newrelicoracledb.slow_queries.interval_avg_wait_time:
@@ -3396,7 +3399,7 @@ metrics:
       - query_id
       - user_name
       - normalised_sql_hash
-      - nr_guid
+      - nr_service_guid
       
 
   newrelicoracledb.slow_queries.interval_avg_disk_reads:
@@ -3411,7 +3414,7 @@ metrics:
       - query_id
       - user_name
       - normalised_sql_hash
-      - nr_guid
+      - nr_service_guid
       
 
   newrelicoracledb.slow_queries.interval_avg_disk_writes:
@@ -3426,7 +3429,7 @@ metrics:
       - query_id
       - user_name
       - normalised_sql_hash
-      - nr_guid
+      - nr_service_guid
       
 
   newrelicoracledb.slow_queries.interval_avg_buffer_gets:
@@ -3441,7 +3444,7 @@ metrics:
       - query_id
       - user_name
       - normalised_sql_hash
-      - nr_guid
+      - nr_service_guid
       
 
   newrelicoracledb.slow_queries.interval_avg_rows_processed:
@@ -3456,7 +3459,7 @@ metrics:
       - query_id
       - user_name
       - normalised_sql_hash
-      - nr_guid
+      - nr_service_guid
       
 
   # Interval total (non-averaged) delta metrics - showing TOTAL activity in the last polling interval
@@ -3473,7 +3476,7 @@ metrics:
       - query_id
       - user_name
       - normalised_sql_hash
-      - nr_guid
+      - nr_service_guid
       
 
   newrelicoracledb.slow_queries.interval_cpu_time:
@@ -3488,7 +3491,7 @@ metrics:
       - query_id
       - user_name
       - normalised_sql_hash
-      - nr_guid
+      - nr_service_guid
       
 
   newrelicoracledb.slow_queries.interval_wait_time:
@@ -3503,7 +3506,7 @@ metrics:
       - query_id
       - user_name
       - normalised_sql_hash
-      - nr_guid
+      - nr_service_guid
       
 
   newrelicoracledb.slow_queries.interval_disk_reads:
@@ -3518,7 +3521,7 @@ metrics:
       - query_id
       - user_name
       - normalised_sql_hash
-      - nr_guid
+      - nr_service_guid
       
 
   newrelicoracledb.slow_queries.interval_disk_writes:
@@ -3533,7 +3536,7 @@ metrics:
       - query_id
       - user_name
       - normalised_sql_hash
-      - nr_guid
+      - nr_service_guid
       
 
   newrelicoracledb.slow_queries.interval_buffer_gets:
@@ -3548,7 +3551,7 @@ metrics:
       - query_id
       - user_name
       - normalised_sql_hash
-      - nr_guid
+      - nr_service_guid
       
 
   newrelicoracledb.slow_queries.interval_rows_processed:
@@ -3563,7 +3566,7 @@ metrics:
       - query_id
       - user_name
       - normalised_sql_hash
-      - nr_guid
+      - nr_service_guid
       
 
   # Child Cursor Metrics (from V$SQL) - Average values per execution
@@ -3710,7 +3713,7 @@ metrics:
       - final_blocker_serial
       - final_blocker_query_id
       - final_blocker_query_text
-      - nr_guid
+      - nr_service_guid
       
       - normalised_sql_hash
 
@@ -3801,7 +3804,7 @@ metrics:
       - row_wait_obj_id
       - row_wait_file_id
       - row_wait_block_id
-      - nr_guid
+      - nr_service_guid
       
       - normalised_sql_hash
 

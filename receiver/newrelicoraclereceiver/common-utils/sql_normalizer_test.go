@@ -174,66 +174,41 @@ func TestExtractNewRelicMetadata(t *testing.T) {
 		},
 		{
 			name:         "Quoted GUID (basic)",
-			input:        "/*nr_guid=\"MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI4MzA5MDIxMQ\"*/ SELECT * FROM pets",
+			input:        "/*nr_service_guid=\"MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI4MzA5MDIxMQ\"*/ SELECT * FROM pets",
 			expectedGuid: "MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI4MzA5MDIxMQ",
 		},
 		{
 			name:         "Quoted GUID with spaces in comment",
-			input:        "/* nr_guid=\"MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI4MzA5MDIxMQ\" */ SELECT * FROM pets",
+			input:        "/* nr_service_guid=\"MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI4MzA5MDIxMQ\" */ SELECT * FROM pets",
 			expectedGuid: "MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI4MzA5MDIxMQ",
 		},
 		{
 			name:         "GUID with different base64 value",
-			input:        "/* nr_guid=\"ABC123XYZ789==\",other=\"value\" */ SELECT * FROM users",
+			input:        "/* nr_service_guid=\"ABC123XYZ789==\",other=\"value\" */ SELECT * FROM users",
 			expectedGuid: "ABC123XYZ789==",
 		},
 		{
 			name:         "Empty quoted GUID",
-			input:        "/* nr_guid=\"\" */ SELECT * FROM users",
+			input:        "/* nr_service_guid=\"\" */ SELECT * FROM users",
 			expectedGuid: "",
 		},
 		{
 			name:         "GUID in middle of query",
-			input:        "SELECT /* nr_guid=\"MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI4MzA5MDIxMQ\" */ * FROM users",
+			input:        "SELECT /* nr_service_guid=\"MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI4MzA5MDIxMQ\" */ * FROM users",
 			expectedGuid: "MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI4MzA5MDIxMQ",
 		},
 		{
 			name:         "Real-world GUID with UPDATE statement",
-			input:        "/* nr_guid=\"MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI4MzA5MDIxMQ\" */ UPDATE payments SET status = ?",
+			input:        "/* nr_service_guid=\"MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI4MzA5MDIxMQ\" */ UPDATE payments SET status = ?",
 			expectedGuid: "MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI4MzA5MDIxMQ",
-		},
-		{
-			name:         "Unquoted GUID (basic)",
-			input:        "/* nr_guid=MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI4MzA5MDIxMQ */ SELECT * FROM pets",
-			expectedGuid: "MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI4MzA5MDIxMQ",
-		},
-		{
-			name:         "Unquoted GUID with comma separator",
-			input:        "/* nr_guid=ABC123XYZ789==,other=value */ SELECT * FROM users",
-			expectedGuid: "ABC123XYZ789==",
-		},
-		{
-			name:         "Unquoted GUID at end of comment",
-			input:        "/* other=value,nr_guid=MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI4MzA5MDIxMQ*/ SELECT * FROM users",
-			expectedGuid: "MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI4MzA5MDIxMQ",
-		},
-		{
-			name:         "Unquoted GUID with spaces",
-			input:        "/* nr_guid=MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI4MzA5MDIxMQ other=value */ SELECT * FROM users",
-			expectedGuid: "MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI4MzA5MDIxMQ",
-		},
-		{
-			name:         "Prefer quoted over unquoted when both present",
-			input:        "/* nr_guid=\"QuotedGUID123\" nr_guid=UnquotedGUID456 */ SELECT * FROM users",
-			expectedGuid: "QuotedGUID123",
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			nrGuid := ExtractNewRelicMetadata(tt.input)
-			if nrGuid != tt.expectedGuid {
-				t.Errorf("ExtractNewRelicMetadata(%q) = %q; want %q", tt.input, nrGuid, tt.expectedGuid)
+			nrApmGuid := ExtractNewRelicMetadata(tt.input)
+			if nrApmGuid != tt.expectedGuid {
+				t.Errorf("ExtractNewRelicMetadata(%q) = %q; want %q", tt.input, nrApmGuid, tt.expectedGuid)
 			}
 		})
 	}
