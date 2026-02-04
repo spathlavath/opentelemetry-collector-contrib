@@ -156,6 +156,16 @@ type ActiveRunningQuery struct {
 	BlockingQueryHash          *QueryID `db:"blocking_query_hash" metric_name:"blocking_query_hash" source_type:"attribute"`
 }
 
+// BlockingQueryEvent represents a blocking query that should be emitted as a custom event
+// This is used to send blocking query text as OpenTelemetry logs (custom events in New Relic)
+type BlockingQueryEvent struct {
+	SessionID         int64  // Victim's session (who is blocked)
+	RequestID         int64  // Victim's request (handles MARS - Multiple Active Result Sets)
+	RequestStartTime  string // When victim started waiting (uniqueness + correlation)
+	BlockingSessionID int64  // Who is blocking
+	BlockingQueryText string // Full SQL text of blocking query (no truncation)
+}
+
 // LockedObject represents detailed information about database objects locked by a session
 // This model resolves lock resources to actual table/object names for troubleshooting lock contention
 type LockedObject struct {

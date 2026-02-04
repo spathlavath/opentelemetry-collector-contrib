@@ -74,7 +74,11 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordSqlserverActivequeryWaitTimeSecondsDataPoint(ts, 1, 10, 10, "database_name-val", "login_name-val", "host_name-val", "query_id-val", "wait_type-val", "wait_type_description-val", "wait_type_category-val", "wait_resource-val", "wait_resource_type-val", "wait_resource_object_name-val", "last_wait_type-val", "last_wait_type_description-val", "request_start_time-val", "collection_timestamp-val", 14, 22, "plan_handle-val", 19, "blocking_login_name-val", "blocking_query_text-val", "blocking_query_hash-val")
+			mb.RecordSqlserverActivequeryWaitTimeSecondsDataPoint(ts, 1, 10, 10, "database_name-val", "login_name-val", "host_name-val", "query_id-val", "wait_type-val", "wait_type_description-val", "wait_type_category-val", "wait_resource-val", "wait_resource_type-val", "wait_resource_object_name-val", "last_wait_type-val", "last_wait_type_description-val", "request_start_time-val", "collection_timestamp-val", 14, 22, "plan_handle-val", 19, "blocking_login_name-val", "blocking_query_hash-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordSqlserverBlockingQueryDetailsDataPoint(ts, 1, 10, 10, "request_start_time-val", 19, "blocking_query_text-val", "newrelic.event.type-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
@@ -787,12 +791,39 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("blocking_login_name")
 					assert.True(t, ok)
 					assert.Equal(t, "blocking_login_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("blocking_query_text")
-					assert.True(t, ok)
-					assert.Equal(t, "blocking_query_text-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("blocking_query_hash")
 					assert.True(t, ok)
 					assert.Equal(t, "blocking_query_hash-val", attrVal.Str())
+				case "sqlserver.blocking_query.details":
+					assert.False(t, validatedMetrics["sqlserver.blocking_query.details"], "Found a duplicate in the metrics slice: sqlserver.blocking_query.details")
+					validatedMetrics["sqlserver.blocking_query.details"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Blocking query details for correlation with active queries (emitted as custom events)", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("session_id")
+					assert.True(t, ok)
+					assert.EqualValues(t, 10, attrVal.Int())
+					attrVal, ok = dp.Attributes().Get("request_id")
+					assert.True(t, ok)
+					assert.EqualValues(t, 10, attrVal.Int())
+					attrVal, ok = dp.Attributes().Get("request_start_time")
+					assert.True(t, ok)
+					assert.Equal(t, "request_start_time-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("blocking_session_id")
+					assert.True(t, ok)
+					assert.EqualValues(t, 19, attrVal.Int())
+					attrVal, ok = dp.Attributes().Get("blocking_query_text")
+					assert.True(t, ok)
+					assert.Equal(t, "blocking_query_text-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("newrelic.event.type")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelic.event.type-val", attrVal.Str())
 				case "sqlserver.buffer.cache_hit_ratio":
 					assert.False(t, validatedMetrics["sqlserver.buffer.cache_hit_ratio"], "Found a duplicate in the metrics slice: sqlserver.buffer.cache_hit_ratio")
 					validatedMetrics["sqlserver.buffer.cache_hit_ratio"] = true
