@@ -7,6 +7,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"strings"
 
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicpostgresqlreceiver/models"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicpostgresqlreceiver/queries"
@@ -1393,4 +1394,64 @@ func (c *SQLClient) QueryIndexSize(ctx context.Context, indexOID int64) (int64, 
 	}
 
 	return size.Int64, nil
+}
+
+// QuerySlowQueries retrieves slow query statistics from pg_stat_statements
+func (c *SQLClient) QuerySlowQueries(ctx context.Context, intervalSeconds, responseTimeThreshold, countThreshold int) ([]models.SlowQuery, error) {
+	// Import the query from queries package
+	query := queries.GetSlowQueriesSQL(intervalSeconds)
+
+	rows, err := c.db.QueryContext(ctx, query)
+	if err != nil {
+		// If pg_stat_statements extension is not available, return empty slice gracefully
+		if strings.Contains(err.Error(), "pg_stat_statements") {
+			return []models.SlowQuery{}, nil
+		}
+		return nil, fmt.Errorf("failed to query slow queries: %w", err)
+	}
+	defer rows.Close()
+
+	var slowQueries []models.SlowQuery
+
+	for rows.Next() {
+		var sq models.SlowQuery
+
+		err := rows.Scan(
+			&sq.CollectionTimestamp,
+			&sq.QueryID,
+			&sq.DatabaseName,
+			&sq.UserName,
+			&sq.ExecutionCount,
+			&sq.QueryText,
+			// Execution time metrics
+			&sq.AvgElapsedTimeMs,
+			&sq.MinElapsedTimeMs,
+			&sq.MaxElapsedTimeMs,
+			&sq.StddevElapsedTimeMs,
+			&sq.TotalElapsedTimeMs,
+			&sq.AvgPlanTimeMs,
+			&sq.AvgCPUTimeMs,
+			// I/O metrics
+			&sq.AvgDiskReads,
+			&sq.TotalDiskReads,
+			&sq.AvgBufferHits,
+			&sq.TotalBufferHits,
+			&sq.AvgDiskWrites,
+			&sq.TotalDiskWrites,
+			// Row statistics
+			&sq.AvgRowsReturned,
+			&sq.TotalRowsReturned,
+		)
+		if err != nil {
+			return nil, fmt.Errorf("failed to scan slow query row: %w", err)
+		}
+
+		slowQueries = append(slowQueries, sq)
+	}
+
+	if err = rows.Err(); err != nil {
+		return nil, fmt.Errorf("error iterating slow query rows: %w", err)
+	}
+
+	return slowQueries, nil
 }

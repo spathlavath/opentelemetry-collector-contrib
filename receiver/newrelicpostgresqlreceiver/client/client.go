@@ -253,4 +253,15 @@ type PostgreSQLClient interface {
 	// Takes an index OID and returns the size in bytes
 	// Available in PostgreSQL 9.6+
 	QueryIndexSize(ctx context.Context, indexOID int64) (int64, error)
+
+	// QuerySlowQueries retrieves slow query statistics from pg_stat_statements
+	// Uses delta calculation for interval-based averages (similar to Oracle/MSSQL implementations)
+	// Requires pg_stat_statements extension to be installed and enabled
+	// Parameters:
+	// - intervalSeconds: Time window for fetching queries (used for delta calculation context)
+	// - responseTimeThreshold: Minimum average elapsed time in ms (filtering done in Go layer)
+	// - countThreshold: Maximum number of slow queries to return (Top N selection done in Go layer)
+	// Returns empty slice if extension is not available (query will fail gracefully)
+	// Available in PostgreSQL 13+ (recommended for planning time metrics)
+	QuerySlowQueries(ctx context.Context, intervalSeconds, responseTimeThreshold, countThreshold int) ([]models.SlowQuery, error)
 }
