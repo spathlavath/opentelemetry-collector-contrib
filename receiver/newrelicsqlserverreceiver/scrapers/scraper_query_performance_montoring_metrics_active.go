@@ -228,6 +228,19 @@ func (s *QueryPerformanceScraper) processActiveRunningQueryMetricsWithPlan(resul
 		blockingQueryText = helpers.AnonymizeQueryText(truncatedText)
 	}
 
+	// Extract query statement text (for logging/debugging, not sent as attribute)
+	var queryStatementText string
+	if result.QueryStatementText != nil {
+		// Anonymize the query text (no truncation - keep full text)
+		queryStatementText = helpers.AnonymizeQueryText(*result.QueryStatementText)
+
+		// Log the query text for debugging purposes
+		s.logger.Debug("Active query statement text extracted",
+			zap.Any("session_id", result.CurrentSessionID),
+			zap.String("query_statement_text", queryStatementText),
+			zap.Int("text_length", len(queryStatementText)))
+	}
+
 	var queryID string
 	if result.QueryID != nil && !result.QueryID.IsEmpty() {
 		queryID = result.QueryID.String()
