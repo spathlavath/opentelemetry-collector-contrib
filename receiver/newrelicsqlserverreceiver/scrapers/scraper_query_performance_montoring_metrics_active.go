@@ -137,21 +137,67 @@ func (s *QueryPerformanceScraper) processActiveRunningQueryMetricsWithPlan(resul
 	// Extract New Relic metadata and normalize SQL for cross-language correlation
 	// This enables APM integration and query correlation across different language agents
 	if result.QueryText != nil && *result.QueryText != "" {
+		// Log the first 500 characters of query text to check for comments
+		queryPreview := *result.QueryText
+		if len(queryPreview) > 500 {
+			queryPreview = queryPreview[:500] + "..."
+		}
+
+		hasNrGuidComment := strings.Contains(*result.QueryText, "nr_service_guid=")
+		hasNrServiceComment := strings.Contains(*result.QueryText, "nr_service=")
+
+		sessionIDStr := "unknown"
+		if result.CurrentSessionID != nil {
+			sessionIDStr = fmt.Sprintf("%d", *result.CurrentSessionID)
+		}
+
+		s.logger.Info("Processing active query text for APM metadata extraction",
+			zap.String("session_id", sessionIDStr),
+			zap.Int("query_text_length", len(*result.QueryText)),
+			zap.Bool("has_nr_guid_comment", hasNrGuidComment),
+			zap.Bool("has_nr_service_comment", hasNrServiceComment),
+			zap.String("query_text_preview", queryPreview),
+			zap.String("full_query_text", *result.QueryText))
+
 		// Extract metadata from New Relic query comments (e.g., /* nr_apm_guid="ABC123", nr_service="order-service" */)
 		nrApmGuid, clientName := helpers.ExtractNewRelicMetadata(*result.QueryText)
+
+		s.logger.Info("Extracted APM metadata from active query text",
+			zap.String("session_id", sessionIDStr),
+			zap.String("extracted_nr_service_guid", nrApmGuid),
+			zap.String("extracted_client_name", clientName),
+			zap.Bool("extraction_successful", nrApmGuid != "" || clientName != ""))
 
 		// Normalize SQL and generate MD5 hash for cross-language query correlation
 		normalizedSQL, sqlHash := helpers.NormalizeSqlAndHash(*result.QueryText)
 
+		s.logger.Debug("Normalized active query SQL",
+			zap.String("session_id", sessionIDStr),
+			zap.String("normalized_sql_hash", sqlHash),
+			zap.Int("normalized_length", len(normalizedSQL)))
+
 		// Populate model fields with extracted metadata
 		if nrApmGuid != "" {
-			result.NrApmGuid = &nrApmGuid
+			result.NrServiceGuid = &nrApmGuid
 		}
 		if clientName != "" {
 			result.ClientName = &clientName
 		}
 		if sqlHash != "" {
 			result.NormalisedSqlHash = &sqlHash
+		}
+
+		// Cache APM metadata for slow query enrichment
+		// This allows slow queries (from plan cache) to be enriched with APM correlation data
+		// captured from active running queries (which have the APM comments)
+		if result.QueryID != nil && !result.QueryID.IsEmpty() && (nrApmGuid != "" || clientName != "" || sqlHash != "") {
+			queryHashStr := result.QueryID.String()
+			s.apmMetadataCache.Set(queryHashStr, nrApmGuid, clientName, sqlHash)
+			s.logger.Debug("Cached APM metadata from active query",
+				zap.String("query_hash", queryHashStr),
+				zap.String("nr_service_guid", nrApmGuid),
+				zap.String("client_name", clientName),
+				zap.String("normalised_sql_hash", sqlHash))
 		}
 
 		// Replace QueryText with normalized version for privacy and consistency
@@ -319,21 +365,9 @@ func (s *QueryPerformanceScraper) processActiveRunningQueryMetricsWithPlan(resul
 		}
 		return ""
 	}
-	getNrApmGuid := func() string {
-		if result.NrApmGuid != nil {
-			return *result.NrApmGuid
-		}
-		return ""
-	}
 	getClientName := func() string {
 		if result.ClientName != nil {
 			return *result.ClientName
-		}
-		return ""
-	}
-	getNormalisedSqlHash := func() string {
-		if result.NormalisedSqlHash != nil {
-			return *result.NormalisedSqlHash
 		}
 		return ""
 	}
@@ -346,6 +380,18 @@ func (s *QueryPerformanceScraper) processActiveRunningQueryMetricsWithPlan(resul
 			}
 			// Then anonymize only what we're sending
 			return helpers.AnonymizeQueryText(truncatedText)
+		}
+		return ""
+	}
+	getNormalisedSqlHash := func() string {
+		if result.NormalisedSqlHash != nil {
+			return *result.NormalisedSqlHash
+		}
+		return ""
+	}
+	getNrServiceGuid := func() string {
+		if result.NrServiceGuid != nil {
+			return *result.NrServiceGuid
 		}
 		return ""
 	}
@@ -369,6 +415,8 @@ func (s *QueryPerformanceScraper) processActiveRunningQueryMetricsWithPlan(resul
 			getClientName(),
 			getQueryID(),
 			getQueryText(),
+			getNormalisedSqlHash(),
+			getNrServiceGuid(),
 			getWaitType(),
 			getWaitTypeDescription(),
 			getWaitTypeCategory(),
@@ -380,8 +428,6 @@ func (s *QueryPerformanceScraper) processActiveRunningQueryMetricsWithPlan(resul
 			getRequestStartTime(),
 			getCollectionTimestamp(),
 			getTransactionID(),
-			getNrApmGuid(),
-			getNormalisedSqlHash(),
 			getOpenTransactionCount(),
 			getPlanHandle(),
 			getBlockingSessionID(),

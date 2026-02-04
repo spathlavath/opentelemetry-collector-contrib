@@ -762,7 +762,7 @@ func (m *metricSqlserverActivequeryWaitTimeSeconds) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricSqlserverActivequeryWaitTimeSeconds) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, sessionIDAttributeValue int64, requestIDAttributeValue int64, databaseNameAttributeValue string, loginNameAttributeValue string, hostNameAttributeValue string, clientNameAttributeValue string, queryIDAttributeValue string, queryTextAttributeValue string, waitTypeAttributeValue string, waitTypeDescriptionAttributeValue string, waitTypeCategoryAttributeValue string, waitResourceAttributeValue string, waitResourceTypeAttributeValue string, waitResourceObjectNameAttributeValue string, lastWaitTypeAttributeValue string, lastWaitTypeDescriptionAttributeValue string, requestStartTimeAttributeValue string, collectionTimestampAttributeValue string, transactionIDAttributeValue int64, nrApmGUIDAttributeValue string, normalisedSQLHashAttributeValue string, openTransactionCountAttributeValue int64, planHandleAttributeValue string, blockingSessionIDAttributeValue int64, blockingLoginNameAttributeValue string, blockingQueryTextAttributeValue string, blockingQueryHashAttributeValue string) {
+func (m *metricSqlserverActivequeryWaitTimeSeconds) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, sessionIDAttributeValue int64, requestIDAttributeValue int64, databaseNameAttributeValue string, loginNameAttributeValue string, hostNameAttributeValue string, clientNameAttributeValue string, queryIDAttributeValue string, queryTextAttributeValue string, normalisedSQLHashAttributeValue string, nrServiceGUIDAttributeValue string, waitTypeAttributeValue string, waitTypeDescriptionAttributeValue string, waitTypeCategoryAttributeValue string, waitResourceAttributeValue string, waitResourceTypeAttributeValue string, waitResourceObjectNameAttributeValue string, lastWaitTypeAttributeValue string, lastWaitTypeDescriptionAttributeValue string, requestStartTimeAttributeValue string, collectionTimestampAttributeValue string, transactionIDAttributeValue int64, openTransactionCountAttributeValue int64, planHandleAttributeValue string, blockingSessionIDAttributeValue int64, blockingLoginNameAttributeValue string, blockingQueryTextAttributeValue string, blockingQueryHashAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -778,6 +778,8 @@ func (m *metricSqlserverActivequeryWaitTimeSeconds) recordDataPoint(start pcommo
 	dp.Attributes().PutStr("client_name", clientNameAttributeValue)
 	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
 	dp.Attributes().PutStr("query_text", queryTextAttributeValue)
+	dp.Attributes().PutStr("normalised_sql_hash", normalisedSQLHashAttributeValue)
+	dp.Attributes().PutStr("nr_service_guid", nrServiceGUIDAttributeValue)
 	dp.Attributes().PutStr("wait_type", waitTypeAttributeValue)
 	dp.Attributes().PutStr("wait_type_description", waitTypeDescriptionAttributeValue)
 	dp.Attributes().PutStr("wait_type_category", waitTypeCategoryAttributeValue)
@@ -789,8 +791,6 @@ func (m *metricSqlserverActivequeryWaitTimeSeconds) recordDataPoint(start pcommo
 	dp.Attributes().PutStr("request_start_time", requestStartTimeAttributeValue)
 	dp.Attributes().PutStr("collection_timestamp", collectionTimestampAttributeValue)
 	dp.Attributes().PutInt("transaction_id", transactionIDAttributeValue)
-	dp.Attributes().PutStr("nr_apm_guid", nrApmGUIDAttributeValue)
-	dp.Attributes().PutStr("normalised_sql_hash", normalisedSQLHashAttributeValue)
 	dp.Attributes().PutInt("open_transaction_count", openTransactionCountAttributeValue)
 	dp.Attributes().PutStr("plan_handle", planHandleAttributeValue)
 	dp.Attributes().PutInt("blocking_session_id", blockingSessionIDAttributeValue)
@@ -6221,7 +6221,7 @@ func (m *metricSqlserverSlowqueryHistoricalAvgElapsedTimeMs) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricSqlserverSlowqueryHistoricalAvgElapsedTimeMs) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, queryIDAttributeValue string, databaseNameAttributeValue string, normalisedSQLHashAttributeValue string, nrApmGUIDAttributeValue string, clientNameAttributeValue string) {
+func (m *metricSqlserverSlowqueryHistoricalAvgElapsedTimeMs) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, queryIDAttributeValue string, databaseNameAttributeValue string, normalisedSQLHashAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -6232,8 +6232,6 @@ func (m *metricSqlserverSlowqueryHistoricalAvgElapsedTimeMs) recordDataPoint(sta
 	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
 	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
 	dp.Attributes().PutStr("normalised_sql_hash", normalisedSQLHashAttributeValue)
-	dp.Attributes().PutStr("nr_apm_guid", nrApmGUIDAttributeValue)
-	dp.Attributes().PutStr("client_name", clientNameAttributeValue)
 }
 
 // updateCapacity saves max length of data point slices that will be used for the slice capacity.
@@ -6276,7 +6274,7 @@ func (m *metricSqlserverSlowqueryHistoricalExecutionCount) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricSqlserverSlowqueryHistoricalExecutionCount) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, queryIDAttributeValue string, databaseNameAttributeValue string, normalisedSQLHashAttributeValue string, nrApmGUIDAttributeValue string, clientNameAttributeValue string) {
+func (m *metricSqlserverSlowqueryHistoricalExecutionCount) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, queryIDAttributeValue string, databaseNameAttributeValue string, normalisedSQLHashAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -6287,8 +6285,6 @@ func (m *metricSqlserverSlowqueryHistoricalExecutionCount) recordDataPoint(start
 	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
 	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
 	dp.Attributes().PutStr("normalised_sql_hash", normalisedSQLHashAttributeValue)
-	dp.Attributes().PutStr("nr_apm_guid", nrApmGUIDAttributeValue)
-	dp.Attributes().PutStr("client_name", clientNameAttributeValue)
 }
 
 // updateCapacity saves max length of data point slices that will be used for the slice capacity.
@@ -6331,7 +6327,7 @@ func (m *metricSqlserverSlowqueryHistoricalLogicalReads) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricSqlserverSlowqueryHistoricalLogicalReads) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, queryIDAttributeValue string, databaseNameAttributeValue string, normalisedSQLHashAttributeValue string, nrApmGUIDAttributeValue string, clientNameAttributeValue string) {
+func (m *metricSqlserverSlowqueryHistoricalLogicalReads) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, queryIDAttributeValue string, databaseNameAttributeValue string, normalisedSQLHashAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -6342,8 +6338,6 @@ func (m *metricSqlserverSlowqueryHistoricalLogicalReads) recordDataPoint(start p
 	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
 	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
 	dp.Attributes().PutStr("normalised_sql_hash", normalisedSQLHashAttributeValue)
-	dp.Attributes().PutStr("nr_apm_guid", nrApmGUIDAttributeValue)
-	dp.Attributes().PutStr("client_name", clientNameAttributeValue)
 }
 
 // updateCapacity saves max length of data point slices that will be used for the slice capacity.
@@ -6386,7 +6380,7 @@ func (m *metricSqlserverSlowqueryHistoricalLogicalWrites) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricSqlserverSlowqueryHistoricalLogicalWrites) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, queryIDAttributeValue string, databaseNameAttributeValue string, normalisedSQLHashAttributeValue string, nrApmGUIDAttributeValue string, clientNameAttributeValue string) {
+func (m *metricSqlserverSlowqueryHistoricalLogicalWrites) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, queryIDAttributeValue string, databaseNameAttributeValue string, normalisedSQLHashAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -6397,8 +6391,6 @@ func (m *metricSqlserverSlowqueryHistoricalLogicalWrites) recordDataPoint(start 
 	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
 	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
 	dp.Attributes().PutStr("normalised_sql_hash", normalisedSQLHashAttributeValue)
-	dp.Attributes().PutStr("nr_apm_guid", nrApmGUIDAttributeValue)
-	dp.Attributes().PutStr("client_name", clientNameAttributeValue)
 }
 
 // updateCapacity saves max length of data point slices that will be used for the slice capacity.
@@ -6441,7 +6433,7 @@ func (m *metricSqlserverSlowqueryHistoricalPhysicalReads) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricSqlserverSlowqueryHistoricalPhysicalReads) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, queryIDAttributeValue string, databaseNameAttributeValue string, normalisedSQLHashAttributeValue string, nrApmGUIDAttributeValue string, clientNameAttributeValue string) {
+func (m *metricSqlserverSlowqueryHistoricalPhysicalReads) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, queryIDAttributeValue string, databaseNameAttributeValue string, normalisedSQLHashAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -6452,8 +6444,6 @@ func (m *metricSqlserverSlowqueryHistoricalPhysicalReads) recordDataPoint(start 
 	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
 	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
 	dp.Attributes().PutStr("normalised_sql_hash", normalisedSQLHashAttributeValue)
-	dp.Attributes().PutStr("nr_apm_guid", nrApmGUIDAttributeValue)
-	dp.Attributes().PutStr("client_name", clientNameAttributeValue)
 }
 
 // updateCapacity saves max length of data point slices that will be used for the slice capacity.
@@ -6496,7 +6486,7 @@ func (m *metricSqlserverSlowqueryHistoricalRows) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricSqlserverSlowqueryHistoricalRows) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, queryIDAttributeValue string, databaseNameAttributeValue string, normalisedSQLHashAttributeValue string, nrApmGUIDAttributeValue string, clientNameAttributeValue string) {
+func (m *metricSqlserverSlowqueryHistoricalRows) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, queryIDAttributeValue string, databaseNameAttributeValue string, normalisedSQLHashAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -6507,8 +6497,6 @@ func (m *metricSqlserverSlowqueryHistoricalRows) recordDataPoint(start pcommon.T
 	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
 	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
 	dp.Attributes().PutStr("normalised_sql_hash", normalisedSQLHashAttributeValue)
-	dp.Attributes().PutStr("nr_apm_guid", nrApmGUIDAttributeValue)
-	dp.Attributes().PutStr("client_name", clientNameAttributeValue)
 }
 
 // updateCapacity saves max length of data point slices that will be used for the slice capacity.
@@ -6551,7 +6539,7 @@ func (m *metricSqlserverSlowqueryHistoricalWaitTimeMs) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricSqlserverSlowqueryHistoricalWaitTimeMs) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, queryIDAttributeValue string, databaseNameAttributeValue string, normalisedSQLHashAttributeValue string, nrApmGUIDAttributeValue string, clientNameAttributeValue string) {
+func (m *metricSqlserverSlowqueryHistoricalWaitTimeMs) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, queryIDAttributeValue string, databaseNameAttributeValue string, normalisedSQLHashAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -6562,8 +6550,6 @@ func (m *metricSqlserverSlowqueryHistoricalWaitTimeMs) recordDataPoint(start pco
 	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
 	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
 	dp.Attributes().PutStr("normalised_sql_hash", normalisedSQLHashAttributeValue)
-	dp.Attributes().PutStr("nr_apm_guid", nrApmGUIDAttributeValue)
-	dp.Attributes().PutStr("client_name", clientNameAttributeValue)
 }
 
 // updateCapacity saves max length of data point slices that will be used for the slice capacity.
@@ -6606,7 +6592,7 @@ func (m *metricSqlserverSlowqueryHistoricalWorkerTimeMs) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricSqlserverSlowqueryHistoricalWorkerTimeMs) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, queryIDAttributeValue string, databaseNameAttributeValue string, normalisedSQLHashAttributeValue string, nrApmGUIDAttributeValue string, clientNameAttributeValue string) {
+func (m *metricSqlserverSlowqueryHistoricalWorkerTimeMs) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, queryIDAttributeValue string, databaseNameAttributeValue string, normalisedSQLHashAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -6617,8 +6603,6 @@ func (m *metricSqlserverSlowqueryHistoricalWorkerTimeMs) recordDataPoint(start p
 	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
 	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
 	dp.Attributes().PutStr("normalised_sql_hash", normalisedSQLHashAttributeValue)
-	dp.Attributes().PutStr("nr_apm_guid", nrApmGUIDAttributeValue)
-	dp.Attributes().PutStr("client_name", clientNameAttributeValue)
 }
 
 // updateCapacity saves max length of data point slices that will be used for the slice capacity.
@@ -6661,7 +6645,7 @@ func (m *metricSqlserverSlowqueryIntervalAvgElapsedTimeMs) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricSqlserverSlowqueryIntervalAvgElapsedTimeMs) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, queryIDAttributeValue string, databaseNameAttributeValue string, normalisedSQLHashAttributeValue string, nrApmGUIDAttributeValue string, clientNameAttributeValue string) {
+func (m *metricSqlserverSlowqueryIntervalAvgElapsedTimeMs) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, queryIDAttributeValue string, databaseNameAttributeValue string, normalisedSQLHashAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -6672,8 +6656,6 @@ func (m *metricSqlserverSlowqueryIntervalAvgElapsedTimeMs) recordDataPoint(start
 	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
 	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
 	dp.Attributes().PutStr("normalised_sql_hash", normalisedSQLHashAttributeValue)
-	dp.Attributes().PutStr("nr_apm_guid", nrApmGUIDAttributeValue)
-	dp.Attributes().PutStr("client_name", clientNameAttributeValue)
 }
 
 // updateCapacity saves max length of data point slices that will be used for the slice capacity.
@@ -6716,7 +6698,7 @@ func (m *metricSqlserverSlowqueryIntervalAvgLogicalReads) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricSqlserverSlowqueryIntervalAvgLogicalReads) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, queryIDAttributeValue string, databaseNameAttributeValue string, normalisedSQLHashAttributeValue string, nrApmGUIDAttributeValue string, clientNameAttributeValue string) {
+func (m *metricSqlserverSlowqueryIntervalAvgLogicalReads) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, queryIDAttributeValue string, databaseNameAttributeValue string, normalisedSQLHashAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -6727,8 +6709,6 @@ func (m *metricSqlserverSlowqueryIntervalAvgLogicalReads) recordDataPoint(start 
 	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
 	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
 	dp.Attributes().PutStr("normalised_sql_hash", normalisedSQLHashAttributeValue)
-	dp.Attributes().PutStr("nr_apm_guid", nrApmGUIDAttributeValue)
-	dp.Attributes().PutStr("client_name", clientNameAttributeValue)
 }
 
 // updateCapacity saves max length of data point slices that will be used for the slice capacity.
@@ -6771,7 +6751,7 @@ func (m *metricSqlserverSlowqueryIntervalAvgLogicalWrites) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricSqlserverSlowqueryIntervalAvgLogicalWrites) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, queryIDAttributeValue string, databaseNameAttributeValue string, normalisedSQLHashAttributeValue string, nrApmGUIDAttributeValue string, clientNameAttributeValue string) {
+func (m *metricSqlserverSlowqueryIntervalAvgLogicalWrites) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, queryIDAttributeValue string, databaseNameAttributeValue string, normalisedSQLHashAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -6782,8 +6762,6 @@ func (m *metricSqlserverSlowqueryIntervalAvgLogicalWrites) recordDataPoint(start
 	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
 	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
 	dp.Attributes().PutStr("normalised_sql_hash", normalisedSQLHashAttributeValue)
-	dp.Attributes().PutStr("nr_apm_guid", nrApmGUIDAttributeValue)
-	dp.Attributes().PutStr("client_name", clientNameAttributeValue)
 }
 
 // updateCapacity saves max length of data point slices that will be used for the slice capacity.
@@ -6826,7 +6804,7 @@ func (m *metricSqlserverSlowqueryIntervalAvgPhysicalReads) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricSqlserverSlowqueryIntervalAvgPhysicalReads) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, queryIDAttributeValue string, databaseNameAttributeValue string, normalisedSQLHashAttributeValue string, nrApmGUIDAttributeValue string, clientNameAttributeValue string) {
+func (m *metricSqlserverSlowqueryIntervalAvgPhysicalReads) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, queryIDAttributeValue string, databaseNameAttributeValue string, normalisedSQLHashAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -6837,8 +6815,6 @@ func (m *metricSqlserverSlowqueryIntervalAvgPhysicalReads) recordDataPoint(start
 	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
 	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
 	dp.Attributes().PutStr("normalised_sql_hash", normalisedSQLHashAttributeValue)
-	dp.Attributes().PutStr("nr_apm_guid", nrApmGUIDAttributeValue)
-	dp.Attributes().PutStr("client_name", clientNameAttributeValue)
 }
 
 // updateCapacity saves max length of data point slices that will be used for the slice capacity.
@@ -6881,7 +6857,7 @@ func (m *metricSqlserverSlowqueryIntervalAvgRows) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricSqlserverSlowqueryIntervalAvgRows) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, queryIDAttributeValue string, databaseNameAttributeValue string, normalisedSQLHashAttributeValue string, nrApmGUIDAttributeValue string, clientNameAttributeValue string) {
+func (m *metricSqlserverSlowqueryIntervalAvgRows) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, queryIDAttributeValue string, databaseNameAttributeValue string, normalisedSQLHashAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -6892,8 +6868,6 @@ func (m *metricSqlserverSlowqueryIntervalAvgRows) recordDataPoint(start pcommon.
 	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
 	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
 	dp.Attributes().PutStr("normalised_sql_hash", normalisedSQLHashAttributeValue)
-	dp.Attributes().PutStr("nr_apm_guid", nrApmGUIDAttributeValue)
-	dp.Attributes().PutStr("client_name", clientNameAttributeValue)
 }
 
 // updateCapacity saves max length of data point slices that will be used for the slice capacity.
@@ -6936,7 +6910,7 @@ func (m *metricSqlserverSlowqueryIntervalAvgWaitTimeMs) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricSqlserverSlowqueryIntervalAvgWaitTimeMs) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, queryIDAttributeValue string, databaseNameAttributeValue string, normalisedSQLHashAttributeValue string, nrApmGUIDAttributeValue string, clientNameAttributeValue string) {
+func (m *metricSqlserverSlowqueryIntervalAvgWaitTimeMs) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, queryIDAttributeValue string, databaseNameAttributeValue string, normalisedSQLHashAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -6947,8 +6921,6 @@ func (m *metricSqlserverSlowqueryIntervalAvgWaitTimeMs) recordDataPoint(start pc
 	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
 	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
 	dp.Attributes().PutStr("normalised_sql_hash", normalisedSQLHashAttributeValue)
-	dp.Attributes().PutStr("nr_apm_guid", nrApmGUIDAttributeValue)
-	dp.Attributes().PutStr("client_name", clientNameAttributeValue)
 }
 
 // updateCapacity saves max length of data point slices that will be used for the slice capacity.
@@ -6991,7 +6963,7 @@ func (m *metricSqlserverSlowqueryIntervalAvgWorkerTimeMs) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricSqlserverSlowqueryIntervalAvgWorkerTimeMs) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, queryIDAttributeValue string, databaseNameAttributeValue string, normalisedSQLHashAttributeValue string, nrApmGUIDAttributeValue string, clientNameAttributeValue string) {
+func (m *metricSqlserverSlowqueryIntervalAvgWorkerTimeMs) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, queryIDAttributeValue string, databaseNameAttributeValue string, normalisedSQLHashAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -7002,8 +6974,6 @@ func (m *metricSqlserverSlowqueryIntervalAvgWorkerTimeMs) recordDataPoint(start 
 	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
 	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
 	dp.Attributes().PutStr("normalised_sql_hash", normalisedSQLHashAttributeValue)
-	dp.Attributes().PutStr("nr_apm_guid", nrApmGUIDAttributeValue)
-	dp.Attributes().PutStr("client_name", clientNameAttributeValue)
 }
 
 // updateCapacity saves max length of data point slices that will be used for the slice capacity.
@@ -7046,7 +7016,7 @@ func (m *metricSqlserverSlowqueryIntervalExecutionCount) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricSqlserverSlowqueryIntervalExecutionCount) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, queryIDAttributeValue string, databaseNameAttributeValue string, normalisedSQLHashAttributeValue string, nrApmGUIDAttributeValue string, clientNameAttributeValue string) {
+func (m *metricSqlserverSlowqueryIntervalExecutionCount) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, queryIDAttributeValue string, databaseNameAttributeValue string, normalisedSQLHashAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -7057,8 +7027,6 @@ func (m *metricSqlserverSlowqueryIntervalExecutionCount) recordDataPoint(start p
 	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
 	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
 	dp.Attributes().PutStr("normalised_sql_hash", normalisedSQLHashAttributeValue)
-	dp.Attributes().PutStr("nr_apm_guid", nrApmGUIDAttributeValue)
-	dp.Attributes().PutStr("client_name", clientNameAttributeValue)
 }
 
 // updateCapacity saves max length of data point slices that will be used for the slice capacity.
@@ -7101,7 +7069,7 @@ func (m *metricSqlserverSlowqueryIntervalLogicalReads) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricSqlserverSlowqueryIntervalLogicalReads) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, queryIDAttributeValue string, databaseNameAttributeValue string, normalisedSQLHashAttributeValue string, nrApmGUIDAttributeValue string, clientNameAttributeValue string) {
+func (m *metricSqlserverSlowqueryIntervalLogicalReads) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, queryIDAttributeValue string, databaseNameAttributeValue string, normalisedSQLHashAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -7112,8 +7080,6 @@ func (m *metricSqlserverSlowqueryIntervalLogicalReads) recordDataPoint(start pco
 	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
 	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
 	dp.Attributes().PutStr("normalised_sql_hash", normalisedSQLHashAttributeValue)
-	dp.Attributes().PutStr("nr_apm_guid", nrApmGUIDAttributeValue)
-	dp.Attributes().PutStr("client_name", clientNameAttributeValue)
 }
 
 // updateCapacity saves max length of data point slices that will be used for the slice capacity.
@@ -7156,7 +7122,7 @@ func (m *metricSqlserverSlowqueryIntervalLogicalWrites) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricSqlserverSlowqueryIntervalLogicalWrites) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, queryIDAttributeValue string, databaseNameAttributeValue string, normalisedSQLHashAttributeValue string, nrApmGUIDAttributeValue string, clientNameAttributeValue string) {
+func (m *metricSqlserverSlowqueryIntervalLogicalWrites) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, queryIDAttributeValue string, databaseNameAttributeValue string, normalisedSQLHashAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -7167,8 +7133,6 @@ func (m *metricSqlserverSlowqueryIntervalLogicalWrites) recordDataPoint(start pc
 	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
 	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
 	dp.Attributes().PutStr("normalised_sql_hash", normalisedSQLHashAttributeValue)
-	dp.Attributes().PutStr("nr_apm_guid", nrApmGUIDAttributeValue)
-	dp.Attributes().PutStr("client_name", clientNameAttributeValue)
 }
 
 // updateCapacity saves max length of data point slices that will be used for the slice capacity.
@@ -7211,7 +7175,7 @@ func (m *metricSqlserverSlowqueryIntervalPhysicalReads) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricSqlserverSlowqueryIntervalPhysicalReads) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, queryIDAttributeValue string, databaseNameAttributeValue string, normalisedSQLHashAttributeValue string, nrApmGUIDAttributeValue string, clientNameAttributeValue string) {
+func (m *metricSqlserverSlowqueryIntervalPhysicalReads) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, queryIDAttributeValue string, databaseNameAttributeValue string, normalisedSQLHashAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -7222,8 +7186,6 @@ func (m *metricSqlserverSlowqueryIntervalPhysicalReads) recordDataPoint(start pc
 	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
 	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
 	dp.Attributes().PutStr("normalised_sql_hash", normalisedSQLHashAttributeValue)
-	dp.Attributes().PutStr("nr_apm_guid", nrApmGUIDAttributeValue)
-	dp.Attributes().PutStr("client_name", clientNameAttributeValue)
 }
 
 // updateCapacity saves max length of data point slices that will be used for the slice capacity.
@@ -7266,7 +7228,7 @@ func (m *metricSqlserverSlowqueryIntervalRows) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricSqlserverSlowqueryIntervalRows) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, queryIDAttributeValue string, databaseNameAttributeValue string, normalisedSQLHashAttributeValue string, nrApmGUIDAttributeValue string, clientNameAttributeValue string) {
+func (m *metricSqlserverSlowqueryIntervalRows) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, queryIDAttributeValue string, databaseNameAttributeValue string, normalisedSQLHashAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -7277,8 +7239,6 @@ func (m *metricSqlserverSlowqueryIntervalRows) recordDataPoint(start pcommon.Tim
 	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
 	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
 	dp.Attributes().PutStr("normalised_sql_hash", normalisedSQLHashAttributeValue)
-	dp.Attributes().PutStr("nr_apm_guid", nrApmGUIDAttributeValue)
-	dp.Attributes().PutStr("client_name", clientNameAttributeValue)
 }
 
 // updateCapacity saves max length of data point slices that will be used for the slice capacity.
@@ -7321,7 +7281,7 @@ func (m *metricSqlserverSlowqueryIntervalWaitTimeMs) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricSqlserverSlowqueryIntervalWaitTimeMs) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, queryIDAttributeValue string, databaseNameAttributeValue string, normalisedSQLHashAttributeValue string, nrApmGUIDAttributeValue string, clientNameAttributeValue string) {
+func (m *metricSqlserverSlowqueryIntervalWaitTimeMs) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, queryIDAttributeValue string, databaseNameAttributeValue string, normalisedSQLHashAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -7332,8 +7292,6 @@ func (m *metricSqlserverSlowqueryIntervalWaitTimeMs) recordDataPoint(start pcomm
 	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
 	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
 	dp.Attributes().PutStr("normalised_sql_hash", normalisedSQLHashAttributeValue)
-	dp.Attributes().PutStr("nr_apm_guid", nrApmGUIDAttributeValue)
-	dp.Attributes().PutStr("client_name", clientNameAttributeValue)
 }
 
 // updateCapacity saves max length of data point slices that will be used for the slice capacity.
@@ -7376,7 +7334,7 @@ func (m *metricSqlserverSlowqueryIntervalWorkerTimeMs) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricSqlserverSlowqueryIntervalWorkerTimeMs) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, queryIDAttributeValue string, databaseNameAttributeValue string, normalisedSQLHashAttributeValue string, nrApmGUIDAttributeValue string, clientNameAttributeValue string) {
+func (m *metricSqlserverSlowqueryIntervalWorkerTimeMs) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, queryIDAttributeValue string, databaseNameAttributeValue string, normalisedSQLHashAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -7387,8 +7345,6 @@ func (m *metricSqlserverSlowqueryIntervalWorkerTimeMs) recordDataPoint(start pco
 	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
 	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
 	dp.Attributes().PutStr("normalised_sql_hash", normalisedSQLHashAttributeValue)
-	dp.Attributes().PutStr("nr_apm_guid", nrApmGUIDAttributeValue)
-	dp.Attributes().PutStr("client_name", clientNameAttributeValue)
 }
 
 // updateCapacity saves max length of data point slices that will be used for the slice capacity.
@@ -7431,7 +7387,7 @@ func (m *metricSqlserverSlowqueryQueryDetails) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricSqlserverSlowqueryQueryDetails) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, queryIDAttributeValue string, databaseNameAttributeValue string, planHandleAttributeValue string, queryTextAttributeValue string, collectionTimestampAttributeValue string, lastExecutionTimestampAttributeValue string, normalisedSQLHashAttributeValue string, nrApmGUIDAttributeValue string, clientNameAttributeValue string, newrelicEventTypeAttributeValue string) {
+func (m *metricSqlserverSlowqueryQueryDetails) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, queryIDAttributeValue string, databaseNameAttributeValue string, planHandleAttributeValue string, queryTextAttributeValue string, collectionTimestampAttributeValue string, lastExecutionTimestampAttributeValue string, normalisedSQLHashAttributeValue string, nrServiceGUIDAttributeValue string, clientNameAttributeValue string, newrelicEventTypeAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -7446,7 +7402,7 @@ func (m *metricSqlserverSlowqueryQueryDetails) recordDataPoint(start pcommon.Tim
 	dp.Attributes().PutStr("collection_timestamp", collectionTimestampAttributeValue)
 	dp.Attributes().PutStr("last_execution_timestamp", lastExecutionTimestampAttributeValue)
 	dp.Attributes().PutStr("normalised_sql_hash", normalisedSQLHashAttributeValue)
-	dp.Attributes().PutStr("nr_apm_guid", nrApmGUIDAttributeValue)
+	dp.Attributes().PutStr("nr_service_guid", nrServiceGUIDAttributeValue)
 	dp.Attributes().PutStr("client_name", clientNameAttributeValue)
 	dp.Attributes().PutStr("newrelic.event.type", newrelicEventTypeAttributeValue)
 }
@@ -10135,8 +10091,8 @@ func (mb *MetricsBuilder) RecordSqlserverAccessPageSplitsPerSecDataPoint(ts pcom
 }
 
 // RecordSqlserverActivequeryWaitTimeSecondsDataPoint adds a data point to sqlserver.activequery.wait_time_seconds metric.
-func (mb *MetricsBuilder) RecordSqlserverActivequeryWaitTimeSecondsDataPoint(ts pcommon.Timestamp, val float64, sessionIDAttributeValue int64, requestIDAttributeValue int64, databaseNameAttributeValue string, loginNameAttributeValue string, hostNameAttributeValue string, clientNameAttributeValue string, queryIDAttributeValue string, queryTextAttributeValue string, waitTypeAttributeValue string, waitTypeDescriptionAttributeValue string, waitTypeCategoryAttributeValue string, waitResourceAttributeValue string, waitResourceTypeAttributeValue string, waitResourceObjectNameAttributeValue string, lastWaitTypeAttributeValue string, lastWaitTypeDescriptionAttributeValue string, requestStartTimeAttributeValue string, collectionTimestampAttributeValue string, transactionIDAttributeValue int64, nrApmGUIDAttributeValue string, normalisedSQLHashAttributeValue string, openTransactionCountAttributeValue int64, planHandleAttributeValue string, blockingSessionIDAttributeValue int64, blockingLoginNameAttributeValue string, blockingQueryTextAttributeValue string, blockingQueryHashAttributeValue string) {
-	mb.metricSqlserverActivequeryWaitTimeSeconds.recordDataPoint(mb.startTime, ts, val, sessionIDAttributeValue, requestIDAttributeValue, databaseNameAttributeValue, loginNameAttributeValue, hostNameAttributeValue, clientNameAttributeValue, queryIDAttributeValue, queryTextAttributeValue, waitTypeAttributeValue, waitTypeDescriptionAttributeValue, waitTypeCategoryAttributeValue, waitResourceAttributeValue, waitResourceTypeAttributeValue, waitResourceObjectNameAttributeValue, lastWaitTypeAttributeValue, lastWaitTypeDescriptionAttributeValue, requestStartTimeAttributeValue, collectionTimestampAttributeValue, transactionIDAttributeValue, nrApmGUIDAttributeValue, normalisedSQLHashAttributeValue, openTransactionCountAttributeValue, planHandleAttributeValue, blockingSessionIDAttributeValue, blockingLoginNameAttributeValue, blockingQueryTextAttributeValue, blockingQueryHashAttributeValue)
+func (mb *MetricsBuilder) RecordSqlserverActivequeryWaitTimeSecondsDataPoint(ts pcommon.Timestamp, val float64, sessionIDAttributeValue int64, requestIDAttributeValue int64, databaseNameAttributeValue string, loginNameAttributeValue string, hostNameAttributeValue string, clientNameAttributeValue string, queryIDAttributeValue string, queryTextAttributeValue string, normalisedSQLHashAttributeValue string, nrServiceGUIDAttributeValue string, waitTypeAttributeValue string, waitTypeDescriptionAttributeValue string, waitTypeCategoryAttributeValue string, waitResourceAttributeValue string, waitResourceTypeAttributeValue string, waitResourceObjectNameAttributeValue string, lastWaitTypeAttributeValue string, lastWaitTypeDescriptionAttributeValue string, requestStartTimeAttributeValue string, collectionTimestampAttributeValue string, transactionIDAttributeValue int64, openTransactionCountAttributeValue int64, planHandleAttributeValue string, blockingSessionIDAttributeValue int64, blockingLoginNameAttributeValue string, blockingQueryTextAttributeValue string, blockingQueryHashAttributeValue string) {
+	mb.metricSqlserverActivequeryWaitTimeSeconds.recordDataPoint(mb.startTime, ts, val, sessionIDAttributeValue, requestIDAttributeValue, databaseNameAttributeValue, loginNameAttributeValue, hostNameAttributeValue, clientNameAttributeValue, queryIDAttributeValue, queryTextAttributeValue, normalisedSQLHashAttributeValue, nrServiceGUIDAttributeValue, waitTypeAttributeValue, waitTypeDescriptionAttributeValue, waitTypeCategoryAttributeValue, waitResourceAttributeValue, waitResourceTypeAttributeValue, waitResourceObjectNameAttributeValue, lastWaitTypeAttributeValue, lastWaitTypeDescriptionAttributeValue, requestStartTimeAttributeValue, collectionTimestampAttributeValue, transactionIDAttributeValue, openTransactionCountAttributeValue, planHandleAttributeValue, blockingSessionIDAttributeValue, blockingLoginNameAttributeValue, blockingQueryTextAttributeValue, blockingQueryHashAttributeValue)
 }
 
 // RecordSqlserverBufferCacheHitRatioDataPoint adds a data point to sqlserver.buffer.cache_hit_ratio metric.
@@ -10665,118 +10621,118 @@ func (mb *MetricsBuilder) RecordSqlserverSecurityServerRoleMembersCountDataPoint
 }
 
 // RecordSqlserverSlowqueryHistoricalAvgElapsedTimeMsDataPoint adds a data point to sqlserver.slowquery.historical_avg_elapsed_time_ms metric.
-func (mb *MetricsBuilder) RecordSqlserverSlowqueryHistoricalAvgElapsedTimeMsDataPoint(ts pcommon.Timestamp, val float64, queryIDAttributeValue string, databaseNameAttributeValue string, normalisedSQLHashAttributeValue string, nrApmGUIDAttributeValue string, clientNameAttributeValue string) {
-	mb.metricSqlserverSlowqueryHistoricalAvgElapsedTimeMs.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, databaseNameAttributeValue, normalisedSQLHashAttributeValue, nrApmGUIDAttributeValue, clientNameAttributeValue)
+func (mb *MetricsBuilder) RecordSqlserverSlowqueryHistoricalAvgElapsedTimeMsDataPoint(ts pcommon.Timestamp, val float64, queryIDAttributeValue string, databaseNameAttributeValue string, normalisedSQLHashAttributeValue string) {
+	mb.metricSqlserverSlowqueryHistoricalAvgElapsedTimeMs.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, databaseNameAttributeValue, normalisedSQLHashAttributeValue)
 }
 
 // RecordSqlserverSlowqueryHistoricalExecutionCountDataPoint adds a data point to sqlserver.slowquery.historical_execution_count metric.
-func (mb *MetricsBuilder) RecordSqlserverSlowqueryHistoricalExecutionCountDataPoint(ts pcommon.Timestamp, val int64, queryIDAttributeValue string, databaseNameAttributeValue string, normalisedSQLHashAttributeValue string, nrApmGUIDAttributeValue string, clientNameAttributeValue string) {
-	mb.metricSqlserverSlowqueryHistoricalExecutionCount.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, databaseNameAttributeValue, normalisedSQLHashAttributeValue, nrApmGUIDAttributeValue, clientNameAttributeValue)
+func (mb *MetricsBuilder) RecordSqlserverSlowqueryHistoricalExecutionCountDataPoint(ts pcommon.Timestamp, val int64, queryIDAttributeValue string, databaseNameAttributeValue string, normalisedSQLHashAttributeValue string) {
+	mb.metricSqlserverSlowqueryHistoricalExecutionCount.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, databaseNameAttributeValue, normalisedSQLHashAttributeValue)
 }
 
 // RecordSqlserverSlowqueryHistoricalLogicalReadsDataPoint adds a data point to sqlserver.slowquery.historical_logical_reads metric.
-func (mb *MetricsBuilder) RecordSqlserverSlowqueryHistoricalLogicalReadsDataPoint(ts pcommon.Timestamp, val int64, queryIDAttributeValue string, databaseNameAttributeValue string, normalisedSQLHashAttributeValue string, nrApmGUIDAttributeValue string, clientNameAttributeValue string) {
-	mb.metricSqlserverSlowqueryHistoricalLogicalReads.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, databaseNameAttributeValue, normalisedSQLHashAttributeValue, nrApmGUIDAttributeValue, clientNameAttributeValue)
+func (mb *MetricsBuilder) RecordSqlserverSlowqueryHistoricalLogicalReadsDataPoint(ts pcommon.Timestamp, val int64, queryIDAttributeValue string, databaseNameAttributeValue string, normalisedSQLHashAttributeValue string) {
+	mb.metricSqlserverSlowqueryHistoricalLogicalReads.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, databaseNameAttributeValue, normalisedSQLHashAttributeValue)
 }
 
 // RecordSqlserverSlowqueryHistoricalLogicalWritesDataPoint adds a data point to sqlserver.slowquery.historical_logical_writes metric.
-func (mb *MetricsBuilder) RecordSqlserverSlowqueryHistoricalLogicalWritesDataPoint(ts pcommon.Timestamp, val int64, queryIDAttributeValue string, databaseNameAttributeValue string, normalisedSQLHashAttributeValue string, nrApmGUIDAttributeValue string, clientNameAttributeValue string) {
-	mb.metricSqlserverSlowqueryHistoricalLogicalWrites.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, databaseNameAttributeValue, normalisedSQLHashAttributeValue, nrApmGUIDAttributeValue, clientNameAttributeValue)
+func (mb *MetricsBuilder) RecordSqlserverSlowqueryHistoricalLogicalWritesDataPoint(ts pcommon.Timestamp, val int64, queryIDAttributeValue string, databaseNameAttributeValue string, normalisedSQLHashAttributeValue string) {
+	mb.metricSqlserverSlowqueryHistoricalLogicalWrites.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, databaseNameAttributeValue, normalisedSQLHashAttributeValue)
 }
 
 // RecordSqlserverSlowqueryHistoricalPhysicalReadsDataPoint adds a data point to sqlserver.slowquery.historical_physical_reads metric.
-func (mb *MetricsBuilder) RecordSqlserverSlowqueryHistoricalPhysicalReadsDataPoint(ts pcommon.Timestamp, val int64, queryIDAttributeValue string, databaseNameAttributeValue string, normalisedSQLHashAttributeValue string, nrApmGUIDAttributeValue string, clientNameAttributeValue string) {
-	mb.metricSqlserverSlowqueryHistoricalPhysicalReads.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, databaseNameAttributeValue, normalisedSQLHashAttributeValue, nrApmGUIDAttributeValue, clientNameAttributeValue)
+func (mb *MetricsBuilder) RecordSqlserverSlowqueryHistoricalPhysicalReadsDataPoint(ts pcommon.Timestamp, val int64, queryIDAttributeValue string, databaseNameAttributeValue string, normalisedSQLHashAttributeValue string) {
+	mb.metricSqlserverSlowqueryHistoricalPhysicalReads.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, databaseNameAttributeValue, normalisedSQLHashAttributeValue)
 }
 
 // RecordSqlserverSlowqueryHistoricalRowsDataPoint adds a data point to sqlserver.slowquery.historical_rows metric.
-func (mb *MetricsBuilder) RecordSqlserverSlowqueryHistoricalRowsDataPoint(ts pcommon.Timestamp, val int64, queryIDAttributeValue string, databaseNameAttributeValue string, normalisedSQLHashAttributeValue string, nrApmGUIDAttributeValue string, clientNameAttributeValue string) {
-	mb.metricSqlserverSlowqueryHistoricalRows.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, databaseNameAttributeValue, normalisedSQLHashAttributeValue, nrApmGUIDAttributeValue, clientNameAttributeValue)
+func (mb *MetricsBuilder) RecordSqlserverSlowqueryHistoricalRowsDataPoint(ts pcommon.Timestamp, val int64, queryIDAttributeValue string, databaseNameAttributeValue string, normalisedSQLHashAttributeValue string) {
+	mb.metricSqlserverSlowqueryHistoricalRows.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, databaseNameAttributeValue, normalisedSQLHashAttributeValue)
 }
 
 // RecordSqlserverSlowqueryHistoricalWaitTimeMsDataPoint adds a data point to sqlserver.slowquery.historical_wait_time_ms metric.
-func (mb *MetricsBuilder) RecordSqlserverSlowqueryHistoricalWaitTimeMsDataPoint(ts pcommon.Timestamp, val int64, queryIDAttributeValue string, databaseNameAttributeValue string, normalisedSQLHashAttributeValue string, nrApmGUIDAttributeValue string, clientNameAttributeValue string) {
-	mb.metricSqlserverSlowqueryHistoricalWaitTimeMs.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, databaseNameAttributeValue, normalisedSQLHashAttributeValue, nrApmGUIDAttributeValue, clientNameAttributeValue)
+func (mb *MetricsBuilder) RecordSqlserverSlowqueryHistoricalWaitTimeMsDataPoint(ts pcommon.Timestamp, val int64, queryIDAttributeValue string, databaseNameAttributeValue string, normalisedSQLHashAttributeValue string) {
+	mb.metricSqlserverSlowqueryHistoricalWaitTimeMs.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, databaseNameAttributeValue, normalisedSQLHashAttributeValue)
 }
 
 // RecordSqlserverSlowqueryHistoricalWorkerTimeMsDataPoint adds a data point to sqlserver.slowquery.historical_worker_time_ms metric.
-func (mb *MetricsBuilder) RecordSqlserverSlowqueryHistoricalWorkerTimeMsDataPoint(ts pcommon.Timestamp, val int64, queryIDAttributeValue string, databaseNameAttributeValue string, normalisedSQLHashAttributeValue string, nrApmGUIDAttributeValue string, clientNameAttributeValue string) {
-	mb.metricSqlserverSlowqueryHistoricalWorkerTimeMs.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, databaseNameAttributeValue, normalisedSQLHashAttributeValue, nrApmGUIDAttributeValue, clientNameAttributeValue)
+func (mb *MetricsBuilder) RecordSqlserverSlowqueryHistoricalWorkerTimeMsDataPoint(ts pcommon.Timestamp, val int64, queryIDAttributeValue string, databaseNameAttributeValue string, normalisedSQLHashAttributeValue string) {
+	mb.metricSqlserverSlowqueryHistoricalWorkerTimeMs.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, databaseNameAttributeValue, normalisedSQLHashAttributeValue)
 }
 
 // RecordSqlserverSlowqueryIntervalAvgElapsedTimeMsDataPoint adds a data point to sqlserver.slowquery.interval_avg_elapsed_time_ms metric.
-func (mb *MetricsBuilder) RecordSqlserverSlowqueryIntervalAvgElapsedTimeMsDataPoint(ts pcommon.Timestamp, val float64, queryIDAttributeValue string, databaseNameAttributeValue string, normalisedSQLHashAttributeValue string, nrApmGUIDAttributeValue string, clientNameAttributeValue string) {
-	mb.metricSqlserverSlowqueryIntervalAvgElapsedTimeMs.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, databaseNameAttributeValue, normalisedSQLHashAttributeValue, nrApmGUIDAttributeValue, clientNameAttributeValue)
+func (mb *MetricsBuilder) RecordSqlserverSlowqueryIntervalAvgElapsedTimeMsDataPoint(ts pcommon.Timestamp, val float64, queryIDAttributeValue string, databaseNameAttributeValue string, normalisedSQLHashAttributeValue string) {
+	mb.metricSqlserverSlowqueryIntervalAvgElapsedTimeMs.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, databaseNameAttributeValue, normalisedSQLHashAttributeValue)
 }
 
 // RecordSqlserverSlowqueryIntervalAvgLogicalReadsDataPoint adds a data point to sqlserver.slowquery.interval_avg_logical_reads metric.
-func (mb *MetricsBuilder) RecordSqlserverSlowqueryIntervalAvgLogicalReadsDataPoint(ts pcommon.Timestamp, val float64, queryIDAttributeValue string, databaseNameAttributeValue string, normalisedSQLHashAttributeValue string, nrApmGUIDAttributeValue string, clientNameAttributeValue string) {
-	mb.metricSqlserverSlowqueryIntervalAvgLogicalReads.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, databaseNameAttributeValue, normalisedSQLHashAttributeValue, nrApmGUIDAttributeValue, clientNameAttributeValue)
+func (mb *MetricsBuilder) RecordSqlserverSlowqueryIntervalAvgLogicalReadsDataPoint(ts pcommon.Timestamp, val float64, queryIDAttributeValue string, databaseNameAttributeValue string, normalisedSQLHashAttributeValue string) {
+	mb.metricSqlserverSlowqueryIntervalAvgLogicalReads.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, databaseNameAttributeValue, normalisedSQLHashAttributeValue)
 }
 
 // RecordSqlserverSlowqueryIntervalAvgLogicalWritesDataPoint adds a data point to sqlserver.slowquery.interval_avg_logical_writes metric.
-func (mb *MetricsBuilder) RecordSqlserverSlowqueryIntervalAvgLogicalWritesDataPoint(ts pcommon.Timestamp, val float64, queryIDAttributeValue string, databaseNameAttributeValue string, normalisedSQLHashAttributeValue string, nrApmGUIDAttributeValue string, clientNameAttributeValue string) {
-	mb.metricSqlserverSlowqueryIntervalAvgLogicalWrites.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, databaseNameAttributeValue, normalisedSQLHashAttributeValue, nrApmGUIDAttributeValue, clientNameAttributeValue)
+func (mb *MetricsBuilder) RecordSqlserverSlowqueryIntervalAvgLogicalWritesDataPoint(ts pcommon.Timestamp, val float64, queryIDAttributeValue string, databaseNameAttributeValue string, normalisedSQLHashAttributeValue string) {
+	mb.metricSqlserverSlowqueryIntervalAvgLogicalWrites.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, databaseNameAttributeValue, normalisedSQLHashAttributeValue)
 }
 
 // RecordSqlserverSlowqueryIntervalAvgPhysicalReadsDataPoint adds a data point to sqlserver.slowquery.interval_avg_physical_reads metric.
-func (mb *MetricsBuilder) RecordSqlserverSlowqueryIntervalAvgPhysicalReadsDataPoint(ts pcommon.Timestamp, val float64, queryIDAttributeValue string, databaseNameAttributeValue string, normalisedSQLHashAttributeValue string, nrApmGUIDAttributeValue string, clientNameAttributeValue string) {
-	mb.metricSqlserverSlowqueryIntervalAvgPhysicalReads.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, databaseNameAttributeValue, normalisedSQLHashAttributeValue, nrApmGUIDAttributeValue, clientNameAttributeValue)
+func (mb *MetricsBuilder) RecordSqlserverSlowqueryIntervalAvgPhysicalReadsDataPoint(ts pcommon.Timestamp, val float64, queryIDAttributeValue string, databaseNameAttributeValue string, normalisedSQLHashAttributeValue string) {
+	mb.metricSqlserverSlowqueryIntervalAvgPhysicalReads.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, databaseNameAttributeValue, normalisedSQLHashAttributeValue)
 }
 
 // RecordSqlserverSlowqueryIntervalAvgRowsDataPoint adds a data point to sqlserver.slowquery.interval_avg_rows metric.
-func (mb *MetricsBuilder) RecordSqlserverSlowqueryIntervalAvgRowsDataPoint(ts pcommon.Timestamp, val float64, queryIDAttributeValue string, databaseNameAttributeValue string, normalisedSQLHashAttributeValue string, nrApmGUIDAttributeValue string, clientNameAttributeValue string) {
-	mb.metricSqlserverSlowqueryIntervalAvgRows.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, databaseNameAttributeValue, normalisedSQLHashAttributeValue, nrApmGUIDAttributeValue, clientNameAttributeValue)
+func (mb *MetricsBuilder) RecordSqlserverSlowqueryIntervalAvgRowsDataPoint(ts pcommon.Timestamp, val float64, queryIDAttributeValue string, databaseNameAttributeValue string, normalisedSQLHashAttributeValue string) {
+	mb.metricSqlserverSlowqueryIntervalAvgRows.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, databaseNameAttributeValue, normalisedSQLHashAttributeValue)
 }
 
 // RecordSqlserverSlowqueryIntervalAvgWaitTimeMsDataPoint adds a data point to sqlserver.slowquery.interval_avg_wait_time_ms metric.
-func (mb *MetricsBuilder) RecordSqlserverSlowqueryIntervalAvgWaitTimeMsDataPoint(ts pcommon.Timestamp, val float64, queryIDAttributeValue string, databaseNameAttributeValue string, normalisedSQLHashAttributeValue string, nrApmGUIDAttributeValue string, clientNameAttributeValue string) {
-	mb.metricSqlserverSlowqueryIntervalAvgWaitTimeMs.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, databaseNameAttributeValue, normalisedSQLHashAttributeValue, nrApmGUIDAttributeValue, clientNameAttributeValue)
+func (mb *MetricsBuilder) RecordSqlserverSlowqueryIntervalAvgWaitTimeMsDataPoint(ts pcommon.Timestamp, val float64, queryIDAttributeValue string, databaseNameAttributeValue string, normalisedSQLHashAttributeValue string) {
+	mb.metricSqlserverSlowqueryIntervalAvgWaitTimeMs.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, databaseNameAttributeValue, normalisedSQLHashAttributeValue)
 }
 
 // RecordSqlserverSlowqueryIntervalAvgWorkerTimeMsDataPoint adds a data point to sqlserver.slowquery.interval_avg_worker_time_ms metric.
-func (mb *MetricsBuilder) RecordSqlserverSlowqueryIntervalAvgWorkerTimeMsDataPoint(ts pcommon.Timestamp, val float64, queryIDAttributeValue string, databaseNameAttributeValue string, normalisedSQLHashAttributeValue string, nrApmGUIDAttributeValue string, clientNameAttributeValue string) {
-	mb.metricSqlserverSlowqueryIntervalAvgWorkerTimeMs.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, databaseNameAttributeValue, normalisedSQLHashAttributeValue, nrApmGUIDAttributeValue, clientNameAttributeValue)
+func (mb *MetricsBuilder) RecordSqlserverSlowqueryIntervalAvgWorkerTimeMsDataPoint(ts pcommon.Timestamp, val float64, queryIDAttributeValue string, databaseNameAttributeValue string, normalisedSQLHashAttributeValue string) {
+	mb.metricSqlserverSlowqueryIntervalAvgWorkerTimeMs.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, databaseNameAttributeValue, normalisedSQLHashAttributeValue)
 }
 
 // RecordSqlserverSlowqueryIntervalExecutionCountDataPoint adds a data point to sqlserver.slowquery.interval_execution_count metric.
-func (mb *MetricsBuilder) RecordSqlserverSlowqueryIntervalExecutionCountDataPoint(ts pcommon.Timestamp, val int64, queryIDAttributeValue string, databaseNameAttributeValue string, normalisedSQLHashAttributeValue string, nrApmGUIDAttributeValue string, clientNameAttributeValue string) {
-	mb.metricSqlserverSlowqueryIntervalExecutionCount.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, databaseNameAttributeValue, normalisedSQLHashAttributeValue, nrApmGUIDAttributeValue, clientNameAttributeValue)
+func (mb *MetricsBuilder) RecordSqlserverSlowqueryIntervalExecutionCountDataPoint(ts pcommon.Timestamp, val int64, queryIDAttributeValue string, databaseNameAttributeValue string, normalisedSQLHashAttributeValue string) {
+	mb.metricSqlserverSlowqueryIntervalExecutionCount.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, databaseNameAttributeValue, normalisedSQLHashAttributeValue)
 }
 
 // RecordSqlserverSlowqueryIntervalLogicalReadsDataPoint adds a data point to sqlserver.slowquery.interval_logical_reads metric.
-func (mb *MetricsBuilder) RecordSqlserverSlowqueryIntervalLogicalReadsDataPoint(ts pcommon.Timestamp, val int64, queryIDAttributeValue string, databaseNameAttributeValue string, normalisedSQLHashAttributeValue string, nrApmGUIDAttributeValue string, clientNameAttributeValue string) {
-	mb.metricSqlserverSlowqueryIntervalLogicalReads.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, databaseNameAttributeValue, normalisedSQLHashAttributeValue, nrApmGUIDAttributeValue, clientNameAttributeValue)
+func (mb *MetricsBuilder) RecordSqlserverSlowqueryIntervalLogicalReadsDataPoint(ts pcommon.Timestamp, val int64, queryIDAttributeValue string, databaseNameAttributeValue string, normalisedSQLHashAttributeValue string) {
+	mb.metricSqlserverSlowqueryIntervalLogicalReads.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, databaseNameAttributeValue, normalisedSQLHashAttributeValue)
 }
 
 // RecordSqlserverSlowqueryIntervalLogicalWritesDataPoint adds a data point to sqlserver.slowquery.interval_logical_writes metric.
-func (mb *MetricsBuilder) RecordSqlserverSlowqueryIntervalLogicalWritesDataPoint(ts pcommon.Timestamp, val int64, queryIDAttributeValue string, databaseNameAttributeValue string, normalisedSQLHashAttributeValue string, nrApmGUIDAttributeValue string, clientNameAttributeValue string) {
-	mb.metricSqlserverSlowqueryIntervalLogicalWrites.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, databaseNameAttributeValue, normalisedSQLHashAttributeValue, nrApmGUIDAttributeValue, clientNameAttributeValue)
+func (mb *MetricsBuilder) RecordSqlserverSlowqueryIntervalLogicalWritesDataPoint(ts pcommon.Timestamp, val int64, queryIDAttributeValue string, databaseNameAttributeValue string, normalisedSQLHashAttributeValue string) {
+	mb.metricSqlserverSlowqueryIntervalLogicalWrites.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, databaseNameAttributeValue, normalisedSQLHashAttributeValue)
 }
 
 // RecordSqlserverSlowqueryIntervalPhysicalReadsDataPoint adds a data point to sqlserver.slowquery.interval_physical_reads metric.
-func (mb *MetricsBuilder) RecordSqlserverSlowqueryIntervalPhysicalReadsDataPoint(ts pcommon.Timestamp, val int64, queryIDAttributeValue string, databaseNameAttributeValue string, normalisedSQLHashAttributeValue string, nrApmGUIDAttributeValue string, clientNameAttributeValue string) {
-	mb.metricSqlserverSlowqueryIntervalPhysicalReads.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, databaseNameAttributeValue, normalisedSQLHashAttributeValue, nrApmGUIDAttributeValue, clientNameAttributeValue)
+func (mb *MetricsBuilder) RecordSqlserverSlowqueryIntervalPhysicalReadsDataPoint(ts pcommon.Timestamp, val int64, queryIDAttributeValue string, databaseNameAttributeValue string, normalisedSQLHashAttributeValue string) {
+	mb.metricSqlserverSlowqueryIntervalPhysicalReads.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, databaseNameAttributeValue, normalisedSQLHashAttributeValue)
 }
 
 // RecordSqlserverSlowqueryIntervalRowsDataPoint adds a data point to sqlserver.slowquery.interval_rows metric.
-func (mb *MetricsBuilder) RecordSqlserverSlowqueryIntervalRowsDataPoint(ts pcommon.Timestamp, val int64, queryIDAttributeValue string, databaseNameAttributeValue string, normalisedSQLHashAttributeValue string, nrApmGUIDAttributeValue string, clientNameAttributeValue string) {
-	mb.metricSqlserverSlowqueryIntervalRows.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, databaseNameAttributeValue, normalisedSQLHashAttributeValue, nrApmGUIDAttributeValue, clientNameAttributeValue)
+func (mb *MetricsBuilder) RecordSqlserverSlowqueryIntervalRowsDataPoint(ts pcommon.Timestamp, val int64, queryIDAttributeValue string, databaseNameAttributeValue string, normalisedSQLHashAttributeValue string) {
+	mb.metricSqlserverSlowqueryIntervalRows.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, databaseNameAttributeValue, normalisedSQLHashAttributeValue)
 }
 
 // RecordSqlserverSlowqueryIntervalWaitTimeMsDataPoint adds a data point to sqlserver.slowquery.interval_wait_time_ms metric.
-func (mb *MetricsBuilder) RecordSqlserverSlowqueryIntervalWaitTimeMsDataPoint(ts pcommon.Timestamp, val int64, queryIDAttributeValue string, databaseNameAttributeValue string, normalisedSQLHashAttributeValue string, nrApmGUIDAttributeValue string, clientNameAttributeValue string) {
-	mb.metricSqlserverSlowqueryIntervalWaitTimeMs.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, databaseNameAttributeValue, normalisedSQLHashAttributeValue, nrApmGUIDAttributeValue, clientNameAttributeValue)
+func (mb *MetricsBuilder) RecordSqlserverSlowqueryIntervalWaitTimeMsDataPoint(ts pcommon.Timestamp, val int64, queryIDAttributeValue string, databaseNameAttributeValue string, normalisedSQLHashAttributeValue string) {
+	mb.metricSqlserverSlowqueryIntervalWaitTimeMs.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, databaseNameAttributeValue, normalisedSQLHashAttributeValue)
 }
 
 // RecordSqlserverSlowqueryIntervalWorkerTimeMsDataPoint adds a data point to sqlserver.slowquery.interval_worker_time_ms metric.
-func (mb *MetricsBuilder) RecordSqlserverSlowqueryIntervalWorkerTimeMsDataPoint(ts pcommon.Timestamp, val int64, queryIDAttributeValue string, databaseNameAttributeValue string, normalisedSQLHashAttributeValue string, nrApmGUIDAttributeValue string, clientNameAttributeValue string) {
-	mb.metricSqlserverSlowqueryIntervalWorkerTimeMs.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, databaseNameAttributeValue, normalisedSQLHashAttributeValue, nrApmGUIDAttributeValue, clientNameAttributeValue)
+func (mb *MetricsBuilder) RecordSqlserverSlowqueryIntervalWorkerTimeMsDataPoint(ts pcommon.Timestamp, val int64, queryIDAttributeValue string, databaseNameAttributeValue string, normalisedSQLHashAttributeValue string) {
+	mb.metricSqlserverSlowqueryIntervalWorkerTimeMs.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, databaseNameAttributeValue, normalisedSQLHashAttributeValue)
 }
 
 // RecordSqlserverSlowqueryQueryDetailsDataPoint adds a data point to sqlserver.slowquery.query_details metric.
-func (mb *MetricsBuilder) RecordSqlserverSlowqueryQueryDetailsDataPoint(ts pcommon.Timestamp, val int64, queryIDAttributeValue string, databaseNameAttributeValue string, planHandleAttributeValue string, queryTextAttributeValue string, collectionTimestampAttributeValue string, lastExecutionTimestampAttributeValue string, normalisedSQLHashAttributeValue string, nrApmGUIDAttributeValue string, clientNameAttributeValue string, newrelicEventTypeAttributeValue string) {
-	mb.metricSqlserverSlowqueryQueryDetails.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, databaseNameAttributeValue, planHandleAttributeValue, queryTextAttributeValue, collectionTimestampAttributeValue, lastExecutionTimestampAttributeValue, normalisedSQLHashAttributeValue, nrApmGUIDAttributeValue, clientNameAttributeValue, newrelicEventTypeAttributeValue)
+func (mb *MetricsBuilder) RecordSqlserverSlowqueryQueryDetailsDataPoint(ts pcommon.Timestamp, val int64, queryIDAttributeValue string, databaseNameAttributeValue string, planHandleAttributeValue string, queryTextAttributeValue string, collectionTimestampAttributeValue string, lastExecutionTimestampAttributeValue string, normalisedSQLHashAttributeValue string, nrServiceGUIDAttributeValue string, clientNameAttributeValue string, newrelicEventTypeAttributeValue string) {
+	mb.metricSqlserverSlowqueryQueryDetails.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, databaseNameAttributeValue, planHandleAttributeValue, queryTextAttributeValue, collectionTimestampAttributeValue, lastExecutionTimestampAttributeValue, normalisedSQLHashAttributeValue, nrServiceGUIDAttributeValue, clientNameAttributeValue, newrelicEventTypeAttributeValue)
 }
 
 // RecordSqlserverStatsConnectionsDataPoint adds a data point to sqlserver.stats.connections metric.

@@ -9,19 +9,10 @@ WITH StatementDetails AS (
 	SELECT
 		qs.plan_handle,
 		qs.sql_handle,
-		-- Extract query text using Microsoft's official offset logic (no +1 on length)
-		-- Reference: https://learn.microsoft.com/en-us/sql/relational-databases/system-dynamic-management-views/sys-dm-exec-query-stats-transact-sql
-		SUBSTRING(
-			qt.text,
-			(qs.statement_start_offset / 2) + 1,
-			(
-				CASE
-					qs.statement_end_offset
-					WHEN -1 THEN DATALENGTH(qt.text)
-					ELSE qs.statement_end_offset
-				END - qs.statement_start_offset
-			) / 2
-		) AS query_text,
+		-- Use FULL query text to preserve NR metadata comments at the beginning
+		-- NOTE: Using qt.text instead of SUBSTRING to capture comments that precede the statement
+		-- The statement_start_offset would skip over leading comments, losing APM correlation data
+		qt.text AS query_text,
 		-- query_id: SQL Server's query_hash - used for correlating with active query metrics
 		qs.query_hash AS query_id,
 		qs.creation_time,
@@ -154,18 +145,9 @@ SELECT TOP (@Limit)
     r_wait.query_hash AS query_id,
 
     -- C2. QUERY TEXT (Required for APM metadata extraction)
-    -- Extract the current query text using sql_handle and statement offsets
-    SUBSTRING(
-        st_wait.text,
-        (r_wait.statement_start_offset / 2) + 1,
-        (
-            CASE
-                r_wait.statement_end_offset
-                WHEN -1 THEN DATALENGTH(st_wait.text)
-                ELSE r_wait.statement_end_offset
-            END - r_wait.statement_start_offset
-        ) / 2
-    ) AS query_text,
+    -- Use FULL query text to preserve NR metadata comments at the beginning
+    -- NOTE: Using st_wait.text instead of SUBSTRING to capture comments that precede the statement
+    st_wait.text AS query_text,
 
     -- D. WAIT DETAILS (Required by NRQL Query 1)
     r_wait.wait_type AS wait_type,

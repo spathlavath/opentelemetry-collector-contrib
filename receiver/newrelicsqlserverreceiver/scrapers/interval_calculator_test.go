@@ -42,28 +42,28 @@ func TestIntervalCalculatorNewMetrics(t *testing.T) {
 				TotalLogicalWrites: ptrInt64(500),
 			},
 			expectedFirstScrapeMetrics: SimplifiedIntervalMetrics{
-				IntervalExecutionCount:     100,
-				HistoricalExecutionCount:   100,
-				IntervalWorkerTimeMs:       8000,
-				IntervalAvgWorkerTimeMs:    80.0,     // 8000 / 100
-				IntervalRows:               5000,
-				IntervalAvgRows:            50.0,     // 5000 / 100
-				IntervalLogicalReads:       10000,
-				IntervalAvgLogicalReads:    100.0,    // 10000 / 100
-				IntervalPhysicalReads:      1000,
-				IntervalAvgPhysicalReads:   10.0,     // 1000 / 100
-				IntervalLogicalWrites:      500,
-				IntervalAvgLogicalWrites:   5.0,      // 500 / 100
-				IntervalWaitTimeMs:         2000,     // 10000 - 8000
-				IntervalAvgWaitTimeMs:      20.0,     // 2000 / 100
-				HistoricalWorkerTimeMs:     8000,
-				HistoricalRows:             5000,
-				HistoricalLogicalReads:     10000,
-				HistoricalPhysicalReads:    1000,
-				HistoricalLogicalWrites:    500,
-				HistoricalWaitTimeMs:       2000,
-				IsFirstScrape:              true,
-				HasNewExecutions:           true,
+				IntervalExecutionCount:   100,
+				HistoricalExecutionCount: 100,
+				IntervalWorkerTimeMs:     8000,
+				IntervalAvgWorkerTimeMs:  80.0, // 8000 / 100
+				IntervalRows:             5000,
+				IntervalAvgRows:          50.0, // 5000 / 100
+				IntervalLogicalReads:     10000,
+				IntervalAvgLogicalReads:  100.0, // 10000 / 100
+				IntervalPhysicalReads:    1000,
+				IntervalAvgPhysicalReads: 10.0, // 1000 / 100
+				IntervalLogicalWrites:    500,
+				IntervalAvgLogicalWrites: 5.0,  // 500 / 100
+				IntervalWaitTimeMs:       2000, // 10000 - 8000
+				IntervalAvgWaitTimeMs:    20.0, // 2000 / 100
+				HistoricalWorkerTimeMs:   8000,
+				HistoricalRows:           5000,
+				HistoricalLogicalReads:   10000,
+				HistoricalPhysicalReads:  1000,
+				HistoricalLogicalWrites:  500,
+				HistoricalWaitTimeMs:     2000,
+				IsFirstScrape:            true,
+				HasNewExecutions:         true,
 			},
 		},
 		{
@@ -80,69 +80,69 @@ func TestIntervalCalculatorNewMetrics(t *testing.T) {
 				TotalLogicalWrites: ptrInt64(500),
 			},
 			expectedFirstScrapeMetrics: SimplifiedIntervalMetrics{
-				IntervalExecutionCount:     100,
-				HistoricalExecutionCount:   100,
-				IntervalWorkerTimeMs:       8000,
-				IntervalAvgWorkerTimeMs:    80.0,
-				IntervalRows:               5000,
-				IntervalAvgRows:            50.0,
-				IntervalLogicalReads:       10000,
-				IntervalAvgLogicalReads:    100.0,
-				IntervalPhysicalReads:      1000,
-				IntervalAvgPhysicalReads:   10.0,
-				IntervalLogicalWrites:      500,
-				IntervalAvgLogicalWrites:   5.0,
-				IntervalWaitTimeMs:         2000,
-				IntervalAvgWaitTimeMs:      20.0,
-				HistoricalWorkerTimeMs:     8000,
-				HistoricalRows:             5000,
-				HistoricalLogicalReads:     10000,
-				HistoricalPhysicalReads:    1000,
-				HistoricalLogicalWrites:    500,
-				HistoricalWaitTimeMs:       2000,
-				IsFirstScrape:              true,
-				HasNewExecutions:           true,
+				IntervalExecutionCount:   100,
+				HistoricalExecutionCount: 100,
+				IntervalWorkerTimeMs:     8000,
+				IntervalAvgWorkerTimeMs:  80.0,
+				IntervalRows:             5000,
+				IntervalAvgRows:          50.0,
+				IntervalLogicalReads:     10000,
+				IntervalAvgLogicalReads:  100.0,
+				IntervalPhysicalReads:    1000,
+				IntervalAvgPhysicalReads: 10.0,
+				IntervalLogicalWrites:    500,
+				IntervalAvgLogicalWrites: 5.0,
+				IntervalWaitTimeMs:       2000,
+				IntervalAvgWaitTimeMs:    20.0,
+				HistoricalWorkerTimeMs:   8000,
+				HistoricalRows:           5000,
+				HistoricalLogicalReads:   10000,
+				HistoricalPhysicalReads:  1000,
+				HistoricalLogicalWrites:  500,
+				HistoricalWaitTimeMs:     2000,
+				IsFirstScrape:            true,
+				HasNewExecutions:         true,
 			},
 			secondScrapeQuery: models.SlowQuery{
 				QueryID:            ptrQueryID("0x2222222222222222"),
 				PlanHandle:         ptrQueryID("0xBBBBBBBBBBBBBBBB"),
-				ExecutionCount:     ptrInt64(120),      // +20 executions
+				ExecutionCount:     ptrInt64(120),       // +20 executions
 				TotalElapsedTimeMS: ptrFloat64(14000.0), // +4000 ms
 				TotalWorkerTimeMS:  ptrFloat64(11000.0), // +3000 ms CPU
-				TotalRows:          ptrInt64(6200),     // +1200 rows
-				TotalLogicalReads:  ptrInt64(14000),    // +4000 reads
-				TotalPhysicalReads: ptrInt64(1400),     // +400 reads
-				TotalLogicalWrites: ptrInt64(700),      // +200 writes
+				TotalRows:          ptrInt64(6200),      // +1200 rows
+				TotalLogicalReads:  ptrInt64(14000),     // +4000 reads
+				TotalPhysicalReads: ptrInt64(1400),      // +400 reads
+				TotalLogicalWrites: ptrInt64(700),       // +200 writes
 			},
-			expectedIntervalWorkerTime:    3000,  // 11000 - 8000
-			expectedIntervalRows:          1200,  // 6200 - 5000
-			expectedIntervalLogicalReads:  4000,  // 14000 - 10000
-			expectedIntervalPhysicalReads: 400,   // 1400 - 1000
-			expectedIntervalLogicalWrites: 200,   // 700 - 500
-			expectedIntervalWaitTime:      1000,  // (14000-11000) - (10000-8000) = 3000 - 2000
+			expectedIntervalWorkerTime:    3000, // 11000 - 8000
+			expectedIntervalRows:          1200, // 6200 - 5000
+			expectedIntervalLogicalReads:  4000, // 14000 - 10000
+			expectedIntervalPhysicalReads: 400,  // 1400 - 1000
+			expectedIntervalLogicalWrites: 200,  // 700 - 500
+			expectedIntervalWaitTime:      1000, // (14000-11000) - (10000-8000) = 3000 - 2000
 			expectedSecondScrapeMetrics: SimplifiedIntervalMetrics{
-				IntervalExecutionCount:     20,
-				HistoricalExecutionCount:   120,
-				IntervalWorkerTimeMs:       3000,
-				IntervalAvgWorkerTimeMs:    150.0,   // 3000 / 20
-				IntervalRows:               1200,
-				IntervalAvgRows:            60.0,    // 1200 / 20
-				IntervalLogicalReads:       4000,
-				IntervalAvgLogicalReads:    200.0,   // 4000 / 20
-				IntervalPhysicalReads:      400,
-				IntervalAvgPhysicalReads:   20.0,    // 400 / 20
-				IntervalLogicalWrites:      200,
-				IntervalAvgLogicalWrites:   10.0,    // 200 / 20
-				IntervalWaitTimeMs:         1000,    // delta_wait = delta_elapsed - delta_worker = 4000 - 3000
-				IntervalAvgWaitTimeMs:      50.0,    // 1000 / 20
-				HistoricalWorkerTimeMs:     11000,
-				HistoricalRows:             6200,
-				HistoricalLogicalReads:     14000,
-				HistoricalPhysicalReads:    1400,
-				HistoricalLogicalWrites:    700,
-				HistoricalWaitTimeMs:       3000,   // 14000 - 11000
-				IsFirstScrape:              false,
-				HasNewExecutions:           true,
+				IntervalExecutionCount:   20,
+				HistoricalExecutionCount: 120,
+				IntervalWorkerTimeMs:     3000,
+				IntervalAvgWorkerTimeMs:  150.0, // 3000 / 20
+				IntervalRows:             1200,
+				IntervalAvgRows:          60.0, // 1200 / 20
+				IntervalLogicalReads:     4000,
+				IntervalAvgLogicalReads:  200.0, // 4000 / 20
+				IntervalPhysicalReads:    400,
+				IntervalAvgPhysicalReads: 20.0, // 400 / 20
+				IntervalLogicalWrites:    200,
+				IntervalAvgLogicalWrites: 10.0, // 200 / 20
+				IntervalWaitTimeMs:       1000, // delta_wait = delta_elapsed - delta_worker = 4000 - 3000
+				IntervalAvgWaitTimeMs:    50.0, // 1000 / 20
+				HistoricalWorkerTimeMs:   11000,
+				HistoricalRows:           6200,
+				HistoricalLogicalReads:   14000,
+				HistoricalPhysicalReads:  1400,
+				HistoricalLogicalWrites:  700,
+				HistoricalWaitTimeMs:     3000, // 14000 - 11000
+				IsFirstScrape:            false,
+				HasNewExecutions:         true,
 			},
 		},
 	}
@@ -218,13 +218,13 @@ func TestWaitTimeCalculation(t *testing.T) {
 	now := time.Now()
 
 	tests := []struct {
-		name                      string
-		totalElapsed              float64
-		totalWorker               float64
-		expectedHistoricalWait    int64
-		expectedIntervalWait      int64 // for second scrape
-		secondTotalElapsed        float64
-		secondTotalWorker         float64
+		name                   string
+		totalElapsed           float64
+		totalWorker            float64
+		expectedHistoricalWait int64
+		expectedIntervalWait   int64 // for second scrape
+		secondTotalElapsed     float64
+		secondTotalWorker      float64
 	}{
 		{
 			name:                   "Equal elapsed and worker (no wait)",

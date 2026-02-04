@@ -22,7 +22,7 @@ func TestSlowQueryModel(t *testing.T) {
 			QueryText:                &queryText,
 			QueryID:                  &queryID,
 			ClientName:               &clientName,
-			NrApmGuid:                &nrApmGuid,
+			NrServiceGuid:                &nrApmGuid,
 			NormalisedSqlHash:        &sqlHash,
 			AvgElapsedTimeMS:         &avgElapsedTime,
 			ExecutionCount:           &executionCount,
@@ -40,8 +40,8 @@ func TestSlowQueryModel(t *testing.T) {
 		assert.NotNil(t, slowQuery.ClientName)
 		assert.Equal(t, clientName, *slowQuery.ClientName)
 
-		assert.NotNil(t, slowQuery.NrApmGuid)
-		assert.Equal(t, nrApmGuid, *slowQuery.NrApmGuid)
+		assert.NotNil(t, slowQuery.NrServiceGuid)
+		assert.Equal(t, nrApmGuid, *slowQuery.NrServiceGuid)
 
 		assert.NotNil(t, slowQuery.NormalisedSqlHash)
 		assert.Equal(t, sqlHash, *slowQuery.NormalisedSqlHash)
@@ -66,18 +66,18 @@ func TestSlowQueryModel(t *testing.T) {
 		slowQuery := SlowQuery{
 			QueryText:         &queryText,
 			ClientName:        nil,
-			NrApmGuid:         nil,
+			NrServiceGuid:         nil,
 			NormalisedSqlHash: nil,
 		}
 
 		// Verify metadata fields can be nil
 		assert.NotNil(t, slowQuery.QueryText)
 		assert.Nil(t, slowQuery.ClientName)
-		assert.Nil(t, slowQuery.NrApmGuid)
+		assert.Nil(t, slowQuery.NrServiceGuid)
 		assert.Nil(t, slowQuery.NormalisedSqlHash)
 	})
 
-	t.Run("SlowQuery model with empty client name and nr_apm_guid", func(t *testing.T) {
+	t.Run("SlowQuery model with empty client name and nr_service_guid", func(t *testing.T) {
 		queryText := "SELECT * FROM PRODUCTS"
 		emptyClient := ""
 		emptyGuid := ""
@@ -86,7 +86,7 @@ func TestSlowQueryModel(t *testing.T) {
 		slowQuery := SlowQuery{
 			QueryText:         &queryText,
 			ClientName:        &emptyClient,
-			NrApmGuid:         &emptyGuid,
+			NrServiceGuid:         &emptyGuid,
 			NormalisedSqlHash: &sqlHash,
 		}
 
@@ -94,8 +94,8 @@ func TestSlowQueryModel(t *testing.T) {
 		assert.NotNil(t, slowQuery.ClientName)
 		assert.Equal(t, "", *slowQuery.ClientName)
 
-		assert.NotNil(t, slowQuery.NrApmGuid)
-		assert.Equal(t, "", *slowQuery.NrApmGuid)
+		assert.NotNil(t, slowQuery.NrServiceGuid)
+		assert.Equal(t, "", *slowQuery.NrServiceGuid)
 
 		assert.NotNil(t, slowQuery.NormalisedSqlHash)
 		assert.NotEmpty(t, *slowQuery.NormalisedSqlHash)
@@ -118,7 +118,7 @@ func TestActiveRunningQueryModel(t *testing.T) {
 			WaitType:          &waitType,
 			WaitTimeS:         &waitTime,
 			ClientName:        &clientName,
-			NrApmGuid:         &nrApmGuid,
+			NrServiceGuid:         &nrApmGuid,
 			NormalisedSqlHash: &sqlHash,
 		}
 
@@ -137,8 +137,8 @@ func TestActiveRunningQueryModel(t *testing.T) {
 		assert.NotNil(t, activeQuery.ClientName)
 		assert.Equal(t, clientName, *activeQuery.ClientName)
 
-		assert.NotNil(t, activeQuery.NrApmGuid)
-		assert.Equal(t, nrApmGuid, *activeQuery.NrApmGuid)
+		assert.NotNil(t, activeQuery.NrServiceGuid)
+		assert.Equal(t, nrApmGuid, *activeQuery.NrServiceGuid)
 
 		assert.NotNil(t, activeQuery.NormalisedSqlHash)
 		assert.Equal(t, sqlHash, *activeQuery.NormalisedSqlHash)
@@ -232,11 +232,11 @@ func TestModelTagging(t *testing.T) {
 		sqlHash := "abcd1234efgh5678ijkl9012mnop3456"
 
 		slowQuery.ClientName = &clientName
-		slowQuery.NrApmGuid = &nrApmGuid
+		slowQuery.NrServiceGuid = &nrApmGuid
 		slowQuery.NormalisedSqlHash = &sqlHash
 
 		assert.Equal(t, "TestApp", *slowQuery.ClientName)
-		assert.Equal(t, "MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI5MjMzNDQwNw", *slowQuery.NrApmGuid)
+		assert.Equal(t, "MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI5MjMzNDQwNw", *slowQuery.NrServiceGuid)
 		assert.Equal(t, "abcd1234efgh5678ijkl9012mnop3456", *slowQuery.NormalisedSqlHash)
 	})
 }
@@ -265,7 +265,7 @@ func TestNilSafetyInModels(t *testing.T) {
 			QueryText:         nil,
 			QueryID:           nil,
 			ClientName:        nil,
-			NrApmGuid:         nil,
+			NrServiceGuid:         nil,
 			NormalisedSqlHash: nil,
 		}
 
@@ -273,7 +273,7 @@ func TestNilSafetyInModels(t *testing.T) {
 		assert.Nil(t, slowQuery.QueryText)
 		assert.Nil(t, slowQuery.QueryID)
 		assert.Nil(t, slowQuery.ClientName)
-		assert.Nil(t, slowQuery.NrApmGuid)
+		assert.Nil(t, slowQuery.NrServiceGuid)
 		assert.Nil(t, slowQuery.NormalisedSqlHash)
 
 		// Setting values should work

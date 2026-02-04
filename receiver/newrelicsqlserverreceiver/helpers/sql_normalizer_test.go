@@ -201,6 +201,36 @@ func TestExtractNewRelicMetadata(t *testing.T) {
 			expectedNrService: "order-service",
 		},
 		{
+			name:              "nr_service_guid variant with nr_service (with space)",
+			input:             `/* nr_service_guid="MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI5MjMzNDQwNw", nr_service="order-service" */ SELECT * FROM orders`,
+			expectedNrApmGuid: "MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI5MjMzNDQwNw",
+			expectedNrService: "order-service",
+		},
+		{
+			name:              "nr_service_guid variant with nr_service (no space after comma)",
+			input:             `/* nr_service_guid="MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI5MjMzNDQwNw",nr_service="order-service" */ SELECT * FROM orders`,
+			expectedNrApmGuid: "MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI5MjMzNDQwNw",
+			expectedNrService: "order-service",
+		},
+		{
+			name:              "nr_service_guid only (no nr_service)",
+			input:             `/* nr_service_guid="MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI5MjMzNDQwNw" */ SELECT * FROM orders`,
+			expectedNrApmGuid: "MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI5MjMzNDQwNw",
+			expectedNrService: "",
+		},
+		{
+			name:              "reversed order (nr_service first, nr_service_guid second) with space",
+			input:             `/* nr_service="order-service", nr_service_guid="MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI5MjMzNDQwNw" */ SELECT * FROM orders`,
+			expectedNrApmGuid: "MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI5MjMzNDQwNw",
+			expectedNrService: "order-service",
+		},
+		{
+			name:              "reversed order (nr_service first, nr_service_guid second) no space after comma",
+			input:             `/* nr_service="order-service",nr_service_guid="MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI5MjMzNDQwNw" */ SELECT * FROM orders`,
+			expectedNrApmGuid: "MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI5MjMzNDQwNw",
+			expectedNrService: "order-service",
+		},
+		{
 			name:              "nr_apm_guid only",
 			input:             `/* nr_apm_guid="MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI5MjMzNDQwNw" */ SELECT * FROM orders`,
 			expectedNrApmGuid: "MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI5MjMzNDQwNw",

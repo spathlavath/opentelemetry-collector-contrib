@@ -56,7 +56,8 @@ type SlowQuery struct {
 
 	// New Relic Metadata Extraction (calculated in-memory from query comments, not from DB)
 	// These fields enable cross-language query correlation and APM integration
-	NrApmGuid         *string `db:"-" metric_name:"nr_apm_guid" source_type:"attribute"`         // Extracted from nr_apm_guid comment (APM entity GUID)
+	// These are ONLY emitted in query_details metric (converted to logs), not in performance metrics
+	NrServiceGuid     *string `db:"-" metric_name:"nr_service_guid" source_type:"attribute"`     // Extracted from nr_apm_guid comment (APM service GUID)
 	ClientName        *string `db:"-" metric_name:"client_name" source_type:"attribute"`         // Extracted from nr_service comment
 	NormalisedSqlHash *string `db:"-" metric_name:"normalised_sql_hash" source_type:"attribute"` // MD5 hash of normalized SQL for cross-language correlation
 }
@@ -198,7 +199,8 @@ type ActiveRunningQuery struct {
 
 	// K. APM Integration (calculated in-memory from query comments, not from DB)
 	// These fields enable cross-language query correlation for active queries
-	NrApmGuid         *string `db:"-" metric_name:"nr_apm_guid" source_type:"attribute"`         // Extracted from nr_apm_guid comment (APM entity GUID)
+	// These are NOT emitted as metric dimensions - they are only stored in query_details (logs)
+	NrServiceGuid     *string `db:"-" metric_name:"nr_service_guid" source_type:"attribute"`     // Extracted from nr_apm_guid comment (APM service GUID)
 	ClientName        *string `db:"-" metric_name:"client_name" source_type:"attribute"`         // Extracted from nr_service comment
 	NormalisedSqlHash *string `db:"-" metric_name:"normalised_sql_hash" source_type:"attribute"` // MD5 hash of normalized SQL for cross-language correlation
 }

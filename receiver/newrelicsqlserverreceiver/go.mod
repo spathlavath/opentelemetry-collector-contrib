@@ -1,6 +1,6 @@
 module github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicsqlserverreceiver
 
-go 1.25.5
+go 1.24.0
 
 require (
 	github.com/google/go-cmp v0.7.0
@@ -19,6 +19,7 @@ require (
 	go.opentelemetry.io/collector/scraper v0.135.0
 	go.opentelemetry.io/collector/scraper/scraperhelper v0.135.0
 	go.uber.org/goleak v1.3.0
+	go.uber.org/multierr v1.11.0
 	go.uber.org/zap v1.27.1
 )
 
@@ -66,7 +67,6 @@ require (
 	go.opentelemetry.io/otel/sdk v1.38.0 // indirect
 	go.opentelemetry.io/otel/sdk/metric v1.38.0 // indirect
 	go.opentelemetry.io/otel/trace v1.38.0 // indirect
-	go.uber.org/multierr v1.11.0 // indirect
 	go.yaml.in/yaml/v3 v3.0.4 // indirect
 	golang.org/x/crypto v0.45.0 // indirect
 	golang.org/x/net v0.47.0 // indirect

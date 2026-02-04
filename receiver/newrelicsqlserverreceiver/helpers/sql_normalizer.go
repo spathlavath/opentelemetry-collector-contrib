@@ -48,25 +48,41 @@ func GenerateMD5Hash(normalizedSQL string) string {
 //
 // Supported formats:
 // 1. APM GUID and Service: /* nr_apm_guid="MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI5MjMzNDQwNw", nr_service="order-service" */
-// 2. Service only: /* nr_service="MyApp-SQLServer, Background Job" */
-// 3. Any order: /* nr_service="MyApp", nr_apm_guid="XYZ789" */
-// 4. With spaces: /* nr_service = "MyApp" , nr_apm_guid = "ABC" */
-// 5. APM GUID only: /* nr_apm_guid="ABC123" */
+// 2. Service GUID variant: /* nr_service_guid="MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI5MjMzNDQwNw", nr_service="order-service" */
+// 3. Service only: /* nr_service="MyApp-SQLServer, Background Job" */
+// 4. Any order: /* nr_service="MyApp", nr_apm_guid="XYZ789" */
+// 5. With spaces: /* nr_service = "MyApp" , nr_apm_guid = "ABC" */
+// 6. APM GUID only: /* nr_apm_guid="ABC123" */
 //
 // Returns: (nr_apm_guid, client_name)
 func ExtractNewRelicMetadata(sql string) (nrApmGuid, nrService string) {
-	// Match nr_apm_guid with quoted values (spaces around = are optional)
-	// Format: nr_apm_guid = "base64_encoded_guid"
+	// Match nr_apm_guid OR nr_service_guid OR nr_guid with quoted values (spaces around = are optional)
+	// Format: nr_apm_guid = "base64_encoded_guid" OR nr_service_guid = "base64_encoded_guid" OR nr_guid = "base64_encoded_guid"
+	// Try in order: nr_apm_guid, nr_service_guid, nr_guid (shortest)
 	apmGuidRegex := regexp.MustCompile(`nr_apm_guid\s*=\s*"([^"]+)"`)
+	serviceGuidRegex := regexp.MustCompile(`nr_service_guid\s*=\s*"([^"]+)"`)
+	guidRegex := regexp.MustCompile(`nr_guid\s*=\s*"([^"]+)"`)
 
 	// Match nr_service with quoted values (spaces around = are optional)
 	// Format: nr_service = "value with, commas and special chars"
 	serviceRegex := regexp.MustCompile(`nr_service\s*=\s*"([^"]+)"`)
 
-	// Extract nr_apm_guid
+	// Extract nr_apm_guid (try standard format first, then variants)
 	apmGuidMatch := apmGuidRegex.FindStringSubmatch(sql)
 	if len(apmGuidMatch) > 1 {
 		nrApmGuid = strings.TrimSpace(apmGuidMatch[1])
+	} else {
+		// Try nr_service_guid variant
+		serviceGuidMatch := serviceGuidRegex.FindStringSubmatch(sql)
+		if len(serviceGuidMatch) > 1 {
+			nrApmGuid = strings.TrimSpace(serviceGuidMatch[1])
+		} else {
+			// Try nr_guid (shortest variant)
+			guidMatch := guidRegex.FindStringSubmatch(sql)
+			if len(guidMatch) > 1 {
+				nrApmGuid = strings.TrimSpace(guidMatch[1])
+			}
+		}
 	}
 
 	// Extract nr_service

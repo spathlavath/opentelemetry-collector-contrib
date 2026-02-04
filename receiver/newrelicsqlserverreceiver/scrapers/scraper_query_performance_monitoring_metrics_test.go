@@ -78,7 +78,7 @@ func TestSQLNormalizationIntegration(t *testing.T) {
 				normalizedSQL, sqlHash := helpers.NormalizeSqlAndHash(*result.QueryText)
 
 				if nrApmGuid != "" {
-					result.NrApmGuid = &nrApmGuid
+					result.NrServiceGuid = &nrApmGuid
 				}
 				if clientName != "" {
 					result.ClientName = &clientName
