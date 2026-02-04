@@ -152,44 +152,6 @@ func TestSafeAnonymizeQueryText(t *testing.T) {
 	}
 }
 
-func TestIsQueryTextSafe(t *testing.T) {
-	tests := []struct {
-		name     string
-		input    string
-		expected bool
-	}{
-		{
-			name:     "Empty string",
-			input:    "",
-			expected: true,
-		},
-		{
-			name:     "Normal size query",
-			input:    "SELECT * FROM users WHERE id = 123",
-			expected: true,
-		},
-		{
-			name:     "Large but safe query",
-			input:    strings.Repeat("SELECT * FROM table WHERE column = 'value' AND ", 100),
-			expected: true,
-		},
-		{
-			name:     "Too large query",
-			input:    strings.Repeat("x", 20000), // Over 16KB limit
-			expected: false,
-		},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			result := IsQueryTextSafe(tt.input)
-			if result != tt.expected {
-				t.Errorf("IsQueryTextSafe() = %v, expected %v", result, tt.expected)
-			}
-		})
-	}
-}
-
 func TestIsXMLContentSafe(t *testing.T) {
 	tests := []struct {
 		name     string

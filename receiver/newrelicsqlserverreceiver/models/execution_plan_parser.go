@@ -531,23 +531,14 @@ func ParseExecutionPlanTopLevelDetails(xmlContent, queryID, planHandle string, p
 
 	// Extract from PlanHandleResult (if provided)
 	if planHandleResult != nil {
-		if planHandleResult.ExecutionCount != nil {
-			details.ExecutionCount = *planHandleResult.ExecutionCount
-		}
 		if planHandleResult.AvgElapsedTimeMs != nil {
 			details.AvgElapsedTimeMs = *planHandleResult.AvgElapsedTimeMs
-		}
-		if planHandleResult.AvgWorkerTimeMs != nil {
-			details.AvgWorkerTimeMs = *planHandleResult.AvgWorkerTimeMs
 		}
 		if planHandleResult.LastExecutionTime != nil {
 			details.LastExecutionTime = *planHandleResult.LastExecutionTime
 		}
 		if planHandleResult.CreationTime != nil {
 			details.CreationTime = *planHandleResult.CreationTime
-		}
-		if planHandleResult.QueryPlanHash != nil {
-			details.QueryPlanHash = planHandleResult.QueryPlanHash.String()
 		}
 	}
 
