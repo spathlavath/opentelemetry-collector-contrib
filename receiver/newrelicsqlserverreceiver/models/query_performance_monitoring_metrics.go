@@ -149,7 +149,10 @@ type ActiveRunningQuery struct {
 	// G. PLAN HANDLE (Required for execution plan retrieval)
 	PlanHandle *QueryID `db:"plan_handle" metric_name:"plan_handle" source_type:"attribute"`
 
-	// H. BLOCKING DETAILS (Required by NRQL Query 1)
+	// H. QUERY TEXT - Active Running Query (Static placeholder)
+	QueryStatementText *string `db:"query_statement_text" metric_name:"query_statement_text" source_type:"attribute"`
+
+	// I. BLOCKING DETAILS (Required by NRQL Query 1)
 	BlockingSessionID          *int64   `db:"blocking_session_id" metric_name:"blocking_session_id" source_type:"attribute"`
 	BlockerLoginName           *string  `db:"blocker_login_name" metric_name:"blocker_login_name" source_type:"attribute"`
 	BlockingQueryStatementText *string  `db:"blocking_query_statement_text" metric_name:"blocking_query_statement_text" source_type:"attribute"`
