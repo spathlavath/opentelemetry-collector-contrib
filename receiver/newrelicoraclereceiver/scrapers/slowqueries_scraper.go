@@ -171,18 +171,13 @@ func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) ([]models.SQ
 		// The anonymized query text is derived from the normalized SQL (for attribute display)
 		var queryHash, qText, nrServiceGuid string
 		if slowQuery.QueryText.Valid && slowQuery.QueryText.String != "" {
-			// Extract nr_apm_guid from query comment
+			// Extract nr_service_guid from query comment
 			nrServiceGuid = commonutils.ExtractNewRelicMetadata(slowQuery.QueryText.String)
 
 			// Generate normalized SQL and hash
 			normalizedSQL, hash := commonutils.NormalizeSqlAndHash(slowQuery.QueryText.String)
 			queryHash = hash
 			qText = normalizedSQL
-		}
-
-		// Use hardcoded nr_apm_guid if not extracted from query
-		if nrServiceGuid == "" {
-			nrServiceGuid = "MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI4MzA5MDIxMQ"
 		}
 
 		if err := s.recordMetrics(now, &slowQuery, collectionTimestamp, dbName, qID, qText, userName, schName, lastActiveTime, queryHash, nrServiceGuid); err != nil {
