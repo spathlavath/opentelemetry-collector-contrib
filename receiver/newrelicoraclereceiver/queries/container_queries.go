@@ -16,7 +16,7 @@ const (
 			RESTRICTED,
 			OPEN_TIME
 		FROM GV$CONTAINERS
-		WHERE ROWNUM <= 1000`
+		WHERE ROWNUM <= 100`
 
 	// PDBStatusSQL returns status of all pluggable databases
 	PDBStatusSQL = `
@@ -29,7 +29,7 @@ const (
 			OPEN_TIME,
 			TOTAL_SIZE
 		FROM GV$PDBS
-		WHERE ROWNUM <= 1000`
+		WHERE ROWNUM <= 100`
 
 	// CDBServicesSQL returns services across all containers
 	CDBServicesSQL = `
@@ -41,7 +41,8 @@ const (
 			pdb,
 			enabled
 		FROM CDB_SERVICES
-		WHERE ROWNUM <= 1000`
+		WHERE enabled = 'YES'
+			AND ROWNUM <= 200`
 )
 
 // Container Metrics Queries
@@ -56,7 +57,8 @@ const (
 			group_id
 		FROM GV$CON_SYSMETRIC 
 		WHERE group_id = 2
-			AND ROWNUM <= 5000`
+			AND value IS NOT NULL
+			AND ROWNUM <= 1000`
 
 	// CDBSysMetricsSQL returns system metrics from CDB root
 	CDBSysMetricsSQL = `
@@ -68,11 +70,13 @@ const (
 			group_id
 		FROM GV$SYSMETRIC 
 		WHERE group_id = 2
-			AND ROWNUM <= 5000`
+			AND value IS NOT NULL
+			AND ROWNUM <= 1000`
 
 	// PDBServiceNamesSQL returns all PDB service names (excluding seed PDB)
 	PDBServiceNamesSQL = `
 		SELECT LOWER(p.NAME) || '.' || (SELECT value FROM v$parameter WHERE name = 'db_domain') AS FQDN
 		FROM V$PDBS p
-		WHERE p.NAME != 'PDB$SEED'`
+		WHERE p.NAME != 'PDB$SEED'
+			AND ROWNUM <= 100`
 )
