@@ -27,8 +27,6 @@ all_set:
       enabled: true
     newrelicoracledb.connection.active_sessions:
       enabled: true
-    newrelicoracledb.connection.blocking_sessions:
-      enabled: true
     newrelicoracledb.connection.bytes_received:
       enabled: true
     newrelicoracledb.connection.bytes_sent:
@@ -68,14 +66,6 @@ all_set:
     newrelicoracledb.connection.user_commits:
       enabled: true
     newrelicoracledb.connection.user_rollbacks:
-      enabled: true
-    newrelicoracledb.connection.wait_event_avg_wait_time:
-      enabled: true
-    newrelicoracledb.connection.wait_event_time_waited:
-      enabled: true
-    newrelicoracledb.connection.wait_event_total_waits:
-      enabled: true
-    newrelicoracledb.connection.wait_events:
       enabled: true
     newrelicoracledb.container.restricted:
       enabled: true
@@ -680,8 +670,6 @@ none_set:
       enabled: false
     newrelicoracledb.connection.active_sessions:
       enabled: false
-    newrelicoracledb.connection.blocking_sessions:
-      enabled: false
     newrelicoracledb.connection.bytes_received:
       enabled: false
     newrelicoracledb.connection.bytes_sent:
@@ -721,14 +709,6 @@ none_set:
     newrelicoracledb.connection.user_commits:
       enabled: false
     newrelicoracledb.connection.user_rollbacks:
-      enabled: false
-    newrelicoracledb.connection.wait_event_avg_wait_time:
-      enabled: false
-    newrelicoracledb.connection.wait_event_time_waited:
-      enabled: false
-    newrelicoracledb.connection.wait_event_total_waits:
-      enabled: false
-    newrelicoracledb.connection.wait_events:
       enabled: false
     newrelicoracledb.container.restricted:
       enabled: false

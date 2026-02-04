@@ -41,7 +41,6 @@ type MetricsConfig struct {
 	NewrelicoracledbChildCursorsInvalidations                          MetricConfig `mapstructure:"newrelicoracledb.child_cursors.invalidations"`
 	NewrelicoracledbChildCursorsUserIoWaitTime                         MetricConfig `mapstructure:"newrelicoracledb.child_cursors.user_io_wait_time"`
 	NewrelicoracledbConnectionActiveSessions                           MetricConfig `mapstructure:"newrelicoracledb.connection.active_sessions"`
-	NewrelicoracledbConnectionBlockingSessions                         MetricConfig `mapstructure:"newrelicoracledb.connection.blocking_sessions"`
 	NewrelicoracledbConnectionBytesReceived                            MetricConfig `mapstructure:"newrelicoracledb.connection.bytes_received"`
 	NewrelicoracledbConnectionBytesSent                                MetricConfig `mapstructure:"newrelicoracledb.connection.bytes_sent"`
 	NewrelicoracledbConnectionCircuits                                 MetricConfig `mapstructure:"newrelicoracledb.connection.circuits"`
@@ -62,10 +61,6 @@ type MetricsConfig struct {
 	NewrelicoracledbConnectionTotalSessions                            MetricConfig `mapstructure:"newrelicoracledb.connection.total_sessions"`
 	NewrelicoracledbConnectionUserCommits                              MetricConfig `mapstructure:"newrelicoracledb.connection.user_commits"`
 	NewrelicoracledbConnectionUserRollbacks                            MetricConfig `mapstructure:"newrelicoracledb.connection.user_rollbacks"`
-	NewrelicoracledbConnectionWaitEventAvgWaitTime                     MetricConfig `mapstructure:"newrelicoracledb.connection.wait_event_avg_wait_time"`
-	NewrelicoracledbConnectionWaitEventTimeWaited                      MetricConfig `mapstructure:"newrelicoracledb.connection.wait_event_time_waited"`
-	NewrelicoracledbConnectionWaitEventTotalWaits                      MetricConfig `mapstructure:"newrelicoracledb.connection.wait_event_total_waits"`
-	NewrelicoracledbConnectionWaitEvents                               MetricConfig `mapstructure:"newrelicoracledb.connection.wait_events"`
 	NewrelicoracledbContainerRestricted                                MetricConfig `mapstructure:"newrelicoracledb.container.restricted"`
 	NewrelicoracledbContainerStatus                                    MetricConfig `mapstructure:"newrelicoracledb.container.status"`
 	NewrelicoracledbDatabaseInfo                                       MetricConfig `mapstructure:"newrelicoracledb.database.info"`
@@ -393,9 +388,6 @@ func DefaultMetricsConfig() MetricsConfig {
 		NewrelicoracledbConnectionActiveSessions: MetricConfig{
 			Enabled: true,
 		},
-		NewrelicoracledbConnectionBlockingSessions: MetricConfig{
-			Enabled: true,
-		},
 		NewrelicoracledbConnectionBytesReceived: MetricConfig{
 			Enabled: true,
 		},
@@ -454,18 +446,6 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		NewrelicoracledbConnectionUserRollbacks: MetricConfig{
-			Enabled: true,
-		},
-		NewrelicoracledbConnectionWaitEventAvgWaitTime: MetricConfig{
-			Enabled: true,
-		},
-		NewrelicoracledbConnectionWaitEventTimeWaited: MetricConfig{
-			Enabled: true,
-		},
-		NewrelicoracledbConnectionWaitEventTotalWaits: MetricConfig{
-			Enabled: true,
-		},
-		NewrelicoracledbConnectionWaitEvents: MetricConfig{
 			Enabled: true,
 		},
 		NewrelicoracledbContainerRestricted: MetricConfig{
