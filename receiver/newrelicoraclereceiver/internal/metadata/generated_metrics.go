@@ -10406,7 +10406,7 @@ func (m *metricNewrelicoracledbSlowQueriesQueryDetails) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricNewrelicoracledbSlowQueriesQueryDetails) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicEventTypeAttributeValue string, collectionTimestampAttributeValue string, databaseNameAttributeValue string, queryIDAttributeValue string, queryTextAttributeValue string, schemaNameAttributeValue string, userNameAttributeValue string, lastActiveTimeAttributeValue string, normalisedSQLHashAttributeValue string, nrServiceGUIDAttributeValue string) {
+func (m *metricNewrelicoracledbSlowQueriesQueryDetails) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicEventTypeAttributeValue string, collectionTimestampAttributeValue string, databaseNameAttributeValue string, queryIDAttributeValue string, queryTextAttributeValue string, schemaNameAttributeValue string, userNameAttributeValue string, lastActiveTimeAttributeValue string, normalisedSQLHashAttributeValue string, nrServiceGUIDAttributeValue string, normalisedBlockingSQLHashAttributeValue string, nrBlockingServiceGUIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -10424,6 +10424,8 @@ func (m *metricNewrelicoracledbSlowQueriesQueryDetails) recordDataPoint(start pc
 	dp.Attributes().PutStr("last_active_time", lastActiveTimeAttributeValue)
 	dp.Attributes().PutStr("normalised_sql_hash", normalisedSQLHashAttributeValue)
 	dp.Attributes().PutStr("nr_service_guid", nrServiceGUIDAttributeValue)
+	dp.Attributes().PutStr("normalised_blocking_sql_hash", normalisedBlockingSQLHashAttributeValue)
+	dp.Attributes().PutStr("nr_blocking_service_guid", nrBlockingServiceGUIDAttributeValue)
 }
 
 // updateCapacity saves max length of data point slices that will be used for the slice capacity.
@@ -20851,8 +20853,8 @@ func (mb *MetricsBuilder) RecordNewrelicoracledbSlowQueriesIntervalWaitTimeDataP
 }
 
 // RecordNewrelicoracledbSlowQueriesQueryDetailsDataPoint adds a data point to newrelicoracledb.slow_queries.query_details metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbSlowQueriesQueryDetailsDataPoint(ts pcommon.Timestamp, val int64, newrelicEventTypeAttributeValue string, collectionTimestampAttributeValue string, databaseNameAttributeValue string, queryIDAttributeValue string, queryTextAttributeValue string, schemaNameAttributeValue string, userNameAttributeValue string, lastActiveTimeAttributeValue string, normalisedSQLHashAttributeValue string, nrServiceGUIDAttributeValue string) {
-	mb.metricNewrelicoracledbSlowQueriesQueryDetails.recordDataPoint(mb.startTime, ts, val, newrelicEventTypeAttributeValue, collectionTimestampAttributeValue, databaseNameAttributeValue, queryIDAttributeValue, queryTextAttributeValue, schemaNameAttributeValue, userNameAttributeValue, lastActiveTimeAttributeValue, normalisedSQLHashAttributeValue, nrServiceGUIDAttributeValue)
+func (mb *MetricsBuilder) RecordNewrelicoracledbSlowQueriesQueryDetailsDataPoint(ts pcommon.Timestamp, val int64, newrelicEventTypeAttributeValue string, collectionTimestampAttributeValue string, databaseNameAttributeValue string, queryIDAttributeValue string, queryTextAttributeValue string, schemaNameAttributeValue string, userNameAttributeValue string, lastActiveTimeAttributeValue string, normalisedSQLHashAttributeValue string, nrServiceGUIDAttributeValue string, normalisedBlockingSQLHashAttributeValue string, nrBlockingServiceGUIDAttributeValue string) {
+	mb.metricNewrelicoracledbSlowQueriesQueryDetails.recordDataPoint(mb.startTime, ts, val, newrelicEventTypeAttributeValue, collectionTimestampAttributeValue, databaseNameAttributeValue, queryIDAttributeValue, queryTextAttributeValue, schemaNameAttributeValue, userNameAttributeValue, lastActiveTimeAttributeValue, normalisedSQLHashAttributeValue, nrServiceGUIDAttributeValue, normalisedBlockingSQLHashAttributeValue, nrBlockingServiceGUIDAttributeValue)
 }
 
 // RecordNewrelicoracledbSlowQueriesTotalCPUTimeDataPoint adds a data point to newrelicoracledb.slow_queries.total_cpu_time metric.

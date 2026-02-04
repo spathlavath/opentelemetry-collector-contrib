@@ -524,6 +524,8 @@ func (s *SlowQueriesScraper) recordMetrics(now pcommon.Timestamp, slowQuery *mod
 		lastActiveTime,
 		queryHash,
 		nrServiceGuid,
+		"", // normalised_blocking_sql_hash - not applicable for slow queries
+		"", // nr_blocking_service_guid - not applicable for slow queries
 	)
 
 	return nil

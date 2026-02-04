@@ -2619,6 +2619,8 @@ Slow Query Details
 | last_active_time | Last active time for the SQL query | Any Str | false |
 | normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | false |
 | nr_service_guid | New Relic Service entity GUID | Any Str | false |
+| normalised_blocking_sql_hash | MD5 hash of normalized blocking SQL query following New Relic Java agent normalization logic | Any Str | false |
+| nr_blocking_service_guid | New Relic Service entity GUID for the blocking query | Any Str | false |
 
 ### newrelicoracledb.slow_queries.total_cpu_time
 

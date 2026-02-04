@@ -336,11 +336,13 @@ func (s *WaitEventBlockingScraper) recordBlockingMetrics(now pcommon.Timestamp, 
 			dbName,
 			finalBlockerQueryID,
 			finalBlockerQueryText,
-			"", // schema_name not available in blocking event
-			finalBlockerUser,
-			sqlExecStart, // using blocked query's execution start as approximate last active time
-			normalisedBlockingSQLHash,
-			nrBlockingServiceGuid,
+			"",                        // schema_name
+			"",                        // user_name
+			"",                        // last_active_time
+			normalisedBlockingSQLHash, // normalised_sql_hash (for this blocking query)
+			nrBlockingServiceGuid,     // nr_service_guid (for this blocking query)
+			normalisedBlockingSQLHash, // normalised_blocking_sql_hash (same - this IS the blocking query)
+			nrBlockingServiceGuid,     // nr_blocking_service_guid (same - this IS the blocking query)
 		)
 	}
 }

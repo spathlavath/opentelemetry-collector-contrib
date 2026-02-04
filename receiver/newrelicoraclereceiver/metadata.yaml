@@ -3336,6 +3336,8 @@ metrics:
       - last_active_time
       - normalised_sql_hash
       - nr_service_guid
+      - normalised_blocking_sql_hash
+      - nr_blocking_service_guid
 
   # Interval-based (delta) metrics - showing what happened in the LAST polling interval
   # These metrics provide real-time visibility into query performance changes

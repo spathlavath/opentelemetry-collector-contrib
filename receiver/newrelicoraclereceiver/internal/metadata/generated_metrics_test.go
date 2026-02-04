@@ -758,7 +758,7 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbSlowQueriesQueryDetailsDataPoint(ts, 1, "newrelic.event.type-val", "collection_timestamp-val", "database_name-val", "query_id-val", "query_text-val", "schema_name-val", "user_name-val", "last_active_time-val", "normalised_sql_hash-val", "nr_service_guid-val")
+			mb.RecordNewrelicoracledbSlowQueriesQueryDetailsDataPoint(ts, 1, "newrelic.event.type-val", "collection_timestamp-val", "database_name-val", "query_id-val", "query_text-val", "schema_name-val", "user_name-val", "last_active_time-val", "normalised_sql_hash-val", "nr_service_guid-val", "normalised_blocking_sql_hash-val", "nr_blocking_service_guid-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
@@ -4826,6 +4826,12 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("nr_service_guid")
 					assert.True(t, ok)
 					assert.Equal(t, "nr_service_guid-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("normalised_blocking_sql_hash")
+					assert.True(t, ok)
+					assert.Equal(t, "normalised_blocking_sql_hash-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("nr_blocking_service_guid")
+					assert.True(t, ok)
+					assert.Equal(t, "nr_blocking_service_guid-val", attrVal.Str())
 				case "newrelicoracledb.slow_queries.total_cpu_time":
 					assert.False(t, validatedMetrics["newrelicoracledb.slow_queries.total_cpu_time"], "Found a duplicate in the metrics slice: newrelicoracledb.slow_queries.total_cpu_time")
 					validatedMetrics["newrelicoracledb.slow_queries.total_cpu_time"] = true
