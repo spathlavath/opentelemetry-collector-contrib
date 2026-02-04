@@ -24,10 +24,6 @@ type MockClient struct {
 	SessionStatusList            []models.SessionStatus
 	SessionTypeList              []models.SessionType
 	LogonStatsList               []models.LogonStat
-	SessionResourcesList         []models.SessionResource
-	CurrentWaitEventsList        []models.CurrentWaitEvent
-	BlockingSessionsList         []models.BlockingSession
-	WaitEventSummaryList         []models.WaitEventSummary
 	ConnectionPoolMetricsList    []models.ConnectionPoolMetric
 	SessionLimitsList            []models.SessionLimit
 	ConnectionQualityMetricsList []models.ConnectionQualityMetric
@@ -204,34 +200,6 @@ func (m *MockClient) QueryLogonStats(ctx context.Context) ([]models.LogonStat, e
 		return nil, m.QueryErr
 	}
 	return m.LogonStatsList, nil
-}
-
-func (m *MockClient) QuerySessionResources(ctx context.Context) ([]models.SessionResource, error) {
-	if m.QueryErr != nil {
-		return nil, m.QueryErr
-	}
-	return m.SessionResourcesList, nil
-}
-
-func (m *MockClient) QueryCurrentWaitEvents(ctx context.Context) ([]models.CurrentWaitEvent, error) {
-	if m.QueryErr != nil {
-		return nil, m.QueryErr
-	}
-	return m.CurrentWaitEventsList, nil
-}
-
-func (m *MockClient) QueryBlockingSessions(ctx context.Context) ([]models.BlockingSession, error) {
-	if m.QueryErr != nil {
-		return nil, m.QueryErr
-	}
-	return m.BlockingSessionsList, nil
-}
-
-func (m *MockClient) QueryWaitEventSummary(ctx context.Context) ([]models.WaitEventSummary, error) {
-	if m.QueryErr != nil {
-		return nil, m.QueryErr
-	}
-	return m.WaitEventSummaryList, nil
 }
 
 func (m *MockClient) QueryConnectionPoolMetrics(ctx context.Context) ([]models.ConnectionPoolMetric, error) {

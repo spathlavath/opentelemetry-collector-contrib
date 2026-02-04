@@ -23,52 +23,6 @@ type LogonStat struct {
 	Value sql.NullFloat64
 }
 
-// SessionResource represents resource consumption for a session
-type SessionResource struct {
-	SID             sql.NullInt64
-	Username        sql.NullString
-	Status          sql.NullString
-	Program         sql.NullString
-	Machine         sql.NullString
-	OSUser          sql.NullString
-	LogonTime       sql.NullTime
-	LastCallET      sql.NullInt64
-	CPUUsageSeconds sql.NullFloat64
-	PGAMemoryBytes  sql.NullInt64
-	LogicalReads    sql.NullInt64
-}
-
-// CurrentWaitEvent represents a current wait event
-type CurrentWaitEvent struct {
-	SID           sql.NullInt64
-	Username      sql.NullString
-	Event         sql.NullString
-	WaitTime      sql.NullInt64
-	State         sql.NullString
-	SecondsInWait sql.NullInt64
-	WaitClass     sql.NullString
-}
-
-// BlockingSession represents a blocking session
-type BlockingSession struct {
-	SID             sql.NullInt64
-	Serial          sql.NullInt64
-	BlockingSession sql.NullInt64
-	Event           sql.NullString
-	Username        sql.NullString
-	Program         sql.NullString
-	SecondsInWait   sql.NullInt64
-}
-
-// WaitEventSummary represents wait event summary
-type WaitEventSummary struct {
-	Event            sql.NullString
-	TotalWaits       sql.NullInt64
-	TimeWaitedMicro  sql.NullInt64
-	AverageWaitMicro sql.NullFloat64
-	WaitClass        sql.NullString
-}
-
 // ConnectionPoolMetric represents connection pool metrics
 type ConnectionPoolMetric struct {
 	MetricName sql.NullString

@@ -44,12 +44,6 @@ type OracleClient interface {
 	QuerySessionTypes(ctx context.Context) ([]models.SessionType, error)
 	QueryLogonStats(ctx context.Context) ([]models.LogonStat, error)
 
-	// Connection metrics - resource consumption
-	QuerySessionResources(ctx context.Context) ([]models.SessionResource, error)
-	QueryCurrentWaitEvents(ctx context.Context) ([]models.CurrentWaitEvent, error)
-	QueryBlockingSessions(ctx context.Context) ([]models.BlockingSession, error)
-	QueryWaitEventSummary(ctx context.Context) ([]models.WaitEventSummary, error)
-
 	// Connection metrics - pool and limits
 	QueryConnectionPoolMetrics(ctx context.Context) ([]models.ConnectionPoolMetric, error)
 	QuerySessionLimits(ctx context.Context) ([]models.SessionLimit, error)
