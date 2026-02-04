@@ -147,6 +147,8 @@ func (s *ReplicationScraper) scrapeReplicaMetrics(now pcommon.Timestamp, errs *s
 
 // scrapeMasterMetrics collects replication metrics when this node is a master/source.
 func (s *ReplicationScraper) scrapeMasterMetrics(now pcommon.Timestamp, errs *scrapererror.ScrapeErrors) {
+	s.logger.Debug("Attempting to scrape master replication metrics")
+
 	masterStatus, err := s.client.GetMasterStatus()
 	if err != nil {
 		s.logger.Error("Failed to fetch master status", zap.Error(err))
@@ -154,17 +156,25 @@ func (s *ReplicationScraper) scrapeMasterMetrics(now pcommon.Timestamp, errs *sc
 		return
 	}
 
+	s.logger.Debug("Master status retrieved", zap.Any("masterStatus", masterStatus))
+
 	// Record number of connected slaves/replicas
 	if slavesConnected, ok := masterStatus["Slaves_Connected"]; ok && slavesConnected != "" {
+		s.logger.Info("Recording slaves_connected metric", zap.String("value", slavesConnected))
 		if intVal, err := strconv.ParseInt(slavesConnected, 10, 64); err == nil {
 			s.mb.RecordNewrelicmysqlReplicationSlavesConnectedDataPoint(now, intVal)
 		}
+	} else {
+		s.logger.Debug("Slaves_Connected not found in master status")
 	}
 
 	if replicasConnected, ok := masterStatus["Replicas_Connected"]; ok && replicasConnected != "" {
+		s.logger.Info("Recording replicas_connected metric", zap.String("value", replicasConnected))
 		if intVal, err := strconv.ParseInt(replicasConnected, 10, 64); err == nil {
 			s.mb.RecordNewrelicmysqlReplicationReplicasConnectedDataPoint(now, intVal)
 		}
+	} else {
+		s.logger.Debug("Replicas_Connected not found in master status")
 	}
 }
 
