@@ -274,12 +274,23 @@ func (s *WaitEventBlockingScraper) recordBlockingMetrics(now pcommon.Timestamp, 
 	finalBlockerQueryID := event.GetFinalBlockerQueryID()
 	finalBlockerQueryText := commonutils.AnonymizeAndNormalize(event.GetFinalBlockerQueryText())
 
-	// Get nr_apm_guid and normalised_sql_hash from sqlIDMap
+	// Get nr_service_guid and normalised_sql_hash from sqlIDMap for the blocked query
 	// These will be empty strings if not present in the map or if the metadata values were empty
 	var nrServiceGuid, normalisedSQLHash string
 	if metadata, exists := sqlIDMap[queryID]; exists {
 		nrServiceGuid = metadata.NRServiceGuid
 		normalisedSQLHash = metadata.NormalisedSQLHash
+	}
+
+	// Extract metadata from final blocker query text
+	var nrBlockingServiceGuid, normalisedBlockingSQLHash string
+	rawFinalBlockerQueryText := event.GetFinalBlockerQueryText()
+	if rawFinalBlockerQueryText != "" {
+		// Extract nr_service_guid from the final blocker query comment
+		nrBlockingServiceGuid = commonutils.ExtractNewRelicMetadata(rawFinalBlockerQueryText)
+
+		// Generate normalized SQL and hash for the final blocker query
+		_, normalisedBlockingSQLHash = commonutils.NormalizeSqlAndHash(rawFinalBlockerQueryText)
 	}
 
 	s.mb.RecordNewrelicoracledbBlockingQueriesWaitTimeMsDataPoint(
@@ -309,19 +320,14 @@ func (s *WaitEventBlockingScraper) recordBlockingMetrics(now pcommon.Timestamp, 
 		finalBlockerQueryID,
 		finalBlockerQueryText,
 		nrServiceGuid,
-
 		normalisedSQLHash,
+		nrBlockingServiceGuid,
+		normalisedBlockingSQLHash,
 	)
 
 	// Record the final blocker query details if we have a valid query ID and text
+	// Use the metadata we already extracted from the raw final blocker query text
 	if finalBlockerQueryID != "" && finalBlockerQueryText != "" {
-		// Get nr_apm_guid and normalised_sql_hash for the final blocker query
-		var finalBlockerNRServiceGuid, finalBlockerHash string
-		if metadata, exists := sqlIDMap[finalBlockerQueryID]; exists {
-			finalBlockerNRServiceGuid = metadata.NRServiceGuid
-			finalBlockerHash = metadata.NormalisedSQLHash
-		}
-
 		s.mb.RecordNewrelicoracledbSlowQueriesQueryDetailsDataPoint(
 			now,
 			1,
@@ -333,8 +339,8 @@ func (s *WaitEventBlockingScraper) recordBlockingMetrics(now pcommon.Timestamp, 
 			"", // schema_name not available in blocking event
 			finalBlockerUser,
 			sqlExecStart, // using blocked query's execution start as approximate last active time
-			finalBlockerHash,
-			finalBlockerNRServiceGuid,
+			normalisedBlockingSQLHash,
+			nrBlockingServiceGuid,
 		)
 	}
 }

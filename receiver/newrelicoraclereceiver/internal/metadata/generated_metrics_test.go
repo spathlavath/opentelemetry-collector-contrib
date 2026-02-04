@@ -82,7 +82,7 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbBlockingQueriesWaitTimeMsDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "user_name-val", "session_id-val", 14, "session_state-val", "query_id-val", 16, 11, "sql_exec_start-val", "wait_event_name-val", "wait_category-val", "wait_object_name-val", "wait_object_owner-val", "wait_object_type-val", "blocking_session_status-val", "immediate_blocker_sid-val", "final_blocking_session_status-val", "final_blocker_user-val", "final_blocker_sid-val", "final_blocker_serial-val", "final_blocker_query_id-val", "final_blocker_query_text-val", "nr_service_guid-val", "normalised_sql_hash-val")
+			mb.RecordNewrelicoracledbBlockingQueriesWaitTimeMsDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "user_name-val", "session_id-val", 14, "session_state-val", "query_id-val", 16, 11, "sql_exec_start-val", "wait_event_name-val", "wait_category-val", "wait_object_name-val", "wait_object_owner-val", "wait_object_type-val", "blocking_session_status-val", "immediate_blocker_sid-val", "final_blocking_session_status-val", "final_blocker_user-val", "final_blocker_sid-val", "final_blocker_serial-val", "final_blocker_query_id-val", "final_blocker_query_text-val", "nr_service_guid-val", "normalised_sql_hash-val", "nr_blocking_service_guid-val", "normalised_blocking_sql_hash-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
@@ -1570,6 +1570,12 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("normalised_sql_hash")
 					assert.True(t, ok)
 					assert.Equal(t, "normalised_sql_hash-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("nr_blocking_service_guid")
+					assert.True(t, ok)
+					assert.Equal(t, "nr_blocking_service_guid-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("normalised_blocking_sql_hash")
+					assert.True(t, ok)
+					assert.Equal(t, "normalised_blocking_sql_hash-val", attrVal.Str())
 				case "newrelicoracledb.child_cursors.buffer_gets":
 					assert.False(t, validatedMetrics["newrelicoracledb.child_cursors.buffer_gets"], "Found a duplicate in the metrics slice: newrelicoracledb.child_cursors.buffer_gets")
 					validatedMetrics["newrelicoracledb.child_cursors.buffer_gets"] = true

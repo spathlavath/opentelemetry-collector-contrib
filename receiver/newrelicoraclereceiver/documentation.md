@@ -99,6 +99,8 @@ Source: Same as current_wait_time_ms (WAIT_TIME_MICRO / 1000).
 | final_blocker_query_text | SQL query text of the final blocking session's query | Any Str | false |
 | nr_service_guid | New Relic Service entity GUID | Any Str | false |
 | normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | false |
+| nr_blocking_service_guid | New Relic Service entity GUID for the blocking query | Any Str | false |
+| normalised_blocking_sql_hash | MD5 hash of normalized blocking SQL query following New Relic Java agent normalization logic | Any Str | false |
 
 ### newrelicoracledb.child_cursors.buffer_gets
 

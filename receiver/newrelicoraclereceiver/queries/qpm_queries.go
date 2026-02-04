@@ -122,7 +122,7 @@ func GetWaitEventsAndBlockingSQL(rowLimit int, slowQuerySQLIDs []string) string 
 			final_blocker.serial# AS final_blocker_serial,
 			-- Enhanced: Prioritize SQL_ID, fallback to PREV_SQL_ID
 			COALESCE(final_blocker.sql_id, final_blocker.prev_sql_id) AS final_blocker_query_id,
-			COALESCE(final_blocker_sql.sql_text, prev_final_blocker_sql.sql_text) AS final_blocker_query_text
+			COALESCE(final_blocker_sql.sql_fulltext, prev_final_blocker_sql.sql_fulltext) AS final_blocker_query_text
 		FROM
 			v$session s
 		LEFT JOIN
