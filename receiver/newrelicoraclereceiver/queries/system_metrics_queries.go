@@ -8,7 +8,7 @@ package queries
 // System Performance Metrics
 const (
 	// SystemSysMetricsSQL returns system metrics from gv$sysmetric
-	SystemSysMetricsSQL = "SELECT INST_ID, METRIC_NAME, VALUE FROM gv$sysmetric"
+	SystemSysMetricsSQL = "SELECT INST_ID, METRIC_NAME, VALUE FROM gv$sysmetric WHERE ROWNUM <= 1000"
 
 	// PDBSysMetricsSQL returns PDB-specific system metrics
 	PDBSysMetricsSQL = `
@@ -18,7 +18,8 @@ const (
 			csm.METRIC_NAME,
 			csm.VALUE
 		FROM gv$con_sysmetric csm
-		JOIN gv$pdbs pd ON csm.CON_ID = pd.CON_ID AND csm.INST_ID = pd.INST_ID`
+		JOIN gv$pdbs pd ON csm.CON_ID = pd.CON_ID AND csm.INST_ID = pd.INST_ID
+		WHERE ROWNUM <= 1000`
 
 	// ReadWriteMetricsSQL returns database I/O statistics
 	ReadWriteMetricsSQL = `
@@ -34,7 +35,6 @@ const (
 		GROUP BY INST_ID`
 
 	// LongRunningQueriesSQL returns count of long-running queries per instance
-	// Returns count of ACTIVE non-BACKGROUND sessions that have been running for more than 60 seconds
 	LongRunningQueriesSQL = `
 		SELECT i.inst_id, COUNT(s.sid) AS total
 		FROM gv$instance i
@@ -95,7 +95,8 @@ const (
 				OR sysevent.event LIKE '%log file switch (arch%'
 				OR sysevent.event LIKE '%buffer busy waits%'
 				OR sysevent.event LIKE '%freeBufferWaits%'
-				OR sysevent.event LIKE '%free buffer inspected%')`
+				OR sysevent.event LIKE '%free buffer inspected%')
+			AND sysevent.total_waits > 0`
 
 	// RollbackSegmentsSQL returns rollback segment statistics
 	RollbackSegmentsSQL = `
