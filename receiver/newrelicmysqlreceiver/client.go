@@ -7,6 +7,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"strconv"
 
 	"github.com/go-sql-driver/mysql"
 	"go.uber.org/zap"
@@ -160,21 +161,46 @@ func (c *mySQLClient) GetReplicationStatus() (map[string]string, error) {
 
 // GetMasterStatus retrieves master/source status information.
 func (c *mySQLClient) GetMasterStatus() (map[string]string, error) {
-	// Get the number of connected slaves/replicas
-	var slavesConnected string
-	err := c.db.QueryRow("SHOW STATUS LIKE 'Slaves_connected'").Scan(new(string), &slavesConnected)
+	result := make(map[string]string)
+
+	// Method 1: Try performance_schema.threads (most reliable, MySQL 5.7+)
+	var count int
+	err := c.db.QueryRow(`SELECT COUNT(*) 
+		FROM performance_schema.threads 
+		WHERE PROCESSLIST_COMMAND LIKE 'Binlog Dump%'`).Scan(&count)
+
 	if err != nil {
-		// Try newer syntax for MySQL 8.0.22+
-		err = c.db.QueryRow("SHOW STATUS LIKE 'Replicas_connected'").Scan(new(string), &slavesConnected)
-		if err != nil && err != sql.ErrNoRows {
-			return nil, err
+		// Method 2: Fallback to INFORMATION_SCHEMA.PROCESSLIST
+		err = c.db.QueryRow(`SELECT COUNT(*) 
+			FROM INFORMATION_SCHEMA.PROCESSLIST 
+			WHERE COMMAND LIKE 'Binlog Dump%'`).Scan(&count)
+
+		if err != nil {
+			// Method 3: Try performance_schema.global_status (for restricted privilege users)
+			var countStr string
+			err = c.db.QueryRow(`SELECT VARIABLE_VALUE 
+				FROM performance_schema.global_status 
+				WHERE VARIABLE_NAME IN ('Slaves_connected', 'Replicas_connected') 
+				LIMIT 1`).Scan(&countStr)
+			if err != nil {
+				// Not a master, performance_schema disabled, or binary logging not enabled
+				// Return empty result without error
+				return result, nil
+			}
+			// Parse the string value to int
+			if parsedCount, parseErr := strconv.Atoi(countStr); parseErr == nil {
+				count = parsedCount
+			} else {
+				return result, nil
+			}
 		}
 	}
 
-	result := make(map[string]string)
-	if slavesConnected != "" {
-		result["Slaves_Connected"] = slavesConnected
-		result["Replicas_Connected"] = slavesConnected
+	// Set the result if we have connected replicas
+	if count > 0 {
+		countStr := strconv.Itoa(count)
+		result["Slaves_Connected"] = countStr
+		result["Replicas_Connected"] = countStr
 	}
 
 	return result, nil
