@@ -678,6 +678,30 @@ var MetricsInfo = metricsInfo{
 	NewrelicmysqlReplicationExecMasterLogPos: metricInfo{
 		Name: "newrelicmysql.replication.exec_master_log_pos",
 	},
+	NewrelicmysqlReplicationGroupConflictsDetected: metricInfo{
+		Name: "newrelicmysql.replication.group.conflicts_detected",
+	},
+	NewrelicmysqlReplicationGroupTransactions: metricInfo{
+		Name: "newrelicmysql.replication.group.transactions",
+	},
+	NewrelicmysqlReplicationGroupTransactionsApplied: metricInfo{
+		Name: "newrelicmysql.replication.group.transactions_applied",
+	},
+	NewrelicmysqlReplicationGroupTransactionsCheck: metricInfo{
+		Name: "newrelicmysql.replication.group.transactions_check",
+	},
+	NewrelicmysqlReplicationGroupTransactionsInApplierQueue: metricInfo{
+		Name: "newrelicmysql.replication.group.transactions_in_applier_queue",
+	},
+	NewrelicmysqlReplicationGroupTransactionsProposed: metricInfo{
+		Name: "newrelicmysql.replication.group.transactions_proposed",
+	},
+	NewrelicmysqlReplicationGroupTransactionsRollback: metricInfo{
+		Name: "newrelicmysql.replication.group.transactions_rollback",
+	},
+	NewrelicmysqlReplicationGroupTransactionsValidating: metricInfo{
+		Name: "newrelicmysql.replication.group.transactions_validating",
+	},
 	NewrelicmysqlReplicationLastIoErrno: metricInfo{
 		Name: "newrelicmysql.replication.last_io_errno",
 	},
@@ -690,8 +714,14 @@ var MetricsInfo = metricsInfo{
 	NewrelicmysqlReplicationRelayLogSpace: metricInfo{
 		Name: "newrelicmysql.replication.relay_log_space",
 	},
+	NewrelicmysqlReplicationReplicasConnected: metricInfo{
+		Name: "newrelicmysql.replication.replicas_connected",
+	},
 	NewrelicmysqlReplicationSecondsBehindMaster: metricInfo{
 		Name: "newrelicmysql.replication.seconds_behind_master",
+	},
+	NewrelicmysqlReplicationSecondsBehindSource: metricInfo{
+		Name: "newrelicmysql.replication.seconds_behind_source",
 	},
 	NewrelicmysqlReplicationSlaveIoRunning: metricInfo{
 		Name: "newrelicmysql.replication.slave_io_running",
@@ -702,220 +732,234 @@ var MetricsInfo = metricsInfo{
 	NewrelicmysqlReplicationSlaveSQLRunning: metricInfo{
 		Name: "newrelicmysql.replication.slave_sql_running",
 	},
+	NewrelicmysqlReplicationSlavesConnected: metricInfo{
+		Name: "newrelicmysql.replication.slaves_connected",
+	},
 	NewrelicmysqlUptime: metricInfo{
 		Name: "newrelicmysql.uptime",
 	},
 }
 
 type metricsInfo struct {
-	NewrelicmysqlBinlogCacheDiskUse                     metricInfo
-	NewrelicmysqlBinlogCacheUse                         metricInfo
-	NewrelicmysqlCommands                               metricInfo
-	NewrelicmysqlConnectionCount                        metricInfo
-	NewrelicmysqlDbHandlerRollback                      metricInfo
-	NewrelicmysqlDbOpenedTables                         metricInfo
-	NewrelicmysqlInnodbActiveTransactions               metricInfo
-	NewrelicmysqlInnodbAdaptiveHashHashSearches         metricInfo
-	NewrelicmysqlInnodbAdaptiveHashNonHashSearches      metricInfo
-	NewrelicmysqlInnodbAdaptiveHashPagesAdded           metricInfo
-	NewrelicmysqlInnodbAdaptiveHashPagesRemoved         metricInfo
-	NewrelicmysqlInnodbAvailableUndoLogs                metricInfo
-	NewrelicmysqlInnodbBufferPoolBytesData              metricInfo
-	NewrelicmysqlInnodbBufferPoolBytesDirty             metricInfo
-	NewrelicmysqlInnodbBufferPoolDirty                  metricInfo
-	NewrelicmysqlInnodbBufferPoolFree                   metricInfo
-	NewrelicmysqlInnodbBufferPoolPagesData              metricInfo
-	NewrelicmysqlInnodbBufferPoolPagesFlushed           metricInfo
-	NewrelicmysqlInnodbBufferPoolPagesFree              metricInfo
-	NewrelicmysqlInnodbBufferPoolPagesLruFlushed        metricInfo
-	NewrelicmysqlInnodbBufferPoolPagesMadeNotYoung      metricInfo
-	NewrelicmysqlInnodbBufferPoolPagesMadeYoung         metricInfo
-	NewrelicmysqlInnodbBufferPoolPagesMisc              metricInfo
-	NewrelicmysqlInnodbBufferPoolPagesOld               metricInfo
-	NewrelicmysqlInnodbBufferPoolPagesTotal             metricInfo
-	NewrelicmysqlInnodbBufferPoolReadAhead              metricInfo
-	NewrelicmysqlInnodbBufferPoolReadAheadEvicted       metricInfo
-	NewrelicmysqlInnodbBufferPoolReadAheadRnd           metricInfo
-	NewrelicmysqlInnodbBufferPoolReadRequests           metricInfo
-	NewrelicmysqlInnodbBufferPoolReads                  metricInfo
-	NewrelicmysqlInnodbBufferPoolTotal                  metricInfo
-	NewrelicmysqlInnodbBufferPoolUsed                   metricInfo
-	NewrelicmysqlInnodbBufferPoolUtilization            metricInfo
-	NewrelicmysqlInnodbBufferPoolWaitFree               metricInfo
-	NewrelicmysqlInnodbBufferPoolWriteRequests          metricInfo
-	NewrelicmysqlInnodbCheckpointAge                    metricInfo
-	NewrelicmysqlInnodbCurrentRowLocks                  metricInfo
-	NewrelicmysqlInnodbCurrentTransactions              metricInfo
-	NewrelicmysqlInnodbDataFsyncs                       metricInfo
-	NewrelicmysqlInnodbDataPendingFsyncs                metricInfo
-	NewrelicmysqlInnodbDataPendingReads                 metricInfo
-	NewrelicmysqlInnodbDataPendingWrites                metricInfo
-	NewrelicmysqlInnodbDataRead                         metricInfo
-	NewrelicmysqlInnodbDataReads                        metricInfo
-	NewrelicmysqlInnodbDataWrites                       metricInfo
-	NewrelicmysqlInnodbDataWritten                      metricInfo
-	NewrelicmysqlInnodbDblwrPagesWritten                metricInfo
-	NewrelicmysqlInnodbDblwrWrites                      metricInfo
-	NewrelicmysqlInnodbHashIndexCellsTotal              metricInfo
-	NewrelicmysqlInnodbHashIndexCellsUsed               metricInfo
-	NewrelicmysqlInnodbHistoryListLength                metricInfo
-	NewrelicmysqlInnodbIbufFreeList                     metricInfo
-	NewrelicmysqlInnodbIbufMergedDeleteMarks            metricInfo
-	NewrelicmysqlInnodbIbufMergedDeletes                metricInfo
-	NewrelicmysqlInnodbIbufMergedInserts                metricInfo
-	NewrelicmysqlInnodbIbufMerges                       metricInfo
-	NewrelicmysqlInnodbIbufSegmentSize                  metricInfo
-	NewrelicmysqlInnodbIbufSize                         metricInfo
-	NewrelicmysqlInnodbLockStructs                      metricInfo
-	NewrelicmysqlInnodbLockedTables                     metricInfo
-	NewrelicmysqlInnodbLockedTransactions               metricInfo
-	NewrelicmysqlInnodbLogWaits                         metricInfo
-	NewrelicmysqlInnodbLogWriteRequests                 metricInfo
-	NewrelicmysqlInnodbLogWrites                        metricInfo
-	NewrelicmysqlInnodbLsnCurrent                       metricInfo
-	NewrelicmysqlInnodbLsnFlushed                       metricInfo
-	NewrelicmysqlInnodbLsnLastCheckpoint                metricInfo
-	NewrelicmysqlInnodbMasterThreadActiveLoops          metricInfo
-	NewrelicmysqlInnodbMasterThreadIdleLoops            metricInfo
-	NewrelicmysqlInnodbMemAdaptiveHash                  metricInfo
-	NewrelicmysqlInnodbMemAdditionalPool                metricInfo
-	NewrelicmysqlInnodbMemDictionary                    metricInfo
-	NewrelicmysqlInnodbMemFileSystem                    metricInfo
-	NewrelicmysqlInnodbMemLockSystem                    metricInfo
-	NewrelicmysqlInnodbMemPageHash                      metricInfo
-	NewrelicmysqlInnodbMemRecoverySystem                metricInfo
-	NewrelicmysqlInnodbMemThreadHash                    metricInfo
-	NewrelicmysqlInnodbMemTotal                         metricInfo
-	NewrelicmysqlInnodbMutexOsWaits                     metricInfo
-	NewrelicmysqlInnodbMutexSpinRounds                  metricInfo
-	NewrelicmysqlInnodbMutexSpinWaits                   metricInfo
-	NewrelicmysqlInnodbNumOpenFiles                     metricInfo
-	NewrelicmysqlInnodbOsFileFsyncs                     metricInfo
-	NewrelicmysqlInnodbOsFileReads                      metricInfo
-	NewrelicmysqlInnodbOsFileWrites                     metricInfo
-	NewrelicmysqlInnodbOsLogFsyncs                      metricInfo
-	NewrelicmysqlInnodbOsLogPendingFsyncs               metricInfo
-	NewrelicmysqlInnodbOsLogPendingWrites               metricInfo
-	NewrelicmysqlInnodbOsLogWritten                     metricInfo
-	NewrelicmysqlInnodbPageSize                         metricInfo
-	NewrelicmysqlInnodbPagesCreated                     metricInfo
-	NewrelicmysqlInnodbPagesRead                        metricInfo
-	NewrelicmysqlInnodbPagesWritten                     metricInfo
-	NewrelicmysqlInnodbPendingAioLogIos                 metricInfo
-	NewrelicmysqlInnodbPendingAioSyncIos                metricInfo
-	NewrelicmysqlInnodbPendingBufferPoolFlushes         metricInfo
-	NewrelicmysqlInnodbPendingCheckpointWrites          metricInfo
-	NewrelicmysqlInnodbPendingIbufAioReads              metricInfo
-	NewrelicmysqlInnodbPendingLogFlushes                metricInfo
-	NewrelicmysqlInnodbPendingLogWrites                 metricInfo
-	NewrelicmysqlInnodbPendingNormalAioReads            metricInfo
-	NewrelicmysqlInnodbPendingNormalAioWrites           metricInfo
-	NewrelicmysqlInnodbPurgeTrxID                       metricInfo
-	NewrelicmysqlInnodbPurgeUndoNo                      metricInfo
-	NewrelicmysqlInnodbQueriesInside                    metricInfo
-	NewrelicmysqlInnodbQueriesQueued                    metricInfo
-	NewrelicmysqlInnodbReadViews                        metricInfo
-	NewrelicmysqlInnodbRedoLogEnabled                   metricInfo
-	NewrelicmysqlInnodbRowLockCurrentWaits              metricInfo
-	NewrelicmysqlInnodbRowLockTime                      metricInfo
-	NewrelicmysqlInnodbRowLockTimeAvg                   metricInfo
-	NewrelicmysqlInnodbRowLockTimeMax                   metricInfo
-	NewrelicmysqlInnodbRowLockWaits                     metricInfo
-	NewrelicmysqlInnodbRowsDeleted                      metricInfo
-	NewrelicmysqlInnodbRowsInserted                     metricInfo
-	NewrelicmysqlInnodbRowsRead                         metricInfo
-	NewrelicmysqlInnodbRowsUpdated                      metricInfo
-	NewrelicmysqlInnodbSLockOsWaits                     metricInfo
-	NewrelicmysqlInnodbSLockSpinRounds                  metricInfo
-	NewrelicmysqlInnodbSLockSpinWaits                   metricInfo
-	NewrelicmysqlInnodbSemaphoreWaitTime                metricInfo
-	NewrelicmysqlInnodbSemaphoreWaits                   metricInfo
-	NewrelicmysqlInnodbTablesInUse                      metricInfo
-	NewrelicmysqlInnodbTruncatedStatusWrites            metricInfo
-	NewrelicmysqlInnodbUndoTablespacesActive            metricInfo
-	NewrelicmysqlInnodbUndoTablespacesExplicit          metricInfo
-	NewrelicmysqlInnodbUndoTablespacesImplicit          metricInfo
-	NewrelicmysqlInnodbUndoTablespacesTotal             metricInfo
-	NewrelicmysqlInnodbXLockOsWaits                     metricInfo
-	NewrelicmysqlInnodbXLockSpinRounds                  metricInfo
-	NewrelicmysqlInnodbXLockSpinWaits                   metricInfo
-	NewrelicmysqlMyisamKeyBufferBytesUnflushed          metricInfo
-	NewrelicmysqlMyisamKeyBufferBytesUsed               metricInfo
-	NewrelicmysqlMyisamKeyBufferSize                    metricInfo
-	NewrelicmysqlMyisamKeyReadRequests                  metricInfo
-	NewrelicmysqlMyisamKeyReads                         metricInfo
-	NewrelicmysqlMyisamKeyWriteRequests                 metricInfo
-	NewrelicmysqlMyisamKeyWrites                        metricInfo
-	NewrelicmysqlNetAbortedClients                      metricInfo
-	NewrelicmysqlNetAbortedConnects                     metricInfo
-	NewrelicmysqlNetConnections                         metricInfo
-	NewrelicmysqlNetMaxConnections                      metricInfo
-	NewrelicmysqlNetMaxConnectionsAvailable             metricInfo
-	NewrelicmysqlNetMaxUsedConnections                  metricInfo
-	NewrelicmysqlPerformanceBytesReceived               metricInfo
-	NewrelicmysqlPerformanceBytesSent                   metricInfo
-	NewrelicmysqlPerformanceCreatedTmpDiskTables        metricInfo
-	NewrelicmysqlPerformanceCreatedTmpFiles             metricInfo
-	NewrelicmysqlPerformanceCreatedTmpTables            metricInfo
-	NewrelicmysqlPerformanceHandlerCommit               metricInfo
-	NewrelicmysqlPerformanceHandlerDelete               metricInfo
-	NewrelicmysqlPerformanceHandlerPrepare              metricInfo
-	NewrelicmysqlPerformanceHandlerReadFirst            metricInfo
-	NewrelicmysqlPerformanceHandlerReadKey              metricInfo
-	NewrelicmysqlPerformanceHandlerReadNext             metricInfo
-	NewrelicmysqlPerformanceHandlerReadPrev             metricInfo
-	NewrelicmysqlPerformanceHandlerReadRnd              metricInfo
-	NewrelicmysqlPerformanceHandlerReadRndNext          metricInfo
-	NewrelicmysqlPerformanceHandlerRollback             metricInfo
-	NewrelicmysqlPerformanceHandlerUpdate               metricInfo
-	NewrelicmysqlPerformanceHandlerWrite                metricInfo
-	NewrelicmysqlPerformanceKeyCacheUtilization         metricInfo
-	NewrelicmysqlPerformanceMaxPreparedStmtCount        metricInfo
-	NewrelicmysqlPerformanceOpenFiles                   metricInfo
-	NewrelicmysqlPerformanceOpenTables                  metricInfo
-	NewrelicmysqlPerformanceOpenedTables                metricInfo
-	NewrelicmysqlPerformancePerformanceSchemaDigestLost metricInfo
-	NewrelicmysqlPerformancePreparedStmtCount           metricInfo
-	NewrelicmysqlPerformanceQcacheFreeBlocks            metricInfo
-	NewrelicmysqlPerformanceQcacheFreeMemory            metricInfo
-	NewrelicmysqlPerformanceQcacheHits                  metricInfo
-	NewrelicmysqlPerformanceQcacheInserts               metricInfo
-	NewrelicmysqlPerformanceQcacheLowmemPrunes          metricInfo
-	NewrelicmysqlPerformanceQcacheNotCached             metricInfo
-	NewrelicmysqlPerformanceQcacheQueriesInCache        metricInfo
-	NewrelicmysqlPerformanceQcacheSize                  metricInfo
-	NewrelicmysqlPerformanceQcacheTotalBlocks           metricInfo
-	NewrelicmysqlPerformanceQuestions                   metricInfo
-	NewrelicmysqlPerformanceSelectFullJoin              metricInfo
-	NewrelicmysqlPerformanceSelectFullRangeJoin         metricInfo
-	NewrelicmysqlPerformanceSelectRange                 metricInfo
-	NewrelicmysqlPerformanceSelectRangeCheck            metricInfo
-	NewrelicmysqlPerformanceSelectScan                  metricInfo
-	NewrelicmysqlPerformanceSlowQueries                 metricInfo
-	NewrelicmysqlPerformanceSortMergePasses             metricInfo
-	NewrelicmysqlPerformanceSortRange                   metricInfo
-	NewrelicmysqlPerformanceSortRows                    metricInfo
-	NewrelicmysqlPerformanceSortScan                    metricInfo
-	NewrelicmysqlPerformanceTableLocksImmediate         metricInfo
-	NewrelicmysqlPerformanceTableLocksImmediateRate     metricInfo
-	NewrelicmysqlPerformanceTableLocksWaited            metricInfo
-	NewrelicmysqlPerformanceTableOpenCache              metricInfo
-	NewrelicmysqlPerformanceThreadCacheSize             metricInfo
-	NewrelicmysqlPerformanceThreadsCached               metricInfo
-	NewrelicmysqlPerformanceThreadsConnected            metricInfo
-	NewrelicmysqlPerformanceThreadsCreated              metricInfo
-	NewrelicmysqlPerformanceThreadsRunning              metricInfo
-	NewrelicmysqlQueryCount                             metricInfo
-	NewrelicmysqlReplicationExecMasterLogPos            metricInfo
-	NewrelicmysqlReplicationLastIoErrno                 metricInfo
-	NewrelicmysqlReplicationLastSQLErrno                metricInfo
-	NewrelicmysqlReplicationReadMasterLogPos            metricInfo
-	NewrelicmysqlReplicationRelayLogSpace               metricInfo
-	NewrelicmysqlReplicationSecondsBehindMaster         metricInfo
-	NewrelicmysqlReplicationSlaveIoRunning              metricInfo
-	NewrelicmysqlReplicationSlaveRunning                metricInfo
-	NewrelicmysqlReplicationSlaveSQLRunning             metricInfo
-	NewrelicmysqlUptime                                 metricInfo
+	NewrelicmysqlBinlogCacheDiskUse                         metricInfo
+	NewrelicmysqlBinlogCacheUse                             metricInfo
+	NewrelicmysqlCommands                                   metricInfo
+	NewrelicmysqlConnectionCount                            metricInfo
+	NewrelicmysqlDbHandlerRollback                          metricInfo
+	NewrelicmysqlDbOpenedTables                             metricInfo
+	NewrelicmysqlInnodbActiveTransactions                   metricInfo
+	NewrelicmysqlInnodbAdaptiveHashHashSearches             metricInfo
+	NewrelicmysqlInnodbAdaptiveHashNonHashSearches          metricInfo
+	NewrelicmysqlInnodbAdaptiveHashPagesAdded               metricInfo
+	NewrelicmysqlInnodbAdaptiveHashPagesRemoved             metricInfo
+	NewrelicmysqlInnodbAvailableUndoLogs                    metricInfo
+	NewrelicmysqlInnodbBufferPoolBytesData                  metricInfo
+	NewrelicmysqlInnodbBufferPoolBytesDirty                 metricInfo
+	NewrelicmysqlInnodbBufferPoolDirty                      metricInfo
+	NewrelicmysqlInnodbBufferPoolFree                       metricInfo
+	NewrelicmysqlInnodbBufferPoolPagesData                  metricInfo
+	NewrelicmysqlInnodbBufferPoolPagesFlushed               metricInfo
+	NewrelicmysqlInnodbBufferPoolPagesFree                  metricInfo
+	NewrelicmysqlInnodbBufferPoolPagesLruFlushed            metricInfo
+	NewrelicmysqlInnodbBufferPoolPagesMadeNotYoung          metricInfo
+	NewrelicmysqlInnodbBufferPoolPagesMadeYoung             metricInfo
+	NewrelicmysqlInnodbBufferPoolPagesMisc                  metricInfo
+	NewrelicmysqlInnodbBufferPoolPagesOld                   metricInfo
+	NewrelicmysqlInnodbBufferPoolPagesTotal                 metricInfo
+	NewrelicmysqlInnodbBufferPoolReadAhead                  metricInfo
+	NewrelicmysqlInnodbBufferPoolReadAheadEvicted           metricInfo
+	NewrelicmysqlInnodbBufferPoolReadAheadRnd               metricInfo
+	NewrelicmysqlInnodbBufferPoolReadRequests               metricInfo
+	NewrelicmysqlInnodbBufferPoolReads                      metricInfo
+	NewrelicmysqlInnodbBufferPoolTotal                      metricInfo
+	NewrelicmysqlInnodbBufferPoolUsed                       metricInfo
+	NewrelicmysqlInnodbBufferPoolUtilization                metricInfo
+	NewrelicmysqlInnodbBufferPoolWaitFree                   metricInfo
+	NewrelicmysqlInnodbBufferPoolWriteRequests              metricInfo
+	NewrelicmysqlInnodbCheckpointAge                        metricInfo
+	NewrelicmysqlInnodbCurrentRowLocks                      metricInfo
+	NewrelicmysqlInnodbCurrentTransactions                  metricInfo
+	NewrelicmysqlInnodbDataFsyncs                           metricInfo
+	NewrelicmysqlInnodbDataPendingFsyncs                    metricInfo
+	NewrelicmysqlInnodbDataPendingReads                     metricInfo
+	NewrelicmysqlInnodbDataPendingWrites                    metricInfo
+	NewrelicmysqlInnodbDataRead                             metricInfo
+	NewrelicmysqlInnodbDataReads                            metricInfo
+	NewrelicmysqlInnodbDataWrites                           metricInfo
+	NewrelicmysqlInnodbDataWritten                          metricInfo
+	NewrelicmysqlInnodbDblwrPagesWritten                    metricInfo
+	NewrelicmysqlInnodbDblwrWrites                          metricInfo
+	NewrelicmysqlInnodbHashIndexCellsTotal                  metricInfo
+	NewrelicmysqlInnodbHashIndexCellsUsed                   metricInfo
+	NewrelicmysqlInnodbHistoryListLength                    metricInfo
+	NewrelicmysqlInnodbIbufFreeList                         metricInfo
+	NewrelicmysqlInnodbIbufMergedDeleteMarks                metricInfo
+	NewrelicmysqlInnodbIbufMergedDeletes                    metricInfo
+	NewrelicmysqlInnodbIbufMergedInserts                    metricInfo
+	NewrelicmysqlInnodbIbufMerges                           metricInfo
+	NewrelicmysqlInnodbIbufSegmentSize                      metricInfo
+	NewrelicmysqlInnodbIbufSize                             metricInfo
+	NewrelicmysqlInnodbLockStructs                          metricInfo
+	NewrelicmysqlInnodbLockedTables                         metricInfo
+	NewrelicmysqlInnodbLockedTransactions                   metricInfo
+	NewrelicmysqlInnodbLogWaits                             metricInfo
+	NewrelicmysqlInnodbLogWriteRequests                     metricInfo
+	NewrelicmysqlInnodbLogWrites                            metricInfo
+	NewrelicmysqlInnodbLsnCurrent                           metricInfo
+	NewrelicmysqlInnodbLsnFlushed                           metricInfo
+	NewrelicmysqlInnodbLsnLastCheckpoint                    metricInfo
+	NewrelicmysqlInnodbMasterThreadActiveLoops              metricInfo
+	NewrelicmysqlInnodbMasterThreadIdleLoops                metricInfo
+	NewrelicmysqlInnodbMemAdaptiveHash                      metricInfo
+	NewrelicmysqlInnodbMemAdditionalPool                    metricInfo
+	NewrelicmysqlInnodbMemDictionary                        metricInfo
+	NewrelicmysqlInnodbMemFileSystem                        metricInfo
+	NewrelicmysqlInnodbMemLockSystem                        metricInfo
+	NewrelicmysqlInnodbMemPageHash                          metricInfo
+	NewrelicmysqlInnodbMemRecoverySystem                    metricInfo
+	NewrelicmysqlInnodbMemThreadHash                        metricInfo
+	NewrelicmysqlInnodbMemTotal                             metricInfo
+	NewrelicmysqlInnodbMutexOsWaits                         metricInfo
+	NewrelicmysqlInnodbMutexSpinRounds                      metricInfo
+	NewrelicmysqlInnodbMutexSpinWaits                       metricInfo
+	NewrelicmysqlInnodbNumOpenFiles                         metricInfo
+	NewrelicmysqlInnodbOsFileFsyncs                         metricInfo
+	NewrelicmysqlInnodbOsFileReads                          metricInfo
+	NewrelicmysqlInnodbOsFileWrites                         metricInfo
+	NewrelicmysqlInnodbOsLogFsyncs                          metricInfo
+	NewrelicmysqlInnodbOsLogPendingFsyncs                   metricInfo
+	NewrelicmysqlInnodbOsLogPendingWrites                   metricInfo
+	NewrelicmysqlInnodbOsLogWritten                         metricInfo
+	NewrelicmysqlInnodbPageSize                             metricInfo
+	NewrelicmysqlInnodbPagesCreated                         metricInfo
+	NewrelicmysqlInnodbPagesRead                            metricInfo
+	NewrelicmysqlInnodbPagesWritten                         metricInfo
+	NewrelicmysqlInnodbPendingAioLogIos                     metricInfo
+	NewrelicmysqlInnodbPendingAioSyncIos                    metricInfo
+	NewrelicmysqlInnodbPendingBufferPoolFlushes             metricInfo
+	NewrelicmysqlInnodbPendingCheckpointWrites              metricInfo
+	NewrelicmysqlInnodbPendingIbufAioReads                  metricInfo
+	NewrelicmysqlInnodbPendingLogFlushes                    metricInfo
+	NewrelicmysqlInnodbPendingLogWrites                     metricInfo
+	NewrelicmysqlInnodbPendingNormalAioReads                metricInfo
+	NewrelicmysqlInnodbPendingNormalAioWrites               metricInfo
+	NewrelicmysqlInnodbPurgeTrxID                           metricInfo
+	NewrelicmysqlInnodbPurgeUndoNo                          metricInfo
+	NewrelicmysqlInnodbQueriesInside                        metricInfo
+	NewrelicmysqlInnodbQueriesQueued                        metricInfo
+	NewrelicmysqlInnodbReadViews                            metricInfo
+	NewrelicmysqlInnodbRedoLogEnabled                       metricInfo
+	NewrelicmysqlInnodbRowLockCurrentWaits                  metricInfo
+	NewrelicmysqlInnodbRowLockTime                          metricInfo
+	NewrelicmysqlInnodbRowLockTimeAvg                       metricInfo
+	NewrelicmysqlInnodbRowLockTimeMax                       metricInfo
+	NewrelicmysqlInnodbRowLockWaits                         metricInfo
+	NewrelicmysqlInnodbRowsDeleted                          metricInfo
+	NewrelicmysqlInnodbRowsInserted                         metricInfo
+	NewrelicmysqlInnodbRowsRead                             metricInfo
+	NewrelicmysqlInnodbRowsUpdated                          metricInfo
+	NewrelicmysqlInnodbSLockOsWaits                         metricInfo
+	NewrelicmysqlInnodbSLockSpinRounds                      metricInfo
+	NewrelicmysqlInnodbSLockSpinWaits                       metricInfo
+	NewrelicmysqlInnodbSemaphoreWaitTime                    metricInfo
+	NewrelicmysqlInnodbSemaphoreWaits                       metricInfo
+	NewrelicmysqlInnodbTablesInUse                          metricInfo
+	NewrelicmysqlInnodbTruncatedStatusWrites                metricInfo
+	NewrelicmysqlInnodbUndoTablespacesActive                metricInfo
+	NewrelicmysqlInnodbUndoTablespacesExplicit              metricInfo
+	NewrelicmysqlInnodbUndoTablespacesImplicit              metricInfo
+	NewrelicmysqlInnodbUndoTablespacesTotal                 metricInfo
+	NewrelicmysqlInnodbXLockOsWaits                         metricInfo
+	NewrelicmysqlInnodbXLockSpinRounds                      metricInfo
+	NewrelicmysqlInnodbXLockSpinWaits                       metricInfo
+	NewrelicmysqlMyisamKeyBufferBytesUnflushed              metricInfo
+	NewrelicmysqlMyisamKeyBufferBytesUsed                   metricInfo
+	NewrelicmysqlMyisamKeyBufferSize                        metricInfo
+	NewrelicmysqlMyisamKeyReadRequests                      metricInfo
+	NewrelicmysqlMyisamKeyReads                             metricInfo
+	NewrelicmysqlMyisamKeyWriteRequests                     metricInfo
+	NewrelicmysqlMyisamKeyWrites                            metricInfo
+	NewrelicmysqlNetAbortedClients                          metricInfo
+	NewrelicmysqlNetAbortedConnects                         metricInfo
+	NewrelicmysqlNetConnections                             metricInfo
+	NewrelicmysqlNetMaxConnections                          metricInfo
+	NewrelicmysqlNetMaxConnectionsAvailable                 metricInfo
+	NewrelicmysqlNetMaxUsedConnections                      metricInfo
+	NewrelicmysqlPerformanceBytesReceived                   metricInfo
+	NewrelicmysqlPerformanceBytesSent                       metricInfo
+	NewrelicmysqlPerformanceCreatedTmpDiskTables            metricInfo
+	NewrelicmysqlPerformanceCreatedTmpFiles                 metricInfo
+	NewrelicmysqlPerformanceCreatedTmpTables                metricInfo
+	NewrelicmysqlPerformanceHandlerCommit                   metricInfo
+	NewrelicmysqlPerformanceHandlerDelete                   metricInfo
+	NewrelicmysqlPerformanceHandlerPrepare                  metricInfo
+	NewrelicmysqlPerformanceHandlerReadFirst                metricInfo
+	NewrelicmysqlPerformanceHandlerReadKey                  metricInfo
+	NewrelicmysqlPerformanceHandlerReadNext                 metricInfo
+	NewrelicmysqlPerformanceHandlerReadPrev                 metricInfo
+	NewrelicmysqlPerformanceHandlerReadRnd                  metricInfo
+	NewrelicmysqlPerformanceHandlerReadRndNext              metricInfo
+	NewrelicmysqlPerformanceHandlerRollback                 metricInfo
+	NewrelicmysqlPerformanceHandlerUpdate                   metricInfo
+	NewrelicmysqlPerformanceHandlerWrite                    metricInfo
+	NewrelicmysqlPerformanceKeyCacheUtilization             metricInfo
+	NewrelicmysqlPerformanceMaxPreparedStmtCount            metricInfo
+	NewrelicmysqlPerformanceOpenFiles                       metricInfo
+	NewrelicmysqlPerformanceOpenTables                      metricInfo
+	NewrelicmysqlPerformanceOpenedTables                    metricInfo
+	NewrelicmysqlPerformancePerformanceSchemaDigestLost     metricInfo
+	NewrelicmysqlPerformancePreparedStmtCount               metricInfo
+	NewrelicmysqlPerformanceQcacheFreeBlocks                metricInfo
+	NewrelicmysqlPerformanceQcacheFreeMemory                metricInfo
+	NewrelicmysqlPerformanceQcacheHits                      metricInfo
+	NewrelicmysqlPerformanceQcacheInserts                   metricInfo
+	NewrelicmysqlPerformanceQcacheLowmemPrunes              metricInfo
+	NewrelicmysqlPerformanceQcacheNotCached                 metricInfo
+	NewrelicmysqlPerformanceQcacheQueriesInCache            metricInfo
+	NewrelicmysqlPerformanceQcacheSize                      metricInfo
+	NewrelicmysqlPerformanceQcacheTotalBlocks               metricInfo
+	NewrelicmysqlPerformanceQuestions                       metricInfo
+	NewrelicmysqlPerformanceSelectFullJoin                  metricInfo
+	NewrelicmysqlPerformanceSelectFullRangeJoin             metricInfo
+	NewrelicmysqlPerformanceSelectRange                     metricInfo
+	NewrelicmysqlPerformanceSelectRangeCheck                metricInfo
+	NewrelicmysqlPerformanceSelectScan                      metricInfo
+	NewrelicmysqlPerformanceSlowQueries                     metricInfo
+	NewrelicmysqlPerformanceSortMergePasses                 metricInfo
+	NewrelicmysqlPerformanceSortRange                       metricInfo
+	NewrelicmysqlPerformanceSortRows                        metricInfo
+	NewrelicmysqlPerformanceSortScan                        metricInfo
+	NewrelicmysqlPerformanceTableLocksImmediate             metricInfo
+	NewrelicmysqlPerformanceTableLocksImmediateRate         metricInfo
+	NewrelicmysqlPerformanceTableLocksWaited                metricInfo
+	NewrelicmysqlPerformanceTableOpenCache                  metricInfo
+	NewrelicmysqlPerformanceThreadCacheSize                 metricInfo
+	NewrelicmysqlPerformanceThreadsCached                   metricInfo
+	NewrelicmysqlPerformanceThreadsConnected                metricInfo
+	NewrelicmysqlPerformanceThreadsCreated                  metricInfo
+	NewrelicmysqlPerformanceThreadsRunning                  metricInfo
+	NewrelicmysqlQueryCount                                 metricInfo
+	NewrelicmysqlReplicationExecMasterLogPos                metricInfo
+	NewrelicmysqlReplicationGroupConflictsDetected          metricInfo
+	NewrelicmysqlReplicationGroupTransactions               metricInfo
+	NewrelicmysqlReplicationGroupTransactionsApplied        metricInfo
+	NewrelicmysqlReplicationGroupTransactionsCheck          metricInfo
+	NewrelicmysqlReplicationGroupTransactionsInApplierQueue metricInfo
+	NewrelicmysqlReplicationGroupTransactionsProposed       metricInfo
+	NewrelicmysqlReplicationGroupTransactionsRollback       metricInfo
+	NewrelicmysqlReplicationGroupTransactionsValidating     metricInfo
+	NewrelicmysqlReplicationLastIoErrno                     metricInfo
+	NewrelicmysqlReplicationLastSQLErrno                    metricInfo
+	NewrelicmysqlReplicationReadMasterLogPos                metricInfo
+	NewrelicmysqlReplicationRelayLogSpace                   metricInfo
+	NewrelicmysqlReplicationReplicasConnected               metricInfo
+	NewrelicmysqlReplicationSecondsBehindMaster             metricInfo
+	NewrelicmysqlReplicationSecondsBehindSource             metricInfo
+	NewrelicmysqlReplicationSlaveIoRunning                  metricInfo
+	NewrelicmysqlReplicationSlaveRunning                    metricInfo
+	NewrelicmysqlReplicationSlaveSQLRunning                 metricInfo
+	NewrelicmysqlReplicationSlavesConnected                 metricInfo
+	NewrelicmysqlUptime                                     metricInfo
 }
 
 type metricInfo struct {
@@ -10887,6 +10931,410 @@ func newMetricNewrelicmysqlReplicationExecMasterLogPos(cfg MetricConfig) metricN
 	return m
 }
 
+type metricNewrelicmysqlReplicationGroupConflictsDetected struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicmysql.replication.group.conflicts_detected metric with initial data.
+func (m *metricNewrelicmysqlReplicationGroupConflictsDetected) init() {
+	m.data.SetName("newrelicmysql.replication.group.conflicts_detected")
+	m.data.SetDescription("The number of transaction conflicts detected by the group replication certification process.")
+	m.data.SetUnit("{conflicts}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+}
+
+func (m *metricNewrelicmysqlReplicationGroupConflictsDetected) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicmysqlReplicationGroupConflictsDetected) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicmysqlReplicationGroupConflictsDetected) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicmysqlReplicationGroupConflictsDetected(cfg MetricConfig) metricNewrelicmysqlReplicationGroupConflictsDetected {
+	m := metricNewrelicmysqlReplicationGroupConflictsDetected{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicmysqlReplicationGroupTransactions struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicmysql.replication.group.transactions metric with initial data.
+func (m *metricNewrelicmysqlReplicationGroupTransactions) init() {
+	m.data.SetName("newrelicmysql.replication.group.transactions")
+	m.data.SetDescription("The total number of transactions that have been checked for conflicts by the group replication certification process.")
+	m.data.SetUnit("{transactions}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+}
+
+func (m *metricNewrelicmysqlReplicationGroupTransactions) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicmysqlReplicationGroupTransactions) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicmysqlReplicationGroupTransactions) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicmysqlReplicationGroupTransactions(cfg MetricConfig) metricNewrelicmysqlReplicationGroupTransactions {
+	m := metricNewrelicmysqlReplicationGroupTransactions{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicmysqlReplicationGroupTransactionsApplied struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicmysql.replication.group.transactions_applied metric with initial data.
+func (m *metricNewrelicmysqlReplicationGroupTransactionsApplied) init() {
+	m.data.SetName("newrelicmysql.replication.group.transactions_applied")
+	m.data.SetDescription("The number of transactions applied by the group replication applier.")
+	m.data.SetUnit("{transactions}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+}
+
+func (m *metricNewrelicmysqlReplicationGroupTransactionsApplied) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicmysqlReplicationGroupTransactionsApplied) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicmysqlReplicationGroupTransactionsApplied) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicmysqlReplicationGroupTransactionsApplied(cfg MetricConfig) metricNewrelicmysqlReplicationGroupTransactionsApplied {
+	m := metricNewrelicmysqlReplicationGroupTransactionsApplied{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicmysqlReplicationGroupTransactionsCheck struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicmysql.replication.group.transactions_check metric with initial data.
+func (m *metricNewrelicmysqlReplicationGroupTransactionsCheck) init() {
+	m.data.SetName("newrelicmysql.replication.group.transactions_check")
+	m.data.SetDescription("The number of transactions checked for conflicts in the group replication.")
+	m.data.SetUnit("{transactions}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+}
+
+func (m *metricNewrelicmysqlReplicationGroupTransactionsCheck) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicmysqlReplicationGroupTransactionsCheck) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicmysqlReplicationGroupTransactionsCheck) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicmysqlReplicationGroupTransactionsCheck(cfg MetricConfig) metricNewrelicmysqlReplicationGroupTransactionsCheck {
+	m := metricNewrelicmysqlReplicationGroupTransactionsCheck{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicmysqlReplicationGroupTransactionsInApplierQueue struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicmysql.replication.group.transactions_in_applier_queue metric with initial data.
+func (m *metricNewrelicmysqlReplicationGroupTransactionsInApplierQueue) init() {
+	m.data.SetName("newrelicmysql.replication.group.transactions_in_applier_queue")
+	m.data.SetDescription("The number of transactions in the group replication applier queue waiting to be applied.")
+	m.data.SetUnit("{transactions}")
+	m.data.SetEmptyGauge()
+}
+
+func (m *metricNewrelicmysqlReplicationGroupTransactionsInApplierQueue) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicmysqlReplicationGroupTransactionsInApplierQueue) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicmysqlReplicationGroupTransactionsInApplierQueue) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicmysqlReplicationGroupTransactionsInApplierQueue(cfg MetricConfig) metricNewrelicmysqlReplicationGroupTransactionsInApplierQueue {
+	m := metricNewrelicmysqlReplicationGroupTransactionsInApplierQueue{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicmysqlReplicationGroupTransactionsProposed struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicmysql.replication.group.transactions_proposed metric with initial data.
+func (m *metricNewrelicmysqlReplicationGroupTransactionsProposed) init() {
+	m.data.SetName("newrelicmysql.replication.group.transactions_proposed")
+	m.data.SetDescription("The number of transactions proposed for group replication.")
+	m.data.SetUnit("{transactions}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+}
+
+func (m *metricNewrelicmysqlReplicationGroupTransactionsProposed) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicmysqlReplicationGroupTransactionsProposed) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicmysqlReplicationGroupTransactionsProposed) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicmysqlReplicationGroupTransactionsProposed(cfg MetricConfig) metricNewrelicmysqlReplicationGroupTransactionsProposed {
+	m := metricNewrelicmysqlReplicationGroupTransactionsProposed{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicmysqlReplicationGroupTransactionsRollback struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicmysql.replication.group.transactions_rollback metric with initial data.
+func (m *metricNewrelicmysqlReplicationGroupTransactionsRollback) init() {
+	m.data.SetName("newrelicmysql.replication.group.transactions_rollback")
+	m.data.SetDescription("The number of transactions rolled back by group replication.")
+	m.data.SetUnit("{transactions}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+}
+
+func (m *metricNewrelicmysqlReplicationGroupTransactionsRollback) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicmysqlReplicationGroupTransactionsRollback) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicmysqlReplicationGroupTransactionsRollback) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicmysqlReplicationGroupTransactionsRollback(cfg MetricConfig) metricNewrelicmysqlReplicationGroupTransactionsRollback {
+	m := metricNewrelicmysqlReplicationGroupTransactionsRollback{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicmysqlReplicationGroupTransactionsValidating struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicmysql.replication.group.transactions_validating metric with initial data.
+func (m *metricNewrelicmysqlReplicationGroupTransactionsValidating) init() {
+	m.data.SetName("newrelicmysql.replication.group.transactions_validating")
+	m.data.SetDescription("The number of transactions currently being validated by the group replication.")
+	m.data.SetUnit("{transactions}")
+	m.data.SetEmptyGauge()
+}
+
+func (m *metricNewrelicmysqlReplicationGroupTransactionsValidating) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicmysqlReplicationGroupTransactionsValidating) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicmysqlReplicationGroupTransactionsValidating) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicmysqlReplicationGroupTransactionsValidating(cfg MetricConfig) metricNewrelicmysqlReplicationGroupTransactionsValidating {
+	m := metricNewrelicmysqlReplicationGroupTransactionsValidating{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
 type metricNewrelicmysqlReplicationLastIoErrno struct {
 	data     pmetric.Metric // data buffer for generated metric.
 	config   MetricConfig   // metric config provided by user.
@@ -11083,6 +11531,55 @@ func newMetricNewrelicmysqlReplicationRelayLogSpace(cfg MetricConfig) metricNewr
 	return m
 }
 
+type metricNewrelicmysqlReplicationReplicasConnected struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicmysql.replication.replicas_connected metric with initial data.
+func (m *metricNewrelicmysqlReplicationReplicasConnected) init() {
+	m.data.SetName("newrelicmysql.replication.replicas_connected")
+	m.data.SetDescription("The number of replicas currently connected to this source (MySQL 8.0.22+).")
+	m.data.SetUnit("{replicas}")
+	m.data.SetEmptyGauge()
+}
+
+func (m *metricNewrelicmysqlReplicationReplicasConnected) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicmysqlReplicationReplicasConnected) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicmysqlReplicationReplicasConnected) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicmysqlReplicationReplicasConnected(cfg MetricConfig) metricNewrelicmysqlReplicationReplicasConnected {
+	m := metricNewrelicmysqlReplicationReplicasConnected{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
 type metricNewrelicmysqlReplicationSecondsBehindMaster struct {
 	data     pmetric.Metric // data buffer for generated metric.
 	config   MetricConfig   // metric config provided by user.
@@ -11125,6 +11622,55 @@ func (m *metricNewrelicmysqlReplicationSecondsBehindMaster) emit(metrics pmetric
 
 func newMetricNewrelicmysqlReplicationSecondsBehindMaster(cfg MetricConfig) metricNewrelicmysqlReplicationSecondsBehindMaster {
 	m := metricNewrelicmysqlReplicationSecondsBehindMaster{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicmysqlReplicationSecondsBehindSource struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicmysql.replication.seconds_behind_source metric with initial data.
+func (m *metricNewrelicmysqlReplicationSecondsBehindSource) init() {
+	m.data.SetName("newrelicmysql.replication.seconds_behind_source")
+	m.data.SetDescription("The number of seconds that the replica SQL thread is behind processing the source binary log (MySQL 8.0.22+).")
+	m.data.SetUnit("s")
+	m.data.SetEmptyGauge()
+}
+
+func (m *metricNewrelicmysqlReplicationSecondsBehindSource) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicmysqlReplicationSecondsBehindSource) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicmysqlReplicationSecondsBehindSource) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicmysqlReplicationSecondsBehindSource(cfg MetricConfig) metricNewrelicmysqlReplicationSecondsBehindSource {
+	m := metricNewrelicmysqlReplicationSecondsBehindSource{config: cfg}
 	if cfg.Enabled {
 		m.data = pmetric.NewMetric()
 		m.init()
@@ -11279,6 +11825,55 @@ func newMetricNewrelicmysqlReplicationSlaveSQLRunning(cfg MetricConfig) metricNe
 	return m
 }
 
+type metricNewrelicmysqlReplicationSlavesConnected struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicmysql.replication.slaves_connected metric with initial data.
+func (m *metricNewrelicmysqlReplicationSlavesConnected) init() {
+	m.data.SetName("newrelicmysql.replication.slaves_connected")
+	m.data.SetDescription("The number of replicas currently connected to this master.")
+	m.data.SetUnit("{replicas}")
+	m.data.SetEmptyGauge()
+}
+
+func (m *metricNewrelicmysqlReplicationSlavesConnected) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicmysqlReplicationSlavesConnected) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicmysqlReplicationSlavesConnected) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicmysqlReplicationSlavesConnected(cfg MetricConfig) metricNewrelicmysqlReplicationSlavesConnected {
+	m := metricNewrelicmysqlReplicationSlavesConnected{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
 type metricNewrelicmysqlUptime struct {
 	data     pmetric.Metric // data buffer for generated metric.
 	config   MetricConfig   // metric config provided by user.
@@ -11333,221 +11928,232 @@ func newMetricNewrelicmysqlUptime(cfg MetricConfig) metricNewrelicmysqlUptime {
 // MetricsBuilder provides an interface for scrapers to report metrics while taking care of all the transformations
 // required to produce metric representation defined in metadata and user config.
 type MetricsBuilder struct {
-	config                                                    MetricsBuilderConfig // config of the metrics builder.
-	startTime                                                 pcommon.Timestamp    // start time that will be applied to all recorded data points.
-	metricsCapacity                                           int                  // maximum observed number of metrics per resource.
-	metricsBuffer                                             pmetric.Metrics      // accumulates metrics data before emitting.
-	buildInfo                                                 component.BuildInfo  // contains version information.
-	resourceAttributeIncludeFilter                            map[string]filter.Filter
-	resourceAttributeExcludeFilter                            map[string]filter.Filter
-	metricNewrelicmysqlBinlogCacheDiskUse                     metricNewrelicmysqlBinlogCacheDiskUse
-	metricNewrelicmysqlBinlogCacheUse                         metricNewrelicmysqlBinlogCacheUse
-	metricNewrelicmysqlCommands                               metricNewrelicmysqlCommands
-	metricNewrelicmysqlConnectionCount                        metricNewrelicmysqlConnectionCount
-	metricNewrelicmysqlDbHandlerRollback                      metricNewrelicmysqlDbHandlerRollback
-	metricNewrelicmysqlDbOpenedTables                         metricNewrelicmysqlDbOpenedTables
-	metricNewrelicmysqlInnodbActiveTransactions               metricNewrelicmysqlInnodbActiveTransactions
-	metricNewrelicmysqlInnodbAdaptiveHashHashSearches         metricNewrelicmysqlInnodbAdaptiveHashHashSearches
-	metricNewrelicmysqlInnodbAdaptiveHashNonHashSearches      metricNewrelicmysqlInnodbAdaptiveHashNonHashSearches
-	metricNewrelicmysqlInnodbAdaptiveHashPagesAdded           metricNewrelicmysqlInnodbAdaptiveHashPagesAdded
-	metricNewrelicmysqlInnodbAdaptiveHashPagesRemoved         metricNewrelicmysqlInnodbAdaptiveHashPagesRemoved
-	metricNewrelicmysqlInnodbAvailableUndoLogs                metricNewrelicmysqlInnodbAvailableUndoLogs
-	metricNewrelicmysqlInnodbBufferPoolBytesData              metricNewrelicmysqlInnodbBufferPoolBytesData
-	metricNewrelicmysqlInnodbBufferPoolBytesDirty             metricNewrelicmysqlInnodbBufferPoolBytesDirty
-	metricNewrelicmysqlInnodbBufferPoolDirty                  metricNewrelicmysqlInnodbBufferPoolDirty
-	metricNewrelicmysqlInnodbBufferPoolFree                   metricNewrelicmysqlInnodbBufferPoolFree
-	metricNewrelicmysqlInnodbBufferPoolPagesData              metricNewrelicmysqlInnodbBufferPoolPagesData
-	metricNewrelicmysqlInnodbBufferPoolPagesFlushed           metricNewrelicmysqlInnodbBufferPoolPagesFlushed
-	metricNewrelicmysqlInnodbBufferPoolPagesFree              metricNewrelicmysqlInnodbBufferPoolPagesFree
-	metricNewrelicmysqlInnodbBufferPoolPagesLruFlushed        metricNewrelicmysqlInnodbBufferPoolPagesLruFlushed
-	metricNewrelicmysqlInnodbBufferPoolPagesMadeNotYoung      metricNewrelicmysqlInnodbBufferPoolPagesMadeNotYoung
-	metricNewrelicmysqlInnodbBufferPoolPagesMadeYoung         metricNewrelicmysqlInnodbBufferPoolPagesMadeYoung
-	metricNewrelicmysqlInnodbBufferPoolPagesMisc              metricNewrelicmysqlInnodbBufferPoolPagesMisc
-	metricNewrelicmysqlInnodbBufferPoolPagesOld               metricNewrelicmysqlInnodbBufferPoolPagesOld
-	metricNewrelicmysqlInnodbBufferPoolPagesTotal             metricNewrelicmysqlInnodbBufferPoolPagesTotal
-	metricNewrelicmysqlInnodbBufferPoolReadAhead              metricNewrelicmysqlInnodbBufferPoolReadAhead
-	metricNewrelicmysqlInnodbBufferPoolReadAheadEvicted       metricNewrelicmysqlInnodbBufferPoolReadAheadEvicted
-	metricNewrelicmysqlInnodbBufferPoolReadAheadRnd           metricNewrelicmysqlInnodbBufferPoolReadAheadRnd
-	metricNewrelicmysqlInnodbBufferPoolReadRequests           metricNewrelicmysqlInnodbBufferPoolReadRequests
-	metricNewrelicmysqlInnodbBufferPoolReads                  metricNewrelicmysqlInnodbBufferPoolReads
-	metricNewrelicmysqlInnodbBufferPoolTotal                  metricNewrelicmysqlInnodbBufferPoolTotal
-	metricNewrelicmysqlInnodbBufferPoolUsed                   metricNewrelicmysqlInnodbBufferPoolUsed
-	metricNewrelicmysqlInnodbBufferPoolUtilization            metricNewrelicmysqlInnodbBufferPoolUtilization
-	metricNewrelicmysqlInnodbBufferPoolWaitFree               metricNewrelicmysqlInnodbBufferPoolWaitFree
-	metricNewrelicmysqlInnodbBufferPoolWriteRequests          metricNewrelicmysqlInnodbBufferPoolWriteRequests
-	metricNewrelicmysqlInnodbCheckpointAge                    metricNewrelicmysqlInnodbCheckpointAge
-	metricNewrelicmysqlInnodbCurrentRowLocks                  metricNewrelicmysqlInnodbCurrentRowLocks
-	metricNewrelicmysqlInnodbCurrentTransactions              metricNewrelicmysqlInnodbCurrentTransactions
-	metricNewrelicmysqlInnodbDataFsyncs                       metricNewrelicmysqlInnodbDataFsyncs
-	metricNewrelicmysqlInnodbDataPendingFsyncs                metricNewrelicmysqlInnodbDataPendingFsyncs
-	metricNewrelicmysqlInnodbDataPendingReads                 metricNewrelicmysqlInnodbDataPendingReads
-	metricNewrelicmysqlInnodbDataPendingWrites                metricNewrelicmysqlInnodbDataPendingWrites
-	metricNewrelicmysqlInnodbDataRead                         metricNewrelicmysqlInnodbDataRead
-	metricNewrelicmysqlInnodbDataReads                        metricNewrelicmysqlInnodbDataReads
-	metricNewrelicmysqlInnodbDataWrites                       metricNewrelicmysqlInnodbDataWrites
-	metricNewrelicmysqlInnodbDataWritten                      metricNewrelicmysqlInnodbDataWritten
-	metricNewrelicmysqlInnodbDblwrPagesWritten                metricNewrelicmysqlInnodbDblwrPagesWritten
-	metricNewrelicmysqlInnodbDblwrWrites                      metricNewrelicmysqlInnodbDblwrWrites
-	metricNewrelicmysqlInnodbHashIndexCellsTotal              metricNewrelicmysqlInnodbHashIndexCellsTotal
-	metricNewrelicmysqlInnodbHashIndexCellsUsed               metricNewrelicmysqlInnodbHashIndexCellsUsed
-	metricNewrelicmysqlInnodbHistoryListLength                metricNewrelicmysqlInnodbHistoryListLength
-	metricNewrelicmysqlInnodbIbufFreeList                     metricNewrelicmysqlInnodbIbufFreeList
-	metricNewrelicmysqlInnodbIbufMergedDeleteMarks            metricNewrelicmysqlInnodbIbufMergedDeleteMarks
-	metricNewrelicmysqlInnodbIbufMergedDeletes                metricNewrelicmysqlInnodbIbufMergedDeletes
-	metricNewrelicmysqlInnodbIbufMergedInserts                metricNewrelicmysqlInnodbIbufMergedInserts
-	metricNewrelicmysqlInnodbIbufMerges                       metricNewrelicmysqlInnodbIbufMerges
-	metricNewrelicmysqlInnodbIbufSegmentSize                  metricNewrelicmysqlInnodbIbufSegmentSize
-	metricNewrelicmysqlInnodbIbufSize                         metricNewrelicmysqlInnodbIbufSize
-	metricNewrelicmysqlInnodbLockStructs                      metricNewrelicmysqlInnodbLockStructs
-	metricNewrelicmysqlInnodbLockedTables                     metricNewrelicmysqlInnodbLockedTables
-	metricNewrelicmysqlInnodbLockedTransactions               metricNewrelicmysqlInnodbLockedTransactions
-	metricNewrelicmysqlInnodbLogWaits                         metricNewrelicmysqlInnodbLogWaits
-	metricNewrelicmysqlInnodbLogWriteRequests                 metricNewrelicmysqlInnodbLogWriteRequests
-	metricNewrelicmysqlInnodbLogWrites                        metricNewrelicmysqlInnodbLogWrites
-	metricNewrelicmysqlInnodbLsnCurrent                       metricNewrelicmysqlInnodbLsnCurrent
-	metricNewrelicmysqlInnodbLsnFlushed                       metricNewrelicmysqlInnodbLsnFlushed
-	metricNewrelicmysqlInnodbLsnLastCheckpoint                metricNewrelicmysqlInnodbLsnLastCheckpoint
-	metricNewrelicmysqlInnodbMasterThreadActiveLoops          metricNewrelicmysqlInnodbMasterThreadActiveLoops
-	metricNewrelicmysqlInnodbMasterThreadIdleLoops            metricNewrelicmysqlInnodbMasterThreadIdleLoops
-	metricNewrelicmysqlInnodbMemAdaptiveHash                  metricNewrelicmysqlInnodbMemAdaptiveHash
-	metricNewrelicmysqlInnodbMemAdditionalPool                metricNewrelicmysqlInnodbMemAdditionalPool
-	metricNewrelicmysqlInnodbMemDictionary                    metricNewrelicmysqlInnodbMemDictionary
-	metricNewrelicmysqlInnodbMemFileSystem                    metricNewrelicmysqlInnodbMemFileSystem
-	metricNewrelicmysqlInnodbMemLockSystem                    metricNewrelicmysqlInnodbMemLockSystem
-	metricNewrelicmysqlInnodbMemPageHash                      metricNewrelicmysqlInnodbMemPageHash
-	metricNewrelicmysqlInnodbMemRecoverySystem                metricNewrelicmysqlInnodbMemRecoverySystem
-	metricNewrelicmysqlInnodbMemThreadHash                    metricNewrelicmysqlInnodbMemThreadHash
-	metricNewrelicmysqlInnodbMemTotal                         metricNewrelicmysqlInnodbMemTotal
-	metricNewrelicmysqlInnodbMutexOsWaits                     metricNewrelicmysqlInnodbMutexOsWaits
-	metricNewrelicmysqlInnodbMutexSpinRounds                  metricNewrelicmysqlInnodbMutexSpinRounds
-	metricNewrelicmysqlInnodbMutexSpinWaits                   metricNewrelicmysqlInnodbMutexSpinWaits
-	metricNewrelicmysqlInnodbNumOpenFiles                     metricNewrelicmysqlInnodbNumOpenFiles
-	metricNewrelicmysqlInnodbOsFileFsyncs                     metricNewrelicmysqlInnodbOsFileFsyncs
-	metricNewrelicmysqlInnodbOsFileReads                      metricNewrelicmysqlInnodbOsFileReads
-	metricNewrelicmysqlInnodbOsFileWrites                     metricNewrelicmysqlInnodbOsFileWrites
-	metricNewrelicmysqlInnodbOsLogFsyncs                      metricNewrelicmysqlInnodbOsLogFsyncs
-	metricNewrelicmysqlInnodbOsLogPendingFsyncs               metricNewrelicmysqlInnodbOsLogPendingFsyncs
-	metricNewrelicmysqlInnodbOsLogPendingWrites               metricNewrelicmysqlInnodbOsLogPendingWrites
-	metricNewrelicmysqlInnodbOsLogWritten                     metricNewrelicmysqlInnodbOsLogWritten
-	metricNewrelicmysqlInnodbPageSize                         metricNewrelicmysqlInnodbPageSize
-	metricNewrelicmysqlInnodbPagesCreated                     metricNewrelicmysqlInnodbPagesCreated
-	metricNewrelicmysqlInnodbPagesRead                        metricNewrelicmysqlInnodbPagesRead
-	metricNewrelicmysqlInnodbPagesWritten                     metricNewrelicmysqlInnodbPagesWritten
-	metricNewrelicmysqlInnodbPendingAioLogIos                 metricNewrelicmysqlInnodbPendingAioLogIos
-	metricNewrelicmysqlInnodbPendingAioSyncIos                metricNewrelicmysqlInnodbPendingAioSyncIos
-	metricNewrelicmysqlInnodbPendingBufferPoolFlushes         metricNewrelicmysqlInnodbPendingBufferPoolFlushes
-	metricNewrelicmysqlInnodbPendingCheckpointWrites          metricNewrelicmysqlInnodbPendingCheckpointWrites
-	metricNewrelicmysqlInnodbPendingIbufAioReads              metricNewrelicmysqlInnodbPendingIbufAioReads
-	metricNewrelicmysqlInnodbPendingLogFlushes                metricNewrelicmysqlInnodbPendingLogFlushes
-	metricNewrelicmysqlInnodbPendingLogWrites                 metricNewrelicmysqlInnodbPendingLogWrites
-	metricNewrelicmysqlInnodbPendingNormalAioReads            metricNewrelicmysqlInnodbPendingNormalAioReads
-	metricNewrelicmysqlInnodbPendingNormalAioWrites           metricNewrelicmysqlInnodbPendingNormalAioWrites
-	metricNewrelicmysqlInnodbPurgeTrxID                       metricNewrelicmysqlInnodbPurgeTrxID
-	metricNewrelicmysqlInnodbPurgeUndoNo                      metricNewrelicmysqlInnodbPurgeUndoNo
-	metricNewrelicmysqlInnodbQueriesInside                    metricNewrelicmysqlInnodbQueriesInside
-	metricNewrelicmysqlInnodbQueriesQueued                    metricNewrelicmysqlInnodbQueriesQueued
-	metricNewrelicmysqlInnodbReadViews                        metricNewrelicmysqlInnodbReadViews
-	metricNewrelicmysqlInnodbRedoLogEnabled                   metricNewrelicmysqlInnodbRedoLogEnabled
-	metricNewrelicmysqlInnodbRowLockCurrentWaits              metricNewrelicmysqlInnodbRowLockCurrentWaits
-	metricNewrelicmysqlInnodbRowLockTime                      metricNewrelicmysqlInnodbRowLockTime
-	metricNewrelicmysqlInnodbRowLockTimeAvg                   metricNewrelicmysqlInnodbRowLockTimeAvg
-	metricNewrelicmysqlInnodbRowLockTimeMax                   metricNewrelicmysqlInnodbRowLockTimeMax
-	metricNewrelicmysqlInnodbRowLockWaits                     metricNewrelicmysqlInnodbRowLockWaits
-	metricNewrelicmysqlInnodbRowsDeleted                      metricNewrelicmysqlInnodbRowsDeleted
-	metricNewrelicmysqlInnodbRowsInserted                     metricNewrelicmysqlInnodbRowsInserted
-	metricNewrelicmysqlInnodbRowsRead                         metricNewrelicmysqlInnodbRowsRead
-	metricNewrelicmysqlInnodbRowsUpdated                      metricNewrelicmysqlInnodbRowsUpdated
-	metricNewrelicmysqlInnodbSLockOsWaits                     metricNewrelicmysqlInnodbSLockOsWaits
-	metricNewrelicmysqlInnodbSLockSpinRounds                  metricNewrelicmysqlInnodbSLockSpinRounds
-	metricNewrelicmysqlInnodbSLockSpinWaits                   metricNewrelicmysqlInnodbSLockSpinWaits
-	metricNewrelicmysqlInnodbSemaphoreWaitTime                metricNewrelicmysqlInnodbSemaphoreWaitTime
-	metricNewrelicmysqlInnodbSemaphoreWaits                   metricNewrelicmysqlInnodbSemaphoreWaits
-	metricNewrelicmysqlInnodbTablesInUse                      metricNewrelicmysqlInnodbTablesInUse
-	metricNewrelicmysqlInnodbTruncatedStatusWrites            metricNewrelicmysqlInnodbTruncatedStatusWrites
-	metricNewrelicmysqlInnodbUndoTablespacesActive            metricNewrelicmysqlInnodbUndoTablespacesActive
-	metricNewrelicmysqlInnodbUndoTablespacesExplicit          metricNewrelicmysqlInnodbUndoTablespacesExplicit
-	metricNewrelicmysqlInnodbUndoTablespacesImplicit          metricNewrelicmysqlInnodbUndoTablespacesImplicit
-	metricNewrelicmysqlInnodbUndoTablespacesTotal             metricNewrelicmysqlInnodbUndoTablespacesTotal
-	metricNewrelicmysqlInnodbXLockOsWaits                     metricNewrelicmysqlInnodbXLockOsWaits
-	metricNewrelicmysqlInnodbXLockSpinRounds                  metricNewrelicmysqlInnodbXLockSpinRounds
-	metricNewrelicmysqlInnodbXLockSpinWaits                   metricNewrelicmysqlInnodbXLockSpinWaits
-	metricNewrelicmysqlMyisamKeyBufferBytesUnflushed          metricNewrelicmysqlMyisamKeyBufferBytesUnflushed
-	metricNewrelicmysqlMyisamKeyBufferBytesUsed               metricNewrelicmysqlMyisamKeyBufferBytesUsed
-	metricNewrelicmysqlMyisamKeyBufferSize                    metricNewrelicmysqlMyisamKeyBufferSize
-	metricNewrelicmysqlMyisamKeyReadRequests                  metricNewrelicmysqlMyisamKeyReadRequests
-	metricNewrelicmysqlMyisamKeyReads                         metricNewrelicmysqlMyisamKeyReads
-	metricNewrelicmysqlMyisamKeyWriteRequests                 metricNewrelicmysqlMyisamKeyWriteRequests
-	metricNewrelicmysqlMyisamKeyWrites                        metricNewrelicmysqlMyisamKeyWrites
-	metricNewrelicmysqlNetAbortedClients                      metricNewrelicmysqlNetAbortedClients
-	metricNewrelicmysqlNetAbortedConnects                     metricNewrelicmysqlNetAbortedConnects
-	metricNewrelicmysqlNetConnections                         metricNewrelicmysqlNetConnections
-	metricNewrelicmysqlNetMaxConnections                      metricNewrelicmysqlNetMaxConnections
-	metricNewrelicmysqlNetMaxConnectionsAvailable             metricNewrelicmysqlNetMaxConnectionsAvailable
-	metricNewrelicmysqlNetMaxUsedConnections                  metricNewrelicmysqlNetMaxUsedConnections
-	metricNewrelicmysqlPerformanceBytesReceived               metricNewrelicmysqlPerformanceBytesReceived
-	metricNewrelicmysqlPerformanceBytesSent                   metricNewrelicmysqlPerformanceBytesSent
-	metricNewrelicmysqlPerformanceCreatedTmpDiskTables        metricNewrelicmysqlPerformanceCreatedTmpDiskTables
-	metricNewrelicmysqlPerformanceCreatedTmpFiles             metricNewrelicmysqlPerformanceCreatedTmpFiles
-	metricNewrelicmysqlPerformanceCreatedTmpTables            metricNewrelicmysqlPerformanceCreatedTmpTables
-	metricNewrelicmysqlPerformanceHandlerCommit               metricNewrelicmysqlPerformanceHandlerCommit
-	metricNewrelicmysqlPerformanceHandlerDelete               metricNewrelicmysqlPerformanceHandlerDelete
-	metricNewrelicmysqlPerformanceHandlerPrepare              metricNewrelicmysqlPerformanceHandlerPrepare
-	metricNewrelicmysqlPerformanceHandlerReadFirst            metricNewrelicmysqlPerformanceHandlerReadFirst
-	metricNewrelicmysqlPerformanceHandlerReadKey              metricNewrelicmysqlPerformanceHandlerReadKey
-	metricNewrelicmysqlPerformanceHandlerReadNext             metricNewrelicmysqlPerformanceHandlerReadNext
-	metricNewrelicmysqlPerformanceHandlerReadPrev             metricNewrelicmysqlPerformanceHandlerReadPrev
-	metricNewrelicmysqlPerformanceHandlerReadRnd              metricNewrelicmysqlPerformanceHandlerReadRnd
-	metricNewrelicmysqlPerformanceHandlerReadRndNext          metricNewrelicmysqlPerformanceHandlerReadRndNext
-	metricNewrelicmysqlPerformanceHandlerRollback             metricNewrelicmysqlPerformanceHandlerRollback
-	metricNewrelicmysqlPerformanceHandlerUpdate               metricNewrelicmysqlPerformanceHandlerUpdate
-	metricNewrelicmysqlPerformanceHandlerWrite                metricNewrelicmysqlPerformanceHandlerWrite
-	metricNewrelicmysqlPerformanceKeyCacheUtilization         metricNewrelicmysqlPerformanceKeyCacheUtilization
-	metricNewrelicmysqlPerformanceMaxPreparedStmtCount        metricNewrelicmysqlPerformanceMaxPreparedStmtCount
-	metricNewrelicmysqlPerformanceOpenFiles                   metricNewrelicmysqlPerformanceOpenFiles
-	metricNewrelicmysqlPerformanceOpenTables                  metricNewrelicmysqlPerformanceOpenTables
-	metricNewrelicmysqlPerformanceOpenedTables                metricNewrelicmysqlPerformanceOpenedTables
-	metricNewrelicmysqlPerformancePerformanceSchemaDigestLost metricNewrelicmysqlPerformancePerformanceSchemaDigestLost
-	metricNewrelicmysqlPerformancePreparedStmtCount           metricNewrelicmysqlPerformancePreparedStmtCount
-	metricNewrelicmysqlPerformanceQcacheFreeBlocks            metricNewrelicmysqlPerformanceQcacheFreeBlocks
-	metricNewrelicmysqlPerformanceQcacheFreeMemory            metricNewrelicmysqlPerformanceQcacheFreeMemory
-	metricNewrelicmysqlPerformanceQcacheHits                  metricNewrelicmysqlPerformanceQcacheHits
-	metricNewrelicmysqlPerformanceQcacheInserts               metricNewrelicmysqlPerformanceQcacheInserts
-	metricNewrelicmysqlPerformanceQcacheLowmemPrunes          metricNewrelicmysqlPerformanceQcacheLowmemPrunes
-	metricNewrelicmysqlPerformanceQcacheNotCached             metricNewrelicmysqlPerformanceQcacheNotCached
-	metricNewrelicmysqlPerformanceQcacheQueriesInCache        metricNewrelicmysqlPerformanceQcacheQueriesInCache
-	metricNewrelicmysqlPerformanceQcacheSize                  metricNewrelicmysqlPerformanceQcacheSize
-	metricNewrelicmysqlPerformanceQcacheTotalBlocks           metricNewrelicmysqlPerformanceQcacheTotalBlocks
-	metricNewrelicmysqlPerformanceQuestions                   metricNewrelicmysqlPerformanceQuestions
-	metricNewrelicmysqlPerformanceSelectFullJoin              metricNewrelicmysqlPerformanceSelectFullJoin
-	metricNewrelicmysqlPerformanceSelectFullRangeJoin         metricNewrelicmysqlPerformanceSelectFullRangeJoin
-	metricNewrelicmysqlPerformanceSelectRange                 metricNewrelicmysqlPerformanceSelectRange
-	metricNewrelicmysqlPerformanceSelectRangeCheck            metricNewrelicmysqlPerformanceSelectRangeCheck
-	metricNewrelicmysqlPerformanceSelectScan                  metricNewrelicmysqlPerformanceSelectScan
-	metricNewrelicmysqlPerformanceSlowQueries                 metricNewrelicmysqlPerformanceSlowQueries
-	metricNewrelicmysqlPerformanceSortMergePasses             metricNewrelicmysqlPerformanceSortMergePasses
-	metricNewrelicmysqlPerformanceSortRange                   metricNewrelicmysqlPerformanceSortRange
-	metricNewrelicmysqlPerformanceSortRows                    metricNewrelicmysqlPerformanceSortRows
-	metricNewrelicmysqlPerformanceSortScan                    metricNewrelicmysqlPerformanceSortScan
-	metricNewrelicmysqlPerformanceTableLocksImmediate         metricNewrelicmysqlPerformanceTableLocksImmediate
-	metricNewrelicmysqlPerformanceTableLocksImmediateRate     metricNewrelicmysqlPerformanceTableLocksImmediateRate
-	metricNewrelicmysqlPerformanceTableLocksWaited            metricNewrelicmysqlPerformanceTableLocksWaited
-	metricNewrelicmysqlPerformanceTableOpenCache              metricNewrelicmysqlPerformanceTableOpenCache
-	metricNewrelicmysqlPerformanceThreadCacheSize             metricNewrelicmysqlPerformanceThreadCacheSize
-	metricNewrelicmysqlPerformanceThreadsCached               metricNewrelicmysqlPerformanceThreadsCached
-	metricNewrelicmysqlPerformanceThreadsConnected            metricNewrelicmysqlPerformanceThreadsConnected
-	metricNewrelicmysqlPerformanceThreadsCreated              metricNewrelicmysqlPerformanceThreadsCreated
-	metricNewrelicmysqlPerformanceThreadsRunning              metricNewrelicmysqlPerformanceThreadsRunning
-	metricNewrelicmysqlQueryCount                             metricNewrelicmysqlQueryCount
-	metricNewrelicmysqlReplicationExecMasterLogPos            metricNewrelicmysqlReplicationExecMasterLogPos
-	metricNewrelicmysqlReplicationLastIoErrno                 metricNewrelicmysqlReplicationLastIoErrno
-	metricNewrelicmysqlReplicationLastSQLErrno                metricNewrelicmysqlReplicationLastSQLErrno
-	metricNewrelicmysqlReplicationReadMasterLogPos            metricNewrelicmysqlReplicationReadMasterLogPos
-	metricNewrelicmysqlReplicationRelayLogSpace               metricNewrelicmysqlReplicationRelayLogSpace
-	metricNewrelicmysqlReplicationSecondsBehindMaster         metricNewrelicmysqlReplicationSecondsBehindMaster
-	metricNewrelicmysqlReplicationSlaveIoRunning              metricNewrelicmysqlReplicationSlaveIoRunning
-	metricNewrelicmysqlReplicationSlaveRunning                metricNewrelicmysqlReplicationSlaveRunning
-	metricNewrelicmysqlReplicationSlaveSQLRunning             metricNewrelicmysqlReplicationSlaveSQLRunning
-	metricNewrelicmysqlUptime                                 metricNewrelicmysqlUptime
+	config                                                        MetricsBuilderConfig // config of the metrics builder.
+	startTime                                                     pcommon.Timestamp    // start time that will be applied to all recorded data points.
+	metricsCapacity                                               int                  // maximum observed number of metrics per resource.
+	metricsBuffer                                                 pmetric.Metrics      // accumulates metrics data before emitting.
+	buildInfo                                                     component.BuildInfo  // contains version information.
+	resourceAttributeIncludeFilter                                map[string]filter.Filter
+	resourceAttributeExcludeFilter                                map[string]filter.Filter
+	metricNewrelicmysqlBinlogCacheDiskUse                         metricNewrelicmysqlBinlogCacheDiskUse
+	metricNewrelicmysqlBinlogCacheUse                             metricNewrelicmysqlBinlogCacheUse
+	metricNewrelicmysqlCommands                                   metricNewrelicmysqlCommands
+	metricNewrelicmysqlConnectionCount                            metricNewrelicmysqlConnectionCount
+	metricNewrelicmysqlDbHandlerRollback                          metricNewrelicmysqlDbHandlerRollback
+	metricNewrelicmysqlDbOpenedTables                             metricNewrelicmysqlDbOpenedTables
+	metricNewrelicmysqlInnodbActiveTransactions                   metricNewrelicmysqlInnodbActiveTransactions
+	metricNewrelicmysqlInnodbAdaptiveHashHashSearches             metricNewrelicmysqlInnodbAdaptiveHashHashSearches
+	metricNewrelicmysqlInnodbAdaptiveHashNonHashSearches          metricNewrelicmysqlInnodbAdaptiveHashNonHashSearches
+	metricNewrelicmysqlInnodbAdaptiveHashPagesAdded               metricNewrelicmysqlInnodbAdaptiveHashPagesAdded
+	metricNewrelicmysqlInnodbAdaptiveHashPagesRemoved             metricNewrelicmysqlInnodbAdaptiveHashPagesRemoved
+	metricNewrelicmysqlInnodbAvailableUndoLogs                    metricNewrelicmysqlInnodbAvailableUndoLogs
+	metricNewrelicmysqlInnodbBufferPoolBytesData                  metricNewrelicmysqlInnodbBufferPoolBytesData
+	metricNewrelicmysqlInnodbBufferPoolBytesDirty                 metricNewrelicmysqlInnodbBufferPoolBytesDirty
+	metricNewrelicmysqlInnodbBufferPoolDirty                      metricNewrelicmysqlInnodbBufferPoolDirty
+	metricNewrelicmysqlInnodbBufferPoolFree                       metricNewrelicmysqlInnodbBufferPoolFree
+	metricNewrelicmysqlInnodbBufferPoolPagesData                  metricNewrelicmysqlInnodbBufferPoolPagesData
+	metricNewrelicmysqlInnodbBufferPoolPagesFlushed               metricNewrelicmysqlInnodbBufferPoolPagesFlushed
+	metricNewrelicmysqlInnodbBufferPoolPagesFree                  metricNewrelicmysqlInnodbBufferPoolPagesFree
+	metricNewrelicmysqlInnodbBufferPoolPagesLruFlushed            metricNewrelicmysqlInnodbBufferPoolPagesLruFlushed
+	metricNewrelicmysqlInnodbBufferPoolPagesMadeNotYoung          metricNewrelicmysqlInnodbBufferPoolPagesMadeNotYoung
+	metricNewrelicmysqlInnodbBufferPoolPagesMadeYoung             metricNewrelicmysqlInnodbBufferPoolPagesMadeYoung
+	metricNewrelicmysqlInnodbBufferPoolPagesMisc                  metricNewrelicmysqlInnodbBufferPoolPagesMisc
+	metricNewrelicmysqlInnodbBufferPoolPagesOld                   metricNewrelicmysqlInnodbBufferPoolPagesOld
+	metricNewrelicmysqlInnodbBufferPoolPagesTotal                 metricNewrelicmysqlInnodbBufferPoolPagesTotal
+	metricNewrelicmysqlInnodbBufferPoolReadAhead                  metricNewrelicmysqlInnodbBufferPoolReadAhead
+	metricNewrelicmysqlInnodbBufferPoolReadAheadEvicted           metricNewrelicmysqlInnodbBufferPoolReadAheadEvicted
+	metricNewrelicmysqlInnodbBufferPoolReadAheadRnd               metricNewrelicmysqlInnodbBufferPoolReadAheadRnd
+	metricNewrelicmysqlInnodbBufferPoolReadRequests               metricNewrelicmysqlInnodbBufferPoolReadRequests
+	metricNewrelicmysqlInnodbBufferPoolReads                      metricNewrelicmysqlInnodbBufferPoolReads
+	metricNewrelicmysqlInnodbBufferPoolTotal                      metricNewrelicmysqlInnodbBufferPoolTotal
+	metricNewrelicmysqlInnodbBufferPoolUsed                       metricNewrelicmysqlInnodbBufferPoolUsed
+	metricNewrelicmysqlInnodbBufferPoolUtilization                metricNewrelicmysqlInnodbBufferPoolUtilization
+	metricNewrelicmysqlInnodbBufferPoolWaitFree                   metricNewrelicmysqlInnodbBufferPoolWaitFree
+	metricNewrelicmysqlInnodbBufferPoolWriteRequests              metricNewrelicmysqlInnodbBufferPoolWriteRequests
+	metricNewrelicmysqlInnodbCheckpointAge                        metricNewrelicmysqlInnodbCheckpointAge
+	metricNewrelicmysqlInnodbCurrentRowLocks                      metricNewrelicmysqlInnodbCurrentRowLocks
+	metricNewrelicmysqlInnodbCurrentTransactions                  metricNewrelicmysqlInnodbCurrentTransactions
+	metricNewrelicmysqlInnodbDataFsyncs                           metricNewrelicmysqlInnodbDataFsyncs
+	metricNewrelicmysqlInnodbDataPendingFsyncs                    metricNewrelicmysqlInnodbDataPendingFsyncs
+	metricNewrelicmysqlInnodbDataPendingReads                     metricNewrelicmysqlInnodbDataPendingReads
+	metricNewrelicmysqlInnodbDataPendingWrites                    metricNewrelicmysqlInnodbDataPendingWrites
+	metricNewrelicmysqlInnodbDataRead                             metricNewrelicmysqlInnodbDataRead
+	metricNewrelicmysqlInnodbDataReads                            metricNewrelicmysqlInnodbDataReads
+	metricNewrelicmysqlInnodbDataWrites                           metricNewrelicmysqlInnodbDataWrites
+	metricNewrelicmysqlInnodbDataWritten                          metricNewrelicmysqlInnodbDataWritten
+	metricNewrelicmysqlInnodbDblwrPagesWritten                    metricNewrelicmysqlInnodbDblwrPagesWritten
+	metricNewrelicmysqlInnodbDblwrWrites                          metricNewrelicmysqlInnodbDblwrWrites
+	metricNewrelicmysqlInnodbHashIndexCellsTotal                  metricNewrelicmysqlInnodbHashIndexCellsTotal
+	metricNewrelicmysqlInnodbHashIndexCellsUsed                   metricNewrelicmysqlInnodbHashIndexCellsUsed
+	metricNewrelicmysqlInnodbHistoryListLength                    metricNewrelicmysqlInnodbHistoryListLength
+	metricNewrelicmysqlInnodbIbufFreeList                         metricNewrelicmysqlInnodbIbufFreeList
+	metricNewrelicmysqlInnodbIbufMergedDeleteMarks                metricNewrelicmysqlInnodbIbufMergedDeleteMarks
+	metricNewrelicmysqlInnodbIbufMergedDeletes                    metricNewrelicmysqlInnodbIbufMergedDeletes
+	metricNewrelicmysqlInnodbIbufMergedInserts                    metricNewrelicmysqlInnodbIbufMergedInserts
+	metricNewrelicmysqlInnodbIbufMerges                           metricNewrelicmysqlInnodbIbufMerges
+	metricNewrelicmysqlInnodbIbufSegmentSize                      metricNewrelicmysqlInnodbIbufSegmentSize
+	metricNewrelicmysqlInnodbIbufSize                             metricNewrelicmysqlInnodbIbufSize
+	metricNewrelicmysqlInnodbLockStructs                          metricNewrelicmysqlInnodbLockStructs
+	metricNewrelicmysqlInnodbLockedTables                         metricNewrelicmysqlInnodbLockedTables
+	metricNewrelicmysqlInnodbLockedTransactions                   metricNewrelicmysqlInnodbLockedTransactions
+	metricNewrelicmysqlInnodbLogWaits                             metricNewrelicmysqlInnodbLogWaits
+	metricNewrelicmysqlInnodbLogWriteRequests                     metricNewrelicmysqlInnodbLogWriteRequests
+	metricNewrelicmysqlInnodbLogWrites                            metricNewrelicmysqlInnodbLogWrites
+	metricNewrelicmysqlInnodbLsnCurrent                           metricNewrelicmysqlInnodbLsnCurrent
+	metricNewrelicmysqlInnodbLsnFlushed                           metricNewrelicmysqlInnodbLsnFlushed
+	metricNewrelicmysqlInnodbLsnLastCheckpoint                    metricNewrelicmysqlInnodbLsnLastCheckpoint
+	metricNewrelicmysqlInnodbMasterThreadActiveLoops              metricNewrelicmysqlInnodbMasterThreadActiveLoops
+	metricNewrelicmysqlInnodbMasterThreadIdleLoops                metricNewrelicmysqlInnodbMasterThreadIdleLoops
+	metricNewrelicmysqlInnodbMemAdaptiveHash                      metricNewrelicmysqlInnodbMemAdaptiveHash
+	metricNewrelicmysqlInnodbMemAdditionalPool                    metricNewrelicmysqlInnodbMemAdditionalPool
+	metricNewrelicmysqlInnodbMemDictionary                        metricNewrelicmysqlInnodbMemDictionary
+	metricNewrelicmysqlInnodbMemFileSystem                        metricNewrelicmysqlInnodbMemFileSystem
+	metricNewrelicmysqlInnodbMemLockSystem                        metricNewrelicmysqlInnodbMemLockSystem
+	metricNewrelicmysqlInnodbMemPageHash                          metricNewrelicmysqlInnodbMemPageHash
+	metricNewrelicmysqlInnodbMemRecoverySystem                    metricNewrelicmysqlInnodbMemRecoverySystem
+	metricNewrelicmysqlInnodbMemThreadHash                        metricNewrelicmysqlInnodbMemThreadHash
+	metricNewrelicmysqlInnodbMemTotal                             metricNewrelicmysqlInnodbMemTotal
+	metricNewrelicmysqlInnodbMutexOsWaits                         metricNewrelicmysqlInnodbMutexOsWaits
+	metricNewrelicmysqlInnodbMutexSpinRounds                      metricNewrelicmysqlInnodbMutexSpinRounds
+	metricNewrelicmysqlInnodbMutexSpinWaits                       metricNewrelicmysqlInnodbMutexSpinWaits
+	metricNewrelicmysqlInnodbNumOpenFiles                         metricNewrelicmysqlInnodbNumOpenFiles
+	metricNewrelicmysqlInnodbOsFileFsyncs                         metricNewrelicmysqlInnodbOsFileFsyncs
+	metricNewrelicmysqlInnodbOsFileReads                          metricNewrelicmysqlInnodbOsFileReads
+	metricNewrelicmysqlInnodbOsFileWrites                         metricNewrelicmysqlInnodbOsFileWrites
+	metricNewrelicmysqlInnodbOsLogFsyncs                          metricNewrelicmysqlInnodbOsLogFsyncs
+	metricNewrelicmysqlInnodbOsLogPendingFsyncs                   metricNewrelicmysqlInnodbOsLogPendingFsyncs
+	metricNewrelicmysqlInnodbOsLogPendingWrites                   metricNewrelicmysqlInnodbOsLogPendingWrites
+	metricNewrelicmysqlInnodbOsLogWritten                         metricNewrelicmysqlInnodbOsLogWritten
+	metricNewrelicmysqlInnodbPageSize                             metricNewrelicmysqlInnodbPageSize
+	metricNewrelicmysqlInnodbPagesCreated                         metricNewrelicmysqlInnodbPagesCreated
+	metricNewrelicmysqlInnodbPagesRead                            metricNewrelicmysqlInnodbPagesRead
+	metricNewrelicmysqlInnodbPagesWritten                         metricNewrelicmysqlInnodbPagesWritten
+	metricNewrelicmysqlInnodbPendingAioLogIos                     metricNewrelicmysqlInnodbPendingAioLogIos
+	metricNewrelicmysqlInnodbPendingAioSyncIos                    metricNewrelicmysqlInnodbPendingAioSyncIos
+	metricNewrelicmysqlInnodbPendingBufferPoolFlushes             metricNewrelicmysqlInnodbPendingBufferPoolFlushes
+	metricNewrelicmysqlInnodbPendingCheckpointWrites              metricNewrelicmysqlInnodbPendingCheckpointWrites
+	metricNewrelicmysqlInnodbPendingIbufAioReads                  metricNewrelicmysqlInnodbPendingIbufAioReads
+	metricNewrelicmysqlInnodbPendingLogFlushes                    metricNewrelicmysqlInnodbPendingLogFlushes
+	metricNewrelicmysqlInnodbPendingLogWrites                     metricNewrelicmysqlInnodbPendingLogWrites
+	metricNewrelicmysqlInnodbPendingNormalAioReads                metricNewrelicmysqlInnodbPendingNormalAioReads
+	metricNewrelicmysqlInnodbPendingNormalAioWrites               metricNewrelicmysqlInnodbPendingNormalAioWrites
+	metricNewrelicmysqlInnodbPurgeTrxID                           metricNewrelicmysqlInnodbPurgeTrxID
+	metricNewrelicmysqlInnodbPurgeUndoNo                          metricNewrelicmysqlInnodbPurgeUndoNo
+	metricNewrelicmysqlInnodbQueriesInside                        metricNewrelicmysqlInnodbQueriesInside
+	metricNewrelicmysqlInnodbQueriesQueued                        metricNewrelicmysqlInnodbQueriesQueued
+	metricNewrelicmysqlInnodbReadViews                            metricNewrelicmysqlInnodbReadViews
+	metricNewrelicmysqlInnodbRedoLogEnabled                       metricNewrelicmysqlInnodbRedoLogEnabled
+	metricNewrelicmysqlInnodbRowLockCurrentWaits                  metricNewrelicmysqlInnodbRowLockCurrentWaits
+	metricNewrelicmysqlInnodbRowLockTime                          metricNewrelicmysqlInnodbRowLockTime
+	metricNewrelicmysqlInnodbRowLockTimeAvg                       metricNewrelicmysqlInnodbRowLockTimeAvg
+	metricNewrelicmysqlInnodbRowLockTimeMax                       metricNewrelicmysqlInnodbRowLockTimeMax
+	metricNewrelicmysqlInnodbRowLockWaits                         metricNewrelicmysqlInnodbRowLockWaits
+	metricNewrelicmysqlInnodbRowsDeleted                          metricNewrelicmysqlInnodbRowsDeleted
+	metricNewrelicmysqlInnodbRowsInserted                         metricNewrelicmysqlInnodbRowsInserted
+	metricNewrelicmysqlInnodbRowsRead                             metricNewrelicmysqlInnodbRowsRead
+	metricNewrelicmysqlInnodbRowsUpdated                          metricNewrelicmysqlInnodbRowsUpdated
+	metricNewrelicmysqlInnodbSLockOsWaits                         metricNewrelicmysqlInnodbSLockOsWaits
+	metricNewrelicmysqlInnodbSLockSpinRounds                      metricNewrelicmysqlInnodbSLockSpinRounds
+	metricNewrelicmysqlInnodbSLockSpinWaits                       metricNewrelicmysqlInnodbSLockSpinWaits
+	metricNewrelicmysqlInnodbSemaphoreWaitTime                    metricNewrelicmysqlInnodbSemaphoreWaitTime
+	metricNewrelicmysqlInnodbSemaphoreWaits                       metricNewrelicmysqlInnodbSemaphoreWaits
+	metricNewrelicmysqlInnodbTablesInUse                          metricNewrelicmysqlInnodbTablesInUse
+	metricNewrelicmysqlInnodbTruncatedStatusWrites                metricNewrelicmysqlInnodbTruncatedStatusWrites
+	metricNewrelicmysqlInnodbUndoTablespacesActive                metricNewrelicmysqlInnodbUndoTablespacesActive
+	metricNewrelicmysqlInnodbUndoTablespacesExplicit              metricNewrelicmysqlInnodbUndoTablespacesExplicit
+	metricNewrelicmysqlInnodbUndoTablespacesImplicit              metricNewrelicmysqlInnodbUndoTablespacesImplicit
+	metricNewrelicmysqlInnodbUndoTablespacesTotal                 metricNewrelicmysqlInnodbUndoTablespacesTotal
+	metricNewrelicmysqlInnodbXLockOsWaits                         metricNewrelicmysqlInnodbXLockOsWaits
+	metricNewrelicmysqlInnodbXLockSpinRounds                      metricNewrelicmysqlInnodbXLockSpinRounds
+	metricNewrelicmysqlInnodbXLockSpinWaits                       metricNewrelicmysqlInnodbXLockSpinWaits
+	metricNewrelicmysqlMyisamKeyBufferBytesUnflushed              metricNewrelicmysqlMyisamKeyBufferBytesUnflushed
+	metricNewrelicmysqlMyisamKeyBufferBytesUsed                   metricNewrelicmysqlMyisamKeyBufferBytesUsed
+	metricNewrelicmysqlMyisamKeyBufferSize                        metricNewrelicmysqlMyisamKeyBufferSize
+	metricNewrelicmysqlMyisamKeyReadRequests                      metricNewrelicmysqlMyisamKeyReadRequests
+	metricNewrelicmysqlMyisamKeyReads                             metricNewrelicmysqlMyisamKeyReads
+	metricNewrelicmysqlMyisamKeyWriteRequests                     metricNewrelicmysqlMyisamKeyWriteRequests
+	metricNewrelicmysqlMyisamKeyWrites                            metricNewrelicmysqlMyisamKeyWrites
+	metricNewrelicmysqlNetAbortedClients                          metricNewrelicmysqlNetAbortedClients
+	metricNewrelicmysqlNetAbortedConnects                         metricNewrelicmysqlNetAbortedConnects
+	metricNewrelicmysqlNetConnections                             metricNewrelicmysqlNetConnections
+	metricNewrelicmysqlNetMaxConnections                          metricNewrelicmysqlNetMaxConnections
+	metricNewrelicmysqlNetMaxConnectionsAvailable                 metricNewrelicmysqlNetMaxConnectionsAvailable
+	metricNewrelicmysqlNetMaxUsedConnections                      metricNewrelicmysqlNetMaxUsedConnections
+	metricNewrelicmysqlPerformanceBytesReceived                   metricNewrelicmysqlPerformanceBytesReceived
+	metricNewrelicmysqlPerformanceBytesSent                       metricNewrelicmysqlPerformanceBytesSent
+	metricNewrelicmysqlPerformanceCreatedTmpDiskTables            metricNewrelicmysqlPerformanceCreatedTmpDiskTables
+	metricNewrelicmysqlPerformanceCreatedTmpFiles                 metricNewrelicmysqlPerformanceCreatedTmpFiles
+	metricNewrelicmysqlPerformanceCreatedTmpTables                metricNewrelicmysqlPerformanceCreatedTmpTables
+	metricNewrelicmysqlPerformanceHandlerCommit                   metricNewrelicmysqlPerformanceHandlerCommit
+	metricNewrelicmysqlPerformanceHandlerDelete                   metricNewrelicmysqlPerformanceHandlerDelete
+	metricNewrelicmysqlPerformanceHandlerPrepare                  metricNewrelicmysqlPerformanceHandlerPrepare
+	metricNewrelicmysqlPerformanceHandlerReadFirst                metricNewrelicmysqlPerformanceHandlerReadFirst
+	metricNewrelicmysqlPerformanceHandlerReadKey                  metricNewrelicmysqlPerformanceHandlerReadKey
+	metricNewrelicmysqlPerformanceHandlerReadNext                 metricNewrelicmysqlPerformanceHandlerReadNext
+	metricNewrelicmysqlPerformanceHandlerReadPrev                 metricNewrelicmysqlPerformanceHandlerReadPrev
+	metricNewrelicmysqlPerformanceHandlerReadRnd                  metricNewrelicmysqlPerformanceHandlerReadRnd
+	metricNewrelicmysqlPerformanceHandlerReadRndNext              metricNewrelicmysqlPerformanceHandlerReadRndNext
+	metricNewrelicmysqlPerformanceHandlerRollback                 metricNewrelicmysqlPerformanceHandlerRollback
+	metricNewrelicmysqlPerformanceHandlerUpdate                   metricNewrelicmysqlPerformanceHandlerUpdate
+	metricNewrelicmysqlPerformanceHandlerWrite                    metricNewrelicmysqlPerformanceHandlerWrite
+	metricNewrelicmysqlPerformanceKeyCacheUtilization             metricNewrelicmysqlPerformanceKeyCacheUtilization
+	metricNewrelicmysqlPerformanceMaxPreparedStmtCount            metricNewrelicmysqlPerformanceMaxPreparedStmtCount
+	metricNewrelicmysqlPerformanceOpenFiles                       metricNewrelicmysqlPerformanceOpenFiles
+	metricNewrelicmysqlPerformanceOpenTables                      metricNewrelicmysqlPerformanceOpenTables
+	metricNewrelicmysqlPerformanceOpenedTables                    metricNewrelicmysqlPerformanceOpenedTables
+	metricNewrelicmysqlPerformancePerformanceSchemaDigestLost     metricNewrelicmysqlPerformancePerformanceSchemaDigestLost
+	metricNewrelicmysqlPerformancePreparedStmtCount               metricNewrelicmysqlPerformancePreparedStmtCount
+	metricNewrelicmysqlPerformanceQcacheFreeBlocks                metricNewrelicmysqlPerformanceQcacheFreeBlocks
+	metricNewrelicmysqlPerformanceQcacheFreeMemory                metricNewrelicmysqlPerformanceQcacheFreeMemory
+	metricNewrelicmysqlPerformanceQcacheHits                      metricNewrelicmysqlPerformanceQcacheHits
+	metricNewrelicmysqlPerformanceQcacheInserts                   metricNewrelicmysqlPerformanceQcacheInserts
+	metricNewrelicmysqlPerformanceQcacheLowmemPrunes              metricNewrelicmysqlPerformanceQcacheLowmemPrunes
+	metricNewrelicmysqlPerformanceQcacheNotCached                 metricNewrelicmysqlPerformanceQcacheNotCached
+	metricNewrelicmysqlPerformanceQcacheQueriesInCache            metricNewrelicmysqlPerformanceQcacheQueriesInCache
+	metricNewrelicmysqlPerformanceQcacheSize                      metricNewrelicmysqlPerformanceQcacheSize
+	metricNewrelicmysqlPerformanceQcacheTotalBlocks               metricNewrelicmysqlPerformanceQcacheTotalBlocks
+	metricNewrelicmysqlPerformanceQuestions                       metricNewrelicmysqlPerformanceQuestions
+	metricNewrelicmysqlPerformanceSelectFullJoin                  metricNewrelicmysqlPerformanceSelectFullJoin
+	metricNewrelicmysqlPerformanceSelectFullRangeJoin             metricNewrelicmysqlPerformanceSelectFullRangeJoin
+	metricNewrelicmysqlPerformanceSelectRange                     metricNewrelicmysqlPerformanceSelectRange
+	metricNewrelicmysqlPerformanceSelectRangeCheck                metricNewrelicmysqlPerformanceSelectRangeCheck
+	metricNewrelicmysqlPerformanceSelectScan                      metricNewrelicmysqlPerformanceSelectScan
+	metricNewrelicmysqlPerformanceSlowQueries                     metricNewrelicmysqlPerformanceSlowQueries
+	metricNewrelicmysqlPerformanceSortMergePasses                 metricNewrelicmysqlPerformanceSortMergePasses
+	metricNewrelicmysqlPerformanceSortRange                       metricNewrelicmysqlPerformanceSortRange
+	metricNewrelicmysqlPerformanceSortRows                        metricNewrelicmysqlPerformanceSortRows
+	metricNewrelicmysqlPerformanceSortScan                        metricNewrelicmysqlPerformanceSortScan
+	metricNewrelicmysqlPerformanceTableLocksImmediate             metricNewrelicmysqlPerformanceTableLocksImmediate
+	metricNewrelicmysqlPerformanceTableLocksImmediateRate         metricNewrelicmysqlPerformanceTableLocksImmediateRate
+	metricNewrelicmysqlPerformanceTableLocksWaited                metricNewrelicmysqlPerformanceTableLocksWaited
+	metricNewrelicmysqlPerformanceTableOpenCache                  metricNewrelicmysqlPerformanceTableOpenCache
+	metricNewrelicmysqlPerformanceThreadCacheSize                 metricNewrelicmysqlPerformanceThreadCacheSize
+	metricNewrelicmysqlPerformanceThreadsCached                   metricNewrelicmysqlPerformanceThreadsCached
+	metricNewrelicmysqlPerformanceThreadsConnected                metricNewrelicmysqlPerformanceThreadsConnected
+	metricNewrelicmysqlPerformanceThreadsCreated                  metricNewrelicmysqlPerformanceThreadsCreated
+	metricNewrelicmysqlPerformanceThreadsRunning                  metricNewrelicmysqlPerformanceThreadsRunning
+	metricNewrelicmysqlQueryCount                                 metricNewrelicmysqlQueryCount
+	metricNewrelicmysqlReplicationExecMasterLogPos                metricNewrelicmysqlReplicationExecMasterLogPos
+	metricNewrelicmysqlReplicationGroupConflictsDetected          metricNewrelicmysqlReplicationGroupConflictsDetected
+	metricNewrelicmysqlReplicationGroupTransactions               metricNewrelicmysqlReplicationGroupTransactions
+	metricNewrelicmysqlReplicationGroupTransactionsApplied        metricNewrelicmysqlReplicationGroupTransactionsApplied
+	metricNewrelicmysqlReplicationGroupTransactionsCheck          metricNewrelicmysqlReplicationGroupTransactionsCheck
+	metricNewrelicmysqlReplicationGroupTransactionsInApplierQueue metricNewrelicmysqlReplicationGroupTransactionsInApplierQueue
+	metricNewrelicmysqlReplicationGroupTransactionsProposed       metricNewrelicmysqlReplicationGroupTransactionsProposed
+	metricNewrelicmysqlReplicationGroupTransactionsRollback       metricNewrelicmysqlReplicationGroupTransactionsRollback
+	metricNewrelicmysqlReplicationGroupTransactionsValidating     metricNewrelicmysqlReplicationGroupTransactionsValidating
+	metricNewrelicmysqlReplicationLastIoErrno                     metricNewrelicmysqlReplicationLastIoErrno
+	metricNewrelicmysqlReplicationLastSQLErrno                    metricNewrelicmysqlReplicationLastSQLErrno
+	metricNewrelicmysqlReplicationReadMasterLogPos                metricNewrelicmysqlReplicationReadMasterLogPos
+	metricNewrelicmysqlReplicationRelayLogSpace                   metricNewrelicmysqlReplicationRelayLogSpace
+	metricNewrelicmysqlReplicationReplicasConnected               metricNewrelicmysqlReplicationReplicasConnected
+	metricNewrelicmysqlReplicationSecondsBehindMaster             metricNewrelicmysqlReplicationSecondsBehindMaster
+	metricNewrelicmysqlReplicationSecondsBehindSource             metricNewrelicmysqlReplicationSecondsBehindSource
+	metricNewrelicmysqlReplicationSlaveIoRunning                  metricNewrelicmysqlReplicationSlaveIoRunning
+	metricNewrelicmysqlReplicationSlaveRunning                    metricNewrelicmysqlReplicationSlaveRunning
+	metricNewrelicmysqlReplicationSlaveSQLRunning                 metricNewrelicmysqlReplicationSlaveSQLRunning
+	metricNewrelicmysqlReplicationSlavesConnected                 metricNewrelicmysqlReplicationSlavesConnected
+	metricNewrelicmysqlUptime                                     metricNewrelicmysqlUptime
 }
 
 // MetricBuilderOption applies changes to default metrics builder.
@@ -11569,220 +12175,231 @@ func WithStartTime(startTime pcommon.Timestamp) MetricBuilderOption {
 }
 func NewMetricsBuilder(mbc MetricsBuilderConfig, settings receiver.Settings, options ...MetricBuilderOption) *MetricsBuilder {
 	mb := &MetricsBuilder{
-		config:                                                    mbc,
-		startTime:                                                 pcommon.NewTimestampFromTime(time.Now()),
-		metricsBuffer:                                             pmetric.NewMetrics(),
-		buildInfo:                                                 settings.BuildInfo,
-		metricNewrelicmysqlBinlogCacheDiskUse:                     newMetricNewrelicmysqlBinlogCacheDiskUse(mbc.Metrics.NewrelicmysqlBinlogCacheDiskUse),
-		metricNewrelicmysqlBinlogCacheUse:                         newMetricNewrelicmysqlBinlogCacheUse(mbc.Metrics.NewrelicmysqlBinlogCacheUse),
-		metricNewrelicmysqlCommands:                               newMetricNewrelicmysqlCommands(mbc.Metrics.NewrelicmysqlCommands),
-		metricNewrelicmysqlConnectionCount:                        newMetricNewrelicmysqlConnectionCount(mbc.Metrics.NewrelicmysqlConnectionCount),
-		metricNewrelicmysqlDbHandlerRollback:                      newMetricNewrelicmysqlDbHandlerRollback(mbc.Metrics.NewrelicmysqlDbHandlerRollback),
-		metricNewrelicmysqlDbOpenedTables:                         newMetricNewrelicmysqlDbOpenedTables(mbc.Metrics.NewrelicmysqlDbOpenedTables),
-		metricNewrelicmysqlInnodbActiveTransactions:               newMetricNewrelicmysqlInnodbActiveTransactions(mbc.Metrics.NewrelicmysqlInnodbActiveTransactions),
-		metricNewrelicmysqlInnodbAdaptiveHashHashSearches:         newMetricNewrelicmysqlInnodbAdaptiveHashHashSearches(mbc.Metrics.NewrelicmysqlInnodbAdaptiveHashHashSearches),
-		metricNewrelicmysqlInnodbAdaptiveHashNonHashSearches:      newMetricNewrelicmysqlInnodbAdaptiveHashNonHashSearches(mbc.Metrics.NewrelicmysqlInnodbAdaptiveHashNonHashSearches),
-		metricNewrelicmysqlInnodbAdaptiveHashPagesAdded:           newMetricNewrelicmysqlInnodbAdaptiveHashPagesAdded(mbc.Metrics.NewrelicmysqlInnodbAdaptiveHashPagesAdded),
-		metricNewrelicmysqlInnodbAdaptiveHashPagesRemoved:         newMetricNewrelicmysqlInnodbAdaptiveHashPagesRemoved(mbc.Metrics.NewrelicmysqlInnodbAdaptiveHashPagesRemoved),
-		metricNewrelicmysqlInnodbAvailableUndoLogs:                newMetricNewrelicmysqlInnodbAvailableUndoLogs(mbc.Metrics.NewrelicmysqlInnodbAvailableUndoLogs),
-		metricNewrelicmysqlInnodbBufferPoolBytesData:              newMetricNewrelicmysqlInnodbBufferPoolBytesData(mbc.Metrics.NewrelicmysqlInnodbBufferPoolBytesData),
-		metricNewrelicmysqlInnodbBufferPoolBytesDirty:             newMetricNewrelicmysqlInnodbBufferPoolBytesDirty(mbc.Metrics.NewrelicmysqlInnodbBufferPoolBytesDirty),
-		metricNewrelicmysqlInnodbBufferPoolDirty:                  newMetricNewrelicmysqlInnodbBufferPoolDirty(mbc.Metrics.NewrelicmysqlInnodbBufferPoolDirty),
-		metricNewrelicmysqlInnodbBufferPoolFree:                   newMetricNewrelicmysqlInnodbBufferPoolFree(mbc.Metrics.NewrelicmysqlInnodbBufferPoolFree),
-		metricNewrelicmysqlInnodbBufferPoolPagesData:              newMetricNewrelicmysqlInnodbBufferPoolPagesData(mbc.Metrics.NewrelicmysqlInnodbBufferPoolPagesData),
-		metricNewrelicmysqlInnodbBufferPoolPagesFlushed:           newMetricNewrelicmysqlInnodbBufferPoolPagesFlushed(mbc.Metrics.NewrelicmysqlInnodbBufferPoolPagesFlushed),
-		metricNewrelicmysqlInnodbBufferPoolPagesFree:              newMetricNewrelicmysqlInnodbBufferPoolPagesFree(mbc.Metrics.NewrelicmysqlInnodbBufferPoolPagesFree),
-		metricNewrelicmysqlInnodbBufferPoolPagesLruFlushed:        newMetricNewrelicmysqlInnodbBufferPoolPagesLruFlushed(mbc.Metrics.NewrelicmysqlInnodbBufferPoolPagesLruFlushed),
-		metricNewrelicmysqlInnodbBufferPoolPagesMadeNotYoung:      newMetricNewrelicmysqlInnodbBufferPoolPagesMadeNotYoung(mbc.Metrics.NewrelicmysqlInnodbBufferPoolPagesMadeNotYoung),
-		metricNewrelicmysqlInnodbBufferPoolPagesMadeYoung:         newMetricNewrelicmysqlInnodbBufferPoolPagesMadeYoung(mbc.Metrics.NewrelicmysqlInnodbBufferPoolPagesMadeYoung),
-		metricNewrelicmysqlInnodbBufferPoolPagesMisc:              newMetricNewrelicmysqlInnodbBufferPoolPagesMisc(mbc.Metrics.NewrelicmysqlInnodbBufferPoolPagesMisc),
-		metricNewrelicmysqlInnodbBufferPoolPagesOld:               newMetricNewrelicmysqlInnodbBufferPoolPagesOld(mbc.Metrics.NewrelicmysqlInnodbBufferPoolPagesOld),
-		metricNewrelicmysqlInnodbBufferPoolPagesTotal:             newMetricNewrelicmysqlInnodbBufferPoolPagesTotal(mbc.Metrics.NewrelicmysqlInnodbBufferPoolPagesTotal),
-		metricNewrelicmysqlInnodbBufferPoolReadAhead:              newMetricNewrelicmysqlInnodbBufferPoolReadAhead(mbc.Metrics.NewrelicmysqlInnodbBufferPoolReadAhead),
-		metricNewrelicmysqlInnodbBufferPoolReadAheadEvicted:       newMetricNewrelicmysqlInnodbBufferPoolReadAheadEvicted(mbc.Metrics.NewrelicmysqlInnodbBufferPoolReadAheadEvicted),
-		metricNewrelicmysqlInnodbBufferPoolReadAheadRnd:           newMetricNewrelicmysqlInnodbBufferPoolReadAheadRnd(mbc.Metrics.NewrelicmysqlInnodbBufferPoolReadAheadRnd),
-		metricNewrelicmysqlInnodbBufferPoolReadRequests:           newMetricNewrelicmysqlInnodbBufferPoolReadRequests(mbc.Metrics.NewrelicmysqlInnodbBufferPoolReadRequests),
-		metricNewrelicmysqlInnodbBufferPoolReads:                  newMetricNewrelicmysqlInnodbBufferPoolReads(mbc.Metrics.NewrelicmysqlInnodbBufferPoolReads),
-		metricNewrelicmysqlInnodbBufferPoolTotal:                  newMetricNewrelicmysqlInnodbBufferPoolTotal(mbc.Metrics.NewrelicmysqlInnodbBufferPoolTotal),
-		metricNewrelicmysqlInnodbBufferPoolUsed:                   newMetricNewrelicmysqlInnodbBufferPoolUsed(mbc.Metrics.NewrelicmysqlInnodbBufferPoolUsed),
-		metricNewrelicmysqlInnodbBufferPoolUtilization:            newMetricNewrelicmysqlInnodbBufferPoolUtilization(mbc.Metrics.NewrelicmysqlInnodbBufferPoolUtilization),
-		metricNewrelicmysqlInnodbBufferPoolWaitFree:               newMetricNewrelicmysqlInnodbBufferPoolWaitFree(mbc.Metrics.NewrelicmysqlInnodbBufferPoolWaitFree),
-		metricNewrelicmysqlInnodbBufferPoolWriteRequests:          newMetricNewrelicmysqlInnodbBufferPoolWriteRequests(mbc.Metrics.NewrelicmysqlInnodbBufferPoolWriteRequests),
-		metricNewrelicmysqlInnodbCheckpointAge:                    newMetricNewrelicmysqlInnodbCheckpointAge(mbc.Metrics.NewrelicmysqlInnodbCheckpointAge),
-		metricNewrelicmysqlInnodbCurrentRowLocks:                  newMetricNewrelicmysqlInnodbCurrentRowLocks(mbc.Metrics.NewrelicmysqlInnodbCurrentRowLocks),
-		metricNewrelicmysqlInnodbCurrentTransactions:              newMetricNewrelicmysqlInnodbCurrentTransactions(mbc.Metrics.NewrelicmysqlInnodbCurrentTransactions),
-		metricNewrelicmysqlInnodbDataFsyncs:                       newMetricNewrelicmysqlInnodbDataFsyncs(mbc.Metrics.NewrelicmysqlInnodbDataFsyncs),
-		metricNewrelicmysqlInnodbDataPendingFsyncs:                newMetricNewrelicmysqlInnodbDataPendingFsyncs(mbc.Metrics.NewrelicmysqlInnodbDataPendingFsyncs),
-		metricNewrelicmysqlInnodbDataPendingReads:                 newMetricNewrelicmysqlInnodbDataPendingReads(mbc.Metrics.NewrelicmysqlInnodbDataPendingReads),
-		metricNewrelicmysqlInnodbDataPendingWrites:                newMetricNewrelicmysqlInnodbDataPendingWrites(mbc.Metrics.NewrelicmysqlInnodbDataPendingWrites),
-		metricNewrelicmysqlInnodbDataRead:                         newMetricNewrelicmysqlInnodbDataRead(mbc.Metrics.NewrelicmysqlInnodbDataRead),
-		metricNewrelicmysqlInnodbDataReads:                        newMetricNewrelicmysqlInnodbDataReads(mbc.Metrics.NewrelicmysqlInnodbDataReads),
-		metricNewrelicmysqlInnodbDataWrites:                       newMetricNewrelicmysqlInnodbDataWrites(mbc.Metrics.NewrelicmysqlInnodbDataWrites),
-		metricNewrelicmysqlInnodbDataWritten:                      newMetricNewrelicmysqlInnodbDataWritten(mbc.Metrics.NewrelicmysqlInnodbDataWritten),
-		metricNewrelicmysqlInnodbDblwrPagesWritten:                newMetricNewrelicmysqlInnodbDblwrPagesWritten(mbc.Metrics.NewrelicmysqlInnodbDblwrPagesWritten),
-		metricNewrelicmysqlInnodbDblwrWrites:                      newMetricNewrelicmysqlInnodbDblwrWrites(mbc.Metrics.NewrelicmysqlInnodbDblwrWrites),
-		metricNewrelicmysqlInnodbHashIndexCellsTotal:              newMetricNewrelicmysqlInnodbHashIndexCellsTotal(mbc.Metrics.NewrelicmysqlInnodbHashIndexCellsTotal),
-		metricNewrelicmysqlInnodbHashIndexCellsUsed:               newMetricNewrelicmysqlInnodbHashIndexCellsUsed(mbc.Metrics.NewrelicmysqlInnodbHashIndexCellsUsed),
-		metricNewrelicmysqlInnodbHistoryListLength:                newMetricNewrelicmysqlInnodbHistoryListLength(mbc.Metrics.NewrelicmysqlInnodbHistoryListLength),
-		metricNewrelicmysqlInnodbIbufFreeList:                     newMetricNewrelicmysqlInnodbIbufFreeList(mbc.Metrics.NewrelicmysqlInnodbIbufFreeList),
-		metricNewrelicmysqlInnodbIbufMergedDeleteMarks:            newMetricNewrelicmysqlInnodbIbufMergedDeleteMarks(mbc.Metrics.NewrelicmysqlInnodbIbufMergedDeleteMarks),
-		metricNewrelicmysqlInnodbIbufMergedDeletes:                newMetricNewrelicmysqlInnodbIbufMergedDeletes(mbc.Metrics.NewrelicmysqlInnodbIbufMergedDeletes),
-		metricNewrelicmysqlInnodbIbufMergedInserts:                newMetricNewrelicmysqlInnodbIbufMergedInserts(mbc.Metrics.NewrelicmysqlInnodbIbufMergedInserts),
-		metricNewrelicmysqlInnodbIbufMerges:                       newMetricNewrelicmysqlInnodbIbufMerges(mbc.Metrics.NewrelicmysqlInnodbIbufMerges),
-		metricNewrelicmysqlInnodbIbufSegmentSize:                  newMetricNewrelicmysqlInnodbIbufSegmentSize(mbc.Metrics.NewrelicmysqlInnodbIbufSegmentSize),
-		metricNewrelicmysqlInnodbIbufSize:                         newMetricNewrelicmysqlInnodbIbufSize(mbc.Metrics.NewrelicmysqlInnodbIbufSize),
-		metricNewrelicmysqlInnodbLockStructs:                      newMetricNewrelicmysqlInnodbLockStructs(mbc.Metrics.NewrelicmysqlInnodbLockStructs),
-		metricNewrelicmysqlInnodbLockedTables:                     newMetricNewrelicmysqlInnodbLockedTables(mbc.Metrics.NewrelicmysqlInnodbLockedTables),
-		metricNewrelicmysqlInnodbLockedTransactions:               newMetricNewrelicmysqlInnodbLockedTransactions(mbc.Metrics.NewrelicmysqlInnodbLockedTransactions),
-		metricNewrelicmysqlInnodbLogWaits:                         newMetricNewrelicmysqlInnodbLogWaits(mbc.Metrics.NewrelicmysqlInnodbLogWaits),
-		metricNewrelicmysqlInnodbLogWriteRequests:                 newMetricNewrelicmysqlInnodbLogWriteRequests(mbc.Metrics.NewrelicmysqlInnodbLogWriteRequests),
-		metricNewrelicmysqlInnodbLogWrites:                        newMetricNewrelicmysqlInnodbLogWrites(mbc.Metrics.NewrelicmysqlInnodbLogWrites),
-		metricNewrelicmysqlInnodbLsnCurrent:                       newMetricNewrelicmysqlInnodbLsnCurrent(mbc.Metrics.NewrelicmysqlInnodbLsnCurrent),
-		metricNewrelicmysqlInnodbLsnFlushed:                       newMetricNewrelicmysqlInnodbLsnFlushed(mbc.Metrics.NewrelicmysqlInnodbLsnFlushed),
-		metricNewrelicmysqlInnodbLsnLastCheckpoint:                newMetricNewrelicmysqlInnodbLsnLastCheckpoint(mbc.Metrics.NewrelicmysqlInnodbLsnLastCheckpoint),
-		metricNewrelicmysqlInnodbMasterThreadActiveLoops:          newMetricNewrelicmysqlInnodbMasterThreadActiveLoops(mbc.Metrics.NewrelicmysqlInnodbMasterThreadActiveLoops),
-		metricNewrelicmysqlInnodbMasterThreadIdleLoops:            newMetricNewrelicmysqlInnodbMasterThreadIdleLoops(mbc.Metrics.NewrelicmysqlInnodbMasterThreadIdleLoops),
-		metricNewrelicmysqlInnodbMemAdaptiveHash:                  newMetricNewrelicmysqlInnodbMemAdaptiveHash(mbc.Metrics.NewrelicmysqlInnodbMemAdaptiveHash),
-		metricNewrelicmysqlInnodbMemAdditionalPool:                newMetricNewrelicmysqlInnodbMemAdditionalPool(mbc.Metrics.NewrelicmysqlInnodbMemAdditionalPool),
-		metricNewrelicmysqlInnodbMemDictionary:                    newMetricNewrelicmysqlInnodbMemDictionary(mbc.Metrics.NewrelicmysqlInnodbMemDictionary),
-		metricNewrelicmysqlInnodbMemFileSystem:                    newMetricNewrelicmysqlInnodbMemFileSystem(mbc.Metrics.NewrelicmysqlInnodbMemFileSystem),
-		metricNewrelicmysqlInnodbMemLockSystem:                    newMetricNewrelicmysqlInnodbMemLockSystem(mbc.Metrics.NewrelicmysqlInnodbMemLockSystem),
-		metricNewrelicmysqlInnodbMemPageHash:                      newMetricNewrelicmysqlInnodbMemPageHash(mbc.Metrics.NewrelicmysqlInnodbMemPageHash),
-		metricNewrelicmysqlInnodbMemRecoverySystem:                newMetricNewrelicmysqlInnodbMemRecoverySystem(mbc.Metrics.NewrelicmysqlInnodbMemRecoverySystem),
-		metricNewrelicmysqlInnodbMemThreadHash:                    newMetricNewrelicmysqlInnodbMemThreadHash(mbc.Metrics.NewrelicmysqlInnodbMemThreadHash),
-		metricNewrelicmysqlInnodbMemTotal:                         newMetricNewrelicmysqlInnodbMemTotal(mbc.Metrics.NewrelicmysqlInnodbMemTotal),
-		metricNewrelicmysqlInnodbMutexOsWaits:                     newMetricNewrelicmysqlInnodbMutexOsWaits(mbc.Metrics.NewrelicmysqlInnodbMutexOsWaits),
-		metricNewrelicmysqlInnodbMutexSpinRounds:                  newMetricNewrelicmysqlInnodbMutexSpinRounds(mbc.Metrics.NewrelicmysqlInnodbMutexSpinRounds),
-		metricNewrelicmysqlInnodbMutexSpinWaits:                   newMetricNewrelicmysqlInnodbMutexSpinWaits(mbc.Metrics.NewrelicmysqlInnodbMutexSpinWaits),
-		metricNewrelicmysqlInnodbNumOpenFiles:                     newMetricNewrelicmysqlInnodbNumOpenFiles(mbc.Metrics.NewrelicmysqlInnodbNumOpenFiles),
-		metricNewrelicmysqlInnodbOsFileFsyncs:                     newMetricNewrelicmysqlInnodbOsFileFsyncs(mbc.Metrics.NewrelicmysqlInnodbOsFileFsyncs),
-		metricNewrelicmysqlInnodbOsFileReads:                      newMetricNewrelicmysqlInnodbOsFileReads(mbc.Metrics.NewrelicmysqlInnodbOsFileReads),
-		metricNewrelicmysqlInnodbOsFileWrites:                     newMetricNewrelicmysqlInnodbOsFileWrites(mbc.Metrics.NewrelicmysqlInnodbOsFileWrites),
-		metricNewrelicmysqlInnodbOsLogFsyncs:                      newMetricNewrelicmysqlInnodbOsLogFsyncs(mbc.Metrics.NewrelicmysqlInnodbOsLogFsyncs),
-		metricNewrelicmysqlInnodbOsLogPendingFsyncs:               newMetricNewrelicmysqlInnodbOsLogPendingFsyncs(mbc.Metrics.NewrelicmysqlInnodbOsLogPendingFsyncs),
-		metricNewrelicmysqlInnodbOsLogPendingWrites:               newMetricNewrelicmysqlInnodbOsLogPendingWrites(mbc.Metrics.NewrelicmysqlInnodbOsLogPendingWrites),
-		metricNewrelicmysqlInnodbOsLogWritten:                     newMetricNewrelicmysqlInnodbOsLogWritten(mbc.Metrics.NewrelicmysqlInnodbOsLogWritten),
-		metricNewrelicmysqlInnodbPageSize:                         newMetricNewrelicmysqlInnodbPageSize(mbc.Metrics.NewrelicmysqlInnodbPageSize),
-		metricNewrelicmysqlInnodbPagesCreated:                     newMetricNewrelicmysqlInnodbPagesCreated(mbc.Metrics.NewrelicmysqlInnodbPagesCreated),
-		metricNewrelicmysqlInnodbPagesRead:                        newMetricNewrelicmysqlInnodbPagesRead(mbc.Metrics.NewrelicmysqlInnodbPagesRead),
-		metricNewrelicmysqlInnodbPagesWritten:                     newMetricNewrelicmysqlInnodbPagesWritten(mbc.Metrics.NewrelicmysqlInnodbPagesWritten),
-		metricNewrelicmysqlInnodbPendingAioLogIos:                 newMetricNewrelicmysqlInnodbPendingAioLogIos(mbc.Metrics.NewrelicmysqlInnodbPendingAioLogIos),
-		metricNewrelicmysqlInnodbPendingAioSyncIos:                newMetricNewrelicmysqlInnodbPendingAioSyncIos(mbc.Metrics.NewrelicmysqlInnodbPendingAioSyncIos),
-		metricNewrelicmysqlInnodbPendingBufferPoolFlushes:         newMetricNewrelicmysqlInnodbPendingBufferPoolFlushes(mbc.Metrics.NewrelicmysqlInnodbPendingBufferPoolFlushes),
-		metricNewrelicmysqlInnodbPendingCheckpointWrites:          newMetricNewrelicmysqlInnodbPendingCheckpointWrites(mbc.Metrics.NewrelicmysqlInnodbPendingCheckpointWrites),
-		metricNewrelicmysqlInnodbPendingIbufAioReads:              newMetricNewrelicmysqlInnodbPendingIbufAioReads(mbc.Metrics.NewrelicmysqlInnodbPendingIbufAioReads),
-		metricNewrelicmysqlInnodbPendingLogFlushes:                newMetricNewrelicmysqlInnodbPendingLogFlushes(mbc.Metrics.NewrelicmysqlInnodbPendingLogFlushes),
-		metricNewrelicmysqlInnodbPendingLogWrites:                 newMetricNewrelicmysqlInnodbPendingLogWrites(mbc.Metrics.NewrelicmysqlInnodbPendingLogWrites),
-		metricNewrelicmysqlInnodbPendingNormalAioReads:            newMetricNewrelicmysqlInnodbPendingNormalAioReads(mbc.Metrics.NewrelicmysqlInnodbPendingNormalAioReads),
-		metricNewrelicmysqlInnodbPendingNormalAioWrites:           newMetricNewrelicmysqlInnodbPendingNormalAioWrites(mbc.Metrics.NewrelicmysqlInnodbPendingNormalAioWrites),
-		metricNewrelicmysqlInnodbPurgeTrxID:                       newMetricNewrelicmysqlInnodbPurgeTrxID(mbc.Metrics.NewrelicmysqlInnodbPurgeTrxID),
-		metricNewrelicmysqlInnodbPurgeUndoNo:                      newMetricNewrelicmysqlInnodbPurgeUndoNo(mbc.Metrics.NewrelicmysqlInnodbPurgeUndoNo),
-		metricNewrelicmysqlInnodbQueriesInside:                    newMetricNewrelicmysqlInnodbQueriesInside(mbc.Metrics.NewrelicmysqlInnodbQueriesInside),
-		metricNewrelicmysqlInnodbQueriesQueued:                    newMetricNewrelicmysqlInnodbQueriesQueued(mbc.Metrics.NewrelicmysqlInnodbQueriesQueued),
-		metricNewrelicmysqlInnodbReadViews:                        newMetricNewrelicmysqlInnodbReadViews(mbc.Metrics.NewrelicmysqlInnodbReadViews),
-		metricNewrelicmysqlInnodbRedoLogEnabled:                   newMetricNewrelicmysqlInnodbRedoLogEnabled(mbc.Metrics.NewrelicmysqlInnodbRedoLogEnabled),
-		metricNewrelicmysqlInnodbRowLockCurrentWaits:              newMetricNewrelicmysqlInnodbRowLockCurrentWaits(mbc.Metrics.NewrelicmysqlInnodbRowLockCurrentWaits),
-		metricNewrelicmysqlInnodbRowLockTime:                      newMetricNewrelicmysqlInnodbRowLockTime(mbc.Metrics.NewrelicmysqlInnodbRowLockTime),
-		metricNewrelicmysqlInnodbRowLockTimeAvg:                   newMetricNewrelicmysqlInnodbRowLockTimeAvg(mbc.Metrics.NewrelicmysqlInnodbRowLockTimeAvg),
-		metricNewrelicmysqlInnodbRowLockTimeMax:                   newMetricNewrelicmysqlInnodbRowLockTimeMax(mbc.Metrics.NewrelicmysqlInnodbRowLockTimeMax),
-		metricNewrelicmysqlInnodbRowLockWaits:                     newMetricNewrelicmysqlInnodbRowLockWaits(mbc.Metrics.NewrelicmysqlInnodbRowLockWaits),
-		metricNewrelicmysqlInnodbRowsDeleted:                      newMetricNewrelicmysqlInnodbRowsDeleted(mbc.Metrics.NewrelicmysqlInnodbRowsDeleted),
-		metricNewrelicmysqlInnodbRowsInserted:                     newMetricNewrelicmysqlInnodbRowsInserted(mbc.Metrics.NewrelicmysqlInnodbRowsInserted),
-		metricNewrelicmysqlInnodbRowsRead:                         newMetricNewrelicmysqlInnodbRowsRead(mbc.Metrics.NewrelicmysqlInnodbRowsRead),
-		metricNewrelicmysqlInnodbRowsUpdated:                      newMetricNewrelicmysqlInnodbRowsUpdated(mbc.Metrics.NewrelicmysqlInnodbRowsUpdated),
-		metricNewrelicmysqlInnodbSLockOsWaits:                     newMetricNewrelicmysqlInnodbSLockOsWaits(mbc.Metrics.NewrelicmysqlInnodbSLockOsWaits),
-		metricNewrelicmysqlInnodbSLockSpinRounds:                  newMetricNewrelicmysqlInnodbSLockSpinRounds(mbc.Metrics.NewrelicmysqlInnodbSLockSpinRounds),
-		metricNewrelicmysqlInnodbSLockSpinWaits:                   newMetricNewrelicmysqlInnodbSLockSpinWaits(mbc.Metrics.NewrelicmysqlInnodbSLockSpinWaits),
-		metricNewrelicmysqlInnodbSemaphoreWaitTime:                newMetricNewrelicmysqlInnodbSemaphoreWaitTime(mbc.Metrics.NewrelicmysqlInnodbSemaphoreWaitTime),
-		metricNewrelicmysqlInnodbSemaphoreWaits:                   newMetricNewrelicmysqlInnodbSemaphoreWaits(mbc.Metrics.NewrelicmysqlInnodbSemaphoreWaits),
-		metricNewrelicmysqlInnodbTablesInUse:                      newMetricNewrelicmysqlInnodbTablesInUse(mbc.Metrics.NewrelicmysqlInnodbTablesInUse),
-		metricNewrelicmysqlInnodbTruncatedStatusWrites:            newMetricNewrelicmysqlInnodbTruncatedStatusWrites(mbc.Metrics.NewrelicmysqlInnodbTruncatedStatusWrites),
-		metricNewrelicmysqlInnodbUndoTablespacesActive:            newMetricNewrelicmysqlInnodbUndoTablespacesActive(mbc.Metrics.NewrelicmysqlInnodbUndoTablespacesActive),
-		metricNewrelicmysqlInnodbUndoTablespacesExplicit:          newMetricNewrelicmysqlInnodbUndoTablespacesExplicit(mbc.Metrics.NewrelicmysqlInnodbUndoTablespacesExplicit),
-		metricNewrelicmysqlInnodbUndoTablespacesImplicit:          newMetricNewrelicmysqlInnodbUndoTablespacesImplicit(mbc.Metrics.NewrelicmysqlInnodbUndoTablespacesImplicit),
-		metricNewrelicmysqlInnodbUndoTablespacesTotal:             newMetricNewrelicmysqlInnodbUndoTablespacesTotal(mbc.Metrics.NewrelicmysqlInnodbUndoTablespacesTotal),
-		metricNewrelicmysqlInnodbXLockOsWaits:                     newMetricNewrelicmysqlInnodbXLockOsWaits(mbc.Metrics.NewrelicmysqlInnodbXLockOsWaits),
-		metricNewrelicmysqlInnodbXLockSpinRounds:                  newMetricNewrelicmysqlInnodbXLockSpinRounds(mbc.Metrics.NewrelicmysqlInnodbXLockSpinRounds),
-		metricNewrelicmysqlInnodbXLockSpinWaits:                   newMetricNewrelicmysqlInnodbXLockSpinWaits(mbc.Metrics.NewrelicmysqlInnodbXLockSpinWaits),
-		metricNewrelicmysqlMyisamKeyBufferBytesUnflushed:          newMetricNewrelicmysqlMyisamKeyBufferBytesUnflushed(mbc.Metrics.NewrelicmysqlMyisamKeyBufferBytesUnflushed),
-		metricNewrelicmysqlMyisamKeyBufferBytesUsed:               newMetricNewrelicmysqlMyisamKeyBufferBytesUsed(mbc.Metrics.NewrelicmysqlMyisamKeyBufferBytesUsed),
-		metricNewrelicmysqlMyisamKeyBufferSize:                    newMetricNewrelicmysqlMyisamKeyBufferSize(mbc.Metrics.NewrelicmysqlMyisamKeyBufferSize),
-		metricNewrelicmysqlMyisamKeyReadRequests:                  newMetricNewrelicmysqlMyisamKeyReadRequests(mbc.Metrics.NewrelicmysqlMyisamKeyReadRequests),
-		metricNewrelicmysqlMyisamKeyReads:                         newMetricNewrelicmysqlMyisamKeyReads(mbc.Metrics.NewrelicmysqlMyisamKeyReads),
-		metricNewrelicmysqlMyisamKeyWriteRequests:                 newMetricNewrelicmysqlMyisamKeyWriteRequests(mbc.Metrics.NewrelicmysqlMyisamKeyWriteRequests),
-		metricNewrelicmysqlMyisamKeyWrites:                        newMetricNewrelicmysqlMyisamKeyWrites(mbc.Metrics.NewrelicmysqlMyisamKeyWrites),
-		metricNewrelicmysqlNetAbortedClients:                      newMetricNewrelicmysqlNetAbortedClients(mbc.Metrics.NewrelicmysqlNetAbortedClients),
-		metricNewrelicmysqlNetAbortedConnects:                     newMetricNewrelicmysqlNetAbortedConnects(mbc.Metrics.NewrelicmysqlNetAbortedConnects),
-		metricNewrelicmysqlNetConnections:                         newMetricNewrelicmysqlNetConnections(mbc.Metrics.NewrelicmysqlNetConnections),
-		metricNewrelicmysqlNetMaxConnections:                      newMetricNewrelicmysqlNetMaxConnections(mbc.Metrics.NewrelicmysqlNetMaxConnections),
-		metricNewrelicmysqlNetMaxConnectionsAvailable:             newMetricNewrelicmysqlNetMaxConnectionsAvailable(mbc.Metrics.NewrelicmysqlNetMaxConnectionsAvailable),
-		metricNewrelicmysqlNetMaxUsedConnections:                  newMetricNewrelicmysqlNetMaxUsedConnections(mbc.Metrics.NewrelicmysqlNetMaxUsedConnections),
-		metricNewrelicmysqlPerformanceBytesReceived:               newMetricNewrelicmysqlPerformanceBytesReceived(mbc.Metrics.NewrelicmysqlPerformanceBytesReceived),
-		metricNewrelicmysqlPerformanceBytesSent:                   newMetricNewrelicmysqlPerformanceBytesSent(mbc.Metrics.NewrelicmysqlPerformanceBytesSent),
-		metricNewrelicmysqlPerformanceCreatedTmpDiskTables:        newMetricNewrelicmysqlPerformanceCreatedTmpDiskTables(mbc.Metrics.NewrelicmysqlPerformanceCreatedTmpDiskTables),
-		metricNewrelicmysqlPerformanceCreatedTmpFiles:             newMetricNewrelicmysqlPerformanceCreatedTmpFiles(mbc.Metrics.NewrelicmysqlPerformanceCreatedTmpFiles),
-		metricNewrelicmysqlPerformanceCreatedTmpTables:            newMetricNewrelicmysqlPerformanceCreatedTmpTables(mbc.Metrics.NewrelicmysqlPerformanceCreatedTmpTables),
-		metricNewrelicmysqlPerformanceHandlerCommit:               newMetricNewrelicmysqlPerformanceHandlerCommit(mbc.Metrics.NewrelicmysqlPerformanceHandlerCommit),
-		metricNewrelicmysqlPerformanceHandlerDelete:               newMetricNewrelicmysqlPerformanceHandlerDelete(mbc.Metrics.NewrelicmysqlPerformanceHandlerDelete),
-		metricNewrelicmysqlPerformanceHandlerPrepare:              newMetricNewrelicmysqlPerformanceHandlerPrepare(mbc.Metrics.NewrelicmysqlPerformanceHandlerPrepare),
-		metricNewrelicmysqlPerformanceHandlerReadFirst:            newMetricNewrelicmysqlPerformanceHandlerReadFirst(mbc.Metrics.NewrelicmysqlPerformanceHandlerReadFirst),
-		metricNewrelicmysqlPerformanceHandlerReadKey:              newMetricNewrelicmysqlPerformanceHandlerReadKey(mbc.Metrics.NewrelicmysqlPerformanceHandlerReadKey),
-		metricNewrelicmysqlPerformanceHandlerReadNext:             newMetricNewrelicmysqlPerformanceHandlerReadNext(mbc.Metrics.NewrelicmysqlPerformanceHandlerReadNext),
-		metricNewrelicmysqlPerformanceHandlerReadPrev:             newMetricNewrelicmysqlPerformanceHandlerReadPrev(mbc.Metrics.NewrelicmysqlPerformanceHandlerReadPrev),
-		metricNewrelicmysqlPerformanceHandlerReadRnd:              newMetricNewrelicmysqlPerformanceHandlerReadRnd(mbc.Metrics.NewrelicmysqlPerformanceHandlerReadRnd),
-		metricNewrelicmysqlPerformanceHandlerReadRndNext:          newMetricNewrelicmysqlPerformanceHandlerReadRndNext(mbc.Metrics.NewrelicmysqlPerformanceHandlerReadRndNext),
-		metricNewrelicmysqlPerformanceHandlerRollback:             newMetricNewrelicmysqlPerformanceHandlerRollback(mbc.Metrics.NewrelicmysqlPerformanceHandlerRollback),
-		metricNewrelicmysqlPerformanceHandlerUpdate:               newMetricNewrelicmysqlPerformanceHandlerUpdate(mbc.Metrics.NewrelicmysqlPerformanceHandlerUpdate),
-		metricNewrelicmysqlPerformanceHandlerWrite:                newMetricNewrelicmysqlPerformanceHandlerWrite(mbc.Metrics.NewrelicmysqlPerformanceHandlerWrite),
-		metricNewrelicmysqlPerformanceKeyCacheUtilization:         newMetricNewrelicmysqlPerformanceKeyCacheUtilization(mbc.Metrics.NewrelicmysqlPerformanceKeyCacheUtilization),
-		metricNewrelicmysqlPerformanceMaxPreparedStmtCount:        newMetricNewrelicmysqlPerformanceMaxPreparedStmtCount(mbc.Metrics.NewrelicmysqlPerformanceMaxPreparedStmtCount),
-		metricNewrelicmysqlPerformanceOpenFiles:                   newMetricNewrelicmysqlPerformanceOpenFiles(mbc.Metrics.NewrelicmysqlPerformanceOpenFiles),
-		metricNewrelicmysqlPerformanceOpenTables:                  newMetricNewrelicmysqlPerformanceOpenTables(mbc.Metrics.NewrelicmysqlPerformanceOpenTables),
-		metricNewrelicmysqlPerformanceOpenedTables:                newMetricNewrelicmysqlPerformanceOpenedTables(mbc.Metrics.NewrelicmysqlPerformanceOpenedTables),
-		metricNewrelicmysqlPerformancePerformanceSchemaDigestLost: newMetricNewrelicmysqlPerformancePerformanceSchemaDigestLost(mbc.Metrics.NewrelicmysqlPerformancePerformanceSchemaDigestLost),
-		metricNewrelicmysqlPerformancePreparedStmtCount:           newMetricNewrelicmysqlPerformancePreparedStmtCount(mbc.Metrics.NewrelicmysqlPerformancePreparedStmtCount),
-		metricNewrelicmysqlPerformanceQcacheFreeBlocks:            newMetricNewrelicmysqlPerformanceQcacheFreeBlocks(mbc.Metrics.NewrelicmysqlPerformanceQcacheFreeBlocks),
-		metricNewrelicmysqlPerformanceQcacheFreeMemory:            newMetricNewrelicmysqlPerformanceQcacheFreeMemory(mbc.Metrics.NewrelicmysqlPerformanceQcacheFreeMemory),
-		metricNewrelicmysqlPerformanceQcacheHits:                  newMetricNewrelicmysqlPerformanceQcacheHits(mbc.Metrics.NewrelicmysqlPerformanceQcacheHits),
-		metricNewrelicmysqlPerformanceQcacheInserts:               newMetricNewrelicmysqlPerformanceQcacheInserts(mbc.Metrics.NewrelicmysqlPerformanceQcacheInserts),
-		metricNewrelicmysqlPerformanceQcacheLowmemPrunes:          newMetricNewrelicmysqlPerformanceQcacheLowmemPrunes(mbc.Metrics.NewrelicmysqlPerformanceQcacheLowmemPrunes),
-		metricNewrelicmysqlPerformanceQcacheNotCached:             newMetricNewrelicmysqlPerformanceQcacheNotCached(mbc.Metrics.NewrelicmysqlPerformanceQcacheNotCached),
-		metricNewrelicmysqlPerformanceQcacheQueriesInCache:        newMetricNewrelicmysqlPerformanceQcacheQueriesInCache(mbc.Metrics.NewrelicmysqlPerformanceQcacheQueriesInCache),
-		metricNewrelicmysqlPerformanceQcacheSize:                  newMetricNewrelicmysqlPerformanceQcacheSize(mbc.Metrics.NewrelicmysqlPerformanceQcacheSize),
-		metricNewrelicmysqlPerformanceQcacheTotalBlocks:           newMetricNewrelicmysqlPerformanceQcacheTotalBlocks(mbc.Metrics.NewrelicmysqlPerformanceQcacheTotalBlocks),
-		metricNewrelicmysqlPerformanceQuestions:                   newMetricNewrelicmysqlPerformanceQuestions(mbc.Metrics.NewrelicmysqlPerformanceQuestions),
-		metricNewrelicmysqlPerformanceSelectFullJoin:              newMetricNewrelicmysqlPerformanceSelectFullJoin(mbc.Metrics.NewrelicmysqlPerformanceSelectFullJoin),
-		metricNewrelicmysqlPerformanceSelectFullRangeJoin:         newMetricNewrelicmysqlPerformanceSelectFullRangeJoin(mbc.Metrics.NewrelicmysqlPerformanceSelectFullRangeJoin),
-		metricNewrelicmysqlPerformanceSelectRange:                 newMetricNewrelicmysqlPerformanceSelectRange(mbc.Metrics.NewrelicmysqlPerformanceSelectRange),
-		metricNewrelicmysqlPerformanceSelectRangeCheck:            newMetricNewrelicmysqlPerformanceSelectRangeCheck(mbc.Metrics.NewrelicmysqlPerformanceSelectRangeCheck),
-		metricNewrelicmysqlPerformanceSelectScan:                  newMetricNewrelicmysqlPerformanceSelectScan(mbc.Metrics.NewrelicmysqlPerformanceSelectScan),
-		metricNewrelicmysqlPerformanceSlowQueries:                 newMetricNewrelicmysqlPerformanceSlowQueries(mbc.Metrics.NewrelicmysqlPerformanceSlowQueries),
-		metricNewrelicmysqlPerformanceSortMergePasses:             newMetricNewrelicmysqlPerformanceSortMergePasses(mbc.Metrics.NewrelicmysqlPerformanceSortMergePasses),
-		metricNewrelicmysqlPerformanceSortRange:                   newMetricNewrelicmysqlPerformanceSortRange(mbc.Metrics.NewrelicmysqlPerformanceSortRange),
-		metricNewrelicmysqlPerformanceSortRows:                    newMetricNewrelicmysqlPerformanceSortRows(mbc.Metrics.NewrelicmysqlPerformanceSortRows),
-		metricNewrelicmysqlPerformanceSortScan:                    newMetricNewrelicmysqlPerformanceSortScan(mbc.Metrics.NewrelicmysqlPerformanceSortScan),
-		metricNewrelicmysqlPerformanceTableLocksImmediate:         newMetricNewrelicmysqlPerformanceTableLocksImmediate(mbc.Metrics.NewrelicmysqlPerformanceTableLocksImmediate),
-		metricNewrelicmysqlPerformanceTableLocksImmediateRate:     newMetricNewrelicmysqlPerformanceTableLocksImmediateRate(mbc.Metrics.NewrelicmysqlPerformanceTableLocksImmediateRate),
-		metricNewrelicmysqlPerformanceTableLocksWaited:            newMetricNewrelicmysqlPerformanceTableLocksWaited(mbc.Metrics.NewrelicmysqlPerformanceTableLocksWaited),
-		metricNewrelicmysqlPerformanceTableOpenCache:              newMetricNewrelicmysqlPerformanceTableOpenCache(mbc.Metrics.NewrelicmysqlPerformanceTableOpenCache),
-		metricNewrelicmysqlPerformanceThreadCacheSize:             newMetricNewrelicmysqlPerformanceThreadCacheSize(mbc.Metrics.NewrelicmysqlPerformanceThreadCacheSize),
-		metricNewrelicmysqlPerformanceThreadsCached:               newMetricNewrelicmysqlPerformanceThreadsCached(mbc.Metrics.NewrelicmysqlPerformanceThreadsCached),
-		metricNewrelicmysqlPerformanceThreadsConnected:            newMetricNewrelicmysqlPerformanceThreadsConnected(mbc.Metrics.NewrelicmysqlPerformanceThreadsConnected),
-		metricNewrelicmysqlPerformanceThreadsCreated:              newMetricNewrelicmysqlPerformanceThreadsCreated(mbc.Metrics.NewrelicmysqlPerformanceThreadsCreated),
-		metricNewrelicmysqlPerformanceThreadsRunning:              newMetricNewrelicmysqlPerformanceThreadsRunning(mbc.Metrics.NewrelicmysqlPerformanceThreadsRunning),
-		metricNewrelicmysqlQueryCount:                             newMetricNewrelicmysqlQueryCount(mbc.Metrics.NewrelicmysqlQueryCount),
-		metricNewrelicmysqlReplicationExecMasterLogPos:            newMetricNewrelicmysqlReplicationExecMasterLogPos(mbc.Metrics.NewrelicmysqlReplicationExecMasterLogPos),
-		metricNewrelicmysqlReplicationLastIoErrno:                 newMetricNewrelicmysqlReplicationLastIoErrno(mbc.Metrics.NewrelicmysqlReplicationLastIoErrno),
-		metricNewrelicmysqlReplicationLastSQLErrno:                newMetricNewrelicmysqlReplicationLastSQLErrno(mbc.Metrics.NewrelicmysqlReplicationLastSQLErrno),
-		metricNewrelicmysqlReplicationReadMasterLogPos:            newMetricNewrelicmysqlReplicationReadMasterLogPos(mbc.Metrics.NewrelicmysqlReplicationReadMasterLogPos),
-		metricNewrelicmysqlReplicationRelayLogSpace:               newMetricNewrelicmysqlReplicationRelayLogSpace(mbc.Metrics.NewrelicmysqlReplicationRelayLogSpace),
-		metricNewrelicmysqlReplicationSecondsBehindMaster:         newMetricNewrelicmysqlReplicationSecondsBehindMaster(mbc.Metrics.NewrelicmysqlReplicationSecondsBehindMaster),
-		metricNewrelicmysqlReplicationSlaveIoRunning:              newMetricNewrelicmysqlReplicationSlaveIoRunning(mbc.Metrics.NewrelicmysqlReplicationSlaveIoRunning),
-		metricNewrelicmysqlReplicationSlaveRunning:                newMetricNewrelicmysqlReplicationSlaveRunning(mbc.Metrics.NewrelicmysqlReplicationSlaveRunning),
-		metricNewrelicmysqlReplicationSlaveSQLRunning:             newMetricNewrelicmysqlReplicationSlaveSQLRunning(mbc.Metrics.NewrelicmysqlReplicationSlaveSQLRunning),
-		metricNewrelicmysqlUptime:                                 newMetricNewrelicmysqlUptime(mbc.Metrics.NewrelicmysqlUptime),
-		resourceAttributeIncludeFilter:                            make(map[string]filter.Filter),
-		resourceAttributeExcludeFilter:                            make(map[string]filter.Filter),
+		config:                                                        mbc,
+		startTime:                                                     pcommon.NewTimestampFromTime(time.Now()),
+		metricsBuffer:                                                 pmetric.NewMetrics(),
+		buildInfo:                                                     settings.BuildInfo,
+		metricNewrelicmysqlBinlogCacheDiskUse:                         newMetricNewrelicmysqlBinlogCacheDiskUse(mbc.Metrics.NewrelicmysqlBinlogCacheDiskUse),
+		metricNewrelicmysqlBinlogCacheUse:                             newMetricNewrelicmysqlBinlogCacheUse(mbc.Metrics.NewrelicmysqlBinlogCacheUse),
+		metricNewrelicmysqlCommands:                                   newMetricNewrelicmysqlCommands(mbc.Metrics.NewrelicmysqlCommands),
+		metricNewrelicmysqlConnectionCount:                            newMetricNewrelicmysqlConnectionCount(mbc.Metrics.NewrelicmysqlConnectionCount),
+		metricNewrelicmysqlDbHandlerRollback:                          newMetricNewrelicmysqlDbHandlerRollback(mbc.Metrics.NewrelicmysqlDbHandlerRollback),
+		metricNewrelicmysqlDbOpenedTables:                             newMetricNewrelicmysqlDbOpenedTables(mbc.Metrics.NewrelicmysqlDbOpenedTables),
+		metricNewrelicmysqlInnodbActiveTransactions:                   newMetricNewrelicmysqlInnodbActiveTransactions(mbc.Metrics.NewrelicmysqlInnodbActiveTransactions),
+		metricNewrelicmysqlInnodbAdaptiveHashHashSearches:             newMetricNewrelicmysqlInnodbAdaptiveHashHashSearches(mbc.Metrics.NewrelicmysqlInnodbAdaptiveHashHashSearches),
+		metricNewrelicmysqlInnodbAdaptiveHashNonHashSearches:          newMetricNewrelicmysqlInnodbAdaptiveHashNonHashSearches(mbc.Metrics.NewrelicmysqlInnodbAdaptiveHashNonHashSearches),
+		metricNewrelicmysqlInnodbAdaptiveHashPagesAdded:               newMetricNewrelicmysqlInnodbAdaptiveHashPagesAdded(mbc.Metrics.NewrelicmysqlInnodbAdaptiveHashPagesAdded),
+		metricNewrelicmysqlInnodbAdaptiveHashPagesRemoved:             newMetricNewrelicmysqlInnodbAdaptiveHashPagesRemoved(mbc.Metrics.NewrelicmysqlInnodbAdaptiveHashPagesRemoved),
+		metricNewrelicmysqlInnodbAvailableUndoLogs:                    newMetricNewrelicmysqlInnodbAvailableUndoLogs(mbc.Metrics.NewrelicmysqlInnodbAvailableUndoLogs),
+		metricNewrelicmysqlInnodbBufferPoolBytesData:                  newMetricNewrelicmysqlInnodbBufferPoolBytesData(mbc.Metrics.NewrelicmysqlInnodbBufferPoolBytesData),
+		metricNewrelicmysqlInnodbBufferPoolBytesDirty:                 newMetricNewrelicmysqlInnodbBufferPoolBytesDirty(mbc.Metrics.NewrelicmysqlInnodbBufferPoolBytesDirty),
+		metricNewrelicmysqlInnodbBufferPoolDirty:                      newMetricNewrelicmysqlInnodbBufferPoolDirty(mbc.Metrics.NewrelicmysqlInnodbBufferPoolDirty),
+		metricNewrelicmysqlInnodbBufferPoolFree:                       newMetricNewrelicmysqlInnodbBufferPoolFree(mbc.Metrics.NewrelicmysqlInnodbBufferPoolFree),
+		metricNewrelicmysqlInnodbBufferPoolPagesData:                  newMetricNewrelicmysqlInnodbBufferPoolPagesData(mbc.Metrics.NewrelicmysqlInnodbBufferPoolPagesData),
+		metricNewrelicmysqlInnodbBufferPoolPagesFlushed:               newMetricNewrelicmysqlInnodbBufferPoolPagesFlushed(mbc.Metrics.NewrelicmysqlInnodbBufferPoolPagesFlushed),
+		metricNewrelicmysqlInnodbBufferPoolPagesFree:                  newMetricNewrelicmysqlInnodbBufferPoolPagesFree(mbc.Metrics.NewrelicmysqlInnodbBufferPoolPagesFree),
+		metricNewrelicmysqlInnodbBufferPoolPagesLruFlushed:            newMetricNewrelicmysqlInnodbBufferPoolPagesLruFlushed(mbc.Metrics.NewrelicmysqlInnodbBufferPoolPagesLruFlushed),
+		metricNewrelicmysqlInnodbBufferPoolPagesMadeNotYoung:          newMetricNewrelicmysqlInnodbBufferPoolPagesMadeNotYoung(mbc.Metrics.NewrelicmysqlInnodbBufferPoolPagesMadeNotYoung),
+		metricNewrelicmysqlInnodbBufferPoolPagesMadeYoung:             newMetricNewrelicmysqlInnodbBufferPoolPagesMadeYoung(mbc.Metrics.NewrelicmysqlInnodbBufferPoolPagesMadeYoung),
+		metricNewrelicmysqlInnodbBufferPoolPagesMisc:                  newMetricNewrelicmysqlInnodbBufferPoolPagesMisc(mbc.Metrics.NewrelicmysqlInnodbBufferPoolPagesMisc),
+		metricNewrelicmysqlInnodbBufferPoolPagesOld:                   newMetricNewrelicmysqlInnodbBufferPoolPagesOld(mbc.Metrics.NewrelicmysqlInnodbBufferPoolPagesOld),
+		metricNewrelicmysqlInnodbBufferPoolPagesTotal:                 newMetricNewrelicmysqlInnodbBufferPoolPagesTotal(mbc.Metrics.NewrelicmysqlInnodbBufferPoolPagesTotal),
+		metricNewrelicmysqlInnodbBufferPoolReadAhead:                  newMetricNewrelicmysqlInnodbBufferPoolReadAhead(mbc.Metrics.NewrelicmysqlInnodbBufferPoolReadAhead),
+		metricNewrelicmysqlInnodbBufferPoolReadAheadEvicted:           newMetricNewrelicmysqlInnodbBufferPoolReadAheadEvicted(mbc.Metrics.NewrelicmysqlInnodbBufferPoolReadAheadEvicted),
+		metricNewrelicmysqlInnodbBufferPoolReadAheadRnd:               newMetricNewrelicmysqlInnodbBufferPoolReadAheadRnd(mbc.Metrics.NewrelicmysqlInnodbBufferPoolReadAheadRnd),
+		metricNewrelicmysqlInnodbBufferPoolReadRequests:               newMetricNewrelicmysqlInnodbBufferPoolReadRequests(mbc.Metrics.NewrelicmysqlInnodbBufferPoolReadRequests),
+		metricNewrelicmysqlInnodbBufferPoolReads:                      newMetricNewrelicmysqlInnodbBufferPoolReads(mbc.Metrics.NewrelicmysqlInnodbBufferPoolReads),
+		metricNewrelicmysqlInnodbBufferPoolTotal:                      newMetricNewrelicmysqlInnodbBufferPoolTotal(mbc.Metrics.NewrelicmysqlInnodbBufferPoolTotal),
+		metricNewrelicmysqlInnodbBufferPoolUsed:                       newMetricNewrelicmysqlInnodbBufferPoolUsed(mbc.Metrics.NewrelicmysqlInnodbBufferPoolUsed),
+		metricNewrelicmysqlInnodbBufferPoolUtilization:                newMetricNewrelicmysqlInnodbBufferPoolUtilization(mbc.Metrics.NewrelicmysqlInnodbBufferPoolUtilization),
+		metricNewrelicmysqlInnodbBufferPoolWaitFree:                   newMetricNewrelicmysqlInnodbBufferPoolWaitFree(mbc.Metrics.NewrelicmysqlInnodbBufferPoolWaitFree),
+		metricNewrelicmysqlInnodbBufferPoolWriteRequests:              newMetricNewrelicmysqlInnodbBufferPoolWriteRequests(mbc.Metrics.NewrelicmysqlInnodbBufferPoolWriteRequests),
+		metricNewrelicmysqlInnodbCheckpointAge:                        newMetricNewrelicmysqlInnodbCheckpointAge(mbc.Metrics.NewrelicmysqlInnodbCheckpointAge),
+		metricNewrelicmysqlInnodbCurrentRowLocks:                      newMetricNewrelicmysqlInnodbCurrentRowLocks(mbc.Metrics.NewrelicmysqlInnodbCurrentRowLocks),
+		metricNewrelicmysqlInnodbCurrentTransactions:                  newMetricNewrelicmysqlInnodbCurrentTransactions(mbc.Metrics.NewrelicmysqlInnodbCurrentTransactions),
+		metricNewrelicmysqlInnodbDataFsyncs:                           newMetricNewrelicmysqlInnodbDataFsyncs(mbc.Metrics.NewrelicmysqlInnodbDataFsyncs),
+		metricNewrelicmysqlInnodbDataPendingFsyncs:                    newMetricNewrelicmysqlInnodbDataPendingFsyncs(mbc.Metrics.NewrelicmysqlInnodbDataPendingFsyncs),
+		metricNewrelicmysqlInnodbDataPendingReads:                     newMetricNewrelicmysqlInnodbDataPendingReads(mbc.Metrics.NewrelicmysqlInnodbDataPendingReads),
+		metricNewrelicmysqlInnodbDataPendingWrites:                    newMetricNewrelicmysqlInnodbDataPendingWrites(mbc.Metrics.NewrelicmysqlInnodbDataPendingWrites),
+		metricNewrelicmysqlInnodbDataRead:                             newMetricNewrelicmysqlInnodbDataRead(mbc.Metrics.NewrelicmysqlInnodbDataRead),
+		metricNewrelicmysqlInnodbDataReads:                            newMetricNewrelicmysqlInnodbDataReads(mbc.Metrics.NewrelicmysqlInnodbDataReads),
+		metricNewrelicmysqlInnodbDataWrites:                           newMetricNewrelicmysqlInnodbDataWrites(mbc.Metrics.NewrelicmysqlInnodbDataWrites),
+		metricNewrelicmysqlInnodbDataWritten:                          newMetricNewrelicmysqlInnodbDataWritten(mbc.Metrics.NewrelicmysqlInnodbDataWritten),
+		metricNewrelicmysqlInnodbDblwrPagesWritten:                    newMetricNewrelicmysqlInnodbDblwrPagesWritten(mbc.Metrics.NewrelicmysqlInnodbDblwrPagesWritten),
+		metricNewrelicmysqlInnodbDblwrWrites:                          newMetricNewrelicmysqlInnodbDblwrWrites(mbc.Metrics.NewrelicmysqlInnodbDblwrWrites),
+		metricNewrelicmysqlInnodbHashIndexCellsTotal:                  newMetricNewrelicmysqlInnodbHashIndexCellsTotal(mbc.Metrics.NewrelicmysqlInnodbHashIndexCellsTotal),
+		metricNewrelicmysqlInnodbHashIndexCellsUsed:                   newMetricNewrelicmysqlInnodbHashIndexCellsUsed(mbc.Metrics.NewrelicmysqlInnodbHashIndexCellsUsed),
+		metricNewrelicmysqlInnodbHistoryListLength:                    newMetricNewrelicmysqlInnodbHistoryListLength(mbc.Metrics.NewrelicmysqlInnodbHistoryListLength),
+		metricNewrelicmysqlInnodbIbufFreeList:                         newMetricNewrelicmysqlInnodbIbufFreeList(mbc.Metrics.NewrelicmysqlInnodbIbufFreeList),
+		metricNewrelicmysqlInnodbIbufMergedDeleteMarks:                newMetricNewrelicmysqlInnodbIbufMergedDeleteMarks(mbc.Metrics.NewrelicmysqlInnodbIbufMergedDeleteMarks),
+		metricNewrelicmysqlInnodbIbufMergedDeletes:                    newMetricNewrelicmysqlInnodbIbufMergedDeletes(mbc.Metrics.NewrelicmysqlInnodbIbufMergedDeletes),
+		metricNewrelicmysqlInnodbIbufMergedInserts:                    newMetricNewrelicmysqlInnodbIbufMergedInserts(mbc.Metrics.NewrelicmysqlInnodbIbufMergedInserts),
+		metricNewrelicmysqlInnodbIbufMerges:                           newMetricNewrelicmysqlInnodbIbufMerges(mbc.Metrics.NewrelicmysqlInnodbIbufMerges),
+		metricNewrelicmysqlInnodbIbufSegmentSize:                      newMetricNewrelicmysqlInnodbIbufSegmentSize(mbc.Metrics.NewrelicmysqlInnodbIbufSegmentSize),
+		metricNewrelicmysqlInnodbIbufSize:                             newMetricNewrelicmysqlInnodbIbufSize(mbc.Metrics.NewrelicmysqlInnodbIbufSize),
+		metricNewrelicmysqlInnodbLockStructs:                          newMetricNewrelicmysqlInnodbLockStructs(mbc.Metrics.NewrelicmysqlInnodbLockStructs),
+		metricNewrelicmysqlInnodbLockedTables:                         newMetricNewrelicmysqlInnodbLockedTables(mbc.Metrics.NewrelicmysqlInnodbLockedTables),
+		metricNewrelicmysqlInnodbLockedTransactions:                   newMetricNewrelicmysqlInnodbLockedTransactions(mbc.Metrics.NewrelicmysqlInnodbLockedTransactions),
+		metricNewrelicmysqlInnodbLogWaits:                             newMetricNewrelicmysqlInnodbLogWaits(mbc.Metrics.NewrelicmysqlInnodbLogWaits),
+		metricNewrelicmysqlInnodbLogWriteRequests:                     newMetricNewrelicmysqlInnodbLogWriteRequests(mbc.Metrics.NewrelicmysqlInnodbLogWriteRequests),
+		metricNewrelicmysqlInnodbLogWrites:                            newMetricNewrelicmysqlInnodbLogWrites(mbc.Metrics.NewrelicmysqlInnodbLogWrites),
+		metricNewrelicmysqlInnodbLsnCurrent:                           newMetricNewrelicmysqlInnodbLsnCurrent(mbc.Metrics.NewrelicmysqlInnodbLsnCurrent),
+		metricNewrelicmysqlInnodbLsnFlushed:                           newMetricNewrelicmysqlInnodbLsnFlushed(mbc.Metrics.NewrelicmysqlInnodbLsnFlushed),
+		metricNewrelicmysqlInnodbLsnLastCheckpoint:                    newMetricNewrelicmysqlInnodbLsnLastCheckpoint(mbc.Metrics.NewrelicmysqlInnodbLsnLastCheckpoint),
+		metricNewrelicmysqlInnodbMasterThreadActiveLoops:              newMetricNewrelicmysqlInnodbMasterThreadActiveLoops(mbc.Metrics.NewrelicmysqlInnodbMasterThreadActiveLoops),
+		metricNewrelicmysqlInnodbMasterThreadIdleLoops:                newMetricNewrelicmysqlInnodbMasterThreadIdleLoops(mbc.Metrics.NewrelicmysqlInnodbMasterThreadIdleLoops),
+		metricNewrelicmysqlInnodbMemAdaptiveHash:                      newMetricNewrelicmysqlInnodbMemAdaptiveHash(mbc.Metrics.NewrelicmysqlInnodbMemAdaptiveHash),
+		metricNewrelicmysqlInnodbMemAdditionalPool:                    newMetricNewrelicmysqlInnodbMemAdditionalPool(mbc.Metrics.NewrelicmysqlInnodbMemAdditionalPool),
+		metricNewrelicmysqlInnodbMemDictionary:                        newMetricNewrelicmysqlInnodbMemDictionary(mbc.Metrics.NewrelicmysqlInnodbMemDictionary),
+		metricNewrelicmysqlInnodbMemFileSystem:                        newMetricNewrelicmysqlInnodbMemFileSystem(mbc.Metrics.NewrelicmysqlInnodbMemFileSystem),
+		metricNewrelicmysqlInnodbMemLockSystem:                        newMetricNewrelicmysqlInnodbMemLockSystem(mbc.Metrics.NewrelicmysqlInnodbMemLockSystem),
+		metricNewrelicmysqlInnodbMemPageHash:                          newMetricNewrelicmysqlInnodbMemPageHash(mbc.Metrics.NewrelicmysqlInnodbMemPageHash),
+		metricNewrelicmysqlInnodbMemRecoverySystem:                    newMetricNewrelicmysqlInnodbMemRecoverySystem(mbc.Metrics.NewrelicmysqlInnodbMemRecoverySystem),
+		metricNewrelicmysqlInnodbMemThreadHash:                        newMetricNewrelicmysqlInnodbMemThreadHash(mbc.Metrics.NewrelicmysqlInnodbMemThreadHash),
+		metricNewrelicmysqlInnodbMemTotal:                             newMetricNewrelicmysqlInnodbMemTotal(mbc.Metrics.NewrelicmysqlInnodbMemTotal),
+		metricNewrelicmysqlInnodbMutexOsWaits:                         newMetricNewrelicmysqlInnodbMutexOsWaits(mbc.Metrics.NewrelicmysqlInnodbMutexOsWaits),
+		metricNewrelicmysqlInnodbMutexSpinRounds:                      newMetricNewrelicmysqlInnodbMutexSpinRounds(mbc.Metrics.NewrelicmysqlInnodbMutexSpinRounds),
+		metricNewrelicmysqlInnodbMutexSpinWaits:                       newMetricNewrelicmysqlInnodbMutexSpinWaits(mbc.Metrics.NewrelicmysqlInnodbMutexSpinWaits),
+		metricNewrelicmysqlInnodbNumOpenFiles:                         newMetricNewrelicmysqlInnodbNumOpenFiles(mbc.Metrics.NewrelicmysqlInnodbNumOpenFiles),
+		metricNewrelicmysqlInnodbOsFileFsyncs:                         newMetricNewrelicmysqlInnodbOsFileFsyncs(mbc.Metrics.NewrelicmysqlInnodbOsFileFsyncs),
+		metricNewrelicmysqlInnodbOsFileReads:                          newMetricNewrelicmysqlInnodbOsFileReads(mbc.Metrics.NewrelicmysqlInnodbOsFileReads),
+		metricNewrelicmysqlInnodbOsFileWrites:                         newMetricNewrelicmysqlInnodbOsFileWrites(mbc.Metrics.NewrelicmysqlInnodbOsFileWrites),
+		metricNewrelicmysqlInnodbOsLogFsyncs:                          newMetricNewrelicmysqlInnodbOsLogFsyncs(mbc.Metrics.NewrelicmysqlInnodbOsLogFsyncs),
+		metricNewrelicmysqlInnodbOsLogPendingFsyncs:                   newMetricNewrelicmysqlInnodbOsLogPendingFsyncs(mbc.Metrics.NewrelicmysqlInnodbOsLogPendingFsyncs),
+		metricNewrelicmysqlInnodbOsLogPendingWrites:                   newMetricNewrelicmysqlInnodbOsLogPendingWrites(mbc.Metrics.NewrelicmysqlInnodbOsLogPendingWrites),
+		metricNewrelicmysqlInnodbOsLogWritten:                         newMetricNewrelicmysqlInnodbOsLogWritten(mbc.Metrics.NewrelicmysqlInnodbOsLogWritten),
+		metricNewrelicmysqlInnodbPageSize:                             newMetricNewrelicmysqlInnodbPageSize(mbc.Metrics.NewrelicmysqlInnodbPageSize),
+		metricNewrelicmysqlInnodbPagesCreated:                         newMetricNewrelicmysqlInnodbPagesCreated(mbc.Metrics.NewrelicmysqlInnodbPagesCreated),
+		metricNewrelicmysqlInnodbPagesRead:                            newMetricNewrelicmysqlInnodbPagesRead(mbc.Metrics.NewrelicmysqlInnodbPagesRead),
+		metricNewrelicmysqlInnodbPagesWritten:                         newMetricNewrelicmysqlInnodbPagesWritten(mbc.Metrics.NewrelicmysqlInnodbPagesWritten),
+		metricNewrelicmysqlInnodbPendingAioLogIos:                     newMetricNewrelicmysqlInnodbPendingAioLogIos(mbc.Metrics.NewrelicmysqlInnodbPendingAioLogIos),
+		metricNewrelicmysqlInnodbPendingAioSyncIos:                    newMetricNewrelicmysqlInnodbPendingAioSyncIos(mbc.Metrics.NewrelicmysqlInnodbPendingAioSyncIos),
+		metricNewrelicmysqlInnodbPendingBufferPoolFlushes:             newMetricNewrelicmysqlInnodbPendingBufferPoolFlushes(mbc.Metrics.NewrelicmysqlInnodbPendingBufferPoolFlushes),
+		metricNewrelicmysqlInnodbPendingCheckpointWrites:              newMetricNewrelicmysqlInnodbPendingCheckpointWrites(mbc.Metrics.NewrelicmysqlInnodbPendingCheckpointWrites),
+		metricNewrelicmysqlInnodbPendingIbufAioReads:                  newMetricNewrelicmysqlInnodbPendingIbufAioReads(mbc.Metrics.NewrelicmysqlInnodbPendingIbufAioReads),
+		metricNewrelicmysqlInnodbPendingLogFlushes:                    newMetricNewrelicmysqlInnodbPendingLogFlushes(mbc.Metrics.NewrelicmysqlInnodbPendingLogFlushes),
+		metricNewrelicmysqlInnodbPendingLogWrites:                     newMetricNewrelicmysqlInnodbPendingLogWrites(mbc.Metrics.NewrelicmysqlInnodbPendingLogWrites),
+		metricNewrelicmysqlInnodbPendingNormalAioReads:                newMetricNewrelicmysqlInnodbPendingNormalAioReads(mbc.Metrics.NewrelicmysqlInnodbPendingNormalAioReads),
+		metricNewrelicmysqlInnodbPendingNormalAioWrites:               newMetricNewrelicmysqlInnodbPendingNormalAioWrites(mbc.Metrics.NewrelicmysqlInnodbPendingNormalAioWrites),
+		metricNewrelicmysqlInnodbPurgeTrxID:                           newMetricNewrelicmysqlInnodbPurgeTrxID(mbc.Metrics.NewrelicmysqlInnodbPurgeTrxID),
+		metricNewrelicmysqlInnodbPurgeUndoNo:                          newMetricNewrelicmysqlInnodbPurgeUndoNo(mbc.Metrics.NewrelicmysqlInnodbPurgeUndoNo),
+		metricNewrelicmysqlInnodbQueriesInside:                        newMetricNewrelicmysqlInnodbQueriesInside(mbc.Metrics.NewrelicmysqlInnodbQueriesInside),
+		metricNewrelicmysqlInnodbQueriesQueued:                        newMetricNewrelicmysqlInnodbQueriesQueued(mbc.Metrics.NewrelicmysqlInnodbQueriesQueued),
+		metricNewrelicmysqlInnodbReadViews:                            newMetricNewrelicmysqlInnodbReadViews(mbc.Metrics.NewrelicmysqlInnodbReadViews),
+		metricNewrelicmysqlInnodbRedoLogEnabled:                       newMetricNewrelicmysqlInnodbRedoLogEnabled(mbc.Metrics.NewrelicmysqlInnodbRedoLogEnabled),
+		metricNewrelicmysqlInnodbRowLockCurrentWaits:                  newMetricNewrelicmysqlInnodbRowLockCurrentWaits(mbc.Metrics.NewrelicmysqlInnodbRowLockCurrentWaits),
+		metricNewrelicmysqlInnodbRowLockTime:                          newMetricNewrelicmysqlInnodbRowLockTime(mbc.Metrics.NewrelicmysqlInnodbRowLockTime),
+		metricNewrelicmysqlInnodbRowLockTimeAvg:                       newMetricNewrelicmysqlInnodbRowLockTimeAvg(mbc.Metrics.NewrelicmysqlInnodbRowLockTimeAvg),
+		metricNewrelicmysqlInnodbRowLockTimeMax:                       newMetricNewrelicmysqlInnodbRowLockTimeMax(mbc.Metrics.NewrelicmysqlInnodbRowLockTimeMax),
+		metricNewrelicmysqlInnodbRowLockWaits:                         newMetricNewrelicmysqlInnodbRowLockWaits(mbc.Metrics.NewrelicmysqlInnodbRowLockWaits),
+		metricNewrelicmysqlInnodbRowsDeleted:                          newMetricNewrelicmysqlInnodbRowsDeleted(mbc.Metrics.NewrelicmysqlInnodbRowsDeleted),
+		metricNewrelicmysqlInnodbRowsInserted:                         newMetricNewrelicmysqlInnodbRowsInserted(mbc.Metrics.NewrelicmysqlInnodbRowsInserted),
+		metricNewrelicmysqlInnodbRowsRead:                             newMetricNewrelicmysqlInnodbRowsRead(mbc.Metrics.NewrelicmysqlInnodbRowsRead),
+		metricNewrelicmysqlInnodbRowsUpdated:                          newMetricNewrelicmysqlInnodbRowsUpdated(mbc.Metrics.NewrelicmysqlInnodbRowsUpdated),
+		metricNewrelicmysqlInnodbSLockOsWaits:                         newMetricNewrelicmysqlInnodbSLockOsWaits(mbc.Metrics.NewrelicmysqlInnodbSLockOsWaits),
+		metricNewrelicmysqlInnodbSLockSpinRounds:                      newMetricNewrelicmysqlInnodbSLockSpinRounds(mbc.Metrics.NewrelicmysqlInnodbSLockSpinRounds),
+		metricNewrelicmysqlInnodbSLockSpinWaits:                       newMetricNewrelicmysqlInnodbSLockSpinWaits(mbc.Metrics.NewrelicmysqlInnodbSLockSpinWaits),
+		metricNewrelicmysqlInnodbSemaphoreWaitTime:                    newMetricNewrelicmysqlInnodbSemaphoreWaitTime(mbc.Metrics.NewrelicmysqlInnodbSemaphoreWaitTime),
+		metricNewrelicmysqlInnodbSemaphoreWaits:                       newMetricNewrelicmysqlInnodbSemaphoreWaits(mbc.Metrics.NewrelicmysqlInnodbSemaphoreWaits),
+		metricNewrelicmysqlInnodbTablesInUse:                          newMetricNewrelicmysqlInnodbTablesInUse(mbc.Metrics.NewrelicmysqlInnodbTablesInUse),
+		metricNewrelicmysqlInnodbTruncatedStatusWrites:                newMetricNewrelicmysqlInnodbTruncatedStatusWrites(mbc.Metrics.NewrelicmysqlInnodbTruncatedStatusWrites),
+		metricNewrelicmysqlInnodbUndoTablespacesActive:                newMetricNewrelicmysqlInnodbUndoTablespacesActive(mbc.Metrics.NewrelicmysqlInnodbUndoTablespacesActive),
+		metricNewrelicmysqlInnodbUndoTablespacesExplicit:              newMetricNewrelicmysqlInnodbUndoTablespacesExplicit(mbc.Metrics.NewrelicmysqlInnodbUndoTablespacesExplicit),
+		metricNewrelicmysqlInnodbUndoTablespacesImplicit:              newMetricNewrelicmysqlInnodbUndoTablespacesImplicit(mbc.Metrics.NewrelicmysqlInnodbUndoTablespacesImplicit),
+		metricNewrelicmysqlInnodbUndoTablespacesTotal:                 newMetricNewrelicmysqlInnodbUndoTablespacesTotal(mbc.Metrics.NewrelicmysqlInnodbUndoTablespacesTotal),
+		metricNewrelicmysqlInnodbXLockOsWaits:                         newMetricNewrelicmysqlInnodbXLockOsWaits(mbc.Metrics.NewrelicmysqlInnodbXLockOsWaits),
+		metricNewrelicmysqlInnodbXLockSpinRounds:                      newMetricNewrelicmysqlInnodbXLockSpinRounds(mbc.Metrics.NewrelicmysqlInnodbXLockSpinRounds),
+		metricNewrelicmysqlInnodbXLockSpinWaits:                       newMetricNewrelicmysqlInnodbXLockSpinWaits(mbc.Metrics.NewrelicmysqlInnodbXLockSpinWaits),
+		metricNewrelicmysqlMyisamKeyBufferBytesUnflushed:              newMetricNewrelicmysqlMyisamKeyBufferBytesUnflushed(mbc.Metrics.NewrelicmysqlMyisamKeyBufferBytesUnflushed),
+		metricNewrelicmysqlMyisamKeyBufferBytesUsed:                   newMetricNewrelicmysqlMyisamKeyBufferBytesUsed(mbc.Metrics.NewrelicmysqlMyisamKeyBufferBytesUsed),
+		metricNewrelicmysqlMyisamKeyBufferSize:                        newMetricNewrelicmysqlMyisamKeyBufferSize(mbc.Metrics.NewrelicmysqlMyisamKeyBufferSize),
+		metricNewrelicmysqlMyisamKeyReadRequests:                      newMetricNewrelicmysqlMyisamKeyReadRequests(mbc.Metrics.NewrelicmysqlMyisamKeyReadRequests),
+		metricNewrelicmysqlMyisamKeyReads:                             newMetricNewrelicmysqlMyisamKeyReads(mbc.Metrics.NewrelicmysqlMyisamKeyReads),
+		metricNewrelicmysqlMyisamKeyWriteRequests:                     newMetricNewrelicmysqlMyisamKeyWriteRequests(mbc.Metrics.NewrelicmysqlMyisamKeyWriteRequests),
+		metricNewrelicmysqlMyisamKeyWrites:                            newMetricNewrelicmysqlMyisamKeyWrites(mbc.Metrics.NewrelicmysqlMyisamKeyWrites),
+		metricNewrelicmysqlNetAbortedClients:                          newMetricNewrelicmysqlNetAbortedClients(mbc.Metrics.NewrelicmysqlNetAbortedClients),
+		metricNewrelicmysqlNetAbortedConnects:                         newMetricNewrelicmysqlNetAbortedConnects(mbc.Metrics.NewrelicmysqlNetAbortedConnects),
+		metricNewrelicmysqlNetConnections:                             newMetricNewrelicmysqlNetConnections(mbc.Metrics.NewrelicmysqlNetConnections),
+		metricNewrelicmysqlNetMaxConnections:                          newMetricNewrelicmysqlNetMaxConnections(mbc.Metrics.NewrelicmysqlNetMaxConnections),
+		metricNewrelicmysqlNetMaxConnectionsAvailable:                 newMetricNewrelicmysqlNetMaxConnectionsAvailable(mbc.Metrics.NewrelicmysqlNetMaxConnectionsAvailable),
+		metricNewrelicmysqlNetMaxUsedConnections:                      newMetricNewrelicmysqlNetMaxUsedConnections(mbc.Metrics.NewrelicmysqlNetMaxUsedConnections),
+		metricNewrelicmysqlPerformanceBytesReceived:                   newMetricNewrelicmysqlPerformanceBytesReceived(mbc.Metrics.NewrelicmysqlPerformanceBytesReceived),
+		metricNewrelicmysqlPerformanceBytesSent:                       newMetricNewrelicmysqlPerformanceBytesSent(mbc.Metrics.NewrelicmysqlPerformanceBytesSent),
+		metricNewrelicmysqlPerformanceCreatedTmpDiskTables:            newMetricNewrelicmysqlPerformanceCreatedTmpDiskTables(mbc.Metrics.NewrelicmysqlPerformanceCreatedTmpDiskTables),
+		metricNewrelicmysqlPerformanceCreatedTmpFiles:                 newMetricNewrelicmysqlPerformanceCreatedTmpFiles(mbc.Metrics.NewrelicmysqlPerformanceCreatedTmpFiles),
+		metricNewrelicmysqlPerformanceCreatedTmpTables:                newMetricNewrelicmysqlPerformanceCreatedTmpTables(mbc.Metrics.NewrelicmysqlPerformanceCreatedTmpTables),
+		metricNewrelicmysqlPerformanceHandlerCommit:                   newMetricNewrelicmysqlPerformanceHandlerCommit(mbc.Metrics.NewrelicmysqlPerformanceHandlerCommit),
+		metricNewrelicmysqlPerformanceHandlerDelete:                   newMetricNewrelicmysqlPerformanceHandlerDelete(mbc.Metrics.NewrelicmysqlPerformanceHandlerDelete),
+		metricNewrelicmysqlPerformanceHandlerPrepare:                  newMetricNewrelicmysqlPerformanceHandlerPrepare(mbc.Metrics.NewrelicmysqlPerformanceHandlerPrepare),
+		metricNewrelicmysqlPerformanceHandlerReadFirst:                newMetricNewrelicmysqlPerformanceHandlerReadFirst(mbc.Metrics.NewrelicmysqlPerformanceHandlerReadFirst),
+		metricNewrelicmysqlPerformanceHandlerReadKey:                  newMetricNewrelicmysqlPerformanceHandlerReadKey(mbc.Metrics.NewrelicmysqlPerformanceHandlerReadKey),
+		metricNewrelicmysqlPerformanceHandlerReadNext:                 newMetricNewrelicmysqlPerformanceHandlerReadNext(mbc.Metrics.NewrelicmysqlPerformanceHandlerReadNext),
+		metricNewrelicmysqlPerformanceHandlerReadPrev:                 newMetricNewrelicmysqlPerformanceHandlerReadPrev(mbc.Metrics.NewrelicmysqlPerformanceHandlerReadPrev),
+		metricNewrelicmysqlPerformanceHandlerReadRnd:                  newMetricNewrelicmysqlPerformanceHandlerReadRnd(mbc.Metrics.NewrelicmysqlPerformanceHandlerReadRnd),
+		metricNewrelicmysqlPerformanceHandlerReadRndNext:              newMetricNewrelicmysqlPerformanceHandlerReadRndNext(mbc.Metrics.NewrelicmysqlPerformanceHandlerReadRndNext),
+		metricNewrelicmysqlPerformanceHandlerRollback:                 newMetricNewrelicmysqlPerformanceHandlerRollback(mbc.Metrics.NewrelicmysqlPerformanceHandlerRollback),
+		metricNewrelicmysqlPerformanceHandlerUpdate:                   newMetricNewrelicmysqlPerformanceHandlerUpdate(mbc.Metrics.NewrelicmysqlPerformanceHandlerUpdate),
+		metricNewrelicmysqlPerformanceHandlerWrite:                    newMetricNewrelicmysqlPerformanceHandlerWrite(mbc.Metrics.NewrelicmysqlPerformanceHandlerWrite),
+		metricNewrelicmysqlPerformanceKeyCacheUtilization:             newMetricNewrelicmysqlPerformanceKeyCacheUtilization(mbc.Metrics.NewrelicmysqlPerformanceKeyCacheUtilization),
+		metricNewrelicmysqlPerformanceMaxPreparedStmtCount:            newMetricNewrelicmysqlPerformanceMaxPreparedStmtCount(mbc.Metrics.NewrelicmysqlPerformanceMaxPreparedStmtCount),
+		metricNewrelicmysqlPerformanceOpenFiles:                       newMetricNewrelicmysqlPerformanceOpenFiles(mbc.Metrics.NewrelicmysqlPerformanceOpenFiles),
+		metricNewrelicmysqlPerformanceOpenTables:                      newMetricNewrelicmysqlPerformanceOpenTables(mbc.Metrics.NewrelicmysqlPerformanceOpenTables),
+		metricNewrelicmysqlPerformanceOpenedTables:                    newMetricNewrelicmysqlPerformanceOpenedTables(mbc.Metrics.NewrelicmysqlPerformanceOpenedTables),
+		metricNewrelicmysqlPerformancePerformanceSchemaDigestLost:     newMetricNewrelicmysqlPerformancePerformanceSchemaDigestLost(mbc.Metrics.NewrelicmysqlPerformancePerformanceSchemaDigestLost),
+		metricNewrelicmysqlPerformancePreparedStmtCount:               newMetricNewrelicmysqlPerformancePreparedStmtCount(mbc.Metrics.NewrelicmysqlPerformancePreparedStmtCount),
+		metricNewrelicmysqlPerformanceQcacheFreeBlocks:                newMetricNewrelicmysqlPerformanceQcacheFreeBlocks(mbc.Metrics.NewrelicmysqlPerformanceQcacheFreeBlocks),
+		metricNewrelicmysqlPerformanceQcacheFreeMemory:                newMetricNewrelicmysqlPerformanceQcacheFreeMemory(mbc.Metrics.NewrelicmysqlPerformanceQcacheFreeMemory),
+		metricNewrelicmysqlPerformanceQcacheHits:                      newMetricNewrelicmysqlPerformanceQcacheHits(mbc.Metrics.NewrelicmysqlPerformanceQcacheHits),
+		metricNewrelicmysqlPerformanceQcacheInserts:                   newMetricNewrelicmysqlPerformanceQcacheInserts(mbc.Metrics.NewrelicmysqlPerformanceQcacheInserts),
+		metricNewrelicmysqlPerformanceQcacheLowmemPrunes:              newMetricNewrelicmysqlPerformanceQcacheLowmemPrunes(mbc.Metrics.NewrelicmysqlPerformanceQcacheLowmemPrunes),
+		metricNewrelicmysqlPerformanceQcacheNotCached:                 newMetricNewrelicmysqlPerformanceQcacheNotCached(mbc.Metrics.NewrelicmysqlPerformanceQcacheNotCached),
+		metricNewrelicmysqlPerformanceQcacheQueriesInCache:            newMetricNewrelicmysqlPerformanceQcacheQueriesInCache(mbc.Metrics.NewrelicmysqlPerformanceQcacheQueriesInCache),
+		metricNewrelicmysqlPerformanceQcacheSize:                      newMetricNewrelicmysqlPerformanceQcacheSize(mbc.Metrics.NewrelicmysqlPerformanceQcacheSize),
+		metricNewrelicmysqlPerformanceQcacheTotalBlocks:               newMetricNewrelicmysqlPerformanceQcacheTotalBlocks(mbc.Metrics.NewrelicmysqlPerformanceQcacheTotalBlocks),
+		metricNewrelicmysqlPerformanceQuestions:                       newMetricNewrelicmysqlPerformanceQuestions(mbc.Metrics.NewrelicmysqlPerformanceQuestions),
+		metricNewrelicmysqlPerformanceSelectFullJoin:                  newMetricNewrelicmysqlPerformanceSelectFullJoin(mbc.Metrics.NewrelicmysqlPerformanceSelectFullJoin),
+		metricNewrelicmysqlPerformanceSelectFullRangeJoin:             newMetricNewrelicmysqlPerformanceSelectFullRangeJoin(mbc.Metrics.NewrelicmysqlPerformanceSelectFullRangeJoin),
+		metricNewrelicmysqlPerformanceSelectRange:                     newMetricNewrelicmysqlPerformanceSelectRange(mbc.Metrics.NewrelicmysqlPerformanceSelectRange),
+		metricNewrelicmysqlPerformanceSelectRangeCheck:                newMetricNewrelicmysqlPerformanceSelectRangeCheck(mbc.Metrics.NewrelicmysqlPerformanceSelectRangeCheck),
+		metricNewrelicmysqlPerformanceSelectScan:                      newMetricNewrelicmysqlPerformanceSelectScan(mbc.Metrics.NewrelicmysqlPerformanceSelectScan),
+		metricNewrelicmysqlPerformanceSlowQueries:                     newMetricNewrelicmysqlPerformanceSlowQueries(mbc.Metrics.NewrelicmysqlPerformanceSlowQueries),
+		metricNewrelicmysqlPerformanceSortMergePasses:                 newMetricNewrelicmysqlPerformanceSortMergePasses(mbc.Metrics.NewrelicmysqlPerformanceSortMergePasses),
+		metricNewrelicmysqlPerformanceSortRange:                       newMetricNewrelicmysqlPerformanceSortRange(mbc.Metrics.NewrelicmysqlPerformanceSortRange),
+		metricNewrelicmysqlPerformanceSortRows:                        newMetricNewrelicmysqlPerformanceSortRows(mbc.Metrics.NewrelicmysqlPerformanceSortRows),
+		metricNewrelicmysqlPerformanceSortScan:                        newMetricNewrelicmysqlPerformanceSortScan(mbc.Metrics.NewrelicmysqlPerformanceSortScan),
+		metricNewrelicmysqlPerformanceTableLocksImmediate:             newMetricNewrelicmysqlPerformanceTableLocksImmediate(mbc.Metrics.NewrelicmysqlPerformanceTableLocksImmediate),
+		metricNewrelicmysqlPerformanceTableLocksImmediateRate:         newMetricNewrelicmysqlPerformanceTableLocksImmediateRate(mbc.Metrics.NewrelicmysqlPerformanceTableLocksImmediateRate),
+		metricNewrelicmysqlPerformanceTableLocksWaited:                newMetricNewrelicmysqlPerformanceTableLocksWaited(mbc.Metrics.NewrelicmysqlPerformanceTableLocksWaited),
+		metricNewrelicmysqlPerformanceTableOpenCache:                  newMetricNewrelicmysqlPerformanceTableOpenCache(mbc.Metrics.NewrelicmysqlPerformanceTableOpenCache),
+		metricNewrelicmysqlPerformanceThreadCacheSize:                 newMetricNewrelicmysqlPerformanceThreadCacheSize(mbc.Metrics.NewrelicmysqlPerformanceThreadCacheSize),
+		metricNewrelicmysqlPerformanceThreadsCached:                   newMetricNewrelicmysqlPerformanceThreadsCached(mbc.Metrics.NewrelicmysqlPerformanceThreadsCached),
+		metricNewrelicmysqlPerformanceThreadsConnected:                newMetricNewrelicmysqlPerformanceThreadsConnected(mbc.Metrics.NewrelicmysqlPerformanceThreadsConnected),
+		metricNewrelicmysqlPerformanceThreadsCreated:                  newMetricNewrelicmysqlPerformanceThreadsCreated(mbc.Metrics.NewrelicmysqlPerformanceThreadsCreated),
+		metricNewrelicmysqlPerformanceThreadsRunning:                  newMetricNewrelicmysqlPerformanceThreadsRunning(mbc.Metrics.NewrelicmysqlPerformanceThreadsRunning),
+		metricNewrelicmysqlQueryCount:                                 newMetricNewrelicmysqlQueryCount(mbc.Metrics.NewrelicmysqlQueryCount),
+		metricNewrelicmysqlReplicationExecMasterLogPos:                newMetricNewrelicmysqlReplicationExecMasterLogPos(mbc.Metrics.NewrelicmysqlReplicationExecMasterLogPos),
+		metricNewrelicmysqlReplicationGroupConflictsDetected:          newMetricNewrelicmysqlReplicationGroupConflictsDetected(mbc.Metrics.NewrelicmysqlReplicationGroupConflictsDetected),
+		metricNewrelicmysqlReplicationGroupTransactions:               newMetricNewrelicmysqlReplicationGroupTransactions(mbc.Metrics.NewrelicmysqlReplicationGroupTransactions),
+		metricNewrelicmysqlReplicationGroupTransactionsApplied:        newMetricNewrelicmysqlReplicationGroupTransactionsApplied(mbc.Metrics.NewrelicmysqlReplicationGroupTransactionsApplied),
+		metricNewrelicmysqlReplicationGroupTransactionsCheck:          newMetricNewrelicmysqlReplicationGroupTransactionsCheck(mbc.Metrics.NewrelicmysqlReplicationGroupTransactionsCheck),
+		metricNewrelicmysqlReplicationGroupTransactionsInApplierQueue: newMetricNewrelicmysqlReplicationGroupTransactionsInApplierQueue(mbc.Metrics.NewrelicmysqlReplicationGroupTransactionsInApplierQueue),
+		metricNewrelicmysqlReplicationGroupTransactionsProposed:       newMetricNewrelicmysqlReplicationGroupTransactionsProposed(mbc.Metrics.NewrelicmysqlReplicationGroupTransactionsProposed),
+		metricNewrelicmysqlReplicationGroupTransactionsRollback:       newMetricNewrelicmysqlReplicationGroupTransactionsRollback(mbc.Metrics.NewrelicmysqlReplicationGroupTransactionsRollback),
+		metricNewrelicmysqlReplicationGroupTransactionsValidating:     newMetricNewrelicmysqlReplicationGroupTransactionsValidating(mbc.Metrics.NewrelicmysqlReplicationGroupTransactionsValidating),
+		metricNewrelicmysqlReplicationLastIoErrno:                     newMetricNewrelicmysqlReplicationLastIoErrno(mbc.Metrics.NewrelicmysqlReplicationLastIoErrno),
+		metricNewrelicmysqlReplicationLastSQLErrno:                    newMetricNewrelicmysqlReplicationLastSQLErrno(mbc.Metrics.NewrelicmysqlReplicationLastSQLErrno),
+		metricNewrelicmysqlReplicationReadMasterLogPos:                newMetricNewrelicmysqlReplicationReadMasterLogPos(mbc.Metrics.NewrelicmysqlReplicationReadMasterLogPos),
+		metricNewrelicmysqlReplicationRelayLogSpace:                   newMetricNewrelicmysqlReplicationRelayLogSpace(mbc.Metrics.NewrelicmysqlReplicationRelayLogSpace),
+		metricNewrelicmysqlReplicationReplicasConnected:               newMetricNewrelicmysqlReplicationReplicasConnected(mbc.Metrics.NewrelicmysqlReplicationReplicasConnected),
+		metricNewrelicmysqlReplicationSecondsBehindMaster:             newMetricNewrelicmysqlReplicationSecondsBehindMaster(mbc.Metrics.NewrelicmysqlReplicationSecondsBehindMaster),
+		metricNewrelicmysqlReplicationSecondsBehindSource:             newMetricNewrelicmysqlReplicationSecondsBehindSource(mbc.Metrics.NewrelicmysqlReplicationSecondsBehindSource),
+		metricNewrelicmysqlReplicationSlaveIoRunning:                  newMetricNewrelicmysqlReplicationSlaveIoRunning(mbc.Metrics.NewrelicmysqlReplicationSlaveIoRunning),
+		metricNewrelicmysqlReplicationSlaveRunning:                    newMetricNewrelicmysqlReplicationSlaveRunning(mbc.Metrics.NewrelicmysqlReplicationSlaveRunning),
+		metricNewrelicmysqlReplicationSlaveSQLRunning:                 newMetricNewrelicmysqlReplicationSlaveSQLRunning(mbc.Metrics.NewrelicmysqlReplicationSlaveSQLRunning),
+		metricNewrelicmysqlReplicationSlavesConnected:                 newMetricNewrelicmysqlReplicationSlavesConnected(mbc.Metrics.NewrelicmysqlReplicationSlavesConnected),
+		metricNewrelicmysqlUptime:                                     newMetricNewrelicmysqlUptime(mbc.Metrics.NewrelicmysqlUptime),
+		resourceAttributeIncludeFilter:                                make(map[string]filter.Filter),
+		resourceAttributeExcludeFilter:                                make(map[string]filter.Filter),
 	}
 	if mbc.ResourceAttributes.NewrelicmysqlInstanceEndpoint.MetricsInclude != nil {
 		mb.resourceAttributeIncludeFilter["newrelicmysql.instance.endpoint"] = filter.CreateFilter(mbc.ResourceAttributes.NewrelicmysqlInstanceEndpoint.MetricsInclude)
@@ -12058,14 +12675,25 @@ func (mb *MetricsBuilder) EmitForResource(options ...ResourceMetricsOption) {
 	mb.metricNewrelicmysqlPerformanceThreadsRunning.emit(ils.Metrics())
 	mb.metricNewrelicmysqlQueryCount.emit(ils.Metrics())
 	mb.metricNewrelicmysqlReplicationExecMasterLogPos.emit(ils.Metrics())
+	mb.metricNewrelicmysqlReplicationGroupConflictsDetected.emit(ils.Metrics())
+	mb.metricNewrelicmysqlReplicationGroupTransactions.emit(ils.Metrics())
+	mb.metricNewrelicmysqlReplicationGroupTransactionsApplied.emit(ils.Metrics())
+	mb.metricNewrelicmysqlReplicationGroupTransactionsCheck.emit(ils.Metrics())
+	mb.metricNewrelicmysqlReplicationGroupTransactionsInApplierQueue.emit(ils.Metrics())
+	mb.metricNewrelicmysqlReplicationGroupTransactionsProposed.emit(ils.Metrics())
+	mb.metricNewrelicmysqlReplicationGroupTransactionsRollback.emit(ils.Metrics())
+	mb.metricNewrelicmysqlReplicationGroupTransactionsValidating.emit(ils.Metrics())
 	mb.metricNewrelicmysqlReplicationLastIoErrno.emit(ils.Metrics())
 	mb.metricNewrelicmysqlReplicationLastSQLErrno.emit(ils.Metrics())
 	mb.metricNewrelicmysqlReplicationReadMasterLogPos.emit(ils.Metrics())
 	mb.metricNewrelicmysqlReplicationRelayLogSpace.emit(ils.Metrics())
+	mb.metricNewrelicmysqlReplicationReplicasConnected.emit(ils.Metrics())
 	mb.metricNewrelicmysqlReplicationSecondsBehindMaster.emit(ils.Metrics())
+	mb.metricNewrelicmysqlReplicationSecondsBehindSource.emit(ils.Metrics())
 	mb.metricNewrelicmysqlReplicationSlaveIoRunning.emit(ils.Metrics())
 	mb.metricNewrelicmysqlReplicationSlaveRunning.emit(ils.Metrics())
 	mb.metricNewrelicmysqlReplicationSlaveSQLRunning.emit(ils.Metrics())
+	mb.metricNewrelicmysqlReplicationSlavesConnected.emit(ils.Metrics())
 	mb.metricNewrelicmysqlUptime.emit(ils.Metrics())
 
 	for _, op := range options {
@@ -13108,6 +13736,46 @@ func (mb *MetricsBuilder) RecordNewrelicmysqlReplicationExecMasterLogPosDataPoin
 	mb.metricNewrelicmysqlReplicationExecMasterLogPos.recordDataPoint(mb.startTime, ts, val)
 }
 
+// RecordNewrelicmysqlReplicationGroupConflictsDetectedDataPoint adds a data point to newrelicmysql.replication.group.conflicts_detected metric.
+func (mb *MetricsBuilder) RecordNewrelicmysqlReplicationGroupConflictsDetectedDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricNewrelicmysqlReplicationGroupConflictsDetected.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordNewrelicmysqlReplicationGroupTransactionsDataPoint adds a data point to newrelicmysql.replication.group.transactions metric.
+func (mb *MetricsBuilder) RecordNewrelicmysqlReplicationGroupTransactionsDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricNewrelicmysqlReplicationGroupTransactions.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordNewrelicmysqlReplicationGroupTransactionsAppliedDataPoint adds a data point to newrelicmysql.replication.group.transactions_applied metric.
+func (mb *MetricsBuilder) RecordNewrelicmysqlReplicationGroupTransactionsAppliedDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricNewrelicmysqlReplicationGroupTransactionsApplied.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordNewrelicmysqlReplicationGroupTransactionsCheckDataPoint adds a data point to newrelicmysql.replication.group.transactions_check metric.
+func (mb *MetricsBuilder) RecordNewrelicmysqlReplicationGroupTransactionsCheckDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricNewrelicmysqlReplicationGroupTransactionsCheck.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordNewrelicmysqlReplicationGroupTransactionsInApplierQueueDataPoint adds a data point to newrelicmysql.replication.group.transactions_in_applier_queue metric.
+func (mb *MetricsBuilder) RecordNewrelicmysqlReplicationGroupTransactionsInApplierQueueDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricNewrelicmysqlReplicationGroupTransactionsInApplierQueue.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordNewrelicmysqlReplicationGroupTransactionsProposedDataPoint adds a data point to newrelicmysql.replication.group.transactions_proposed metric.
+func (mb *MetricsBuilder) RecordNewrelicmysqlReplicationGroupTransactionsProposedDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricNewrelicmysqlReplicationGroupTransactionsProposed.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordNewrelicmysqlReplicationGroupTransactionsRollbackDataPoint adds a data point to newrelicmysql.replication.group.transactions_rollback metric.
+func (mb *MetricsBuilder) RecordNewrelicmysqlReplicationGroupTransactionsRollbackDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricNewrelicmysqlReplicationGroupTransactionsRollback.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordNewrelicmysqlReplicationGroupTransactionsValidatingDataPoint adds a data point to newrelicmysql.replication.group.transactions_validating metric.
+func (mb *MetricsBuilder) RecordNewrelicmysqlReplicationGroupTransactionsValidatingDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricNewrelicmysqlReplicationGroupTransactionsValidating.recordDataPoint(mb.startTime, ts, val)
+}
+
 // RecordNewrelicmysqlReplicationLastIoErrnoDataPoint adds a data point to newrelicmysql.replication.last_io_errno metric.
 func (mb *MetricsBuilder) RecordNewrelicmysqlReplicationLastIoErrnoDataPoint(ts pcommon.Timestamp, val int64) {
 	mb.metricNewrelicmysqlReplicationLastIoErrno.recordDataPoint(mb.startTime, ts, val)
@@ -13128,9 +13796,19 @@ func (mb *MetricsBuilder) RecordNewrelicmysqlReplicationRelayLogSpaceDataPoint(t
 	mb.metricNewrelicmysqlReplicationRelayLogSpace.recordDataPoint(mb.startTime, ts, val)
 }
 
+// RecordNewrelicmysqlReplicationReplicasConnectedDataPoint adds a data point to newrelicmysql.replication.replicas_connected metric.
+func (mb *MetricsBuilder) RecordNewrelicmysqlReplicationReplicasConnectedDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricNewrelicmysqlReplicationReplicasConnected.recordDataPoint(mb.startTime, ts, val)
+}
+
 // RecordNewrelicmysqlReplicationSecondsBehindMasterDataPoint adds a data point to newrelicmysql.replication.seconds_behind_master metric.
 func (mb *MetricsBuilder) RecordNewrelicmysqlReplicationSecondsBehindMasterDataPoint(ts pcommon.Timestamp, val int64) {
 	mb.metricNewrelicmysqlReplicationSecondsBehindMaster.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordNewrelicmysqlReplicationSecondsBehindSourceDataPoint adds a data point to newrelicmysql.replication.seconds_behind_source metric.
+func (mb *MetricsBuilder) RecordNewrelicmysqlReplicationSecondsBehindSourceDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricNewrelicmysqlReplicationSecondsBehindSource.recordDataPoint(mb.startTime, ts, val)
 }
 
 // RecordNewrelicmysqlReplicationSlaveIoRunningDataPoint adds a data point to newrelicmysql.replication.slave_io_running metric.
@@ -13146,6 +13824,11 @@ func (mb *MetricsBuilder) RecordNewrelicmysqlReplicationSlaveRunningDataPoint(ts
 // RecordNewrelicmysqlReplicationSlaveSQLRunningDataPoint adds a data point to newrelicmysql.replication.slave_sql_running metric.
 func (mb *MetricsBuilder) RecordNewrelicmysqlReplicationSlaveSQLRunningDataPoint(ts pcommon.Timestamp, val int64) {
 	mb.metricNewrelicmysqlReplicationSlaveSQLRunning.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordNewrelicmysqlReplicationSlavesConnectedDataPoint adds a data point to newrelicmysql.replication.slaves_connected metric.
+func (mb *MetricsBuilder) RecordNewrelicmysqlReplicationSlavesConnectedDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricNewrelicmysqlReplicationSlavesConnected.recordDataPoint(mb.startTime, ts, val)
 }
 
 // RecordNewrelicmysqlUptimeDataPoint adds a data point to newrelicmysql.uptime metric.

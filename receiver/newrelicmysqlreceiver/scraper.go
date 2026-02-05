@@ -65,7 +65,9 @@ func (n *newRelicMySQLScraper) start(_ context.Context, _ component.Host) error 
 		return err
 	}
 
-	replicationScraper, err := scrapers.NewReplicationScraper(n.sqlclient, n.mb, n.logger)
+	// Initialize replication scraper (always enabled for core metrics)
+	// Additional metrics are controlled by the Replication flag
+	replicationScraper, err := scrapers.NewReplicationScraper(n.sqlclient, n.mb, n.logger, n.config.Replication)
 	if err != nil {
 		return err
 	}
@@ -73,6 +75,10 @@ func (n *newRelicMySQLScraper) start(_ context.Context, _ component.Host) error 
 	n.scrapers = []scrapers.Scraper{
 		coreScraper,
 		replicationScraper,
+	}
+
+	if n.config.Replication {
+		n.logger.Info("Additional replication metrics collection enabled")
 	}
 
 	if n.config.ExtraStatusMetrics {

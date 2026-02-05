@@ -7,6 +7,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"strconv"
 
 	"github.com/go-sql-driver/mysql"
 	"go.uber.org/zap"
@@ -156,6 +157,167 @@ func (c *mySQLClient) GetReplicationStatus() (map[string]string, error) {
 	}
 
 	return result, rows.Err()
+}
+
+// GetMasterStatus retrieves master/source status information.
+func (c *mySQLClient) GetMasterStatus() (map[string]string, error) {
+	result := make(map[string]string)
+
+	// Method 1: Try performance_schema.threads (most reliable, MySQL 5.7+)
+	var count int
+	err := c.db.QueryRow(`SELECT COUNT(*) 
+		FROM performance_schema.threads 
+		WHERE PROCESSLIST_COMMAND LIKE 'Binlog Dump%'`).Scan(&count)
+
+	if err != nil {
+		// Method 2: Fallback to INFORMATION_SCHEMA.PROCESSLIST
+		err = c.db.QueryRow(`SELECT COUNT(*) 
+			FROM INFORMATION_SCHEMA.PROCESSLIST 
+			WHERE COMMAND LIKE 'Binlog Dump%'`).Scan(&count)
+
+		if err != nil {
+			// Method 3: Try performance_schema.global_status (for restricted privilege users)
+			var countStr string
+			err = c.db.QueryRow(`SELECT VARIABLE_VALUE 
+				FROM performance_schema.global_status 
+				WHERE VARIABLE_NAME IN ('Slaves_connected', 'Replicas_connected') 
+				LIMIT 1`).Scan(&countStr)
+			if err != nil {
+				// Not a master, performance_schema disabled, or binary logging not enabled
+				// Return empty result without error
+				return result, nil
+			}
+			// Parse the string value to int
+			if parsedCount, parseErr := strconv.Atoi(countStr); parseErr == nil {
+				count = parsedCount
+			} else {
+				return result, nil
+			}
+		}
+	}
+
+	// Set the result if we have connected replicas
+	if count > 0 {
+		countStr := strconv.Itoa(count)
+		result["Slaves_Connected"] = countStr
+		result["Replicas_Connected"] = countStr
+		c.logger.Info("Master replication status detected", zap.Int("replicas_connected", count))
+	} else {
+		c.logger.Debug("No replicas connected to this master server")
+	}
+
+	return result, nil
+}
+
+// GetGroupReplicationStats retrieves group replication statistics from performance schema.
+// Queries per-server metrics filtered by current server UUID.
+func (c *mySQLClient) GetGroupReplicationStats() (map[string]string, error) {
+	result := make(map[string]string)
+
+	// Check if group replication plugin is active
+	var pluginStatus string
+	err := c.db.QueryRow(`SELECT plugin_status FROM information_schema.plugins WHERE plugin_name='group_replication'`).Scan(&pluginStatus)
+	if err != nil || pluginStatus != "ACTIVE" {
+		// Plugin not installed or not active
+		c.logger.Debug("Group Replication plugin not active or not installed")
+		return result, nil
+	}
+
+	c.logger.Debug("Group Replication plugin is active, querying metrics")
+
+	// Try MySQL >= 8.0.2 query first (all 8 columns available)
+	// Filters by current server UUID and applier channel
+	query := `SELECT 
+                COUNT_TRANSACTIONS_IN_QUEUE,
+                COUNT_TRANSACTIONS_CHECKED,
+                COUNT_CONFLICTS_DETECTED,
+                COUNT_TRANSACTIONS_ROWS_VALIDATING,
+                COUNT_TRANSACTIONS_REMOTE_IN_APPLIER_QUEUE,
+                COUNT_TRANSACTIONS_REMOTE_APPLIED,
+                COUNT_TRANSACTIONS_LOCAL_PROPOSED,
+                COUNT_TRANSACTIONS_LOCAL_ROLLBACK
+              FROM performance_schema.replication_group_member_stats
+              WHERE member_id = @@server_uuid
+                AND channel_name = 'group_replication_applier'`
+
+	var (
+		inQueue, checked, conflicts, validating          sql.NullInt64
+		remoteInQueue, remoteApplied, proposed, rollback sql.NullInt64
+	)
+
+	row := c.db.QueryRow(query)
+	err = row.Scan(&inQueue, &checked, &conflicts, &validating, &remoteInQueue, &remoteApplied, &proposed, &rollback)
+
+	// If MySQL >= 8.0.2 query fails, try MySQL < 8.0.2 fallback (only 4 columns)
+	if err != nil {
+		// MySQL < 8.0.2 query (only 4 columns available)
+		queryLegacy := `SELECT 
+                        COUNT_TRANSACTIONS_IN_QUEUE,
+                        COUNT_TRANSACTIONS_CHECKED,
+                        COUNT_CONFLICTS_DETECTED,
+                        COUNT_TRANSACTIONS_ROWS_VALIDATING
+                      FROM performance_schema.replication_group_member_stats
+                      WHERE member_id = @@server_uuid
+                        AND channel_name = 'group_replication_applier'`
+
+		row = c.db.QueryRow(queryLegacy)
+		err = row.Scan(&inQueue, &checked, &conflicts, &validating)
+		if err != nil {
+			// Table might not exist or no matching rows
+			c.logger.Debug("Group Replication stats table not found or no data for this server")
+			return result, nil
+		}
+
+		c.logger.Debug("Using MySQL < 8.0.2 query, collected 4 Group Replication metrics")
+
+		// MySQL < 8.0.2: Only 4 metrics available
+		if inQueue.Valid {
+			result["group_replication_transactions"] = strconv.FormatInt(inQueue.Int64, 10)
+		}
+		if checked.Valid {
+			result["group_replication_transactions_check"] = strconv.FormatInt(checked.Int64, 10)
+		}
+		if conflicts.Valid {
+			result["group_replication_conflicts_detected"] = strconv.FormatInt(conflicts.Int64, 10)
+		}
+		if validating.Valid {
+			result["group_replication_transactions_validating"] = strconv.FormatInt(validating.Int64, 10)
+		}
+
+		return result, nil
+	}
+
+	c.logger.Debug("Using MySQL >= 8.0.2 query, collected 8 Group Replication metrics")
+
+	// MySQL >= 8.0.2: All 8 metrics available
+	if inQueue.Valid {
+		result["group_replication_transactions"] = strconv.FormatInt(inQueue.Int64, 10)
+	}
+	if checked.Valid {
+		result["group_replication_transactions_check"] = strconv.FormatInt(checked.Int64, 10)
+	}
+	if conflicts.Valid {
+		result["group_replication_conflicts_detected"] = strconv.FormatInt(conflicts.Int64, 10)
+	}
+	if validating.Valid {
+		result["group_replication_transactions_validating"] = strconv.FormatInt(validating.Int64, 10)
+	}
+	if remoteInQueue.Valid {
+		result["group_replication_transactions_in_applier_queue"] = strconv.FormatInt(remoteInQueue.Int64, 10)
+	}
+	if remoteApplied.Valid {
+		result["group_replication_transactions_applied"] = strconv.FormatInt(remoteApplied.Int64, 10)
+	}
+	if proposed.Valid {
+		result["group_replication_transactions_proposed"] = strconv.FormatInt(proposed.Int64, 10)
+	}
+	if rollback.Valid {
+		result["group_replication_transactions_rollback"] = strconv.FormatInt(rollback.Int64, 10)
+	}
+
+	c.logger.Info("Group Replication metrics collected (MySQL >= 8.0.2)", zap.Int("metric_count", len(result)))
+
+	return result, nil
 }
 
 // GetVersion retrieves the MySQL server version string.

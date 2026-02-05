@@ -2037,6 +2037,90 @@ metrics:
     gauge:
       value_type: int
 
+  newrelicmysql.replication.group.conflicts_detected:
+    enabled: true
+    description: The number of transaction conflicts detected by the group replication certification process.
+    stability:
+      level: development
+    unit: "{conflicts}"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  newrelicmysql.replication.group.transactions:
+    enabled: true
+    description: The total number of transactions that have been checked for conflicts by the group replication certification process.
+    stability:
+      level: development
+    unit: "{transactions}"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  newrelicmysql.replication.group.transactions_applied:
+    enabled: true
+    description: The number of transactions applied by the group replication applier.
+    stability:
+      level: development
+    unit: "{transactions}"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  newrelicmysql.replication.group.transactions_check:
+    enabled: true
+    description: The number of transactions checked for conflicts in the group replication.
+    stability:
+      level: development
+    unit: "{transactions}"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  newrelicmysql.replication.group.transactions_in_applier_queue:
+    enabled: true
+    description: The number of transactions in the group replication applier queue waiting to be applied.
+    stability:
+      level: development
+    unit: "{transactions}"
+    gauge:
+      value_type: int
+
+  newrelicmysql.replication.group.transactions_proposed:
+    enabled: true
+    description: The number of transactions proposed for group replication.
+    stability:
+      level: development
+    unit: "{transactions}"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  newrelicmysql.replication.group.transactions_rollback:
+    enabled: true
+    description: The number of transactions rolled back by group replication.
+    stability:
+      level: development
+    unit: "{transactions}"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  newrelicmysql.replication.group.transactions_validating:
+    enabled: true
+    description: The number of transactions currently being validated by the group replication.
+    stability:
+      level: development
+    unit: "{transactions}"
+    gauge:
+      value_type: int
+
   newrelicmysql.replication.last_io_errno:
     enabled: true
     description: The error number of the most recent error that caused the replication I/O thread to stop.
@@ -2073,9 +2157,27 @@ metrics:
     gauge:
       value_type: int
 
+  newrelicmysql.replication.replicas_connected:
+    enabled: true
+    description: The number of replicas currently connected to this source (MySQL 8.0.22+).
+    stability:
+      level: development
+    unit: "{replicas}"
+    gauge:
+      value_type: int
+
   newrelicmysql.replication.seconds_behind_master:
     enabled: true
     description: The number of seconds that the replica SQL thread is behind processing the master binary log.
+    stability:
+      level: development
+    unit: s
+    gauge:
+      value_type: int
+
+  newrelicmysql.replication.seconds_behind_source:
+    enabled: true
+    description: The number of seconds that the replica SQL thread is behind processing the source binary log (MySQL 8.0.22+).
     stability:
       level: development
     unit: s
@@ -2106,6 +2208,15 @@ metrics:
     stability:
       level: development
     unit: "1"
+    gauge:
+      value_type: int
+
+  newrelicmysql.replication.slaves_connected:
+    enabled: true
+    description: The number of replicas currently connected to this master.
+    stability:
+      level: development
+    unit: "{replicas}"
     gauge:
       value_type: int
 
