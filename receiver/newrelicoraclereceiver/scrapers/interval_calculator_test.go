@@ -77,8 +77,7 @@ func TestCalculateMetrics_FirstScrape(t *testing.T) {
 		QueryID:            sql.NullString{String: "test_query_1", Valid: true},
 		ExecutionCount:     sql.NullInt64{Int64: 100, Valid: true},
 		TotalElapsedTimeMS: sql.NullFloat64{Float64: 5000.0, Valid: true},
-		AvgElapsedTimeMs:   sql.NullFloat64{Float64: 50.0, Valid: true},
-		AvgCPUTimeMs:       sql.NullFloat64{Float64: 30.0, Valid: true},
+		TotalCPUTimeMS:     sql.NullFloat64{Float64: 3000.0, Valid: true}, // 100 * 30 = 3000
 	}
 
 	metrics := calc.CalculateMetrics(query, now)
@@ -117,8 +116,7 @@ func TestCalculateMetrics_SubsequentScrape_WithNewExecutions(t *testing.T) {
 		QueryID:            sql.NullString{String: "test_query_1", Valid: true},
 		ExecutionCount:     sql.NullInt64{Int64: 100, Valid: true},
 		TotalElapsedTimeMS: sql.NullFloat64{Float64: 5000.0, Valid: true},
-		AvgElapsedTimeMs:   sql.NullFloat64{Float64: 50.0, Valid: true},
-		AvgCPUTimeMs:       sql.NullFloat64{Float64: 30.0, Valid: true},
+		TotalCPUTimeMS:     sql.NullFloat64{Float64: 3000.0, Valid: true}, // 100 * 30 = 3000
 	}
 
 	// First scrape
@@ -129,8 +127,7 @@ func TestCalculateMetrics_SubsequentScrape_WithNewExecutions(t *testing.T) {
 		QueryID:            sql.NullString{String: "test_query_1", Valid: true},
 		ExecutionCount:     sql.NullInt64{Int64: 120, Valid: true},
 		TotalElapsedTimeMS: sql.NullFloat64{Float64: 7000.0, Valid: true},
-		AvgElapsedTimeMs:   sql.NullFloat64{Float64: 58.33, Valid: true},
-		AvgCPUTimeMs:       sql.NullFloat64{Float64: 35.0, Valid: true},
+		TotalCPUTimeMS:     sql.NullFloat64{Float64: 4200.0, Valid: true}, // 120 * 35 = 4200
 	}
 
 	metrics := calc.CalculateMetrics(query2, now.Add(1*time.Minute))
@@ -139,8 +136,8 @@ func TestCalculateMetrics_SubsequentScrape_WithNewExecutions(t *testing.T) {
 	// Delta: (7000 - 5000) / (120 - 100) = 2000 / 20 = 100
 	assert.Equal(t, 100.0, metrics.IntervalAvgElapsedTimeMs)
 	assert.Equal(t, int64(20), metrics.IntervalExecutionCount)
-	assert.Equal(t, 58.33, metrics.HistoricalAvgElapsedTimeMs)
-	assert.Equal(t, 35.0, metrics.HistoricalAvgCPUTimeMs)
+	assert.InDelta(t, 58.33, metrics.HistoricalAvgElapsedTimeMs, 0.01)
+	assert.Equal(t, 35.0, metrics.HistoricalAvgCPUTimeMs) // 4200 / 120 = 35
 	assert.Equal(t, int64(120), metrics.HistoricalExecutionCount)
 	assert.False(t, metrics.IsFirstScrape)
 	assert.True(t, metrics.HasNewExecutions)
@@ -155,7 +152,6 @@ func TestCalculateMetrics_SubsequentScrape_NoNewExecutions(t *testing.T) {
 		QueryID:            sql.NullString{String: "test_query_1", Valid: true},
 		ExecutionCount:     sql.NullInt64{Int64: 100, Valid: true},
 		TotalElapsedTimeMS: sql.NullFloat64{Float64: 5000.0, Valid: true},
-		AvgElapsedTimeMs:   sql.NullFloat64{Float64: 50.0, Valid: true},
 	}
 
 	calc.CalculateMetrics(query1, now)
@@ -165,7 +161,6 @@ func TestCalculateMetrics_SubsequentScrape_NoNewExecutions(t *testing.T) {
 		QueryID:            sql.NullString{String: "test_query_1", Valid: true},
 		ExecutionCount:     sql.NullInt64{Int64: 100, Valid: true},
 		TotalElapsedTimeMS: sql.NullFloat64{Float64: 5000.0, Valid: true},
-		AvgElapsedTimeMs:   sql.NullFloat64{Float64: 50.0, Valid: true},
 	}
 
 	metrics := calc.CalculateMetrics(query2, now.Add(1*time.Minute))
@@ -186,7 +181,6 @@ func TestCalculateMetrics_PlanCacheReset_NegativeExecCount(t *testing.T) {
 		QueryID:            sql.NullString{String: "test_query_1", Valid: true},
 		ExecutionCount:     sql.NullInt64{Int64: 100, Valid: true},
 		TotalElapsedTimeMS: sql.NullFloat64{Float64: 5000.0, Valid: true},
-		AvgElapsedTimeMs:   sql.NullFloat64{Float64: 50.0, Valid: true},
 	}
 
 	calc.CalculateMetrics(query1, now)
@@ -196,7 +190,6 @@ func TestCalculateMetrics_PlanCacheReset_NegativeExecCount(t *testing.T) {
 		QueryID:            sql.NullString{String: "test_query_1", Valid: true},
 		ExecutionCount:     sql.NullInt64{Int64: 50, Valid: true},
 		TotalElapsedTimeMS: sql.NullFloat64{Float64: 2500.0, Valid: true},
-		AvgElapsedTimeMs:   sql.NullFloat64{Float64: 50.0, Valid: true},
 	}
 
 	metrics := calc.CalculateMetrics(query2, now.Add(1*time.Minute))
@@ -217,7 +210,6 @@ func TestCalculateMetrics_NegativeElapsedTime(t *testing.T) {
 		QueryID:            sql.NullString{String: "test_query_1", Valid: true},
 		ExecutionCount:     sql.NullInt64{Int64: 100, Valid: true},
 		TotalElapsedTimeMS: sql.NullFloat64{Float64: 5000.0, Valid: true},
-		AvgElapsedTimeMs:   sql.NullFloat64{Float64: 50.0, Valid: true},
 	}
 
 	calc.CalculateMetrics(query1, now)
@@ -227,13 +219,12 @@ func TestCalculateMetrics_NegativeElapsedTime(t *testing.T) {
 		QueryID:            sql.NullString{String: "test_query_1", Valid: true},
 		ExecutionCount:     sql.NullInt64{Int64: 120, Valid: true},
 		TotalElapsedTimeMS: sql.NullFloat64{Float64: 4000.0, Valid: true},
-		AvgElapsedTimeMs:   sql.NullFloat64{Float64: 33.33, Valid: true},
 	}
 
 	metrics := calc.CalculateMetrics(query2, now.Add(1*time.Minute))
 
 	assert.NotNil(t, metrics)
-	assert.Equal(t, 33.33, metrics.IntervalAvgElapsedTimeMs)
+	assert.InDelta(t, 33.33, metrics.IntervalAvgElapsedTimeMs, 0.01)
 	assert.Equal(t, int64(120), metrics.IntervalExecutionCount)
 	assert.True(t, metrics.IsFirstScrape)
 }
@@ -247,7 +238,6 @@ func TestCalculateMetrics_ZeroElapsedWithExecutions(t *testing.T) {
 		QueryID:            sql.NullString{String: "test_query_1", Valid: true},
 		ExecutionCount:     sql.NullInt64{Int64: 100, Valid: true},
 		TotalElapsedTimeMS: sql.NullFloat64{Float64: 5000.0, Valid: true},
-		AvgElapsedTimeMs:   sql.NullFloat64{Float64: 50.0, Valid: true},
 	}
 
 	calc.CalculateMetrics(query1, now)
@@ -257,7 +247,6 @@ func TestCalculateMetrics_ZeroElapsedWithExecutions(t *testing.T) {
 		QueryID:            sql.NullString{String: "test_query_1", Valid: true},
 		ExecutionCount:     sql.NullInt64{Int64: 120, Valid: true},
 		TotalElapsedTimeMS: sql.NullFloat64{Float64: 5000.0, Valid: true},
-		AvgElapsedTimeMs:   sql.NullFloat64{Float64: 41.67, Valid: true},
 	}
 
 	metrics := calc.CalculateMetrics(query2, now.Add(1*time.Minute))
@@ -278,7 +267,6 @@ func TestCalculateMetrics_WithLastActiveTime(t *testing.T) {
 		QueryID:            sql.NullString{String: "test_query_1", Valid: true},
 		ExecutionCount:     sql.NullInt64{Int64: 100, Valid: true},
 		TotalElapsedTimeMS: sql.NullFloat64{Float64: 5000.0, Valid: true},
-		AvgElapsedTimeMs:   sql.NullFloat64{Float64: 50.0, Valid: true},
 		LastActiveTime:     sql.NullString{String: lastActive.Format("2006-01-02/15:04:05"), Valid: true},
 	}
 
@@ -296,7 +284,6 @@ func TestCalculateMetrics_InvalidLastActiveTime(t *testing.T) {
 		QueryID:            sql.NullString{String: "test_query_1", Valid: true},
 		ExecutionCount:     sql.NullInt64{Int64: 100, Valid: true},
 		TotalElapsedTimeMS: sql.NullFloat64{Float64: 5000.0, Valid: true},
-		AvgElapsedTimeMs:   sql.NullFloat64{Float64: 50.0, Valid: true},
 		LastActiveTime:     sql.NullString{String: "invalid-date", Valid: true},
 	}
 
@@ -314,8 +301,7 @@ func TestCalculateMetrics_NullFields(t *testing.T) {
 		QueryID:            sql.NullString{String: "test_query_1", Valid: true},
 		ExecutionCount:     sql.NullInt64{Valid: false},
 		TotalElapsedTimeMS: sql.NullFloat64{Valid: false},
-		AvgElapsedTimeMs:   sql.NullFloat64{Valid: false},
-		AvgCPUTimeMs:       sql.NullFloat64{Valid: false},
+		TotalCPUTimeMS:     sql.NullFloat64{Valid: false},
 	}
 
 	metrics := calc.CalculateMetrics(query, time.Now())
@@ -332,7 +318,6 @@ func TestCleanupStaleEntries_NoCleanupNeeded(t *testing.T) {
 		QueryID:            sql.NullString{String: "test_query_1", Valid: true},
 		ExecutionCount:     sql.NullInt64{Int64: 100, Valid: true},
 		TotalElapsedTimeMS: sql.NullFloat64{Float64: 5000.0, Valid: true},
-		AvgElapsedTimeMs:   sql.NullFloat64{Float64: 50.0, Valid: true},
 	}
 
 	calc.CalculateMetrics(query, now)
@@ -351,7 +336,6 @@ func TestCleanupStaleEntries_RemoveStaleEntries(t *testing.T) {
 		QueryID:            sql.NullString{String: "test_query_1", Valid: true},
 		ExecutionCount:     sql.NullInt64{Int64: 100, Valid: true},
 		TotalElapsedTimeMS: sql.NullFloat64{Float64: 5000.0, Valid: true},
-		AvgElapsedTimeMs:   sql.NullFloat64{Float64: 50.0, Valid: true},
 	}
 
 	calc.CalculateMetrics(query, now)
@@ -373,7 +357,6 @@ func TestCleanupStaleEntries_SkipIfRecentlyRan(t *testing.T) {
 		QueryID:            sql.NullString{String: "test_query_1", Valid: true},
 		ExecutionCount:     sql.NullInt64{Int64: 100, Valid: true},
 		TotalElapsedTimeMS: sql.NullFloat64{Float64: 5000.0, Valid: true},
-		AvgElapsedTimeMs:   sql.NullFloat64{Float64: 50.0, Valid: true},
 	}
 
 	calc.CalculateMetrics(query, now)
@@ -407,7 +390,6 @@ func TestGetCacheStats_WithEntries(t *testing.T) {
 			QueryID:            sql.NullString{String: string(rune('a' + i)), Valid: true},
 			ExecutionCount:     sql.NullInt64{Int64: 100, Valid: true},
 			TotalElapsedTimeMS: sql.NullFloat64{Float64: 5000.0, Valid: true},
-			AvgElapsedTimeMs:   sql.NullFloat64{Float64: 50.0, Valid: true},
 		}
 		calc.CalculateMetrics(query, now)
 	}
@@ -425,7 +407,6 @@ func TestReset(t *testing.T) {
 		QueryID:            sql.NullString{String: "test_query_1", Valid: true},
 		ExecutionCount:     sql.NullInt64{Int64: 100, Valid: true},
 		TotalElapsedTimeMS: sql.NullFloat64{Float64: 5000.0, Valid: true},
-		AvgElapsedTimeMs:   sql.NullFloat64{Float64: 50.0, Valid: true},
 	}
 
 	calc.CalculateMetrics(query, now)
@@ -445,7 +426,6 @@ func TestCalculateMetrics_PreserveFirstSeenTimestamp(t *testing.T) {
 		QueryID:            sql.NullString{String: "test_query_1", Valid: true},
 		ExecutionCount:     sql.NullInt64{Int64: 100, Valid: true},
 		TotalElapsedTimeMS: sql.NullFloat64{Float64: 5000.0, Valid: true},
-		AvgElapsedTimeMs:   sql.NullFloat64{Float64: 50.0, Valid: true},
 	}
 
 	calc.CalculateMetrics(query1, now)
@@ -457,7 +437,6 @@ func TestCalculateMetrics_PreserveFirstSeenTimestamp(t *testing.T) {
 		QueryID:            sql.NullString{String: "test_query_1", Valid: true},
 		ExecutionCount:     sql.NullInt64{Int64: 50, Valid: true},
 		TotalElapsedTimeMS: sql.NullFloat64{Float64: 2500.0, Valid: true},
-		AvgElapsedTimeMs:   sql.NullFloat64{Float64: 50.0, Valid: true},
 	}
 
 	calc.CalculateMetrics(query2, now.Add(1*time.Minute))
@@ -476,13 +455,11 @@ func TestCalculateMetrics_MultipleQueries(t *testing.T) {
 			QueryID:            sql.NullString{String: "query_1", Valid: true},
 			ExecutionCount:     sql.NullInt64{Int64: 100, Valid: true},
 			TotalElapsedTimeMS: sql.NullFloat64{Float64: 5000.0, Valid: true},
-			AvgElapsedTimeMs:   sql.NullFloat64{Float64: 50.0, Valid: true},
 		},
 		{
 			QueryID:            sql.NullString{String: "query_2", Valid: true},
 			ExecutionCount:     sql.NullInt64{Int64: 200, Valid: true},
 			TotalElapsedTimeMS: sql.NullFloat64{Float64: 10000.0, Valid: true},
-			AvgElapsedTimeMs:   sql.NullFloat64{Float64: 50.0, Valid: true},
 		},
 	}
 

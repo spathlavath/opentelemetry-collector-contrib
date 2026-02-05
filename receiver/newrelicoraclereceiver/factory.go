@@ -241,7 +241,6 @@ func determineMonitoredServices(sqlOpenerFunc sqlOpenerFunc, dataSource string, 
 		return nil, fmt.Errorf("failed to query services: %w", err)
 	}
 
-	// Filter services based on configuration (case-insensitive matching)
 	filteredServices := filterServices(allServices, pdbServices, logger)
 	if len(filteredServices) == 0 {
 		return nil, fmt.Errorf("none of the requested services found: %v", pdbServices)
@@ -252,7 +251,6 @@ func determineMonitoredServices(sqlOpenerFunc sqlOpenerFunc, dataSource string, 
 
 // filterServices filters services based on requested names (case-insensitive)
 func filterServices(allServices []string, requestedServices []string, logger *zap.Logger) []string {
-	// Create a map for case-insensitive lookup
 	requestMap := make(map[string]string) // lowercase -> original
 	for _, req := range requestedServices {
 		requestMap[strings.ToLower(req)] = req
@@ -260,7 +258,6 @@ func filterServices(allServices []string, requestedServices []string, logger *za
 
 	var filtered []string
 	for _, service := range allServices {
-		// Extract just the service name (before the first dot)
 		serviceName := service
 		if dotIndex := strings.Index(service, "."); dotIndex != -1 {
 			serviceName = service[:dotIndex]
