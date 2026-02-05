@@ -144,28 +144,6 @@ func (s *WaitEventBlockingScraper) recordWaitEventMetrics(now pcommon.Timestamp,
 	)
 }
 
-// GetSQLIdentifiers retrieves unique SQL identifiers from wait events without emitting metrics
-func (s *WaitEventBlockingScraper) GetSQLIdentifiers(ctx context.Context, slowQueryIdentifiers []models.SQLIdentifier) ([]models.SQLIdentifier, []error) {
-	// Extract SQL IDs and create a map for metadata lookup
-	sqlIDMap := make(map[string]models.SQLIdentifier)
-	sqlIDs := make([]string, len(slowQueryIdentifiers))
-	for i, identifier := range slowQueryIdentifiers {
-		sqlIDs[i] = identifier.SQLID
-		sqlIDMap[identifier.SQLID] = identifier
-	}
-
-	waitEvents, err := s.fetchWaitEvents(ctx, sqlIDs)
-	if err != nil {
-		return nil, []error{err}
-	}
-
-	sqlIdentifiers := s.extractSQLIdentifiers(waitEvents, sqlIDMap)
-
-	s.logger.Debug("SQL identifiers collected without emitting metrics")
-
-	return sqlIdentifiers, nil
-}
-
 // emitWaitEventMetrics emits metrics for wait events and blocking queries
 func (s *WaitEventBlockingScraper) emitWaitEventMetrics(
 	now pcommon.Timestamp,
@@ -339,8 +317,8 @@ func (s *WaitEventBlockingScraper) recordBlockingMetrics(now pcommon.Timestamp, 
 			"",                        // schema_name
 			"",                        // user_name
 			"",                        // last_active_time
-			nrServiceGuid, 			   // normalised_sql_hash 
-			normalisedSQLHash,     	   // nr_service_guid 
+			nrServiceGuid,             // normalised_sql_hash
+			normalisedSQLHash,         // nr_service_guid
 			normalisedBlockingSQLHash, // normalised_blocking_sql_hash (same - this IS the blocking query)
 			nrBlockingServiceGuid,     // nr_blocking_service_guid (same - this IS the blocking query)
 		)

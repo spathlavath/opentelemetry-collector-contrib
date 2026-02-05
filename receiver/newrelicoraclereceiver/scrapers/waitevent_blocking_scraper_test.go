@@ -258,59 +258,6 @@ func TestRecordWaitEventMetrics_InvalidEvent(t *testing.T) {
 	scraper.recordWaitEventMetrics(pcommon.NewTimestampFromTime(now), event, make(map[string]models.SQLIdentifier))
 }
 
-func TestGetSQLIdentifiers_Success(t *testing.T) {
-	mockClient := &client.MockClient{
-		WaitEventsWithBlocking: []models.WaitEventWithBlocking{
-			{
-				CollectionTimestamp: sql.NullTime{Time: time.Now(), Valid: true},
-				DatabaseName:        sql.NullString{String: "ORCL", Valid: true},
-				SID:                 sql.NullInt64{Int64: 123, Valid: true},
-				WaitTimeMs:          sql.NullFloat64{Float64: 5500, Valid: true},
-				SQLID:               sql.NullString{String: "abc123", Valid: true},
-				SQLChildNumber:      sql.NullInt64{Int64: 0, Valid: true},
-				Event:               sql.NullString{String: "db file sequential read", Valid: true},
-			},
-		},
-	}
-	settings := receivertest.NewNopSettings(metadata.Type)
-	mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), settings)
-	logger := zap.NewNop()
-	config := metadata.DefaultMetricsBuilderConfig()
-
-	scraper, _ := NewWaitEventBlockingScraper(mockClient, mb, logger, config, 10)
-
-	ctx := context.Background()
-	slowQueryIdentifiers := []models.SQLIdentifier{{SQLID: "sql1", ChildNumber: 0, Timestamp: time.Now()}}
-
-	sqlIdentifiers, errs := scraper.GetSQLIdentifiers(ctx, slowQueryIdentifiers)
-
-	assert.Empty(t, errs)
-	assert.Len(t, sqlIdentifiers, 1)
-	assert.Equal(t, "abc123", sqlIdentifiers[0].SQLID)
-	assert.Equal(t, int64(0), sqlIdentifiers[0].ChildNumber)
-}
-
-func TestGetSQLIdentifiers_FetchError(t *testing.T) {
-	mockClient := &client.MockClient{
-		QueryErr: errors.New("database error"),
-	}
-	settings := receivertest.NewNopSettings(metadata.Type)
-	mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), settings)
-	logger := zap.NewNop()
-	config := metadata.DefaultMetricsBuilderConfig()
-
-	scraper, _ := NewWaitEventBlockingScraper(mockClient, mb, logger, config, 10)
-
-	ctx := context.Background()
-	slowQueryIdentifiers := []models.SQLIdentifier{{SQLID: "sql1", ChildNumber: 0, Timestamp: time.Now()}}
-
-	sqlIdentifiers, errs := scraper.GetSQLIdentifiers(ctx, slowQueryIdentifiers)
-
-	assert.Nil(t, sqlIdentifiers)
-	assert.Len(t, errs, 1)
-	assert.Contains(t, errs[0].Error(), "database error")
-}
-
 func TestEmitWaitEventMetrics_ValidEvents(t *testing.T) {
 	mockClient := &client.MockClient{}
 	settings := receivertest.NewNopSettings(metadata.Type)

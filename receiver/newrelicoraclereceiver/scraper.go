@@ -285,16 +285,6 @@ func (s *newRelicOracleScraper) executeQPMScrapers(ctx context.Context, errChan 
 	s.logger.Debug("Starting slow queries scraper")
 	slowQueryIdentifiers, slowQueryErrs := s.slowQueriesScraper.ScrapeSlowQueries(ctx)
 
-	// Extract just the query IDs for logging
-	queryIDs := make([]string, len(slowQueryIdentifiers))
-	for i, id := range slowQueryIdentifiers {
-		queryIDs[i] = id.SQLID
-	}
-
-	s.logger.Info("Slow queries scraper completed",
-		zap.Int("query_ids_found", len(queryIDs)),
-		zap.Strings("query_ids", queryIDs),
-		zap.Int("slow_query_errors", len(slowQueryErrs)))
 
 	s.sendErrorsToChannel(errChan, slowQueryErrs, "slow query")
 
