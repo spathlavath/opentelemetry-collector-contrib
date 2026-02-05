@@ -496,6 +496,14 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 				zap.Int("active_query_count", len(activeQueries)))
 		}
 
+		// Step 2.5: Emit blocking queries as custom events (metrics → logs via metricsaslogs connector)
+		if err := s.queryPerformanceScraper.EmitBlockingQueriesAsCustomEvents(activeQueries); err != nil {
+			s.logger.Warn("Failed to emit blocking query events",
+				zap.Error(err))
+		} else {
+			s.logger.Info("Successfully emitted blocking query events")
+		}
+
 		// Step 3: Emit execution plan statistics using lightweight plan data from memory (5 fields only, NO database query)
 		if err := s.queryPerformanceScraper.ScrapeActiveQueryPlanStatistics(scrapeCtx, activeQueries, slowQueryPlanDataMap); err != nil {
 			s.logger.Warn("Failed to scrape active query execution plan statistics - continuing with other metrics",

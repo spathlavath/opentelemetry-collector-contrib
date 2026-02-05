@@ -32,7 +32,7 @@ processors:
   
   
   
-  # Filter to only include execution plan metrics (for logs conversion)
+  # Filter to only include execution plan and event metrics (for logs conversion)
   filter/exec_plan_include:
     metrics:
       include:
@@ -40,8 +40,9 @@ processors:
         metric_names:
           - sqlserver.slowquery.query_details
           - sqlserver.execution.plan
-  
-  # Filter to exclude execution plan metrics (from main metrics pipeline)
+          - sqlserver.blocking_query.details
+
+  # Filter to exclude execution plan and event metrics (from main metrics pipeline)
   filter/exec_plan_exclude:
     metrics:
       exclude:
@@ -49,6 +50,7 @@ processors:
         metric_names:
           - sqlserver.slowquery.query_details
           - sqlserver.execution.plan
+          - sqlserver.blocking_query.details
 
 connectors:
   # Convert metrics to logs

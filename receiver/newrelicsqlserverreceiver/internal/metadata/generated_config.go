@@ -30,6 +30,7 @@ func (ms *MetricConfig) Unmarshal(parser *confmap.Conf) error {
 type MetricsConfig struct {
 	SqlserverAccessPageSplitsPerSec                           MetricConfig `mapstructure:"sqlserver.access.page_splits_per_sec"`
 	SqlserverActivequeryWaitTimeSeconds                       MetricConfig `mapstructure:"sqlserver.activequery.wait_time_seconds"`
+	SqlserverBlockingQueryDetails                             MetricConfig `mapstructure:"sqlserver.blocking_query.details"`
 	SqlserverBufferCacheHitRatio                              MetricConfig `mapstructure:"sqlserver.buffer.cache_hit_ratio"`
 	SqlserverBufferCheckpointPagesPerSec                      MetricConfig `mapstructure:"sqlserver.buffer.checkpoint_pages_per_sec"`
 	SqlserverBufferPageLifeExpectancy                         MetricConfig `mapstructure:"sqlserver.buffer.page_life_expectancy"`
@@ -187,6 +188,9 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		SqlserverActivequeryWaitTimeSeconds: MetricConfig{
+			Enabled: true,
+		},
+		SqlserverBlockingQueryDetails: MetricConfig{
 			Enabled: true,
 		},
 		SqlserverBufferCacheHitRatio: MetricConfig{

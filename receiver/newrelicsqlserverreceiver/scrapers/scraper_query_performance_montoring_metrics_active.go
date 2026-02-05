@@ -217,16 +217,6 @@ func (s *QueryPerformanceScraper) processActiveRunningQueryMetricsWithPlan(resul
 		blockingQueryHash = result.BlockingQueryHash.String()
 	}
 
-	var blockingQueryText string
-	if result.BlockingQueryStatementText != nil {
-		// Truncate to 4095 characters first (before anonymization for efficiency)
-		truncatedText := *result.BlockingQueryStatementText
-		if len(truncatedText) > 4095 {
-			truncatedText = truncatedText[:4095]
-		}
-		// Then anonymize only what we're sending
-		blockingQueryText = helpers.AnonymizeQueryText(truncatedText)
-	}
 
 	// Extract query statement text (for logging/debugging, not sent as attribute)
 	var queryStatementText string
@@ -313,7 +303,6 @@ func (s *QueryPerformanceScraper) processActiveRunningQueryMetricsWithPlan(resul
 			planHandle,
 			blockingSessionID,
 			blockingLoginName,
-			blockingQueryText,
 			blockingQueryHash,
 		)
 	} else {
@@ -379,3 +368,82 @@ func (s *QueryPerformanceScraper) fetchExecutionPlanXML(ctx context.Context, pla
 
 // REMOVED: Legacy execution plan functions (fetchTop5PlanHandlesForActiveQuery, emitAggregatedExecutionPlanAsMetrics)
 // Replaced by ScrapeSlowQueryExecutionPlans in scraper_query_performance_montoring_metrics.go
+
+// EmitBlockingQueriesAsCustomEvents extracts unique blocking queries from active queries
+// and emits them as metrics (which get converted to custom events/logs via metricsaslogs connector)
+// Uses composite key: session_id + request_id + request_start_time + blocking_session_id
+func (s *QueryPerformanceScraper) EmitBlockingQueriesAsCustomEvents(activeQueries []models.ActiveRunningQuery) error {
+	// Build a map of unique blocking events
+	// Key: session_id|request_id|request_start_time|blocking_session_id
+	blockingEventsMap := make(map[string]models.BlockingQueryEvent)
+
+	for _, activeQuery := range activeQueries {
+		// Skip if no blocking session
+		if activeQuery.BlockingSessionID == nil || *activeQuery.BlockingSessionID == 0 {
+			continue
+		}
+
+		// Skip if blocking query text is N/A or empty
+		if activeQuery.BlockingQueryStatementText == nil ||
+			*activeQuery.BlockingQueryStatementText == "" ||
+			*activeQuery.BlockingQueryStatementText == "N/A" {
+			continue
+		}
+
+		// Skip if required victim identifiers are missing
+		if activeQuery.CurrentSessionID == nil ||
+			activeQuery.RequestID == nil ||
+			activeQuery.RequestStartTime == nil {
+			continue
+		}
+
+		// Build composite key for deduplication
+		key := fmt.Sprintf("%d|%d|%s|%d",
+			*activeQuery.CurrentSessionID,
+			*activeQuery.RequestID,
+			*activeQuery.RequestStartTime,
+			*activeQuery.BlockingSessionID)
+
+		// Only add if not already in map (deduplicate)
+		if _, exists := blockingEventsMap[key]; !exists {
+			blockingEventsMap[key] = models.BlockingQueryEvent{
+				SessionID:         *activeQuery.CurrentSessionID,
+				RequestID:         *activeQuery.RequestID,
+				RequestStartTime:  *activeQuery.RequestStartTime,
+				BlockingSessionID: *activeQuery.BlockingSessionID,
+				BlockingQueryText: *activeQuery.BlockingQueryStatementText, // Full text, no truncation
+			}
+		}
+	}
+
+	s.logger.Info("Extracted unique blocking query events from active queries",
+		zap.Int("total_active_queries", len(activeQueries)),
+		zap.Int("unique_blocking_events", len(blockingEventsMap)))
+
+	// Emit metrics for each unique blocking event
+	// These will be converted to logs/custom events via the metricsaslogs connector
+	timestamp := pcommon.NewTimestampFromTime(time.Now())
+	emittedCount := 0
+
+	for _, event := range blockingEventsMap {
+		// Anonymize the blocking query text before emission
+		anonymizedText := helpers.AnonymizeQueryText(event.BlockingQueryText)
+
+		s.mb.RecordSqlserverBlockingQueryDetailsDataPoint(
+			timestamp,
+			1, // Value is always 1 for dimensional metrics
+			event.SessionID,
+			event.RequestID,
+			event.RequestStartTime,
+			event.BlockingSessionID,
+			anonymizedText,
+			"SqlServerSlowQueryDetails", // event.name for New Relic custom events
+		)
+		emittedCount++
+	}
+
+	s.logger.Info("Emitted blocking query events as metrics",
+		zap.Int("emitted_count", emittedCount))
+
+	return nil
+}
