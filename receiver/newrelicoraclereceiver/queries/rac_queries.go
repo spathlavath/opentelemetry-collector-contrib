@@ -30,7 +30,6 @@ const (
 		FROM GV$INSTANCE`
 
 	// RACActiveServicesSQL returns active services across all RAC instances
-	// Includes failover-related columns for monitoring service availability
 	RACActiveServicesSQL = `
 		SELECT
 			INST_ID,
@@ -38,19 +37,19 @@ const (
 			NETWORK_NAME,
 			GOAL,
 			CLB_GOAL,
-			BLOCKED,                      -- Check for service being blocked (direct failover signal)
-			AQ_HA_NOTIFICATION,           -- Check if FAN is enabled
-			COMMIT_OUTCOME,               -- Check if Transaction Guard is enabled
-			DRAIN_TIMEOUT,                -- Time reserved for session draining before stop
-			REPLAY_INITIATION_TIMEOUT     -- Application Continuity Replay timeout
+			BLOCKED,
+			AQ_HA_NOTIFICATION,
+			COMMIT_OUTCOME,
+			DRAIN_TIMEOUT,
+			REPLAY_INITIATION_TIMEOUT
 		FROM GV$ACTIVE_SERVICES
+		WHERE ROWNUM <= 500
 		ORDER BY NAME, INST_ID`
 )
 
 // ASM (Automatic Storage Management) Queries
 const (
 	// ASMDetectionSQL checks if ASM instance is available by querying the view directly
-	// Returns row count if ASM is configured, otherwise throws error (caught by client)
 	ASMDetectionSQL = `
 		SELECT COUNT(*) AS ASM_COUNT
 		FROM GV$ASM_DISKGROUP`
@@ -62,13 +61,13 @@ const (
 			TOTAL_MB,
 			FREE_MB,
 			OFFLINE_DISKS
-		FROM GV$ASM_DISKGROUP`
+		FROM GV$ASM_DISKGROUP
+		WHERE ROWNUM <= 100`
 )
 
 // Cluster Performance and Wait Events
 const (
 	// ClusterWaitEventsSQL returns cluster-specific wait events including Global Cache waits
-	// Filters for Cluster wait class events and global cache (gc) related events
 	ClusterWaitEventsSQL = `
 		SELECT
 			INST_ID,
@@ -76,9 +75,11 @@ const (
 			TOTAL_WAITS,
 			TIME_WAITED_MICRO
 		FROM GV$SYSTEM_EVENT
-		WHERE WAIT_CLASS = 'Cluster'
+		WHERE (WAIT_CLASS = 'Cluster'
 		   OR EVENT LIKE 'gc%request'
 		   OR EVENT LIKE 'gc%busy'
 		   OR EVENT LIKE 'gc%retry'
-		   OR EVENT LIKE 'gc%lost'`
+		   OR EVENT LIKE 'gc%lost')
+		   AND TOTAL_WAITS > 0
+		   AND ROWNUM <= 500`
 )

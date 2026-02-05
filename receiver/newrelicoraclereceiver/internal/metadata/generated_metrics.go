@@ -52,9 +52,6 @@ var MetricsInfo = metricsInfo{
 	NewrelicoracledbConnectionActiveSessions: metricInfo{
 		Name: "newrelicoracledb.connection.active_sessions",
 	},
-	NewrelicoracledbConnectionBlockingSessions: metricInfo{
-		Name: "newrelicoracledb.connection.blocking_sessions",
-	},
 	NewrelicoracledbConnectionBytesReceived: metricInfo{
 		Name: "newrelicoracledb.connection.bytes_received",
 	},
@@ -114,18 +111,6 @@ var MetricsInfo = metricsInfo{
 	},
 	NewrelicoracledbConnectionUserRollbacks: metricInfo{
 		Name: "newrelicoracledb.connection.user_rollbacks",
-	},
-	NewrelicoracledbConnectionWaitEventAvgWaitTime: metricInfo{
-		Name: "newrelicoracledb.connection.wait_event_avg_wait_time",
-	},
-	NewrelicoracledbConnectionWaitEventTimeWaited: metricInfo{
-		Name: "newrelicoracledb.connection.wait_event_time_waited",
-	},
-	NewrelicoracledbConnectionWaitEventTotalWaits: metricInfo{
-		Name: "newrelicoracledb.connection.wait_event_total_waits",
-	},
-	NewrelicoracledbConnectionWaitEvents: metricInfo{
-		Name: "newrelicoracledb.connection.wait_events",
 	},
 	NewrelicoracledbContainerRestricted: metricInfo{
 		Name: "newrelicoracledb.container.restricted",
@@ -1037,7 +1022,6 @@ type metricsInfo struct {
 	NewrelicoracledbChildCursorsInvalidations                          metricInfo
 	NewrelicoracledbChildCursorsUserIoWaitTime                         metricInfo
 	NewrelicoracledbConnectionActiveSessions                           metricInfo
-	NewrelicoracledbConnectionBlockingSessions                         metricInfo
 	NewrelicoracledbConnectionBytesReceived                            metricInfo
 	NewrelicoracledbConnectionBytesSent                                metricInfo
 	NewrelicoracledbConnectionCircuits                                 metricInfo
@@ -1058,10 +1042,6 @@ type metricsInfo struct {
 	NewrelicoracledbConnectionTotalSessions                            metricInfo
 	NewrelicoracledbConnectionUserCommits                              metricInfo
 	NewrelicoracledbConnectionUserRollbacks                            metricInfo
-	NewrelicoracledbConnectionWaitEventAvgWaitTime                     metricInfo
-	NewrelicoracledbConnectionWaitEventTimeWaited                      metricInfo
-	NewrelicoracledbConnectionWaitEventTotalWaits                      metricInfo
-	NewrelicoracledbConnectionWaitEvents                               metricInfo
 	NewrelicoracledbContainerRestricted                                metricInfo
 	NewrelicoracledbContainerStatus                                    metricInfo
 	NewrelicoracledbDatabaseInfo                                       metricInfo
@@ -2087,61 +2067,6 @@ func newMetricNewrelicoracledbConnectionActiveSessions(cfg MetricConfig) metricN
 	return m
 }
 
-type metricNewrelicoracledbConnectionBlockingSessions struct {
-	data     pmetric.Metric // data buffer for generated metric.
-	config   MetricConfig   // metric config provided by user.
-	capacity int            // max observed number of data points added to the metric.
-}
-
-// init fills newrelicoracledb.connection.blocking_sessions metric with initial data.
-func (m *metricNewrelicoracledbConnectionBlockingSessions) init() {
-	m.data.SetName("newrelicoracledb.connection.blocking_sessions")
-	m.data.SetDescription("Sessions blocked by other sessions")
-	m.data.SetUnit("s")
-	m.data.SetEmptyGauge()
-	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
-}
-
-func (m *metricNewrelicoracledbConnectionBlockingSessions) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, sessionIDAttributeValue string, blockingSessionIDAttributeValue string, usernameAttributeValue string, waitEventAttributeValue string, programAttributeValue string) {
-	if !m.config.Enabled {
-		return
-	}
-	dp := m.data.Gauge().DataPoints().AppendEmpty()
-	dp.SetStartTimestamp(start)
-	dp.SetTimestamp(ts)
-	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("session.id", sessionIDAttributeValue)
-	dp.Attributes().PutStr("blocking.session.id", blockingSessionIDAttributeValue)
-	dp.Attributes().PutStr("username", usernameAttributeValue)
-	dp.Attributes().PutStr("wait.event", waitEventAttributeValue)
-	dp.Attributes().PutStr("program", programAttributeValue)
-}
-
-// updateCapacity saves max length of data point slices that will be used for the slice capacity.
-func (m *metricNewrelicoracledbConnectionBlockingSessions) updateCapacity() {
-	if m.data.Gauge().DataPoints().Len() > m.capacity {
-		m.capacity = m.data.Gauge().DataPoints().Len()
-	}
-}
-
-// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
-func (m *metricNewrelicoracledbConnectionBlockingSessions) emit(metrics pmetric.MetricSlice) {
-	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
-		m.updateCapacity()
-		m.data.MoveTo(metrics.AppendEmpty())
-		m.init()
-	}
-}
-
-func newMetricNewrelicoracledbConnectionBlockingSessions(cfg MetricConfig) metricNewrelicoracledbConnectionBlockingSessions {
-	m := metricNewrelicoracledbConnectionBlockingSessions{config: cfg}
-	if cfg.Enabled {
-		m.data = pmetric.NewMetric()
-		m.init()
-	}
-	return m
-}
-
 type metricNewrelicoracledbConnectionBytesReceived struct {
 	data     pmetric.Metric // data buffer for generated metric.
 	config   MetricConfig   // metric config provided by user.
@@ -3143,221 +3068,6 @@ func (m *metricNewrelicoracledbConnectionUserRollbacks) emit(metrics pmetric.Met
 
 func newMetricNewrelicoracledbConnectionUserRollbacks(cfg MetricConfig) metricNewrelicoracledbConnectionUserRollbacks {
 	m := metricNewrelicoracledbConnectionUserRollbacks{config: cfg}
-	if cfg.Enabled {
-		m.data = pmetric.NewMetric()
-		m.init()
-	}
-	return m
-}
-
-type metricNewrelicoracledbConnectionWaitEventAvgWaitTime struct {
-	data     pmetric.Metric // data buffer for generated metric.
-	config   MetricConfig   // metric config provided by user.
-	capacity int            // max observed number of data points added to the metric.
-}
-
-// init fills newrelicoracledb.connection.wait_event_avg_wait_time metric with initial data.
-func (m *metricNewrelicoracledbConnectionWaitEventAvgWaitTime) init() {
-	m.data.SetName("newrelicoracledb.connection.wait_event_avg_wait_time")
-	m.data.SetDescription("Average wait time for each wait event")
-	m.data.SetUnit("ms")
-	m.data.SetEmptyGauge()
-	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
-}
-
-func (m *metricNewrelicoracledbConnectionWaitEventAvgWaitTime) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, waitEventAttributeValue string, waitClassAttributeValue string) {
-	if !m.config.Enabled {
-		return
-	}
-	dp := m.data.Gauge().DataPoints().AppendEmpty()
-	dp.SetStartTimestamp(start)
-	dp.SetTimestamp(ts)
-	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("wait.event", waitEventAttributeValue)
-	dp.Attributes().PutStr("wait.class", waitClassAttributeValue)
-}
-
-// updateCapacity saves max length of data point slices that will be used for the slice capacity.
-func (m *metricNewrelicoracledbConnectionWaitEventAvgWaitTime) updateCapacity() {
-	if m.data.Gauge().DataPoints().Len() > m.capacity {
-		m.capacity = m.data.Gauge().DataPoints().Len()
-	}
-}
-
-// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
-func (m *metricNewrelicoracledbConnectionWaitEventAvgWaitTime) emit(metrics pmetric.MetricSlice) {
-	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
-		m.updateCapacity()
-		m.data.MoveTo(metrics.AppendEmpty())
-		m.init()
-	}
-}
-
-func newMetricNewrelicoracledbConnectionWaitEventAvgWaitTime(cfg MetricConfig) metricNewrelicoracledbConnectionWaitEventAvgWaitTime {
-	m := metricNewrelicoracledbConnectionWaitEventAvgWaitTime{config: cfg}
-	if cfg.Enabled {
-		m.data = pmetric.NewMetric()
-		m.init()
-	}
-	return m
-}
-
-type metricNewrelicoracledbConnectionWaitEventTimeWaited struct {
-	data     pmetric.Metric // data buffer for generated metric.
-	config   MetricConfig   // metric config provided by user.
-	capacity int            // max observed number of data points added to the metric.
-}
-
-// init fills newrelicoracledb.connection.wait_event_time_waited metric with initial data.
-func (m *metricNewrelicoracledbConnectionWaitEventTimeWaited) init() {
-	m.data.SetName("newrelicoracledb.connection.wait_event_time_waited")
-	m.data.SetDescription("Total time waited for each wait event")
-	m.data.SetUnit("ms")
-	m.data.SetEmptySum()
-	m.data.Sum().SetIsMonotonic(true)
-	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
-	m.data.Sum().DataPoints().EnsureCapacity(m.capacity)
-}
-
-func (m *metricNewrelicoracledbConnectionWaitEventTimeWaited) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, waitEventAttributeValue string, waitClassAttributeValue string) {
-	if !m.config.Enabled {
-		return
-	}
-	dp := m.data.Sum().DataPoints().AppendEmpty()
-	dp.SetStartTimestamp(start)
-	dp.SetTimestamp(ts)
-	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("wait.event", waitEventAttributeValue)
-	dp.Attributes().PutStr("wait.class", waitClassAttributeValue)
-}
-
-// updateCapacity saves max length of data point slices that will be used for the slice capacity.
-func (m *metricNewrelicoracledbConnectionWaitEventTimeWaited) updateCapacity() {
-	if m.data.Sum().DataPoints().Len() > m.capacity {
-		m.capacity = m.data.Sum().DataPoints().Len()
-	}
-}
-
-// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
-func (m *metricNewrelicoracledbConnectionWaitEventTimeWaited) emit(metrics pmetric.MetricSlice) {
-	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
-		m.updateCapacity()
-		m.data.MoveTo(metrics.AppendEmpty())
-		m.init()
-	}
-}
-
-func newMetricNewrelicoracledbConnectionWaitEventTimeWaited(cfg MetricConfig) metricNewrelicoracledbConnectionWaitEventTimeWaited {
-	m := metricNewrelicoracledbConnectionWaitEventTimeWaited{config: cfg}
-	if cfg.Enabled {
-		m.data = pmetric.NewMetric()
-		m.init()
-	}
-	return m
-}
-
-type metricNewrelicoracledbConnectionWaitEventTotalWaits struct {
-	data     pmetric.Metric // data buffer for generated metric.
-	config   MetricConfig   // metric config provided by user.
-	capacity int            // max observed number of data points added to the metric.
-}
-
-// init fills newrelicoracledb.connection.wait_event_total_waits metric with initial data.
-func (m *metricNewrelicoracledbConnectionWaitEventTotalWaits) init() {
-	m.data.SetName("newrelicoracledb.connection.wait_event_total_waits")
-	m.data.SetDescription("Total number of waits for each wait event")
-	m.data.SetUnit("{waits}")
-	m.data.SetEmptySum()
-	m.data.Sum().SetIsMonotonic(true)
-	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
-	m.data.Sum().DataPoints().EnsureCapacity(m.capacity)
-}
-
-func (m *metricNewrelicoracledbConnectionWaitEventTotalWaits) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, waitEventAttributeValue string, waitClassAttributeValue string) {
-	if !m.config.Enabled {
-		return
-	}
-	dp := m.data.Sum().DataPoints().AppendEmpty()
-	dp.SetStartTimestamp(start)
-	dp.SetTimestamp(ts)
-	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("wait.event", waitEventAttributeValue)
-	dp.Attributes().PutStr("wait.class", waitClassAttributeValue)
-}
-
-// updateCapacity saves max length of data point slices that will be used for the slice capacity.
-func (m *metricNewrelicoracledbConnectionWaitEventTotalWaits) updateCapacity() {
-	if m.data.Sum().DataPoints().Len() > m.capacity {
-		m.capacity = m.data.Sum().DataPoints().Len()
-	}
-}
-
-// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
-func (m *metricNewrelicoracledbConnectionWaitEventTotalWaits) emit(metrics pmetric.MetricSlice) {
-	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
-		m.updateCapacity()
-		m.data.MoveTo(metrics.AppendEmpty())
-		m.init()
-	}
-}
-
-func newMetricNewrelicoracledbConnectionWaitEventTotalWaits(cfg MetricConfig) metricNewrelicoracledbConnectionWaitEventTotalWaits {
-	m := metricNewrelicoracledbConnectionWaitEventTotalWaits{config: cfg}
-	if cfg.Enabled {
-		m.data = pmetric.NewMetric()
-		m.init()
-	}
-	return m
-}
-
-type metricNewrelicoracledbConnectionWaitEvents struct {
-	data     pmetric.Metric // data buffer for generated metric.
-	config   MetricConfig   // metric config provided by user.
-	capacity int            // max observed number of data points added to the metric.
-}
-
-// init fills newrelicoracledb.connection.wait_events metric with initial data.
-func (m *metricNewrelicoracledbConnectionWaitEvents) init() {
-	m.data.SetName("newrelicoracledb.connection.wait_events")
-	m.data.SetDescription("Current wait events and wait time")
-	m.data.SetUnit("s")
-	m.data.SetEmptyGauge()
-	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
-}
-
-func (m *metricNewrelicoracledbConnectionWaitEvents) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, sessionIDAttributeValue string, usernameAttributeValue string, waitEventAttributeValue string, waitStateAttributeValue string, waitClassAttributeValue string) {
-	if !m.config.Enabled {
-		return
-	}
-	dp := m.data.Gauge().DataPoints().AppendEmpty()
-	dp.SetStartTimestamp(start)
-	dp.SetTimestamp(ts)
-	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("session.id", sessionIDAttributeValue)
-	dp.Attributes().PutStr("username", usernameAttributeValue)
-	dp.Attributes().PutStr("wait.event", waitEventAttributeValue)
-	dp.Attributes().PutStr("wait.state", waitStateAttributeValue)
-	dp.Attributes().PutStr("wait.class", waitClassAttributeValue)
-}
-
-// updateCapacity saves max length of data point slices that will be used for the slice capacity.
-func (m *metricNewrelicoracledbConnectionWaitEvents) updateCapacity() {
-	if m.data.Gauge().DataPoints().Len() > m.capacity {
-		m.capacity = m.data.Gauge().DataPoints().Len()
-	}
-}
-
-// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
-func (m *metricNewrelicoracledbConnectionWaitEvents) emit(metrics pmetric.MetricSlice) {
-	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
-		m.updateCapacity()
-		m.data.MoveTo(metrics.AppendEmpty())
-		m.init()
-	}
-}
-
-func newMetricNewrelicoracledbConnectionWaitEvents(cfg MetricConfig) metricNewrelicoracledbConnectionWaitEvents {
-	m := metricNewrelicoracledbConnectionWaitEvents{config: cfg}
 	if cfg.Enabled {
 		m.data = pmetric.NewMetric()
 		m.init()
@@ -18851,7 +18561,6 @@ type MetricsBuilder struct {
 	metricNewrelicoracledbChildCursorsInvalidations                          metricNewrelicoracledbChildCursorsInvalidations
 	metricNewrelicoracledbChildCursorsUserIoWaitTime                         metricNewrelicoracledbChildCursorsUserIoWaitTime
 	metricNewrelicoracledbConnectionActiveSessions                           metricNewrelicoracledbConnectionActiveSessions
-	metricNewrelicoracledbConnectionBlockingSessions                         metricNewrelicoracledbConnectionBlockingSessions
 	metricNewrelicoracledbConnectionBytesReceived                            metricNewrelicoracledbConnectionBytesReceived
 	metricNewrelicoracledbConnectionBytesSent                                metricNewrelicoracledbConnectionBytesSent
 	metricNewrelicoracledbConnectionCircuits                                 metricNewrelicoracledbConnectionCircuits
@@ -18872,10 +18581,6 @@ type MetricsBuilder struct {
 	metricNewrelicoracledbConnectionTotalSessions                            metricNewrelicoracledbConnectionTotalSessions
 	metricNewrelicoracledbConnectionUserCommits                              metricNewrelicoracledbConnectionUserCommits
 	metricNewrelicoracledbConnectionUserRollbacks                            metricNewrelicoracledbConnectionUserRollbacks
-	metricNewrelicoracledbConnectionWaitEventAvgWaitTime                     metricNewrelicoracledbConnectionWaitEventAvgWaitTime
-	metricNewrelicoracledbConnectionWaitEventTimeWaited                      metricNewrelicoracledbConnectionWaitEventTimeWaited
-	metricNewrelicoracledbConnectionWaitEventTotalWaits                      metricNewrelicoracledbConnectionWaitEventTotalWaits
-	metricNewrelicoracledbConnectionWaitEvents                               metricNewrelicoracledbConnectionWaitEvents
 	metricNewrelicoracledbContainerRestricted                                metricNewrelicoracledbContainerRestricted
 	metricNewrelicoracledbContainerStatus                                    metricNewrelicoracledbContainerStatus
 	metricNewrelicoracledbDatabaseInfo                                       metricNewrelicoracledbDatabaseInfo
@@ -19212,7 +18917,6 @@ func NewMetricsBuilder(mbc MetricsBuilderConfig, settings receiver.Settings, opt
 		metricNewrelicoracledbChildCursorsInvalidations:                          newMetricNewrelicoracledbChildCursorsInvalidations(mbc.Metrics.NewrelicoracledbChildCursorsInvalidations),
 		metricNewrelicoracledbChildCursorsUserIoWaitTime:                         newMetricNewrelicoracledbChildCursorsUserIoWaitTime(mbc.Metrics.NewrelicoracledbChildCursorsUserIoWaitTime),
 		metricNewrelicoracledbConnectionActiveSessions:                           newMetricNewrelicoracledbConnectionActiveSessions(mbc.Metrics.NewrelicoracledbConnectionActiveSessions),
-		metricNewrelicoracledbConnectionBlockingSessions:                         newMetricNewrelicoracledbConnectionBlockingSessions(mbc.Metrics.NewrelicoracledbConnectionBlockingSessions),
 		metricNewrelicoracledbConnectionBytesReceived:                            newMetricNewrelicoracledbConnectionBytesReceived(mbc.Metrics.NewrelicoracledbConnectionBytesReceived),
 		metricNewrelicoracledbConnectionBytesSent:                                newMetricNewrelicoracledbConnectionBytesSent(mbc.Metrics.NewrelicoracledbConnectionBytesSent),
 		metricNewrelicoracledbConnectionCircuits:                                 newMetricNewrelicoracledbConnectionCircuits(mbc.Metrics.NewrelicoracledbConnectionCircuits),
@@ -19233,10 +18937,6 @@ func NewMetricsBuilder(mbc MetricsBuilderConfig, settings receiver.Settings, opt
 		metricNewrelicoracledbConnectionTotalSessions:                            newMetricNewrelicoracledbConnectionTotalSessions(mbc.Metrics.NewrelicoracledbConnectionTotalSessions),
 		metricNewrelicoracledbConnectionUserCommits:                              newMetricNewrelicoracledbConnectionUserCommits(mbc.Metrics.NewrelicoracledbConnectionUserCommits),
 		metricNewrelicoracledbConnectionUserRollbacks:                            newMetricNewrelicoracledbConnectionUserRollbacks(mbc.Metrics.NewrelicoracledbConnectionUserRollbacks),
-		metricNewrelicoracledbConnectionWaitEventAvgWaitTime:                     newMetricNewrelicoracledbConnectionWaitEventAvgWaitTime(mbc.Metrics.NewrelicoracledbConnectionWaitEventAvgWaitTime),
-		metricNewrelicoracledbConnectionWaitEventTimeWaited:                      newMetricNewrelicoracledbConnectionWaitEventTimeWaited(mbc.Metrics.NewrelicoracledbConnectionWaitEventTimeWaited),
-		metricNewrelicoracledbConnectionWaitEventTotalWaits:                      newMetricNewrelicoracledbConnectionWaitEventTotalWaits(mbc.Metrics.NewrelicoracledbConnectionWaitEventTotalWaits),
-		metricNewrelicoracledbConnectionWaitEvents:                               newMetricNewrelicoracledbConnectionWaitEvents(mbc.Metrics.NewrelicoracledbConnectionWaitEvents),
 		metricNewrelicoracledbContainerRestricted:                                newMetricNewrelicoracledbContainerRestricted(mbc.Metrics.NewrelicoracledbContainerRestricted),
 		metricNewrelicoracledbContainerStatus:                                    newMetricNewrelicoracledbContainerStatus(mbc.Metrics.NewrelicoracledbContainerStatus),
 		metricNewrelicoracledbDatabaseInfo:                                       newMetricNewrelicoracledbDatabaseInfo(mbc.Metrics.NewrelicoracledbDatabaseInfo),
@@ -19638,7 +19338,6 @@ func (mb *MetricsBuilder) EmitForResource(options ...ResourceMetricsOption) {
 	mb.metricNewrelicoracledbChildCursorsInvalidations.emit(ils.Metrics())
 	mb.metricNewrelicoracledbChildCursorsUserIoWaitTime.emit(ils.Metrics())
 	mb.metricNewrelicoracledbConnectionActiveSessions.emit(ils.Metrics())
-	mb.metricNewrelicoracledbConnectionBlockingSessions.emit(ils.Metrics())
 	mb.metricNewrelicoracledbConnectionBytesReceived.emit(ils.Metrics())
 	mb.metricNewrelicoracledbConnectionBytesSent.emit(ils.Metrics())
 	mb.metricNewrelicoracledbConnectionCircuits.emit(ils.Metrics())
@@ -19659,10 +19358,6 @@ func (mb *MetricsBuilder) EmitForResource(options ...ResourceMetricsOption) {
 	mb.metricNewrelicoracledbConnectionTotalSessions.emit(ils.Metrics())
 	mb.metricNewrelicoracledbConnectionUserCommits.emit(ils.Metrics())
 	mb.metricNewrelicoracledbConnectionUserRollbacks.emit(ils.Metrics())
-	mb.metricNewrelicoracledbConnectionWaitEventAvgWaitTime.emit(ils.Metrics())
-	mb.metricNewrelicoracledbConnectionWaitEventTimeWaited.emit(ils.Metrics())
-	mb.metricNewrelicoracledbConnectionWaitEventTotalWaits.emit(ils.Metrics())
-	mb.metricNewrelicoracledbConnectionWaitEvents.emit(ils.Metrics())
 	mb.metricNewrelicoracledbContainerRestricted.emit(ils.Metrics())
 	mb.metricNewrelicoracledbContainerStatus.emit(ils.Metrics())
 	mb.metricNewrelicoracledbDatabaseInfo.emit(ils.Metrics())
@@ -20057,11 +19752,6 @@ func (mb *MetricsBuilder) RecordNewrelicoracledbConnectionActiveSessionsDataPoin
 	mb.metricNewrelicoracledbConnectionActiveSessions.recordDataPoint(mb.startTime, ts, val)
 }
 
-// RecordNewrelicoracledbConnectionBlockingSessionsDataPoint adds a data point to newrelicoracledb.connection.blocking_sessions metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbConnectionBlockingSessionsDataPoint(ts pcommon.Timestamp, val float64, sessionIDAttributeValue string, blockingSessionIDAttributeValue string, usernameAttributeValue string, waitEventAttributeValue string, programAttributeValue string) {
-	mb.metricNewrelicoracledbConnectionBlockingSessions.recordDataPoint(mb.startTime, ts, val, sessionIDAttributeValue, blockingSessionIDAttributeValue, usernameAttributeValue, waitEventAttributeValue, programAttributeValue)
-}
-
 // RecordNewrelicoracledbConnectionBytesReceivedDataPoint adds a data point to newrelicoracledb.connection.bytes_received metric.
 func (mb *MetricsBuilder) RecordNewrelicoracledbConnectionBytesReceivedDataPoint(ts pcommon.Timestamp, val float64) {
 	mb.metricNewrelicoracledbConnectionBytesReceived.recordDataPoint(mb.startTime, ts, val)
@@ -20160,26 +19850,6 @@ func (mb *MetricsBuilder) RecordNewrelicoracledbConnectionUserCommitsDataPoint(t
 // RecordNewrelicoracledbConnectionUserRollbacksDataPoint adds a data point to newrelicoracledb.connection.user_rollbacks metric.
 func (mb *MetricsBuilder) RecordNewrelicoracledbConnectionUserRollbacksDataPoint(ts pcommon.Timestamp, val float64) {
 	mb.metricNewrelicoracledbConnectionUserRollbacks.recordDataPoint(mb.startTime, ts, val)
-}
-
-// RecordNewrelicoracledbConnectionWaitEventAvgWaitTimeDataPoint adds a data point to newrelicoracledb.connection.wait_event_avg_wait_time metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbConnectionWaitEventAvgWaitTimeDataPoint(ts pcommon.Timestamp, val float64, waitEventAttributeValue string, waitClassAttributeValue string) {
-	mb.metricNewrelicoracledbConnectionWaitEventAvgWaitTime.recordDataPoint(mb.startTime, ts, val, waitEventAttributeValue, waitClassAttributeValue)
-}
-
-// RecordNewrelicoracledbConnectionWaitEventTimeWaitedDataPoint adds a data point to newrelicoracledb.connection.wait_event_time_waited metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbConnectionWaitEventTimeWaitedDataPoint(ts pcommon.Timestamp, val float64, waitEventAttributeValue string, waitClassAttributeValue string) {
-	mb.metricNewrelicoracledbConnectionWaitEventTimeWaited.recordDataPoint(mb.startTime, ts, val, waitEventAttributeValue, waitClassAttributeValue)
-}
-
-// RecordNewrelicoracledbConnectionWaitEventTotalWaitsDataPoint adds a data point to newrelicoracledb.connection.wait_event_total_waits metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbConnectionWaitEventTotalWaitsDataPoint(ts pcommon.Timestamp, val float64, waitEventAttributeValue string, waitClassAttributeValue string) {
-	mb.metricNewrelicoracledbConnectionWaitEventTotalWaits.recordDataPoint(mb.startTime, ts, val, waitEventAttributeValue, waitClassAttributeValue)
-}
-
-// RecordNewrelicoracledbConnectionWaitEventsDataPoint adds a data point to newrelicoracledb.connection.wait_events metric.
-func (mb *MetricsBuilder) RecordNewrelicoracledbConnectionWaitEventsDataPoint(ts pcommon.Timestamp, val float64, sessionIDAttributeValue string, usernameAttributeValue string, waitEventAttributeValue string, waitStateAttributeValue string, waitClassAttributeValue string) {
-	mb.metricNewrelicoracledbConnectionWaitEvents.recordDataPoint(mb.startTime, ts, val, sessionIDAttributeValue, usernameAttributeValue, waitEventAttributeValue, waitStateAttributeValue, waitClassAttributeValue)
 }
 
 // RecordNewrelicoracledbContainerRestrictedDataPoint adds a data point to newrelicoracledb.container.restricted metric.

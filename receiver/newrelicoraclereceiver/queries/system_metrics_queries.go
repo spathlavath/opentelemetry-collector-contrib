@@ -34,7 +34,6 @@ const (
 		GROUP BY INST_ID`
 
 	// LongRunningQueriesSQL returns count of long-running queries per instance
-	// Returns count of ACTIVE non-BACKGROUND sessions that have been running for more than 60 seconds
 	LongRunningQueriesSQL = `
 		SELECT i.inst_id, COUNT(s.sid) AS total
 		FROM gv$instance i
@@ -95,7 +94,8 @@ const (
 				OR sysevent.event LIKE '%log file switch (arch%'
 				OR sysevent.event LIKE '%buffer busy waits%'
 				OR sysevent.event LIKE '%freeBufferWaits%'
-				OR sysevent.event LIKE '%free buffer inspected%')`
+				OR sysevent.event LIKE '%free buffer inspected%')
+			AND sysevent.total_waits > 0`
 
 	// RollbackSegmentsSQL returns rollback segment statistics
 	RollbackSegmentsSQL = `

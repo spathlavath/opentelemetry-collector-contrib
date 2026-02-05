@@ -148,24 +148,6 @@ Number of active Oracle database sessions
 | ---- | ----------- | ---------- |
 | {sessions} | Gauge | Double |
 
-### newrelicoracledb.connection.blocking_sessions
-
-Sessions blocked by other sessions
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| s | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| session.id | Oracle session identifier (SID) | Any Str | false |
-| blocking.session.id | Oracle blocking session identifier | Any Str | false |
-| username | Oracle username who parsed the SQL | Any Str | false |
-| wait.event | Oracle wait event name | Any Str | false |
-| program | Program or application name | Any Str | false |
-
 ### newrelicoracledb.connection.bytes_received
 
 Bytes received via SQL*Net from client
@@ -355,69 +337,6 @@ Number of user rollbacks
 | Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic |
 | ---- | ----------- | ---------- | ----------------------- | --------- |
 | {rollbacks} | Sum | Double | Cumulative | true |
-
-### newrelicoracledb.connection.wait_event_avg_wait_time
-
-Average wait time for each wait event
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| ms | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| wait.event | Oracle wait event name | Any Str | false |
-| wait.class | Oracle wait event class | Any Str | false |
-
-### newrelicoracledb.connection.wait_event_time_waited
-
-Total time waited for each wait event
-
-| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic |
-| ---- | ----------- | ---------- | ----------------------- | --------- |
-| ms | Sum | Double | Cumulative | true |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| wait.event | Oracle wait event name | Any Str | false |
-| wait.class | Oracle wait event class | Any Str | false |
-
-### newrelicoracledb.connection.wait_event_total_waits
-
-Total number of waits for each wait event
-
-| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic |
-| ---- | ----------- | ---------- | ----------------------- | --------- |
-| {waits} | Sum | Double | Cumulative | true |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| wait.event | Oracle wait event name | Any Str | false |
-| wait.class | Oracle wait event class | Any Str | false |
-
-### newrelicoracledb.connection.wait_events
-
-Current wait events and wait time
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| s | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| session.id | Oracle session identifier (SID) | Any Str | false |
-| username | Oracle username who parsed the SQL | Any Str | false |
-| wait.event | Oracle wait event name | Any Str | false |
-| wait.state | Oracle wait event state | Any Str | false |
-| wait.class | Oracle wait event class | Any Str | false |
 
 ### newrelicoracledb.container.restricted
 

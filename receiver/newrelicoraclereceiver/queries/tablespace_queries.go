@@ -24,7 +24,7 @@ const (
 			maxbytes,
 			user_bytes
 		FROM CDB_DATA_FILES
-		WHERE ROWNUM <= 10000`
+		WHERE ROWNUM <= 1000`
 )
 
 // Dynamic query builders with tablespace filtering
@@ -65,7 +65,7 @@ func BuildCDBTablespaceUsageSQL(includeTablespaces, excludeTablespaces []string)
 			tablespace_size AS total_bytes,
 			used_percent
 		FROM CDB_TABLESPACE_USAGE_METRICS
-		WHERE ROWNUM <= 5000`
+		WHERE ROWNUM <= 1000`
 
 	whereClause := BuildTablespaceWhereClause("tablespace_name", includeTablespaces, excludeTablespaces)
 	if whereClause != "" {

@@ -58,9 +58,6 @@ func (s *ConnectionScraper) ScrapeConnectionMetrics(ctx context.Context) []error
 	scrapeErrors = append(scrapeErrors, s.scrapeCoreConnectionCounts(ctx, now)...)
 	scrapeErrors = append(scrapeErrors, s.scrapeSessionBreakdown(ctx, now)...)
 	scrapeErrors = append(scrapeErrors, s.scrapeLogonStats(ctx, now)...)
-	scrapeErrors = append(scrapeErrors, s.scrapeWaitEvents(ctx, now)...)
-	scrapeErrors = append(scrapeErrors, s.scrapeBlockingSessions(ctx, now)...)
-	scrapeErrors = append(scrapeErrors, s.scrapeWaitEventSummary(ctx, now)...)
 	scrapeErrors = append(scrapeErrors, s.scrapeConnectionPoolMetrics(ctx, now)...)
 	scrapeErrors = append(scrapeErrors, s.scrapeSessionLimits(ctx, now)...)
 	scrapeErrors = append(scrapeErrors, s.scrapeConnectionQuality(ctx, now)...)
@@ -163,109 +160,6 @@ func (s *ConnectionScraper) scrapeLogonStats(ctx context.Context, timestamp pcom
 			s.mb.RecordNewrelicoracledbConnectionLogonsCurrentDataPoint(
 				timestamp,
 				stat.Value.Float64,
-			)
-		}
-	}
-
-	return errors
-}
-
-// scrapeWaitEvents scrapes current wait events
-func (s *ConnectionScraper) scrapeWaitEvents(ctx context.Context, timestamp pcommon.Timestamp) []error {
-	var errors []error
-
-	waitEvents, err := s.client.QueryCurrentWaitEvents(ctx)
-	if err != nil {
-		s.logger.Debug("Failed to query wait events", zap.Error(err))
-		return []error{err}
-	}
-
-	for _, event := range waitEvents {
-		if !event.SID.Valid || !event.Event.Valid || !event.SecondsInWait.Valid {
-			continue
-		}
-
-		s.mb.RecordNewrelicoracledbConnectionWaitEventsDataPoint(
-			timestamp,
-			float64(event.SecondsInWait.Int64),
-			s.formatInt64(event.SID),
-			s.formatString(event.Username),
-			event.Event.String,
-			s.formatString(event.State),
-			s.formatString(event.WaitClass),
-		)
-	}
-
-	return errors
-}
-
-// scrapeBlockingSessions scrapes blocking sessions information
-func (s *ConnectionScraper) scrapeBlockingSessions(ctx context.Context, timestamp pcommon.Timestamp) []error {
-	var errors []error
-
-	blockingSessions, err := s.client.QueryBlockingSessions(ctx)
-	if err != nil {
-		s.logger.Debug("Failed to query blocking sessions", zap.Error(err))
-		return []error{err}
-	}
-
-	for _, session := range blockingSessions {
-		if !session.SID.Valid || !session.BlockingSession.Valid || !session.SecondsInWait.Valid {
-			continue
-		}
-
-		s.mb.RecordNewrelicoracledbConnectionBlockingSessionsDataPoint(
-			timestamp,
-			float64(session.SecondsInWait.Int64),
-			s.formatInt64(session.SID),
-			s.formatInt64(session.BlockingSession),
-			s.formatString(session.Username),
-			s.formatString(session.Event),
-			s.formatString(session.Program),
-		)
-	}
-
-	return errors
-}
-
-// scrapeWaitEventSummary scrapes wait event summary
-func (s *ConnectionScraper) scrapeWaitEventSummary(ctx context.Context, timestamp pcommon.Timestamp) []error {
-	var errors []error
-
-	summaries, err := s.client.QueryWaitEventSummary(ctx)
-	if err != nil {
-		s.logger.Debug("Failed to query wait event summary", zap.Error(err))
-		return []error{err}
-	}
-
-	for _, summary := range summaries {
-		if !summary.Event.Valid || !summary.TotalWaits.Valid || !summary.TimeWaitedMicro.Valid {
-			continue
-		}
-
-		eventStr := summary.Event.String
-		waitClassStr := s.formatString(summary.WaitClass)
-
-		s.mb.RecordNewrelicoracledbConnectionWaitEventTotalWaitsDataPoint(
-			timestamp,
-			float64(summary.TotalWaits.Int64),
-			eventStr,
-			waitClassStr,
-		)
-
-		s.mb.RecordNewrelicoracledbConnectionWaitEventTimeWaitedDataPoint(
-			timestamp,
-			float64(summary.TimeWaitedMicro.Int64)/1000.0,
-			eventStr,
-			waitClassStr,
-		)
-
-		if summary.AverageWaitMicro.Valid {
-			s.mb.RecordNewrelicoracledbConnectionWaitEventAvgWaitTimeDataPoint(
-				timestamp,
-				summary.AverageWaitMicro.Float64/1000.0,
-				eventStr,
-				waitClassStr,
 			)
 		}
 	}

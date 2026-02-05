@@ -41,9 +41,6 @@ attributes:
   schema_name:
     description: Schema name where the query is executed
     type: string
-  username:
-    description: Oracle username who parsed the SQL
-    type: string
   user_name:
     description: Oracle username for slow queries
     type: string
@@ -233,23 +230,8 @@ attributes:
   session.type:
     description: Oracle session type (USER, BACKGROUND, etc.)
     type: string
-  session.id:
-    description: Oracle session identifier (SID)
-    type: string
-  program:
-    description: Program or application name
-    type: string
   wait.event:
     description: Oracle wait event name
-    type: string
-  wait.state:
-    description: Oracle wait event state
-    type: string
-  wait.class:
-    description: Oracle wait event class
-    type: string
-  blocking.session.id:
-    description: Oracle blocking session identifier
     type: string
   resource.name:
     description: Oracle resource name
@@ -2656,68 +2638,6 @@ metrics:
       value_type: double
     unit: "{logons}"
     attributes:
-
-  # Wait Events
-  newrelicoracledb.connection.wait_events:
-    description: Current wait events and wait time
-    enabled: true
-    gauge:
-      value_type: double
-    unit: s
-    attributes:
-      - session.id
-      - username
-      - wait.event
-      - wait.state
-      - wait.class
-
-  newrelicoracledb.connection.blocking_sessions:
-    description: Sessions blocked by other sessions
-    enabled: true
-    gauge:
-      value_type: double
-    unit: s
-    attributes:
-      - session.id
-      - blocking.session.id
-      - username
-      - wait.event
-      - program
-
-  # Wait Event Summary
-  newrelicoracledb.connection.wait_event_total_waits:
-    description: Total number of waits for each wait event
-    enabled: true
-    sum:
-      aggregation_temporality: cumulative
-      monotonic: true
-      value_type: double
-    unit: "{waits}"
-    attributes:
-      - wait.event
-      - wait.class
-
-  newrelicoracledb.connection.wait_event_time_waited:
-    description: Total time waited for each wait event
-    enabled: true
-    sum:
-      aggregation_temporality: cumulative
-      monotonic: true
-      value_type: double
-    unit: ms
-    attributes:
-      - wait.event
-      - wait.class
-
-  newrelicoracledb.connection.wait_event_avg_wait_time:
-    description: Average wait time for each wait event
-    enabled: true
-    gauge:
-      value_type: double
-    unit: ms
-    attributes:
-      - wait.event
-      - wait.class
 
   # Connection Pool Metrics
   newrelicoracledb.connection.shared_servers:

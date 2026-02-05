@@ -116,10 +116,6 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordNewrelicoracledbConnectionBlockingSessionsDataPoint(ts, 1, "session.id-val", "blocking.session.id-val", "username-val", "wait.event-val", "program-val")
-
-			defaultMetricsCount++
-			allMetricsCount++
 			mb.RecordNewrelicoracledbConnectionBytesReceivedDataPoint(ts, 1)
 
 			defaultMetricsCount++
@@ -197,22 +193,6 @@ func TestMetricsBuilder(t *testing.T) {
 			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicoracledbConnectionUserRollbacksDataPoint(ts, 1)
-
-			defaultMetricsCount++
-			allMetricsCount++
-			mb.RecordNewrelicoracledbConnectionWaitEventAvgWaitTimeDataPoint(ts, 1, "wait.event-val", "wait.class-val")
-
-			defaultMetricsCount++
-			allMetricsCount++
-			mb.RecordNewrelicoracledbConnectionWaitEventTimeWaitedDataPoint(ts, 1, "wait.event-val", "wait.class-val")
-
-			defaultMetricsCount++
-			allMetricsCount++
-			mb.RecordNewrelicoracledbConnectionWaitEventTotalWaitsDataPoint(ts, 1, "wait.event-val", "wait.class-val")
-
-			defaultMetricsCount++
-			allMetricsCount++
-			mb.RecordNewrelicoracledbConnectionWaitEventsDataPoint(ts, 1, "session.id-val", "username-val", "wait.event-val", "wait.state-val", "wait.class-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
@@ -1804,33 +1784,6 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-				case "newrelicoracledb.connection.blocking_sessions":
-					assert.False(t, validatedMetrics["newrelicoracledb.connection.blocking_sessions"], "Found a duplicate in the metrics slice: newrelicoracledb.connection.blocking_sessions")
-					validatedMetrics["newrelicoracledb.connection.blocking_sessions"] = true
-					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
-					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
-					assert.Equal(t, "Sessions blocked by other sessions", ms.At(i).Description())
-					assert.Equal(t, "s", ms.At(i).Unit())
-					dp := ms.At(i).Gauge().DataPoints().At(0)
-					assert.Equal(t, start, dp.StartTimestamp())
-					assert.Equal(t, ts, dp.Timestamp())
-					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
-					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("session.id")
-					assert.True(t, ok)
-					assert.Equal(t, "session.id-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("blocking.session.id")
-					assert.True(t, ok)
-					assert.Equal(t, "blocking.session.id-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("username")
-					assert.True(t, ok)
-					assert.Equal(t, "username-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("wait.event")
-					assert.True(t, ok)
-					assert.Equal(t, "wait.event-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("program")
-					assert.True(t, ok)
-					assert.Equal(t, "program-val", attrVal.Str())
 				case "newrelicoracledb.connection.bytes_received":
 					assert.False(t, validatedMetrics["newrelicoracledb.connection.bytes_received"], "Found a duplicate in the metrics slice: newrelicoracledb.connection.bytes_received")
 					validatedMetrics["newrelicoracledb.connection.bytes_received"] = true
@@ -2104,91 +2057,6 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-				case "newrelicoracledb.connection.wait_event_avg_wait_time":
-					assert.False(t, validatedMetrics["newrelicoracledb.connection.wait_event_avg_wait_time"], "Found a duplicate in the metrics slice: newrelicoracledb.connection.wait_event_avg_wait_time")
-					validatedMetrics["newrelicoracledb.connection.wait_event_avg_wait_time"] = true
-					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
-					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
-					assert.Equal(t, "Average wait time for each wait event", ms.At(i).Description())
-					assert.Equal(t, "ms", ms.At(i).Unit())
-					dp := ms.At(i).Gauge().DataPoints().At(0)
-					assert.Equal(t, start, dp.StartTimestamp())
-					assert.Equal(t, ts, dp.Timestamp())
-					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
-					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("wait.event")
-					assert.True(t, ok)
-					assert.Equal(t, "wait.event-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("wait.class")
-					assert.True(t, ok)
-					assert.Equal(t, "wait.class-val", attrVal.Str())
-				case "newrelicoracledb.connection.wait_event_time_waited":
-					assert.False(t, validatedMetrics["newrelicoracledb.connection.wait_event_time_waited"], "Found a duplicate in the metrics slice: newrelicoracledb.connection.wait_event_time_waited")
-					validatedMetrics["newrelicoracledb.connection.wait_event_time_waited"] = true
-					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
-					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
-					assert.Equal(t, "Total time waited for each wait event", ms.At(i).Description())
-					assert.Equal(t, "ms", ms.At(i).Unit())
-					assert.True(t, ms.At(i).Sum().IsMonotonic())
-					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
-					dp := ms.At(i).Sum().DataPoints().At(0)
-					assert.Equal(t, start, dp.StartTimestamp())
-					assert.Equal(t, ts, dp.Timestamp())
-					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
-					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("wait.event")
-					assert.True(t, ok)
-					assert.Equal(t, "wait.event-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("wait.class")
-					assert.True(t, ok)
-					assert.Equal(t, "wait.class-val", attrVal.Str())
-				case "newrelicoracledb.connection.wait_event_total_waits":
-					assert.False(t, validatedMetrics["newrelicoracledb.connection.wait_event_total_waits"], "Found a duplicate in the metrics slice: newrelicoracledb.connection.wait_event_total_waits")
-					validatedMetrics["newrelicoracledb.connection.wait_event_total_waits"] = true
-					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
-					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
-					assert.Equal(t, "Total number of waits for each wait event", ms.At(i).Description())
-					assert.Equal(t, "{waits}", ms.At(i).Unit())
-					assert.True(t, ms.At(i).Sum().IsMonotonic())
-					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
-					dp := ms.At(i).Sum().DataPoints().At(0)
-					assert.Equal(t, start, dp.StartTimestamp())
-					assert.Equal(t, ts, dp.Timestamp())
-					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
-					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("wait.event")
-					assert.True(t, ok)
-					assert.Equal(t, "wait.event-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("wait.class")
-					assert.True(t, ok)
-					assert.Equal(t, "wait.class-val", attrVal.Str())
-				case "newrelicoracledb.connection.wait_events":
-					assert.False(t, validatedMetrics["newrelicoracledb.connection.wait_events"], "Found a duplicate in the metrics slice: newrelicoracledb.connection.wait_events")
-					validatedMetrics["newrelicoracledb.connection.wait_events"] = true
-					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
-					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
-					assert.Equal(t, "Current wait events and wait time", ms.At(i).Description())
-					assert.Equal(t, "s", ms.At(i).Unit())
-					dp := ms.At(i).Gauge().DataPoints().At(0)
-					assert.Equal(t, start, dp.StartTimestamp())
-					assert.Equal(t, ts, dp.Timestamp())
-					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
-					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("session.id")
-					assert.True(t, ok)
-					assert.Equal(t, "session.id-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("username")
-					assert.True(t, ok)
-					assert.Equal(t, "username-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("wait.event")
-					assert.True(t, ok)
-					assert.Equal(t, "wait.event-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("wait.state")
-					assert.True(t, ok)
-					assert.Equal(t, "wait.state-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("wait.class")
-					assert.True(t, ok)
-					assert.Equal(t, "wait.class-val", attrVal.Str())
 				case "newrelicoracledb.container.restricted":
 					assert.False(t, validatedMetrics["newrelicoracledb.container.restricted"], "Found a duplicate in the metrics slice: newrelicoracledb.container.restricted")
 					validatedMetrics["newrelicoracledb.container.restricted"] = true
