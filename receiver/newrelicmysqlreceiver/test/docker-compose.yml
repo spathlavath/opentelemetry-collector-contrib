@@ -2,11 +2,20 @@ version: '3.8'
 
 services:
   mysql:
-    image: mysql:8.0
+    image: mysql:8.4
     container_name: newrelicmysql-test
+    command: 
+      - --performance-schema-instrument='wait/%=ON'
+      - --performance-schema-consumer-events-waits-current=ON
+      - --performance-schema-consumer-events-waits-history=ON
+      - --performance-schema-consumer-events-waits-history-long=ON
+      - --performance-schema-consumer-events-statements-current=ON
+      - --performance-schema-consumer-events-statements-history=ON
+      - --performance-schema-consumer-events-statements-history-long=ON
+      - --local-infile=ON
     environment:
       MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE: testdb
+      MYSQL_DATABASE: employees
       MYSQL_USER: testuser
       MYSQL_PASSWORD: testpassword
     ports:
@@ -19,6 +28,45 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - mysql-network
+
+  # Galera Cluster - Single Node
+  galera1:
+    image: mariadb:11.3
+    container_name: galera-node1
+    hostname: galera1
+    command:
+      - --wsrep-new-cluster
+      - --wsrep-on=ON
+      - --wsrep-provider=/usr/lib/galera/libgalera_smm.so
+      - --wsrep-cluster-name=galera-cluster
+      - --wsrep-cluster-address=gcomm://
+      - --wsrep-node-name=galera1
+      - --wsrep-node-address=galera1
+      - --binlog-format=ROW
+      - --default-storage-engine=InnoDB
+      - --innodb-autoinc-lock-mode=2
+      - --innodb-flush-log-at-trx-commit=0
+      - --innodb-buffer-pool-size=256M
+    environment:
+      MYSQL_ROOT_PASSWORD: galerapass
+      MYSQL_DATABASE: galera_testdb
+      MYSQL_USER: galerauser
+      MYSQL_PASSWORD: galerapassword
+    ports:
+      - "3307:3306"
+      - "4567:4567"  # Galera Cluster replication port
+      - "4568:4568"  # IST port
+      - "4444:4444"  # SST port
+    volumes:
+      - galera1_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
     networks:
       - mysql-network
 
@@ -38,8 +86,27 @@ services:
       - MYSQL_PASSWORD=monitorpass
     restart: unless-stopped
 
+  # OTel Collector for Galera Cluster monitoring
+  otelcol-galera:
+    build:
+      context: ../../../
+      dockerfile: receiver/newrelicmysqlreceiver/test/Dockerfile
+    container_name: otelcol-galera
+    depends_on:
+      galera1:
+        condition: service_healthy
+    networks:
+      - mysql-network
+    volumes:
+      - ./otel-galera-config.yaml:/etc/otel/config.yaml:ro
+    environment:
+      - MYSQL_PASSWORD=galerapass
+    restart: unless-stopped
+
 volumes:
   mysql_data:
+    driver: local
+  galera1_data:
     driver: local
 
 networks:

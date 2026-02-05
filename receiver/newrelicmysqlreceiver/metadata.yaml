@@ -87,6 +87,157 @@ metrics:
       monotonic: true
       aggregation_temporality: cumulative
 
+  # Galera Cluster Metrics
+
+  newrelicmysql.galera.wsrep_cert_deps_distance:
+    enabled: true
+    description: Average distance between the lowest and highest seqno values that can be possibly applied in parallel (potential degree of parallelization).
+    stability:
+      level: development
+    unit: "1"
+    gauge:
+      value_type: double
+
+  newrelicmysql.galera.wsrep_cluster_size:
+    enabled: true
+    description: Current number of nodes in the Galera cluster.
+    stability:
+      level: development
+    unit: "{nodes}"
+    gauge:
+      value_type: int
+
+  newrelicmysql.galera.wsrep_flow_control_paused:
+    enabled: true
+    description: The fraction of time since the last status query that replication was paused due to flow control.
+    stability:
+      level: development
+    unit: "1"
+    gauge:
+      value_type: double
+
+  newrelicmysql.galera.wsrep_flow_control_paused_ns:
+    enabled: true
+    description: The total time spent in a paused state measured in nanoseconds.
+    stability:
+      level: development
+    unit: "ns"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  newrelicmysql.galera.wsrep_flow_control_recv:
+    enabled: true
+    description: Number of FC_PAUSE events received since the last status query, including those that cause the provider to pause.
+    stability:
+      level: development
+    unit: "{events}"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  newrelicmysql.galera.wsrep_flow_control_sent:
+    enabled: true
+    description: Number of FC_PAUSE events sent since the last status query.
+    stability:
+      level: development
+    unit: "{events}"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  newrelicmysql.galera.wsrep_local_cert_failures:
+    enabled: true
+    description: Number of local transactions that failed certification since the last status query.
+    stability:
+      level: development
+    unit: "{transactions}"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  newrelicmysql.galera.wsrep_local_recv_queue:
+    enabled: true
+    description: Current length of the local received queue (number of writesets waiting to be applied).
+    stability:
+      level: development
+    unit: "{writesets}"
+    gauge:
+      value_type: int
+
+  newrelicmysql.galera.wsrep_local_recv_queue_avg:
+    enabled: true
+    description: Average length of the local received queue since the last status query.
+    stability:
+      level: development
+    unit: "{writesets}"
+    gauge:
+      value_type: double
+
+  newrelicmysql.galera.wsrep_local_send_queue:
+    enabled: true
+    description: Current length of the send queue (number of writesets waiting to be sent).
+    stability:
+      level: development
+    unit: "{writesets}"
+    gauge:
+      value_type: int
+
+  newrelicmysql.galera.wsrep_local_send_queue_avg:
+    enabled: true
+    description: Average length of the send queue since the last status query.
+    stability:
+      level: development
+    unit: "{writesets}"
+    gauge:
+      value_type: double
+
+  newrelicmysql.galera.wsrep_local_state:
+    enabled: true
+    description: Internal Galera Cluster FSM state number.
+    stability:
+      level: development
+    unit: "1"
+    gauge:
+      value_type: int
+
+  newrelicmysql.galera.wsrep_received:
+    enabled: true
+    description: Total number of write-sets received from other nodes.
+    stability:
+      level: development
+    unit: "{writesets}"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  newrelicmysql.galera.wsrep_received_bytes:
+    enabled: true
+    description: Total size in bytes of write-sets received from other nodes.
+    stability:
+      level: development
+    unit: "By"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
+  newrelicmysql.galera.wsrep_replicated_bytes:
+    enabled: true
+    description: Total size in bytes of write-sets replicated to other nodes.
+    stability:
+      level: development
+    unit: "By"
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+
   # InnoDB Additional Metrics
 
   newrelicmysql.innodb.active_transactions:

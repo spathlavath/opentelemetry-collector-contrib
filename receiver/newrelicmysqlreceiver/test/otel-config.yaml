@@ -4,7 +4,8 @@ receivers:
     username: monitor
     password: monitorpass
     collection_interval: 10s
-    initial_delay: 1s
+    initial_delay: 5s
+    extra_status_metrics: true
 
 processors:
   batch:
@@ -22,9 +23,9 @@ exporters:
     sampling_initial: 5
     sampling_thereafter: 200
   otlphttp:
-    endpoint: "newrelic-otlp-endpoint"
+    endpoint: "newrelic-otlp-endpoint:443"
     headers:
-      api-key: "***"
+      api-key: "your_new_relic_api_key_here"
     compression: gzip
 
 service:

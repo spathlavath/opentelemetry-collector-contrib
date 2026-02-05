@@ -1,0 +1,550 @@
+resourceMetrics:
+  - resource: {}
+    scopeMetrics:
+      - metrics:
+          - description: The number of times each type of command has been executed.
+            name: newrelicmysql.commands
+            sum:
+              aggregationTemporality: 2
+              dataPoints:
+                - asInt: "0"
+                  attributes:
+                    - key: command
+                      value:
+                        stringValue: commit
+                  startTimeUnixNano: "1000000"
+                  timeUnixNano: "2000000"
+                - asInt: "0"
+                  attributes:
+                    - key: command
+                      value:
+                        stringValue: delete
+                  startTimeUnixNano: "1000000"
+                  timeUnixNano: "2000000"
+                - asInt: "0"
+                  attributes:
+                    - key: command
+                      value:
+                        stringValue: delete_multi
+                  startTimeUnixNano: "1000000"
+                  timeUnixNano: "2000000"
+                - asInt: "0"
+                  attributes:
+                    - key: command
+                      value:
+                        stringValue: insert
+                  startTimeUnixNano: "1000000"
+                  timeUnixNano: "2000000"
+                - asInt: "0"
+                  attributes:
+                    - key: command
+                      value:
+                        stringValue: insert_select
+                  startTimeUnixNano: "1000000"
+                  timeUnixNano: "2000000"
+                - asInt: "0"
+                  attributes:
+                    - key: command
+                      value:
+                        stringValue: load
+                  startTimeUnixNano: "1000000"
+                  timeUnixNano: "2000000"
+                - asInt: "0"
+                  attributes:
+                    - key: command
+                      value:
+                        stringValue: replace
+                  startTimeUnixNano: "1000000"
+                  timeUnixNano: "2000000"
+                - asInt: "0"
+                  attributes:
+                    - key: command
+                      value:
+                        stringValue: replace_select
+                  startTimeUnixNano: "1000000"
+                  timeUnixNano: "2000000"
+                - asInt: "0"
+                  attributes:
+                    - key: command
+                      value:
+                        stringValue: rollback
+                  startTimeUnixNano: "1000000"
+                  timeUnixNano: "2000000"
+                - asInt: "1"
+                  attributes:
+                    - key: command
+                      value:
+                        stringValue: select
+                  startTimeUnixNano: "1000000"
+                  timeUnixNano: "2000000"
+                - asInt: "0"
+                  attributes:
+                    - key: command
+                      value:
+                        stringValue: update
+                  startTimeUnixNano: "1000000"
+                  timeUnixNano: "2000000"
+                - asInt: "0"
+                  attributes:
+                    - key: command
+                      value:
+                        stringValue: update_multi
+                  startTimeUnixNano: "1000000"
+                  timeUnixNano: "2000000"
+              isMonotonic: true
+            unit: "1"
+          - description: The number of connection attempts (successful or not) to the MySQL server.
+            name: newrelicmysql.connection.count
+            sum:
+              aggregationTemporality: 2
+              dataPoints:
+                - asInt: "8"
+                  startTimeUnixNano: "1000000"
+                  timeUnixNano: "2000000"
+              isMonotonic: true
+            unit: "1"
+          - description: The number of internal ROLLBACK statements.
+            name: newrelicmysql.db.handler_rollback
+            sum:
+              aggregationTemporality: 2
+              dataPoints:
+                - asInt: "0"
+                  startTimeUnixNano: "1000000"
+                  timeUnixNano: "2000000"
+              isMonotonic: true
+            unit: "1"
+          - description: The number of tables that have been opened.
+            name: newrelicmysql.db.opened_tables
+            sum:
+              aggregationTemporality: 2
+              dataPoints:
+                - asInt: "136"
+                  startTimeUnixNano: "1000000"
+                  timeUnixNano: "2000000"
+              isMonotonic: true
+            unit: "1"
+          - description: The number of dirty pages in the InnoDB buffer pool.
+            gauge:
+              dataPoints:
+                - asInt: "0"
+                  startTimeUnixNano: "1000000"
+                  timeUnixNano: "2000000"
+            name: newrelicmysql.innodb.buffer_pool_dirty
+            unit: "1"
+          - description: The number of free pages in the InnoDB buffer pool.
+            gauge:
+              dataPoints:
+                - asInt: "7026"
+                  startTimeUnixNano: "1000000"
+                  timeUnixNano: "2000000"
+            name: newrelicmysql.innodb.buffer_pool_free
+            unit: "1"
+          - description: The number of logical read requests.
+            name: newrelicmysql.innodb.buffer_pool_read_requests
+            sum:
+              aggregationTemporality: 2
+              dataPoints:
+                - asInt: "15587"
+                  startTimeUnixNano: "1000000"
+                  timeUnixNano: "2000000"
+              isMonotonic: true
+            unit: "1"
+          - description: The number of reads that InnoDB could not satisfy from the buffer pool.
+            name: newrelicmysql.innodb.buffer_pool_reads
+            sum:
+              aggregationTemporality: 2
+              dataPoints:
+                - asInt: "1020"
+                  startTimeUnixNano: "1000000"
+                  timeUnixNano: "2000000"
+              isMonotonic: true
+            unit: "1"
+          - description: The total size of the InnoDB buffer pool in pages.
+            gauge:
+              dataPoints:
+                - asInt: "8192"
+                  startTimeUnixNano: "1000000"
+                  timeUnixNano: "2000000"
+            name: newrelicmysql.innodb.buffer_pool_total
+            unit: "1"
+          - description: The number of used pages in the InnoDB buffer pool.
+            gauge:
+              dataPoints:
+                - asInt: "1166"
+                  startTimeUnixNano: "1000000"
+                  timeUnixNano: "2000000"
+            name: newrelicmysql.innodb.buffer_pool_used
+            unit: "1"
+          - description: The InnoDB buffer pool utilization percentage.
+            gauge:
+              dataPoints:
+                - asDouble: 14.2333984375
+                  startTimeUnixNano: "1000000"
+                  timeUnixNano: "2000000"
+            name: newrelicmysql.innodb.buffer_pool_utilization
+            unit: '%'
+          - description: The amount of data read.
+            name: newrelicmysql.innodb.data_reads
+            sum:
+              aggregationTemporality: 2
+              dataPoints:
+                - asInt: "1044"
+                  startTimeUnixNano: "1000000"
+                  timeUnixNano: "2000000"
+              isMonotonic: true
+            unit: "1"
+          - description: The amount of data written.
+            name: newrelicmysql.innodb.data_writes
+            sum:
+              aggregationTemporality: 2
+              dataPoints:
+                - asInt: "249"
+                  startTimeUnixNano: "1000000"
+                  timeUnixNano: "2000000"
+              isMonotonic: true
+            unit: "1"
+          - description: The amount of data written to InnoDB tables in bytes.
+            name: newrelicmysql.innodb.data_written
+            sum:
+              aggregationTemporality: 2
+              dataPoints:
+                - asInt: "3259392"
+                  startTimeUnixNano: "1000000"
+                  timeUnixNano: "2000000"
+              isMonotonic: true
+            unit: By
+          - description: The number of times the log buffer was too small and a wait was required for it to be flushed.
+            name: newrelicmysql.innodb.log_waits
+            sum:
+              aggregationTemporality: 2
+              dataPoints:
+                - asInt: "0"
+                  startTimeUnixNano: "1000000"
+                  timeUnixNano: "2000000"
+              isMonotonic: true
+            unit: "1"
+          - description: The number of fsync writes done to the InnoDB redo log files.
+            name: newrelicmysql.innodb.os_log_fsyncs
+            sum:
+              aggregationTemporality: 2
+              dataPoints:
+                - asInt: "22"
+                  startTimeUnixNano: "1000000"
+                  timeUnixNano: "2000000"
+              isMonotonic: true
+            unit: "1"
+          - description: The number of row locks currently being waited for.
+            gauge:
+              dataPoints:
+                - asInt: "0"
+                  startTimeUnixNano: "1000000"
+                  timeUnixNano: "2000000"
+            name: newrelicmysql.innodb.row_lock_current_waits
+            unit: "1"
+          - description: The total time spent in acquiring row locks.
+            name: newrelicmysql.innodb.row_lock_time
+            sum:
+              aggregationTemporality: 2
+              dataPoints:
+                - asInt: "0"
+                  startTimeUnixNano: "1000000"
+                  timeUnixNano: "2000000"
+              isMonotonic: true
+            unit: ms
+          - description: The number of times operations had to wait for a row lock.
+            name: newrelicmysql.innodb.row_lock_waits
+            sum:
+              aggregationTemporality: 2
+              dataPoints:
+                - asInt: "0"
+                  startTimeUnixNano: "1000000"
+                  timeUnixNano: "2000000"
+              isMonotonic: true
+            unit: "1"
+          - description: MyISAM key buffer bytes unflushed.
+            gauge:
+              dataPoints:
+                - asInt: "0"
+                  startTimeUnixNano: "1000000"
+                  timeUnixNano: "2000000"
+            name: newrelicmysql.myisam.key_buffer_bytes_unflushed
+            unit: By
+          - description: MyISAM key buffer bytes used.
+            gauge:
+              dataPoints:
+                - asInt: "0"
+                  startTimeUnixNano: "1000000"
+                  timeUnixNano: "2000000"
+            name: newrelicmysql.myisam.key_buffer_bytes_used
+            unit: By
+          - description: Size of the buffer used for index blocks.
+            gauge:
+              dataPoints:
+                - asInt: "8388608"
+                  startTimeUnixNano: "1000000"
+                  timeUnixNano: "2000000"
+            name: newrelicmysql.myisam.key_buffer_size
+            unit: By
+          - description: The number of requests to read a key block from the MyISAM key cache.
+            name: newrelicmysql.myisam.key_read_requests
+            sum:
+              aggregationTemporality: 2
+              dataPoints:
+                - asInt: "0"
+                  startTimeUnixNano: "1000000"
+                  timeUnixNano: "2000000"
+              isMonotonic: true
+            unit: "1"
+          - description: The number of physical reads of a key block from disk into the MyISAM key cache.
+            name: newrelicmysql.myisam.key_reads
+            sum:
+              aggregationTemporality: 2
+              dataPoints:
+                - asInt: "0"
+                  startTimeUnixNano: "1000000"
+                  timeUnixNano: "2000000"
+              isMonotonic: true
+            unit: "1"
+          - description: The number of requests to write a key block to the MyISAM key cache.
+            name: newrelicmysql.myisam.key_write_requests
+            sum:
+              aggregationTemporality: 2
+              dataPoints:
+                - asInt: "0"
+                  startTimeUnixNano: "1000000"
+                  timeUnixNano: "2000000"
+              isMonotonic: true
+            unit: "1"
+          - description: The number of physical writes of a key block from the MyISAM key cache to disk.
+            name: newrelicmysql.myisam.key_writes
+            sum:
+              aggregationTemporality: 2
+              dataPoints:
+                - asInt: "0"
+                  startTimeUnixNano: "1000000"
+                  timeUnixNano: "2000000"
+              isMonotonic: true
+            unit: "1"
+          - description: The number of connections that were aborted because the client died without closing the connection properly.
+            name: newrelicmysql.net.aborted_clients
+            sum:
+              aggregationTemporality: 2
+              dataPoints:
+                - asInt: "0"
+                  startTimeUnixNano: "1000000"
+                  timeUnixNano: "2000000"
+              isMonotonic: true
+            unit: "1"
+          - description: The number of failed attempts to connect to the MySQL server.
+            name: newrelicmysql.net.aborted_connects
+            sum:
+              aggregationTemporality: 2
+              dataPoints:
+                - asInt: "0"
+                  startTimeUnixNano: "1000000"
+                  timeUnixNano: "2000000"
+              isMonotonic: true
+            unit: "1"
+          - description: The number of connection attempts (successful or not) to the MySQL server.
+            name: newrelicmysql.net.connections
+            sum:
+              aggregationTemporality: 2
+              dataPoints:
+                - asInt: "8"
+                  startTimeUnixNano: "1000000"
+                  timeUnixNano: "2000000"
+              isMonotonic: true
+            unit: "1"
+          - description: The maximum permitted number of simultaneous client connections.
+            gauge:
+              dataPoints:
+                - asInt: "151"
+                  startTimeUnixNano: "1000000"
+                  timeUnixNano: "2000000"
+            name: newrelicmysql.net.max_connections
+            unit: "1"
+          - description: The number of available connections (max_connections - threads_connected).
+            gauge:
+              dataPoints:
+                - asInt: "150"
+                  startTimeUnixNano: "1000000"
+                  timeUnixNano: "2000000"
+            name: newrelicmysql.net.max_connections_available
+            unit: "1"
+          - description: The maximum number of connections that have been in use simultaneously since the server started.
+            gauge:
+              dataPoints:
+                - asInt: "1"
+                  startTimeUnixNano: "1000000"
+                  timeUnixNano: "2000000"
+            name: newrelicmysql.net.max_used_connections
+            unit: "1"
+          - description: The number of bytes received from all clients.
+            name: newrelicmysql.performance.bytes_received
+            sum:
+              aggregationTemporality: 2
+              dataPoints:
+                - asInt: "511"
+                  startTimeUnixNano: "1000000"
+                  timeUnixNano: "2000000"
+              isMonotonic: true
+            unit: By
+          - description: The number of bytes sent to all clients.
+            name: newrelicmysql.performance.bytes_sent
+            sum:
+              aggregationTemporality: 2
+              dataPoints:
+                - asInt: "629"
+                  startTimeUnixNano: "1000000"
+                  timeUnixNano: "2000000"
+              isMonotonic: true
+            unit: By
+          - description: The number of internal on-disk temporary tables created by the server.
+            name: newrelicmysql.performance.created_tmp_disk_tables
+            sum:
+              aggregationTemporality: 2
+              dataPoints:
+                - asInt: "0"
+                  startTimeUnixNano: "1000000"
+                  timeUnixNano: "2000000"
+              isMonotonic: true
+            unit: "1"
+          - description: How many temporary files mysqld has created.
+            name: newrelicmysql.performance.created_tmp_files
+            sum:
+              aggregationTemporality: 2
+              dataPoints:
+                - asInt: "5"
+                  startTimeUnixNano: "1000000"
+                  timeUnixNano: "2000000"
+              isMonotonic: true
+            unit: "1"
+          - description: The number of internal temporary tables created by the server.
+            name: newrelicmysql.performance.created_tmp_tables
+            sum:
+              aggregationTemporality: 2
+              dataPoints:
+                - asInt: "1"
+                  startTimeUnixNano: "1000000"
+                  timeUnixNano: "2000000"
+              isMonotonic: true
+            unit: "1"
+          - description: Maximum number of prepared statements.
+            gauge:
+              dataPoints:
+                - asInt: "16382"
+                  startTimeUnixNano: "1000000"
+                  timeUnixNano: "2000000"
+            name: newrelicmysql.performance.max_prepared_stmt_count
+            unit: "1"
+          - description: The number of files that are currently open.
+            gauge:
+              dataPoints:
+                - asInt: "2"
+                  startTimeUnixNano: "1000000"
+                  timeUnixNano: "2000000"
+            name: newrelicmysql.performance.open_files
+            unit: "1"
+          - description: The number of tables that are currently open.
+            gauge:
+              dataPoints:
+                - asInt: "55"
+                  startTimeUnixNano: "1000000"
+                  timeUnixNano: "2000000"
+            name: newrelicmysql.performance.open_tables
+            unit: "1"
+          - description: Number of digest lost in performance schema.
+            name: newrelicmysql.performance.performance_schema_digest_lost
+            sum:
+              aggregationTemporality: 2
+              dataPoints:
+                - asInt: "0"
+                  startTimeUnixNano: "1000000"
+                  timeUnixNano: "2000000"
+              isMonotonic: true
+            unit: "1"
+          - description: Current number of prepared statements.
+            gauge:
+              dataPoints:
+                - asInt: "0"
+                  startTimeUnixNano: "1000000"
+                  timeUnixNano: "2000000"
+            name: newrelicmysql.performance.prepared_stmt_count
+            unit: "1"
+          - description: The number of statements executed by the server (sent by clients).
+            name: newrelicmysql.performance.questions
+            sum:
+              aggregationTemporality: 2
+              dataPoints:
+                - asInt: "2"
+                  startTimeUnixNano: "1000000"
+                  timeUnixNano: "2000000"
+              isMonotonic: true
+            unit: "1"
+          - description: The number of queries that have taken more than long_query_time seconds.
+            name: newrelicmysql.performance.slow_queries
+            sum:
+              aggregationTemporality: 2
+              dataPoints:
+                - asInt: "0"
+                  startTimeUnixNano: "1000000"
+                  timeUnixNano: "2000000"
+              isMonotonic: true
+            unit: "1"
+          - description: The total number of times that a request for a table lock could not be granted immediately.
+            name: newrelicmysql.performance.table_locks_waited
+            sum:
+              aggregationTemporality: 2
+              dataPoints:
+                - asInt: "0"
+                  startTimeUnixNano: "1000000"
+                  timeUnixNano: "2000000"
+              isMonotonic: true
+            unit: "1"
+          - description: Thread cache size.
+            gauge:
+              dataPoints:
+                - asInt: "9"
+                  startTimeUnixNano: "1000000"
+                  timeUnixNano: "2000000"
+            name: newrelicmysql.performance.thread_cache_size
+            unit: "1"
+          - description: The number of currently open connections.
+            gauge:
+              dataPoints:
+                - asInt: "1"
+                  startTimeUnixNano: "1000000"
+                  timeUnixNano: "2000000"
+            name: newrelicmysql.performance.threads_connected
+            unit: "1"
+          - description: The number of threads that are not sleeping.
+            gauge:
+              dataPoints:
+                - asInt: "2"
+                  startTimeUnixNano: "1000000"
+                  timeUnixNano: "2000000"
+            name: newrelicmysql.performance.threads_running
+            unit: "1"
+          - description: The number of statements executed by the server.
+            name: newrelicmysql.query.count
+            sum:
+              aggregationTemporality: 2
+              dataPoints:
+                - asInt: "4"
+                  startTimeUnixNano: "1000000"
+                  timeUnixNano: "2000000"
+              isMonotonic: true
+            unit: "1"
+          - description: The number of seconds that the server has been up.
+            name: newrelicmysql.uptime
+            sum:
+              aggregationTemporality: 2
+              dataPoints:
+                - asInt: "8"
+                  startTimeUnixNano: "1000000"
+                  timeUnixNano: "2000000"
+              isMonotonic: true
+            unit: s
+        scope:
+          name: github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicmysqlreceiver
+          version: latest
