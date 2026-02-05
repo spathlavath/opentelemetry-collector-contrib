@@ -102,42 +102,6 @@ Source: Same as current_wait_time_ms (WAIT_TIME_MICRO / 1000).
 | nr_blocking_service_guid | New Relic Service entity GUID for the blocking query | Any Str | false |
 | normalised_blocking_sql_hash | MD5 hash of normalized blocking SQL query following New Relic Java agent normalization logic | Any Str | false |
 
-### newrelicoracledb.child_cursors.buffer_gets
-
-Average number of buffer gets per execution for this child cursor
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {gets} | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
-| query_id | SQL query identifier | Any Str | false |
-| child_number | Child cursor number | Any Int | false |
-| plan_hash_value | Oracle execution plan hash value | Any Str | false |
-
-### newrelicoracledb.child_cursors.cpu_time
-
-Average CPU time per execution for this child cursor (in milliseconds)
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| ms | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
-| query_id | SQL query identifier | Any Str | false |
-| child_number | Child cursor number | Any Int | false |
-| plan_hash_value | Oracle execution plan hash value | Any Str | false |
-
 ### newrelicoracledb.child_cursors.details
 
 Child cursor details including load times
@@ -158,81 +122,9 @@ Child cursor details including load times
 | first_load_time | Time when the SQL statement was first loaded into the library cache | Any Str | false |
 | last_load_time | Time at which the query plan was loaded into the library cache | Any Str | false |
 
-### newrelicoracledb.child_cursors.disk_reads
-
-Average number of disk reads per execution for this child cursor
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {reads} | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
-| query_id | SQL query identifier | Any Str | false |
-| child_number | Child cursor number | Any Int | false |
-| plan_hash_value | Oracle execution plan hash value | Any Str | false |
-
 ### newrelicoracledb.child_cursors.elapsed_time
 
 Average elapsed time per execution for this child cursor (in milliseconds)
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| ms | Gauge | Double |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
-| query_id | SQL query identifier | Any Str | false |
-| child_number | Child cursor number | Any Int | false |
-| plan_hash_value | Oracle execution plan hash value | Any Str | false |
-
-### newrelicoracledb.child_cursors.executions
-
-Total number of executions of this child cursor
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {executions} | Gauge | Int |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
-| query_id | SQL query identifier | Any Str | false |
-| child_number | Child cursor number | Any Int | false |
-| plan_hash_value | Oracle execution plan hash value | Any Str | false |
-
-### newrelicoracledb.child_cursors.invalidations
-
-Number of times this child cursor was invalidated
-
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {invalidations} | Gauge | Int |
-
-#### Attributes
-
-| Name | Description | Values | Optional |
-| ---- | ----------- | ------ | -------- |
-| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
-| query_id | SQL query identifier | Any Str | false |
-| child_number | Child cursor number | Any Int | false |
-| plan_hash_value | Oracle execution plan hash value | Any Str | false |
-
-### newrelicoracledb.child_cursors.user_io_wait_time
-
-Average user I/O wait time per execution for this child cursor (in milliseconds)
 
 | Unit | Metric Type | Value Type |
 | ---- | ----------- | ---------- |
@@ -4972,6 +4864,124 @@ Source: WAIT_TIME_MICRO / 1000 (rounded to 2 decimal places).
 | row_wait_block_id | Block ID of the row being waited on | Any Str | false |
 | nr_service_guid | New Relic Service entity GUID | Any Str | false |
 | normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | false |
+
+## Optional Metrics
+
+The following metrics are not emitted by default. Each of them can be enabled by applying the following configuration:
+
+```yaml
+metrics:
+  <metric_name>:
+    enabled: true
+```
+
+### newrelicoracledb.child_cursors.buffer_gets
+
+Average number of buffer gets per execution for this child cursor
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {gets} | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
+| query_id | SQL query identifier | Any Str | false |
+| child_number | Child cursor number | Any Int | false |
+| plan_hash_value | Oracle execution plan hash value | Any Str | false |
+
+### newrelicoracledb.child_cursors.cpu_time
+
+Average CPU time per execution for this child cursor (in milliseconds)
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| ms | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
+| query_id | SQL query identifier | Any Str | false |
+| child_number | Child cursor number | Any Int | false |
+| plan_hash_value | Oracle execution plan hash value | Any Str | false |
+
+### newrelicoracledb.child_cursors.disk_reads
+
+Average number of disk reads per execution for this child cursor
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {reads} | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
+| query_id | SQL query identifier | Any Str | false |
+| child_number | Child cursor number | Any Int | false |
+| plan_hash_value | Oracle execution plan hash value | Any Str | false |
+
+### newrelicoracledb.child_cursors.executions
+
+Total number of executions of this child cursor
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {executions} | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
+| query_id | SQL query identifier | Any Str | false |
+| child_number | Child cursor number | Any Int | false |
+| plan_hash_value | Oracle execution plan hash value | Any Str | false |
+
+### newrelicoracledb.child_cursors.invalidations
+
+Number of times this child cursor was invalidated
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| {invalidations} | Gauge | Int |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
+| query_id | SQL query identifier | Any Str | false |
+| child_number | Child cursor number | Any Int | false |
+| plan_hash_value | Oracle execution plan hash value | Any Str | false |
+
+### newrelicoracledb.child_cursors.user_io_wait_time
+
+Average user I/O wait time per execution for this child cursor (in milliseconds)
+
+| Unit | Metric Type | Value Type |
+| ---- | ----------- | ---------- |
+| ms | Gauge | Double |
+
+#### Attributes
+
+| Name | Description | Values | Optional |
+| ---- | ----------- | ------ | -------- |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
+| database_name | Oracle database name | Any Str | false |
+| query_id | SQL query identifier | Any Str | false |
+| child_number | Child cursor number | Any Int | false |
+| plan_hash_value | Oracle execution plan hash value | Any Str | false |
 
 ## Resource Attributes
 
