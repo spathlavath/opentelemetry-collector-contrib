@@ -3702,18 +3702,6 @@ metrics:
       - nr_blocking_service_guid
       - normalised_blocking_sql_hash
 
-  # Disabled old wait events metrics - replaced with current_wait_seconds
-  # newrelicoracledb.wait_events.total_wait_time_ms:
-  #   description: Total wait time in milliseconds for wait events
-  #   enabled: false
-  #   gauge:
-  #     value_type: double
-  #   unit: ms
-  #   attributes:
-  #     - database_name
-  #     - query_id
-  #     - wait_event_name
-  #     - wait_category
 
   # Database Version and Configuration Information
   newrelicoracledb.database.info:
@@ -3791,18 +3779,7 @@ metrics:
       - row_wait_block_id
       - nr_service_guid
       - normalised_sql_hash
-  # Disabled old wait events metrics - replaced with current_wait_time_ms
-  # newrelicoracledb.wait_events.avg_wait_time_ms:
-  #     description: Average wait time in milliseconds for wait events
-  #     enabled: false
-  #     gauge:
-  #       value_type: double
-  #     unit: ms
-  #     attributes:
-  #       - database_name
-  #       - query_id
-  #       - wait_event_name
-  #       - wait_category
+
 
 tests:
   config:

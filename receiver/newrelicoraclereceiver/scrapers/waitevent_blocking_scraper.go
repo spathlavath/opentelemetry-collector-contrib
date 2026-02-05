@@ -304,7 +304,6 @@ func (s *WaitEventBlockingScraper) recordBlockingMetrics(now pcommon.Timestamp, 
 	)
 
 	// Record the final blocker query details if we have a valid query ID and text
-	// Use the metadata we already extracted from the raw final blocker query text
 	if finalBlockerQueryID != "" && finalBlockerQueryText != "" {
 		s.mb.RecordNewrelicoracledbSlowQueriesQueryDetailsDataPoint(
 			now,

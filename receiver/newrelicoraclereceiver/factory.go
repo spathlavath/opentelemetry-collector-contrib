@@ -214,7 +214,7 @@ func getDataSourceWithService(cfg Config, serviceName string) string {
 }
 
 // determineMonitoredServices determines which services to monitor based on pdb_services configuration
-func determineMonitoredServices(sqlOpenerFunc sqlOpenerFunc, dataSource, configuredService string, pdbServices []string, logger *zap.Logger) ([]string, error) {
+func determineMonitoredServices(sqlOpenerFunc sqlOpenerFunc, dataSource string, configuredService string, pdbServices []string, logger *zap.Logger) ([]string, error) {
 	// Case 1: Empty pdb_services - collect only configured service data (CDB or PDB)
 	if len(pdbServices) == 0 {
 		logger.Info("PDB services not configured, collecting configured service data only", zap.String("service", configuredService))
@@ -241,7 +241,6 @@ func determineMonitoredServices(sqlOpenerFunc sqlOpenerFunc, dataSource, configu
 		return nil, fmt.Errorf("failed to query services: %w", err)
 	}
 
-	// Filter services based on configuration (case-insensitive matching)
 	filteredServices := filterServices(allServices, pdbServices, logger)
 	if len(filteredServices) == 0 {
 		return nil, fmt.Errorf("none of the requested services found: %v", pdbServices)
@@ -251,8 +250,7 @@ func determineMonitoredServices(sqlOpenerFunc sqlOpenerFunc, dataSource, configu
 }
 
 // filterServices filters services based on requested names (case-insensitive)
-func filterServices(allServices, requestedServices []string, logger *zap.Logger) []string {
-	// Create a map for case-insensitive lookup
+func filterServices(allServices []string, requestedServices []string, logger *zap.Logger) []string {
 	requestMap := make(map[string]string) // lowercase -> original
 	for _, req := range requestedServices {
 		requestMap[strings.ToLower(req)] = req
@@ -260,7 +258,6 @@ func filterServices(allServices, requestedServices []string, logger *zap.Logger)
 
 	var filtered []string
 	for _, service := range allServices {
-		// Extract just the service name (before the first dot)
 		serviceName := service
 		if dotIndex := strings.Index(service, "."); dotIndex != -1 {
 			serviceName = service[:dotIndex]
