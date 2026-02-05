@@ -84,13 +84,14 @@ func (s *ReplicationScraper) scrapeReplicaMetrics(now pcommon.Timestamp, errs *s
 	for key, value := range replicationStatus {
 		switch key {
 		case "Seconds_Behind_Master":
-			if value != "" && value != "NULL" {
+			// MySQL 5.7 and earlier - only send seconds_behind_master (requires replication flag)
+			if s.enableAdditionalMetrics && value != "" && value != "NULL" {
 				if intVal, err := strconv.ParseInt(value, 10, 64); err == nil {
 					s.mb.RecordNewrelicmysqlReplicationSecondsBehindMasterDataPoint(now, intVal)
 				}
 			}
 		case "Seconds_Behind_Source":
-			// Only collect this additional metric if flag is enabled
+			// MySQL 8.0.22+ - only send seconds_behind_source (requires replication flag)
 			if s.enableAdditionalMetrics && value != "" && value != "NULL" {
 				if intVal, err := strconv.ParseInt(value, 10, 64); err == nil {
 					s.mb.RecordNewrelicmysqlReplicationSecondsBehindSourceDataPoint(now, intVal)
