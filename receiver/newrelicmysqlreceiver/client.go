@@ -201,6 +201,9 @@ func (c *mySQLClient) GetMasterStatus() (map[string]string, error) {
 		countStr := strconv.Itoa(count)
 		result["Slaves_Connected"] = countStr
 		result["Replicas_Connected"] = countStr
+		c.logger.Info("Master replication status detected", zap.Int("replicas_connected", count))
+	} else {
+		c.logger.Debug("No replicas connected to this master server")
 	}
 
 	return result, nil
@@ -216,8 +219,11 @@ func (c *mySQLClient) GetGroupReplicationStats() (map[string]string, error) {
 	err := c.db.QueryRow(`SELECT plugin_status FROM information_schema.plugins WHERE plugin_name='group_replication'`).Scan(&pluginStatus)
 	if err != nil || pluginStatus != "ACTIVE" {
 		// Plugin not installed or not active
+		c.logger.Debug("Group Replication plugin not active or not installed")
 		return result, nil
 	}
+
+	c.logger.Debug("Group Replication plugin is active, querying metrics")
 
 	// Try MySQL >= 8.0.2 query first (all 8 columns available)
 	// Filters by current server UUID and applier channel
@@ -258,8 +264,11 @@ func (c *mySQLClient) GetGroupReplicationStats() (map[string]string, error) {
 		err = row.Scan(&inQueue, &checked, &conflicts, &validating)
 		if err != nil {
 			// Table might not exist or no matching rows
+			c.logger.Debug("Group Replication stats table not found or no data for this server")
 			return result, nil
 		}
+
+		c.logger.Debug("Using MySQL < 8.0.2 query, collected 4 Group Replication metrics")
 
 		// MySQL < 8.0.2: Only 4 metrics available
 		if inQueue.Valid {
@@ -277,6 +286,8 @@ func (c *mySQLClient) GetGroupReplicationStats() (map[string]string, error) {
 
 		return result, nil
 	}
+
+	c.logger.Debug("Using MySQL >= 8.0.2 query, collected 8 Group Replication metrics")
 
 	// MySQL >= 8.0.2: All 8 metrics available
 	if inQueue.Valid {
@@ -303,6 +314,8 @@ func (c *mySQLClient) GetGroupReplicationStats() (map[string]string, error) {
 	if rollback.Valid {
 		result["group_replication_transactions_rollback"] = strconv.FormatInt(rollback.Int64, 10)
 	}
+
+	c.logger.Info("Group Replication metrics collected (MySQL >= 8.0.2)", zap.Int("metric_count", len(result)))
 
 	return result, nil
 }
