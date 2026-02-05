@@ -47,6 +47,18 @@ attributes:
   last_active_time:
     description: Last active time for the SQL query
     type: string
+  normalised_sql_hash:
+    description: "MD5 hash of normalized SQL query following New Relic Java agent normalization logic"
+    type: string
+  nr_service_guid:
+    description: "New Relic Service entity GUID"
+    type: string
+  nr_blocking_service_guid:
+    description: "New Relic Service entity GUID for the blocking query"
+    type: string
+  normalised_blocking_sql_hash:
+    description: "MD5 hash of normalized blocking SQL query following New Relic Java agent normalization logic"
+    type: string
   plan_hash_value:
     description: Oracle execution plan hash value
     type: string
@@ -186,6 +198,9 @@ attributes:
     type: string
   final_blocker_query_id:
     description: SQL query ID of the final blocking session's query
+    type: string
+  final_blocker_query_text:
+    description: SQL query text of the final blocking session's query
     type: string
   blocking_session_status:
     description: Status of the blocking session (VALID, NO HOLDER, etc.)
@@ -3123,9 +3138,11 @@ metrics:
       - database_name
       - query_id
       - user_name
+      - normalised_sql_hash
+      - nr_service_guid
 
-  newrelicoracledb.slow_queries.avg_cpu_time:
-    description: Average CPU time per execution for slow queries
+  newrelicoracledb.slow_queries.total_cpu_time:
+    description: Total cumulative CPU time for slow queries (raw value from V$SQLAREA)
     enabled: true
     gauge:
       value_type: double
@@ -3135,9 +3152,11 @@ metrics:
       - database_name
       - query_id
       - user_name
+      - normalised_sql_hash
+      - nr_service_guid
 
-  newrelicoracledb.slow_queries.avg_disk_reads:
-    description: Average disk reads per execution for slow queries
+  newrelicoracledb.slow_queries.total_disk_reads:
+    description: Total cumulative disk reads for slow queries (raw value from V$SQLAREA)
     enabled: true
     gauge:
       value_type: double
@@ -3147,9 +3166,11 @@ metrics:
       - database_name
       - query_id
       - user_name
+      - normalised_sql_hash
+      - nr_service_guid
 
-  newrelicoracledb.slow_queries.avg_disk_writes:
-    description: Average disk writes per execution for slow queries
+  newrelicoracledb.slow_queries.total_disk_writes:
+    description: Total cumulative direct writes for slow queries - writes bypassing buffer cache (raw value from V$SQLAREA DIRECT_WRITES)
     enabled: true
     gauge:
       value_type: double
@@ -3159,9 +3180,11 @@ metrics:
       - database_name
       - query_id
       - user_name
+      - normalised_sql_hash
+      - nr_service_guid
 
-  newrelicoracledb.slow_queries.avg_elapsed_time:
-    description: Average elapsed time per execution for slow queries
+  newrelicoracledb.slow_queries.total_elapsed_time:
+    description: Total cumulative elapsed time for slow queries (raw value from V$SQLAREA)
     enabled: true
     gauge:
       value_type: double
@@ -3171,9 +3194,11 @@ metrics:
       - database_name
       - query_id
       - user_name
+      - normalised_sql_hash
+      - nr_service_guid
 
-  newrelicoracledb.slow_queries.avg_rows_examined:
-    description: Average rows examined per execution for slow queries
+  newrelicoracledb.slow_queries.total_rows_examined:
+    description: Total cumulative rows examined for slow queries (buffer gets/logical reads, raw value from V$SQLAREA)
     enabled: true
     gauge:
       value_type: double
@@ -3183,9 +3208,25 @@ metrics:
       - database_name
       - query_id
       - user_name
+      - normalised_sql_hash
+      - nr_service_guid
 
-  newrelicoracledb.slow_queries.avg_lock_time:
-    description: Average lock/concurrency wait time per execution for slow queries
+  newrelicoracledb.slow_queries.total_rows_returned:
+    description: Total cumulative rows returned for slow queries (rows processed, raw value from V$SQLAREA)
+    enabled: true
+    gauge:
+      value_type: double
+    unit: "{rows}"
+    attributes:
+      - collection_timestamp
+      - database_name
+      - query_id
+      - user_name
+      - normalised_sql_hash
+      - nr_service_guid
+
+  newrelicoracledb.slow_queries.total_wait_time:
+    description: Total cumulative wait time for slow queries (elapsed_time - cpu_time, raw value from V$SQLAREA)
     enabled: true
     gauge:
       value_type: double
@@ -3195,6 +3236,8 @@ metrics:
       - database_name
       - query_id
       - user_name
+      - normalised_sql_hash
+      - nr_service_guid
 
   newrelicoracledb.slow_queries.query_details:
     description: Slow Query Details
@@ -3211,6 +3254,10 @@ metrics:
       - schema_name
       - user_name
       - last_active_time
+      - normalised_sql_hash
+      - nr_service_guid
+      - normalised_blocking_sql_hash
+      - nr_blocking_service_guid
 
   # Interval-based (delta) metrics - showing what happened in the LAST polling interval
   # These metrics provide real-time visibility into query performance changes
@@ -3225,6 +3272,8 @@ metrics:
       - database_name
       - query_id
       - user_name
+      - normalised_sql_hash
+      - nr_service_guid
 
   newrelicoracledb.slow_queries.interval_execution_count:
     description: Number of new executions since last scrape (delta metric). On first scrape or after cache reset, represents all executions since plan cache load.
@@ -3237,6 +3286,192 @@ metrics:
       - database_name
       - query_id
       - user_name
+      - normalised_sql_hash
+      - nr_service_guid
+
+  newrelicoracledb.slow_queries.interval_avg_cpu_time:
+    description: Average CPU time per execution in the last polling interval (delta metric)
+    enabled: true
+    gauge:
+      value_type: double
+    unit: ms
+    attributes:
+      - collection_timestamp
+      - database_name
+      - query_id
+      - user_name
+      - normalised_sql_hash
+      - nr_service_guid
+
+  newrelicoracledb.slow_queries.interval_avg_wait_time:
+    description: Average wait time per execution in the last polling interval (delta metric)
+    enabled: true
+    gauge:
+      value_type: double
+    unit: ms
+    attributes:
+      - collection_timestamp
+      - database_name
+      - query_id
+      - user_name
+      - normalised_sql_hash
+      - nr_service_guid
+
+  newrelicoracledb.slow_queries.interval_avg_disk_reads:
+    description: Average disk reads per execution in the last polling interval (delta metric)
+    enabled: true
+    gauge:
+      value_type: double
+    unit: "{reads}"
+    attributes:
+      - collection_timestamp
+      - database_name
+      - query_id
+      - user_name
+      - normalised_sql_hash
+      - nr_service_guid
+
+  newrelicoracledb.slow_queries.interval_avg_disk_writes:
+    description: Average direct writes per execution in the last polling interval - writes bypassing buffer cache (delta metric)
+    enabled: true
+    gauge:
+      value_type: double
+    unit: "{writes}"
+    attributes:
+      - collection_timestamp
+      - database_name
+      - query_id
+      - user_name
+      - normalised_sql_hash
+      - nr_service_guid
+
+  newrelicoracledb.slow_queries.interval_avg_buffer_gets:
+    description: Average buffer gets (logical reads) per execution in the last polling interval (delta metric)
+    enabled: true
+    gauge:
+      value_type: double
+    unit: "{gets}"
+    attributes:
+      - collection_timestamp
+      - database_name
+      - query_id
+      - user_name
+      - normalised_sql_hash
+      - nr_service_guid
+
+  newrelicoracledb.slow_queries.interval_avg_rows_processed:
+    description: Average rows processed (returned) per execution in the last polling interval (delta metric)
+    enabled: true
+    gauge:
+      value_type: double
+    unit: "{rows}"
+    attributes:
+      - collection_timestamp
+      - database_name
+      - query_id
+      - user_name
+      - normalised_sql_hash
+      - nr_service_guid
+
+  # Interval total (non-averaged) delta metrics - showing TOTAL activity in the last polling interval
+  # These metrics show aggregate delta values without per-execution averaging
+  newrelicoracledb.slow_queries.interval_elapsed_time:
+    description: Total elapsed time in the last polling interval (delta metric, not averaged)
+    enabled: true
+    gauge:
+      value_type: double
+    unit: ms
+    attributes:
+      - collection_timestamp
+      - database_name
+      - query_id
+      - user_name
+      - normalised_sql_hash
+      - nr_service_guid
+
+  newrelicoracledb.slow_queries.interval_cpu_time:
+    description: Total CPU time in the last polling interval (delta metric, not averaged)
+    enabled: true
+    gauge:
+      value_type: double
+    unit: ms
+    attributes:
+      - collection_timestamp
+      - database_name
+      - query_id
+      - user_name
+      - normalised_sql_hash
+      - nr_service_guid
+
+  newrelicoracledb.slow_queries.interval_wait_time:
+    description: Total wait time in the last polling interval (delta metric, not averaged)
+    enabled: true
+    gauge:
+      value_type: double
+    unit: ms
+    attributes:
+      - collection_timestamp
+      - database_name
+      - query_id
+      - user_name
+      - normalised_sql_hash
+      - nr_service_guid
+
+  newrelicoracledb.slow_queries.interval_disk_reads:
+    description: Total disk reads in the last polling interval (delta metric, not averaged)
+    enabled: true
+    gauge:
+      value_type: double
+    unit: "{reads}"
+    attributes:
+      - collection_timestamp
+      - database_name
+      - query_id
+      - user_name
+      - normalised_sql_hash
+      - nr_service_guid
+
+  newrelicoracledb.slow_queries.interval_disk_writes:
+    description: Total direct writes in the last polling interval - writes bypassing buffer cache (delta metric, not averaged)
+    enabled: true
+    gauge:
+      value_type: double
+    unit: "{writes}"
+    attributes:
+      - collection_timestamp
+      - database_name
+      - query_id
+      - user_name
+      - normalised_sql_hash
+      - nr_service_guid
+
+  newrelicoracledb.slow_queries.interval_buffer_gets:
+    description: Total buffer gets (logical reads) in the last polling interval (delta metric, not averaged)
+    enabled: true
+    gauge:
+      value_type: double
+    unit: "{gets}"
+    attributes:
+      - collection_timestamp
+      - database_name
+      - query_id
+      - user_name
+      - normalised_sql_hash
+      - nr_service_guid
+
+  newrelicoracledb.slow_queries.interval_rows_processed:
+    description: Total rows processed (returned) in the last polling interval (delta metric, not averaged)
+    enabled: true
+    gauge:
+      value_type: double
+    unit: "{rows}"
+    attributes:
+      - collection_timestamp
+      - database_name
+      - query_id
+      - user_name
+      - normalised_sql_hash
+      - nr_service_guid
 
   # Child Cursor Metrics (from V$SQL) - Average values per execution
   newrelicoracledb.child_cursors.cpu_time:
@@ -3381,19 +3616,12 @@ metrics:
       - final_blocker_sid
       - final_blocker_serial
       - final_blocker_query_id
+      - final_blocker_query_text
+      - nr_service_guid
+      - normalised_sql_hash
+      - nr_blocking_service_guid
+      - normalised_blocking_sql_hash
 
-  # Disabled old wait events metrics - replaced with current_wait_seconds
-  # newrelicoracledb.wait_events.total_wait_time_ms:
-  #   description: Total wait time in milliseconds for wait events
-  #   enabled: false
-  #   gauge:
-  #     value_type: double
-  #   unit: ms
-  #   attributes:
-  #     - database_name
-  #     - query_id
-  #     - wait_event_name
-  #     - wait_category
 
   # Database Version and Configuration Information
   newrelicoracledb.database.info:
@@ -3469,19 +3697,9 @@ metrics:
       - row_wait_obj_id
       - row_wait_file_id
       - row_wait_block_id
+      - nr_service_guid
+      - normalised_sql_hash
 
-  # Disabled old wait events metrics - replaced with current_wait_time_ms
-  # newrelicoracledb.wait_events.avg_wait_time_ms:
-  #     description: Average wait time in milliseconds for wait events
-  #     enabled: false
-  #     gauge:
-  #       value_type: double
-  #     unit: ms
-  #     attributes:
-  #       - database_name
-  #       - query_id
-  #       - wait_event_name
-  #       - wait_category    
 
 tests:
   config:

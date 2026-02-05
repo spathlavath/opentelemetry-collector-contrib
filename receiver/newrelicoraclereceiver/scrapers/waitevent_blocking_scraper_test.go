@@ -159,9 +159,9 @@ func TestScrapeWaitEventsAndBlocking_Success(t *testing.T) {
 	scraper, _ := NewWaitEventBlockingScraper(mockClient, mb, logger, config, 10)
 
 	ctx := context.Background()
-	slowQuerySQLIDs := []string{"sql1"}
+	slowQueryIdentifiers := []models.SQLIdentifier{{SQLID: "sql1", ChildNumber: 0, Timestamp: time.Now()}}
 
-	sqlIdentifiers, errs := scraper.ScrapeWaitEventsAndBlocking(ctx, slowQuerySQLIDs)
+	sqlIdentifiers, errs := scraper.ScrapeWaitEventsAndBlocking(ctx, slowQueryIdentifiers)
 
 	assert.Empty(t, errs)
 	assert.Len(t, sqlIdentifiers, 2)
@@ -179,9 +179,9 @@ func TestScrapeWaitEventsAndBlocking_FetchError(t *testing.T) {
 	scraper, _ := NewWaitEventBlockingScraper(mockClient, mb, logger, config, 10)
 
 	ctx := context.Background()
-	slowQuerySQLIDs := []string{"sql1"}
+	slowQueryIdentifiers := []models.SQLIdentifier{{SQLID: "sql1", ChildNumber: 0, Timestamp: time.Now()}}
 
-	sqlIdentifiers, errs := scraper.ScrapeWaitEventsAndBlocking(ctx, slowQuerySQLIDs)
+	sqlIdentifiers, errs := scraper.ScrapeWaitEventsAndBlocking(ctx, slowQueryIdentifiers)
 
 	assert.Nil(t, sqlIdentifiers)
 	assert.Len(t, errs, 1)
@@ -200,9 +200,9 @@ func TestScrapeWaitEventsAndBlocking_EmptyResults(t *testing.T) {
 	scraper, _ := NewWaitEventBlockingScraper(mockClient, mb, logger, config, 10)
 
 	ctx := context.Background()
-	slowQuerySQLIDs := []string{}
+	slowQueryIdentifiers := []models.SQLIdentifier{}
 
-	sqlIdentifiers, errs := scraper.ScrapeWaitEventsAndBlocking(ctx, slowQuerySQLIDs)
+	sqlIdentifiers, errs := scraper.ScrapeWaitEventsAndBlocking(ctx, slowQueryIdentifiers)
 
 	assert.Empty(t, errs)
 	assert.Empty(t, sqlIdentifiers)
@@ -234,7 +234,7 @@ func TestRecordWaitEventMetrics_ValidEvent(t *testing.T) {
 	}
 
 	// This should not panic
-	scraper.recordWaitEventMetrics(pcommon.NewTimestampFromTime(now), event)
+	scraper.recordWaitEventMetrics(pcommon.NewTimestampFromTime(now), event, make(map[string]models.SQLIdentifier))
 }
 
 func TestRecordWaitEventMetrics_InvalidEvent(t *testing.T) {
@@ -255,60 +255,7 @@ func TestRecordWaitEventMetrics_InvalidEvent(t *testing.T) {
 	}
 
 	// This should return early and not panic
-	scraper.recordWaitEventMetrics(pcommon.NewTimestampFromTime(now), event)
-}
-
-func TestGetSQLIdentifiers_Success(t *testing.T) {
-	mockClient := &client.MockClient{
-		WaitEventsWithBlocking: []models.WaitEventWithBlocking{
-			{
-				CollectionTimestamp: sql.NullTime{Time: time.Now(), Valid: true},
-				DatabaseName:        sql.NullString{String: "ORCL", Valid: true},
-				SID:                 sql.NullInt64{Int64: 123, Valid: true},
-				WaitTimeMs:          sql.NullFloat64{Float64: 5500, Valid: true},
-				SQLID:               sql.NullString{String: "abc123", Valid: true},
-				SQLChildNumber:      sql.NullInt64{Int64: 0, Valid: true},
-				Event:               sql.NullString{String: "db file sequential read", Valid: true},
-			},
-		},
-	}
-	settings := receivertest.NewNopSettings(metadata.Type)
-	mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), settings)
-	logger := zap.NewNop()
-	config := metadata.DefaultMetricsBuilderConfig()
-
-	scraper, _ := NewWaitEventBlockingScraper(mockClient, mb, logger, config, 10)
-
-	ctx := context.Background()
-	slowQuerySQLIDs := []string{"sql1"}
-
-	sqlIdentifiers, errs := scraper.GetSQLIdentifiers(ctx, slowQuerySQLIDs)
-
-	assert.Empty(t, errs)
-	assert.Len(t, sqlIdentifiers, 1)
-	assert.Equal(t, "abc123", sqlIdentifiers[0].SQLID)
-	assert.Equal(t, int64(0), sqlIdentifiers[0].ChildNumber)
-}
-
-func TestGetSQLIdentifiers_FetchError(t *testing.T) {
-	mockClient := &client.MockClient{
-		QueryErr: errors.New("database error"),
-	}
-	settings := receivertest.NewNopSettings(metadata.Type)
-	mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), settings)
-	logger := zap.NewNop()
-	config := metadata.DefaultMetricsBuilderConfig()
-
-	scraper, _ := NewWaitEventBlockingScraper(mockClient, mb, logger, config, 10)
-
-	ctx := context.Background()
-	slowQuerySQLIDs := []string{"sql1"}
-
-	sqlIdentifiers, errs := scraper.GetSQLIdentifiers(ctx, slowQuerySQLIDs)
-
-	assert.Nil(t, sqlIdentifiers)
-	assert.Len(t, errs, 1)
-	assert.Contains(t, errs[0].Error(), "database error")
+	scraper.recordWaitEventMetrics(pcommon.NewTimestampFromTime(now), event, make(map[string]models.SQLIdentifier))
 }
 
 func TestEmitWaitEventMetrics_ValidEvents(t *testing.T) {
@@ -342,7 +289,7 @@ func TestEmitWaitEventMetrics_ValidEvents(t *testing.T) {
 		},
 	}
 
-	waitEventCount, blockingCount := scraper.emitWaitEventMetrics(pcommon.NewTimestampFromTime(now), waitEvents)
+	waitEventCount, blockingCount := scraper.emitWaitEventMetrics(pcommon.NewTimestampFromTime(now), waitEvents, make(map[string]models.SQLIdentifier))
 
 	assert.Equal(t, 2, waitEventCount)
 	assert.Equal(t, 0, blockingCount) // No blocking sessions in this test
@@ -374,7 +321,7 @@ func TestEmitWaitEventMetrics_WithBlockedEvents(t *testing.T) {
 		},
 	}
 
-	waitEventCount, blockingCount := scraper.emitWaitEventMetrics(pcommon.NewTimestampFromTime(now), waitEvents)
+	waitEventCount, blockingCount := scraper.emitWaitEventMetrics(pcommon.NewTimestampFromTime(now), waitEvents, make(map[string]models.SQLIdentifier))
 
 	assert.Equal(t, 1, waitEventCount)
 	assert.Equal(t, 1, blockingCount)
@@ -392,7 +339,7 @@ func TestEmitWaitEventMetrics_EmptyList(t *testing.T) {
 	now := time.Now()
 	waitEvents := []models.WaitEventWithBlocking{}
 
-	waitEventCount, blockingCount := scraper.emitWaitEventMetrics(pcommon.NewTimestampFromTime(now), waitEvents)
+	waitEventCount, blockingCount := scraper.emitWaitEventMetrics(pcommon.NewTimestampFromTime(now), waitEvents, make(map[string]models.SQLIdentifier))
 
 	assert.Equal(t, 0, waitEventCount)
 	assert.Equal(t, 0, blockingCount)
@@ -486,7 +433,7 @@ func TestExtractSQLIdentifiers_UniqueIdentifiers(t *testing.T) {
 		},
 	}
 
-	identifiers := scraper.extractSQLIdentifiers(waitEvents)
+	identifiers := scraper.extractSQLIdentifiers(waitEvents, make(map[string]models.SQLIdentifier))
 
 	assert.Len(t, identifiers, 2)
 	sqlIDs := make(map[string]bool)
@@ -528,7 +475,7 @@ func TestExtractSQLIdentifiers_DuplicateIdentifiers(t *testing.T) {
 		},
 	}
 
-	identifiers := scraper.extractSQLIdentifiers(waitEvents)
+	identifiers := scraper.extractSQLIdentifiers(waitEvents, make(map[string]models.SQLIdentifier))
 
 	// Should deduplicate
 	assert.Len(t, identifiers, 1)
@@ -556,7 +503,7 @@ func TestExtractSQLIdentifiers_InvalidEvents(t *testing.T) {
 		},
 	}
 
-	identifiers := scraper.extractSQLIdentifiers(waitEvents)
+	identifiers := scraper.extractSQLIdentifiers(waitEvents, make(map[string]models.SQLIdentifier))
 
 	// Invalid event should not be included
 	assert.Empty(t, identifiers)
@@ -583,7 +530,7 @@ func TestExtractSQLIdentifiers_ZeroTimestamp(t *testing.T) {
 		},
 	}
 
-	identifiers := scraper.extractSQLIdentifiers(waitEvents)
+	identifiers := scraper.extractSQLIdentifiers(waitEvents, make(map[string]models.SQLIdentifier))
 
 	// Should use current time when timestamp is zero
 	assert.Len(t, identifiers, 1)
@@ -621,7 +568,7 @@ func TestRecordBlockingMetrics_ValidBlockedEvent(t *testing.T) {
 	}
 
 	// This should not panic
-	scraper.recordBlockingMetrics(pcommon.NewTimestampFromTime(now), event)
+	scraper.recordBlockingMetrics(pcommon.NewTimestampFromTime(now), event, make(map[string]models.SQLIdentifier))
 }
 
 func TestRecordBlockingMetrics_ZeroWaitTime(t *testing.T) {
@@ -643,7 +590,7 @@ func TestRecordBlockingMetrics_ZeroWaitTime(t *testing.T) {
 	}
 
 	// Should return early and not panic
-	scraper.recordBlockingMetrics(pcommon.NewTimestampFromTime(now), event)
+	scraper.recordBlockingMetrics(pcommon.NewTimestampFromTime(now), event, make(map[string]models.SQLIdentifier))
 }
 
 func TestRecordBlockingMetrics_NegativeWaitTime(t *testing.T) {
@@ -665,5 +612,5 @@ func TestRecordBlockingMetrics_NegativeWaitTime(t *testing.T) {
 	}
 
 	// Should return early and not panic
-	scraper.recordBlockingMetrics(pcommon.NewTimestampFromTime(now), event)
+	scraper.recordBlockingMetrics(pcommon.NewTimestampFromTime(now), event, make(map[string]models.SQLIdentifier))
 }

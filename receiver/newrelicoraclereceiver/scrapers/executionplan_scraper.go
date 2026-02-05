@@ -265,6 +265,7 @@ func (s *ExecutionPlanScraper) buildExecutionPlanMetrics(row *models.ExecutionPl
 
 	return nil
 }
+
 func (s *ExecutionPlanScraper) parseIntSafe(value string) int64 {
 	if value == "" {
 		return -1

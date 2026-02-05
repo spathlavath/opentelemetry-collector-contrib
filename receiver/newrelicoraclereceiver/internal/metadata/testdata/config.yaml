@@ -303,25 +303,53 @@ all_set:
       enabled: true
     newrelicoracledb.sga_shared_pool_library_cache_reload_ratio:
       enabled: true
-    newrelicoracledb.slow_queries.avg_cpu_time:
-      enabled: true
-    newrelicoracledb.slow_queries.avg_disk_reads:
-      enabled: true
-    newrelicoracledb.slow_queries.avg_disk_writes:
-      enabled: true
-    newrelicoracledb.slow_queries.avg_elapsed_time:
-      enabled: true
-    newrelicoracledb.slow_queries.avg_lock_time:
-      enabled: true
-    newrelicoracledb.slow_queries.avg_rows_examined:
-      enabled: true
     newrelicoracledb.slow_queries.execution_count:
+      enabled: true
+    newrelicoracledb.slow_queries.interval_avg_buffer_gets:
+      enabled: true
+    newrelicoracledb.slow_queries.interval_avg_cpu_time:
+      enabled: true
+    newrelicoracledb.slow_queries.interval_avg_disk_reads:
+      enabled: true
+    newrelicoracledb.slow_queries.interval_avg_disk_writes:
       enabled: true
     newrelicoracledb.slow_queries.interval_avg_elapsed_time:
       enabled: true
+    newrelicoracledb.slow_queries.interval_avg_rows_processed:
+      enabled: true
+    newrelicoracledb.slow_queries.interval_avg_wait_time:
+      enabled: true
+    newrelicoracledb.slow_queries.interval_buffer_gets:
+      enabled: true
+    newrelicoracledb.slow_queries.interval_cpu_time:
+      enabled: true
+    newrelicoracledb.slow_queries.interval_disk_reads:
+      enabled: true
+    newrelicoracledb.slow_queries.interval_disk_writes:
+      enabled: true
+    newrelicoracledb.slow_queries.interval_elapsed_time:
+      enabled: true
     newrelicoracledb.slow_queries.interval_execution_count:
       enabled: true
+    newrelicoracledb.slow_queries.interval_rows_processed:
+      enabled: true
+    newrelicoracledb.slow_queries.interval_wait_time:
+      enabled: true
     newrelicoracledb.slow_queries.query_details:
+      enabled: true
+    newrelicoracledb.slow_queries.total_cpu_time:
+      enabled: true
+    newrelicoracledb.slow_queries.total_disk_reads:
+      enabled: true
+    newrelicoracledb.slow_queries.total_disk_writes:
+      enabled: true
+    newrelicoracledb.slow_queries.total_elapsed_time:
+      enabled: true
+    newrelicoracledb.slow_queries.total_rows_examined:
+      enabled: true
+    newrelicoracledb.slow_queries.total_rows_returned:
+      enabled: true
+    newrelicoracledb.slow_queries.total_wait_time:
       enabled: true
     newrelicoracledb.sorts_disk:
       enabled: true
@@ -946,25 +974,53 @@ none_set:
       enabled: false
     newrelicoracledb.sga_shared_pool_library_cache_reload_ratio:
       enabled: false
-    newrelicoracledb.slow_queries.avg_cpu_time:
-      enabled: false
-    newrelicoracledb.slow_queries.avg_disk_reads:
-      enabled: false
-    newrelicoracledb.slow_queries.avg_disk_writes:
-      enabled: false
-    newrelicoracledb.slow_queries.avg_elapsed_time:
-      enabled: false
-    newrelicoracledb.slow_queries.avg_lock_time:
-      enabled: false
-    newrelicoracledb.slow_queries.avg_rows_examined:
-      enabled: false
     newrelicoracledb.slow_queries.execution_count:
+      enabled: false
+    newrelicoracledb.slow_queries.interval_avg_buffer_gets:
+      enabled: false
+    newrelicoracledb.slow_queries.interval_avg_cpu_time:
+      enabled: false
+    newrelicoracledb.slow_queries.interval_avg_disk_reads:
+      enabled: false
+    newrelicoracledb.slow_queries.interval_avg_disk_writes:
       enabled: false
     newrelicoracledb.slow_queries.interval_avg_elapsed_time:
       enabled: false
+    newrelicoracledb.slow_queries.interval_avg_rows_processed:
+      enabled: false
+    newrelicoracledb.slow_queries.interval_avg_wait_time:
+      enabled: false
+    newrelicoracledb.slow_queries.interval_buffer_gets:
+      enabled: false
+    newrelicoracledb.slow_queries.interval_cpu_time:
+      enabled: false
+    newrelicoracledb.slow_queries.interval_disk_reads:
+      enabled: false
+    newrelicoracledb.slow_queries.interval_disk_writes:
+      enabled: false
+    newrelicoracledb.slow_queries.interval_elapsed_time:
+      enabled: false
     newrelicoracledb.slow_queries.interval_execution_count:
       enabled: false
+    newrelicoracledb.slow_queries.interval_rows_processed:
+      enabled: false
+    newrelicoracledb.slow_queries.interval_wait_time:
+      enabled: false
     newrelicoracledb.slow_queries.query_details:
+      enabled: false
+    newrelicoracledb.slow_queries.total_cpu_time:
+      enabled: false
+    newrelicoracledb.slow_queries.total_disk_reads:
+      enabled: false
+    newrelicoracledb.slow_queries.total_disk_writes:
+      enabled: false
+    newrelicoracledb.slow_queries.total_elapsed_time:
+      enabled: false
+    newrelicoracledb.slow_queries.total_rows_examined:
+      enabled: false
+    newrelicoracledb.slow_queries.total_rows_returned:
+      enabled: false
+    newrelicoracledb.slow_queries.total_wait_time:
       enabled: false
     newrelicoracledb.sorts_disk:
       enabled: false
