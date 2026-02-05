@@ -77,6 +77,5 @@ const (
 	PDBServiceNamesSQL = `
 		SELECT LOWER(p.NAME) || '.' || (SELECT value FROM v$parameter WHERE name = 'db_domain') AS FQDN
 		FROM V$PDBS p
-		WHERE p.NAME != 'PDB$SEED'
-			AND ROWNUM <= 100`
+		WHERE p.NAME != 'PDB$SEED'`
 )

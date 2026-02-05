@@ -8,7 +8,7 @@ package queries
 // System Performance Metrics
 const (
 	// SystemSysMetricsSQL returns system metrics from gv$sysmetric
-	SystemSysMetricsSQL = "SELECT INST_ID, METRIC_NAME, VALUE FROM gv$sysmetric WHERE ROWNUM <= 1000"
+	SystemSysMetricsSQL = "SELECT INST_ID, METRIC_NAME, VALUE FROM gv$sysmetric"
 
 	// PDBSysMetricsSQL returns PDB-specific system metrics
 	PDBSysMetricsSQL = `
@@ -18,8 +18,7 @@ const (
 			csm.METRIC_NAME,
 			csm.VALUE
 		FROM gv$con_sysmetric csm
-		JOIN gv$pdbs pd ON csm.CON_ID = pd.CON_ID AND csm.INST_ID = pd.INST_ID
-		WHERE ROWNUM <= 1000`
+		JOIN gv$pdbs pd ON csm.CON_ID = pd.CON_ID AND csm.INST_ID = pd.INST_ID`
 
 	// ReadWriteMetricsSQL returns database I/O statistics
 	ReadWriteMetricsSQL = `
