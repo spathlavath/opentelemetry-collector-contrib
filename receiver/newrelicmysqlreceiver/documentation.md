@@ -1682,6 +1682,136 @@ The number of seconds that the server has been up.
 | ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
 | s | Sum | Int | Cumulative | true | Development |
 
+## Optional Metrics
+
+The following metrics are not emitted by default. Each of them can be enabled by applying the following configuration:
+
+```yaml
+metrics:
+  <metric_name>:
+    enabled: true
+```
+
+### newrelicmysql.galera.wsrep_cert_deps_distance
+
+Average distance between the lowest and highest seqno values that can be possibly applied in parallel (potential degree of parallelization).
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Development |
+
+### newrelicmysql.galera.wsrep_cluster_size
+
+Current number of nodes in the Galera cluster.
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {nodes} | Gauge | Int | Development |
+
+### newrelicmysql.galera.wsrep_flow_control_paused
+
+The fraction of time since the last status query that replication was paused due to flow control.
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Development |
+
+### newrelicmysql.galera.wsrep_flow_control_paused_ns
+
+The total time spent in a paused state measured in nanoseconds.
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| ns | Sum | Int | Cumulative | true | Development |
+
+### newrelicmysql.galera.wsrep_flow_control_recv
+
+Number of FC_PAUSE events received since the last status query, including those that cause the provider to pause.
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {events} | Sum | Int | Cumulative | true | Development |
+
+### newrelicmysql.galera.wsrep_flow_control_sent
+
+Number of FC_PAUSE events sent since the last status query.
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {events} | Sum | Int | Cumulative | true | Development |
+
+### newrelicmysql.galera.wsrep_local_cert_failures
+
+Number of local transactions that failed certification since the last status query.
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {transactions} | Sum | Int | Cumulative | true | Development |
+
+### newrelicmysql.galera.wsrep_local_recv_queue
+
+Current length of the local received queue (number of writesets waiting to be applied).
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {writesets} | Gauge | Int | Development |
+
+### newrelicmysql.galera.wsrep_local_recv_queue_avg
+
+Average length of the local received queue since the last status query.
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {writesets} | Gauge | Double | Development |
+
+### newrelicmysql.galera.wsrep_local_send_queue
+
+Current length of the send queue (number of writesets waiting to be sent).
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {writesets} | Gauge | Int | Development |
+
+### newrelicmysql.galera.wsrep_local_send_queue_avg
+
+Average length of the send queue since the last status query.
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {writesets} | Gauge | Double | Development |
+
+### newrelicmysql.galera.wsrep_local_state
+
+Internal Galera Cluster FSM state number.
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Development |
+
+### newrelicmysql.galera.wsrep_received
+
+Total number of write-sets received from other nodes.
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {writesets} | Sum | Int | Cumulative | true | Development |
+
+### newrelicmysql.galera.wsrep_received_bytes
+
+Total size in bytes of write-sets received from other nodes.
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| By | Sum | Int | Cumulative | true | Development |
+
+### newrelicmysql.galera.wsrep_replicated_bytes
+
+Total size in bytes of write-sets replicated to other nodes.
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| By | Sum | Int | Cumulative | true | Development |
+
 ## Resource Attributes
 
 | Name | Description | Values | Enabled |

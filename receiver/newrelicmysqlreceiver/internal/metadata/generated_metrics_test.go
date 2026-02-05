@@ -92,6 +92,51 @@ func TestMetricsBuilder(t *testing.T) {
 			allMetricsCount++
 			mb.RecordNewrelicmysqlDbOpenedTablesDataPoint(ts, 1)
 
+			allMetricsCount++
+			mb.RecordNewrelicmysqlGaleraWsrepCertDepsDistanceDataPoint(ts, 1)
+
+			allMetricsCount++
+			mb.RecordNewrelicmysqlGaleraWsrepClusterSizeDataPoint(ts, 1)
+
+			allMetricsCount++
+			mb.RecordNewrelicmysqlGaleraWsrepFlowControlPausedDataPoint(ts, 1)
+
+			allMetricsCount++
+			mb.RecordNewrelicmysqlGaleraWsrepFlowControlPausedNsDataPoint(ts, 1)
+
+			allMetricsCount++
+			mb.RecordNewrelicmysqlGaleraWsrepFlowControlRecvDataPoint(ts, 1)
+
+			allMetricsCount++
+			mb.RecordNewrelicmysqlGaleraWsrepFlowControlSentDataPoint(ts, 1)
+
+			allMetricsCount++
+			mb.RecordNewrelicmysqlGaleraWsrepLocalCertFailuresDataPoint(ts, 1)
+
+			allMetricsCount++
+			mb.RecordNewrelicmysqlGaleraWsrepLocalRecvQueueDataPoint(ts, 1)
+
+			allMetricsCount++
+			mb.RecordNewrelicmysqlGaleraWsrepLocalRecvQueueAvgDataPoint(ts, 1)
+
+			allMetricsCount++
+			mb.RecordNewrelicmysqlGaleraWsrepLocalSendQueueDataPoint(ts, 1)
+
+			allMetricsCount++
+			mb.RecordNewrelicmysqlGaleraWsrepLocalSendQueueAvgDataPoint(ts, 1)
+
+			allMetricsCount++
+			mb.RecordNewrelicmysqlGaleraWsrepLocalStateDataPoint(ts, 1)
+
+			allMetricsCount++
+			mb.RecordNewrelicmysqlGaleraWsrepReceivedDataPoint(ts, 1)
+
+			allMetricsCount++
+			mb.RecordNewrelicmysqlGaleraWsrepReceivedBytesDataPoint(ts, 1)
+
+			allMetricsCount++
+			mb.RecordNewrelicmysqlGaleraWsrepReplicatedBytesDataPoint(ts, 1)
+
 			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicmysqlInnodbActiveTransactionsDataPoint(ts, 1)
@@ -1000,6 +1045,200 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
 					assert.Equal(t, "The number of tables that have been opened.", ms.At(i).Description())
 					assert.Equal(t, "1", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.galera.wsrep_cert_deps_distance":
+					assert.False(t, validatedMetrics["newrelicmysql.galera.wsrep_cert_deps_distance"], "Found a duplicate in the metrics slice: newrelicmysql.galera.wsrep_cert_deps_distance")
+					validatedMetrics["newrelicmysql.galera.wsrep_cert_deps_distance"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Average distance between the lowest and highest seqno values that can be possibly applied in parallel (potential degree of parallelization).", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
+					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
+				case "newrelicmysql.galera.wsrep_cluster_size":
+					assert.False(t, validatedMetrics["newrelicmysql.galera.wsrep_cluster_size"], "Found a duplicate in the metrics slice: newrelicmysql.galera.wsrep_cluster_size")
+					validatedMetrics["newrelicmysql.galera.wsrep_cluster_size"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Current number of nodes in the Galera cluster.", ms.At(i).Description())
+					assert.Equal(t, "{nodes}", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.galera.wsrep_flow_control_paused":
+					assert.False(t, validatedMetrics["newrelicmysql.galera.wsrep_flow_control_paused"], "Found a duplicate in the metrics slice: newrelicmysql.galera.wsrep_flow_control_paused")
+					validatedMetrics["newrelicmysql.galera.wsrep_flow_control_paused"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "The fraction of time since the last status query that replication was paused due to flow control.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
+					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
+				case "newrelicmysql.galera.wsrep_flow_control_paused_ns":
+					assert.False(t, validatedMetrics["newrelicmysql.galera.wsrep_flow_control_paused_ns"], "Found a duplicate in the metrics slice: newrelicmysql.galera.wsrep_flow_control_paused_ns")
+					validatedMetrics["newrelicmysql.galera.wsrep_flow_control_paused_ns"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "The total time spent in a paused state measured in nanoseconds.", ms.At(i).Description())
+					assert.Equal(t, "ns", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.galera.wsrep_flow_control_recv":
+					assert.False(t, validatedMetrics["newrelicmysql.galera.wsrep_flow_control_recv"], "Found a duplicate in the metrics slice: newrelicmysql.galera.wsrep_flow_control_recv")
+					validatedMetrics["newrelicmysql.galera.wsrep_flow_control_recv"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "Number of FC_PAUSE events received since the last status query, including those that cause the provider to pause.", ms.At(i).Description())
+					assert.Equal(t, "{events}", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.galera.wsrep_flow_control_sent":
+					assert.False(t, validatedMetrics["newrelicmysql.galera.wsrep_flow_control_sent"], "Found a duplicate in the metrics slice: newrelicmysql.galera.wsrep_flow_control_sent")
+					validatedMetrics["newrelicmysql.galera.wsrep_flow_control_sent"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "Number of FC_PAUSE events sent since the last status query.", ms.At(i).Description())
+					assert.Equal(t, "{events}", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.galera.wsrep_local_cert_failures":
+					assert.False(t, validatedMetrics["newrelicmysql.galera.wsrep_local_cert_failures"], "Found a duplicate in the metrics slice: newrelicmysql.galera.wsrep_local_cert_failures")
+					validatedMetrics["newrelicmysql.galera.wsrep_local_cert_failures"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "Number of local transactions that failed certification since the last status query.", ms.At(i).Description())
+					assert.Equal(t, "{transactions}", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.galera.wsrep_local_recv_queue":
+					assert.False(t, validatedMetrics["newrelicmysql.galera.wsrep_local_recv_queue"], "Found a duplicate in the metrics slice: newrelicmysql.galera.wsrep_local_recv_queue")
+					validatedMetrics["newrelicmysql.galera.wsrep_local_recv_queue"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Current length of the local received queue (number of writesets waiting to be applied).", ms.At(i).Description())
+					assert.Equal(t, "{writesets}", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.galera.wsrep_local_recv_queue_avg":
+					assert.False(t, validatedMetrics["newrelicmysql.galera.wsrep_local_recv_queue_avg"], "Found a duplicate in the metrics slice: newrelicmysql.galera.wsrep_local_recv_queue_avg")
+					validatedMetrics["newrelicmysql.galera.wsrep_local_recv_queue_avg"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Average length of the local received queue since the last status query.", ms.At(i).Description())
+					assert.Equal(t, "{writesets}", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
+					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
+				case "newrelicmysql.galera.wsrep_local_send_queue":
+					assert.False(t, validatedMetrics["newrelicmysql.galera.wsrep_local_send_queue"], "Found a duplicate in the metrics slice: newrelicmysql.galera.wsrep_local_send_queue")
+					validatedMetrics["newrelicmysql.galera.wsrep_local_send_queue"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Current length of the send queue (number of writesets waiting to be sent).", ms.At(i).Description())
+					assert.Equal(t, "{writesets}", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.galera.wsrep_local_send_queue_avg":
+					assert.False(t, validatedMetrics["newrelicmysql.galera.wsrep_local_send_queue_avg"], "Found a duplicate in the metrics slice: newrelicmysql.galera.wsrep_local_send_queue_avg")
+					validatedMetrics["newrelicmysql.galera.wsrep_local_send_queue_avg"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Average length of the send queue since the last status query.", ms.At(i).Description())
+					assert.Equal(t, "{writesets}", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
+					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
+				case "newrelicmysql.galera.wsrep_local_state":
+					assert.False(t, validatedMetrics["newrelicmysql.galera.wsrep_local_state"], "Found a duplicate in the metrics slice: newrelicmysql.galera.wsrep_local_state")
+					validatedMetrics["newrelicmysql.galera.wsrep_local_state"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Internal Galera Cluster FSM state number.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.galera.wsrep_received":
+					assert.False(t, validatedMetrics["newrelicmysql.galera.wsrep_received"], "Found a duplicate in the metrics slice: newrelicmysql.galera.wsrep_received")
+					validatedMetrics["newrelicmysql.galera.wsrep_received"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "Total number of write-sets received from other nodes.", ms.At(i).Description())
+					assert.Equal(t, "{writesets}", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.galera.wsrep_received_bytes":
+					assert.False(t, validatedMetrics["newrelicmysql.galera.wsrep_received_bytes"], "Found a duplicate in the metrics slice: newrelicmysql.galera.wsrep_received_bytes")
+					validatedMetrics["newrelicmysql.galera.wsrep_received_bytes"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "Total size in bytes of write-sets received from other nodes.", ms.At(i).Description())
+					assert.Equal(t, "By", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.galera.wsrep_replicated_bytes":
+					assert.False(t, validatedMetrics["newrelicmysql.galera.wsrep_replicated_bytes"], "Found a duplicate in the metrics slice: newrelicmysql.galera.wsrep_replicated_bytes")
+					validatedMetrics["newrelicmysql.galera.wsrep_replicated_bytes"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "Total size in bytes of write-sets replicated to other nodes.", ms.At(i).Description())
+					assert.Equal(t, "By", ms.At(i).Unit())
 					assert.True(t, ms.At(i).Sum().IsMonotonic())
 					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
 					dp := ms.At(i).Sum().DataPoints().At(0)

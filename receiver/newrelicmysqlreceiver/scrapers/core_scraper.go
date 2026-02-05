@@ -51,6 +51,16 @@ func parseInt64(s string, logger *zap.Logger, field string) int64 {
 	return val
 }
 
+// parseFloat64 parses a string to float64, returning 0.0 and logging an error if parsing fails.
+func parseFloat64(s string, logger *zap.Logger, field string) float64 {
+	val, err := strconv.ParseFloat(s, 64)
+	if err != nil {
+		logger.Debug("Failed to parse float64", zap.String("field", field), zap.String("value", s), zap.Error(err))
+		return 0.0
+	}
+	return val
+}
+
 // ScrapeMetrics collects MySQL core database metrics.
 func (s *CoreScraper) ScrapeMetrics(_ context.Context, now pcommon.Timestamp, errs *scrapererror.ScrapeErrors) {
 	s.logger.Debug("Scraping MySQL core metrics")

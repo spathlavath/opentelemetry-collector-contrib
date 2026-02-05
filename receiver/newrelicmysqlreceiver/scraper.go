@@ -81,10 +81,16 @@ func (n *newRelicMySQLScraper) start(_ context.Context, _ component.Host) error 
 			return err
 		}
 		n.scrapers = append(n.scrapers, extraStatusScraper)
-		n.logger.Info("Extra status metrics collection enabled")
 	}
 
-	// Conditionally initialize InnoDB extended scraper if enabled
+	if n.config.GaleraCluster {
+		galeraScraper, err := scrapers.NewGaleraScraper(n.sqlclient, n.mb, n.logger)
+		if err != nil {
+			return err
+		}
+		n.scrapers = append(n.scrapers, galeraScraper)
+	}
+
 	if n.config.ExtraInnoDBMetrics {
 		innodbExtendedScraper, err := scrapers.NewInnoDBExtendedScraper(n.sqlclient, n.mb, n.logger)
 		if err != nil {
