@@ -198,14 +198,14 @@ func (s *ReplicationScraper) scrapeGroupReplicationMetrics(now pcommon.Timestamp
 
 	// Map group replication status variables to metrics
 	metricMapping := map[string]func(pcommon.Timestamp, int64){
-		"group_replication_transactions_certified":                s.mb.RecordNewrelicmysqlReplicationGroupTransactionsDataPoint,
-		"group_replication_transactions_conflicts_detected":       s.mb.RecordNewrelicmysqlReplicationGroupConflictsDetectedDataPoint,
-		"group_replication_transactions_in_validation_queue":      s.mb.RecordNewrelicmysqlReplicationGroupTransactionsValidatingDataPoint,
-		"group_replication_transactions_in_applier_queue":         s.mb.RecordNewrelicmysqlReplicationGroupTransactionsInApplierQueueDataPoint,
-		"group_replication_transactions_committed":                s.mb.RecordNewrelicmysqlReplicationGroupTransactionsAppliedDataPoint,
-		"group_replication_transactions_proposed":                 s.mb.RecordNewrelicmysqlReplicationGroupTransactionsProposedDataPoint,
-		"group_replication_transactions_rollback":                 s.mb.RecordNewrelicmysqlReplicationGroupTransactionsRollbackDataPoint,
-		"group_replication_certification_db_transactions_checked": s.mb.RecordNewrelicmysqlReplicationGroupTransactionsCheckDataPoint,
+		"group_replication_transactions":                  s.mb.RecordNewrelicmysqlReplicationGroupTransactionsDataPoint,
+		"group_replication_transactions_check":            s.mb.RecordNewrelicmysqlReplicationGroupTransactionsCheckDataPoint,
+		"group_replication_conflicts_detected":            s.mb.RecordNewrelicmysqlReplicationGroupConflictsDetectedDataPoint,
+		"group_replication_transactions_validating":       s.mb.RecordNewrelicmysqlReplicationGroupTransactionsValidatingDataPoint,
+		"group_replication_transactions_in_applier_queue": s.mb.RecordNewrelicmysqlReplicationGroupTransactionsInApplierQueueDataPoint,
+		"group_replication_transactions_applied":          s.mb.RecordNewrelicmysqlReplicationGroupTransactionsAppliedDataPoint,
+		"group_replication_transactions_proposed":         s.mb.RecordNewrelicmysqlReplicationGroupTransactionsProposedDataPoint,
+		"group_replication_transactions_rollback":         s.mb.RecordNewrelicmysqlReplicationGroupTransactionsRollbackDataPoint,
 	}
 
 	for statusVar, recordFunc := range metricMapping {
