@@ -99,6 +99,51 @@ var MetricsInfo = metricsInfo{
 	NewrelicmysqlDbOpenedTables: metricInfo{
 		Name: "newrelicmysql.db.opened_tables",
 	},
+	NewrelicmysqlGaleraWsrepCertDepsDistance: metricInfo{
+		Name: "newrelicmysql.galera.wsrep_cert_deps_distance",
+	},
+	NewrelicmysqlGaleraWsrepClusterSize: metricInfo{
+		Name: "newrelicmysql.galera.wsrep_cluster_size",
+	},
+	NewrelicmysqlGaleraWsrepFlowControlPaused: metricInfo{
+		Name: "newrelicmysql.galera.wsrep_flow_control_paused",
+	},
+	NewrelicmysqlGaleraWsrepFlowControlPausedNs: metricInfo{
+		Name: "newrelicmysql.galera.wsrep_flow_control_paused_ns",
+	},
+	NewrelicmysqlGaleraWsrepFlowControlRecv: metricInfo{
+		Name: "newrelicmysql.galera.wsrep_flow_control_recv",
+	},
+	NewrelicmysqlGaleraWsrepFlowControlSent: metricInfo{
+		Name: "newrelicmysql.galera.wsrep_flow_control_sent",
+	},
+	NewrelicmysqlGaleraWsrepLocalCertFailures: metricInfo{
+		Name: "newrelicmysql.galera.wsrep_local_cert_failures",
+	},
+	NewrelicmysqlGaleraWsrepLocalRecvQueue: metricInfo{
+		Name: "newrelicmysql.galera.wsrep_local_recv_queue",
+	},
+	NewrelicmysqlGaleraWsrepLocalRecvQueueAvg: metricInfo{
+		Name: "newrelicmysql.galera.wsrep_local_recv_queue_avg",
+	},
+	NewrelicmysqlGaleraWsrepLocalSendQueue: metricInfo{
+		Name: "newrelicmysql.galera.wsrep_local_send_queue",
+	},
+	NewrelicmysqlGaleraWsrepLocalSendQueueAvg: metricInfo{
+		Name: "newrelicmysql.galera.wsrep_local_send_queue_avg",
+	},
+	NewrelicmysqlGaleraWsrepLocalState: metricInfo{
+		Name: "newrelicmysql.galera.wsrep_local_state",
+	},
+	NewrelicmysqlGaleraWsrepReceived: metricInfo{
+		Name: "newrelicmysql.galera.wsrep_received",
+	},
+	NewrelicmysqlGaleraWsrepReceivedBytes: metricInfo{
+		Name: "newrelicmysql.galera.wsrep_received_bytes",
+	},
+	NewrelicmysqlGaleraWsrepReplicatedBytes: metricInfo{
+		Name: "newrelicmysql.galera.wsrep_replicated_bytes",
+	},
 	NewrelicmysqlInnodbActiveTransactions: metricInfo{
 		Name: "newrelicmysql.innodb.active_transactions",
 	},
@@ -714,6 +759,21 @@ type metricsInfo struct {
 	NewrelicmysqlConnectionCount                        metricInfo
 	NewrelicmysqlDbHandlerRollback                      metricInfo
 	NewrelicmysqlDbOpenedTables                         metricInfo
+	NewrelicmysqlGaleraWsrepCertDepsDistance            metricInfo
+	NewrelicmysqlGaleraWsrepClusterSize                 metricInfo
+	NewrelicmysqlGaleraWsrepFlowControlPaused           metricInfo
+	NewrelicmysqlGaleraWsrepFlowControlPausedNs         metricInfo
+	NewrelicmysqlGaleraWsrepFlowControlRecv             metricInfo
+	NewrelicmysqlGaleraWsrepFlowControlSent             metricInfo
+	NewrelicmysqlGaleraWsrepLocalCertFailures           metricInfo
+	NewrelicmysqlGaleraWsrepLocalRecvQueue              metricInfo
+	NewrelicmysqlGaleraWsrepLocalRecvQueueAvg           metricInfo
+	NewrelicmysqlGaleraWsrepLocalSendQueue              metricInfo
+	NewrelicmysqlGaleraWsrepLocalSendQueueAvg           metricInfo
+	NewrelicmysqlGaleraWsrepLocalState                  metricInfo
+	NewrelicmysqlGaleraWsrepReceived                    metricInfo
+	NewrelicmysqlGaleraWsrepReceivedBytes               metricInfo
+	NewrelicmysqlGaleraWsrepReplicatedBytes             metricInfo
 	NewrelicmysqlInnodbActiveTransactions               metricInfo
 	NewrelicmysqlInnodbAdaptiveHashHashSearches         metricInfo
 	NewrelicmysqlInnodbAdaptiveHashNonHashSearches      metricInfo
@@ -1219,6 +1279,755 @@ func (m *metricNewrelicmysqlDbOpenedTables) emit(metrics pmetric.MetricSlice) {
 
 func newMetricNewrelicmysqlDbOpenedTables(cfg MetricConfig) metricNewrelicmysqlDbOpenedTables {
 	m := metricNewrelicmysqlDbOpenedTables{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicmysqlGaleraWsrepCertDepsDistance struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicmysql.galera.wsrep_cert_deps_distance metric with initial data.
+func (m *metricNewrelicmysqlGaleraWsrepCertDepsDistance) init() {
+	m.data.SetName("newrelicmysql.galera.wsrep_cert_deps_distance")
+	m.data.SetDescription("Average distance between the lowest and highest seqno values that can be possibly applied in parallel (potential degree of parallelization).")
+	m.data.SetUnit("1")
+	m.data.SetEmptyGauge()
+}
+
+func (m *metricNewrelicmysqlGaleraWsrepCertDepsDistance) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicmysqlGaleraWsrepCertDepsDistance) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicmysqlGaleraWsrepCertDepsDistance) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicmysqlGaleraWsrepCertDepsDistance(cfg MetricConfig) metricNewrelicmysqlGaleraWsrepCertDepsDistance {
+	m := metricNewrelicmysqlGaleraWsrepCertDepsDistance{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicmysqlGaleraWsrepClusterSize struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicmysql.galera.wsrep_cluster_size metric with initial data.
+func (m *metricNewrelicmysqlGaleraWsrepClusterSize) init() {
+	m.data.SetName("newrelicmysql.galera.wsrep_cluster_size")
+	m.data.SetDescription("Current number of nodes in the Galera cluster.")
+	m.data.SetUnit("{nodes}")
+	m.data.SetEmptyGauge()
+}
+
+func (m *metricNewrelicmysqlGaleraWsrepClusterSize) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicmysqlGaleraWsrepClusterSize) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicmysqlGaleraWsrepClusterSize) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicmysqlGaleraWsrepClusterSize(cfg MetricConfig) metricNewrelicmysqlGaleraWsrepClusterSize {
+	m := metricNewrelicmysqlGaleraWsrepClusterSize{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicmysqlGaleraWsrepFlowControlPaused struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicmysql.galera.wsrep_flow_control_paused metric with initial data.
+func (m *metricNewrelicmysqlGaleraWsrepFlowControlPaused) init() {
+	m.data.SetName("newrelicmysql.galera.wsrep_flow_control_paused")
+	m.data.SetDescription("The fraction of time since the last status query that replication was paused due to flow control.")
+	m.data.SetUnit("1")
+	m.data.SetEmptyGauge()
+}
+
+func (m *metricNewrelicmysqlGaleraWsrepFlowControlPaused) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicmysqlGaleraWsrepFlowControlPaused) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicmysqlGaleraWsrepFlowControlPaused) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicmysqlGaleraWsrepFlowControlPaused(cfg MetricConfig) metricNewrelicmysqlGaleraWsrepFlowControlPaused {
+	m := metricNewrelicmysqlGaleraWsrepFlowControlPaused{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicmysqlGaleraWsrepFlowControlPausedNs struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicmysql.galera.wsrep_flow_control_paused_ns metric with initial data.
+func (m *metricNewrelicmysqlGaleraWsrepFlowControlPausedNs) init() {
+	m.data.SetName("newrelicmysql.galera.wsrep_flow_control_paused_ns")
+	m.data.SetDescription("The total time spent in a paused state measured in nanoseconds.")
+	m.data.SetUnit("ns")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+}
+
+func (m *metricNewrelicmysqlGaleraWsrepFlowControlPausedNs) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicmysqlGaleraWsrepFlowControlPausedNs) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicmysqlGaleraWsrepFlowControlPausedNs) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicmysqlGaleraWsrepFlowControlPausedNs(cfg MetricConfig) metricNewrelicmysqlGaleraWsrepFlowControlPausedNs {
+	m := metricNewrelicmysqlGaleraWsrepFlowControlPausedNs{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicmysqlGaleraWsrepFlowControlRecv struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicmysql.galera.wsrep_flow_control_recv metric with initial data.
+func (m *metricNewrelicmysqlGaleraWsrepFlowControlRecv) init() {
+	m.data.SetName("newrelicmysql.galera.wsrep_flow_control_recv")
+	m.data.SetDescription("Number of FC_PAUSE events received since the last status query, including those that cause the provider to pause.")
+	m.data.SetUnit("{events}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+}
+
+func (m *metricNewrelicmysqlGaleraWsrepFlowControlRecv) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicmysqlGaleraWsrepFlowControlRecv) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicmysqlGaleraWsrepFlowControlRecv) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicmysqlGaleraWsrepFlowControlRecv(cfg MetricConfig) metricNewrelicmysqlGaleraWsrepFlowControlRecv {
+	m := metricNewrelicmysqlGaleraWsrepFlowControlRecv{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicmysqlGaleraWsrepFlowControlSent struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicmysql.galera.wsrep_flow_control_sent metric with initial data.
+func (m *metricNewrelicmysqlGaleraWsrepFlowControlSent) init() {
+	m.data.SetName("newrelicmysql.galera.wsrep_flow_control_sent")
+	m.data.SetDescription("Number of FC_PAUSE events sent since the last status query.")
+	m.data.SetUnit("{events}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+}
+
+func (m *metricNewrelicmysqlGaleraWsrepFlowControlSent) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicmysqlGaleraWsrepFlowControlSent) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicmysqlGaleraWsrepFlowControlSent) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicmysqlGaleraWsrepFlowControlSent(cfg MetricConfig) metricNewrelicmysqlGaleraWsrepFlowControlSent {
+	m := metricNewrelicmysqlGaleraWsrepFlowControlSent{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicmysqlGaleraWsrepLocalCertFailures struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicmysql.galera.wsrep_local_cert_failures metric with initial data.
+func (m *metricNewrelicmysqlGaleraWsrepLocalCertFailures) init() {
+	m.data.SetName("newrelicmysql.galera.wsrep_local_cert_failures")
+	m.data.SetDescription("Number of local transactions that failed certification since the last status query.")
+	m.data.SetUnit("{transactions}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+}
+
+func (m *metricNewrelicmysqlGaleraWsrepLocalCertFailures) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicmysqlGaleraWsrepLocalCertFailures) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicmysqlGaleraWsrepLocalCertFailures) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicmysqlGaleraWsrepLocalCertFailures(cfg MetricConfig) metricNewrelicmysqlGaleraWsrepLocalCertFailures {
+	m := metricNewrelicmysqlGaleraWsrepLocalCertFailures{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicmysqlGaleraWsrepLocalRecvQueue struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicmysql.galera.wsrep_local_recv_queue metric with initial data.
+func (m *metricNewrelicmysqlGaleraWsrepLocalRecvQueue) init() {
+	m.data.SetName("newrelicmysql.galera.wsrep_local_recv_queue")
+	m.data.SetDescription("Current length of the local received queue (number of writesets waiting to be applied).")
+	m.data.SetUnit("{writesets}")
+	m.data.SetEmptyGauge()
+}
+
+func (m *metricNewrelicmysqlGaleraWsrepLocalRecvQueue) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicmysqlGaleraWsrepLocalRecvQueue) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicmysqlGaleraWsrepLocalRecvQueue) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicmysqlGaleraWsrepLocalRecvQueue(cfg MetricConfig) metricNewrelicmysqlGaleraWsrepLocalRecvQueue {
+	m := metricNewrelicmysqlGaleraWsrepLocalRecvQueue{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicmysqlGaleraWsrepLocalRecvQueueAvg struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicmysql.galera.wsrep_local_recv_queue_avg metric with initial data.
+func (m *metricNewrelicmysqlGaleraWsrepLocalRecvQueueAvg) init() {
+	m.data.SetName("newrelicmysql.galera.wsrep_local_recv_queue_avg")
+	m.data.SetDescription("Average length of the local received queue since the last status query.")
+	m.data.SetUnit("{writesets}")
+	m.data.SetEmptyGauge()
+}
+
+func (m *metricNewrelicmysqlGaleraWsrepLocalRecvQueueAvg) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicmysqlGaleraWsrepLocalRecvQueueAvg) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicmysqlGaleraWsrepLocalRecvQueueAvg) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicmysqlGaleraWsrepLocalRecvQueueAvg(cfg MetricConfig) metricNewrelicmysqlGaleraWsrepLocalRecvQueueAvg {
+	m := metricNewrelicmysqlGaleraWsrepLocalRecvQueueAvg{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicmysqlGaleraWsrepLocalSendQueue struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicmysql.galera.wsrep_local_send_queue metric with initial data.
+func (m *metricNewrelicmysqlGaleraWsrepLocalSendQueue) init() {
+	m.data.SetName("newrelicmysql.galera.wsrep_local_send_queue")
+	m.data.SetDescription("Current length of the send queue (number of writesets waiting to be sent).")
+	m.data.SetUnit("{writesets}")
+	m.data.SetEmptyGauge()
+}
+
+func (m *metricNewrelicmysqlGaleraWsrepLocalSendQueue) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicmysqlGaleraWsrepLocalSendQueue) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicmysqlGaleraWsrepLocalSendQueue) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicmysqlGaleraWsrepLocalSendQueue(cfg MetricConfig) metricNewrelicmysqlGaleraWsrepLocalSendQueue {
+	m := metricNewrelicmysqlGaleraWsrepLocalSendQueue{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicmysqlGaleraWsrepLocalSendQueueAvg struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicmysql.galera.wsrep_local_send_queue_avg metric with initial data.
+func (m *metricNewrelicmysqlGaleraWsrepLocalSendQueueAvg) init() {
+	m.data.SetName("newrelicmysql.galera.wsrep_local_send_queue_avg")
+	m.data.SetDescription("Average length of the send queue since the last status query.")
+	m.data.SetUnit("{writesets}")
+	m.data.SetEmptyGauge()
+}
+
+func (m *metricNewrelicmysqlGaleraWsrepLocalSendQueueAvg) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicmysqlGaleraWsrepLocalSendQueueAvg) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicmysqlGaleraWsrepLocalSendQueueAvg) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicmysqlGaleraWsrepLocalSendQueueAvg(cfg MetricConfig) metricNewrelicmysqlGaleraWsrepLocalSendQueueAvg {
+	m := metricNewrelicmysqlGaleraWsrepLocalSendQueueAvg{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicmysqlGaleraWsrepLocalState struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicmysql.galera.wsrep_local_state metric with initial data.
+func (m *metricNewrelicmysqlGaleraWsrepLocalState) init() {
+	m.data.SetName("newrelicmysql.galera.wsrep_local_state")
+	m.data.SetDescription("Internal Galera Cluster FSM state number.")
+	m.data.SetUnit("1")
+	m.data.SetEmptyGauge()
+}
+
+func (m *metricNewrelicmysqlGaleraWsrepLocalState) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicmysqlGaleraWsrepLocalState) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicmysqlGaleraWsrepLocalState) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicmysqlGaleraWsrepLocalState(cfg MetricConfig) metricNewrelicmysqlGaleraWsrepLocalState {
+	m := metricNewrelicmysqlGaleraWsrepLocalState{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicmysqlGaleraWsrepReceived struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicmysql.galera.wsrep_received metric with initial data.
+func (m *metricNewrelicmysqlGaleraWsrepReceived) init() {
+	m.data.SetName("newrelicmysql.galera.wsrep_received")
+	m.data.SetDescription("Total number of write-sets received from other nodes.")
+	m.data.SetUnit("{writesets}")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+}
+
+func (m *metricNewrelicmysqlGaleraWsrepReceived) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicmysqlGaleraWsrepReceived) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicmysqlGaleraWsrepReceived) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicmysqlGaleraWsrepReceived(cfg MetricConfig) metricNewrelicmysqlGaleraWsrepReceived {
+	m := metricNewrelicmysqlGaleraWsrepReceived{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicmysqlGaleraWsrepReceivedBytes struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicmysql.galera.wsrep_received_bytes metric with initial data.
+func (m *metricNewrelicmysqlGaleraWsrepReceivedBytes) init() {
+	m.data.SetName("newrelicmysql.galera.wsrep_received_bytes")
+	m.data.SetDescription("Total size in bytes of write-sets received from other nodes.")
+	m.data.SetUnit("By")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+}
+
+func (m *metricNewrelicmysqlGaleraWsrepReceivedBytes) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicmysqlGaleraWsrepReceivedBytes) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicmysqlGaleraWsrepReceivedBytes) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicmysqlGaleraWsrepReceivedBytes(cfg MetricConfig) metricNewrelicmysqlGaleraWsrepReceivedBytes {
+	m := metricNewrelicmysqlGaleraWsrepReceivedBytes{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricNewrelicmysqlGaleraWsrepReplicatedBytes struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills newrelicmysql.galera.wsrep_replicated_bytes metric with initial data.
+func (m *metricNewrelicmysqlGaleraWsrepReplicatedBytes) init() {
+	m.data.SetName("newrelicmysql.galera.wsrep_replicated_bytes")
+	m.data.SetDescription("Total size in bytes of write-sets replicated to other nodes.")
+	m.data.SetUnit("By")
+	m.data.SetEmptySum()
+	m.data.Sum().SetIsMonotonic(true)
+	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+}
+
+func (m *metricNewrelicmysqlGaleraWsrepReplicatedBytes) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricNewrelicmysqlGaleraWsrepReplicatedBytes) updateCapacity() {
+	if m.data.Sum().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Sum().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricNewrelicmysqlGaleraWsrepReplicatedBytes) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricNewrelicmysqlGaleraWsrepReplicatedBytes(cfg MetricConfig) metricNewrelicmysqlGaleraWsrepReplicatedBytes {
+	m := metricNewrelicmysqlGaleraWsrepReplicatedBytes{config: cfg}
 	if cfg.Enabled {
 		m.data = pmetric.NewMetric()
 		m.init()
@@ -11346,6 +12155,21 @@ type MetricsBuilder struct {
 	metricNewrelicmysqlConnectionCount                        metricNewrelicmysqlConnectionCount
 	metricNewrelicmysqlDbHandlerRollback                      metricNewrelicmysqlDbHandlerRollback
 	metricNewrelicmysqlDbOpenedTables                         metricNewrelicmysqlDbOpenedTables
+	metricNewrelicmysqlGaleraWsrepCertDepsDistance            metricNewrelicmysqlGaleraWsrepCertDepsDistance
+	metricNewrelicmysqlGaleraWsrepClusterSize                 metricNewrelicmysqlGaleraWsrepClusterSize
+	metricNewrelicmysqlGaleraWsrepFlowControlPaused           metricNewrelicmysqlGaleraWsrepFlowControlPaused
+	metricNewrelicmysqlGaleraWsrepFlowControlPausedNs         metricNewrelicmysqlGaleraWsrepFlowControlPausedNs
+	metricNewrelicmysqlGaleraWsrepFlowControlRecv             metricNewrelicmysqlGaleraWsrepFlowControlRecv
+	metricNewrelicmysqlGaleraWsrepFlowControlSent             metricNewrelicmysqlGaleraWsrepFlowControlSent
+	metricNewrelicmysqlGaleraWsrepLocalCertFailures           metricNewrelicmysqlGaleraWsrepLocalCertFailures
+	metricNewrelicmysqlGaleraWsrepLocalRecvQueue              metricNewrelicmysqlGaleraWsrepLocalRecvQueue
+	metricNewrelicmysqlGaleraWsrepLocalRecvQueueAvg           metricNewrelicmysqlGaleraWsrepLocalRecvQueueAvg
+	metricNewrelicmysqlGaleraWsrepLocalSendQueue              metricNewrelicmysqlGaleraWsrepLocalSendQueue
+	metricNewrelicmysqlGaleraWsrepLocalSendQueueAvg           metricNewrelicmysqlGaleraWsrepLocalSendQueueAvg
+	metricNewrelicmysqlGaleraWsrepLocalState                  metricNewrelicmysqlGaleraWsrepLocalState
+	metricNewrelicmysqlGaleraWsrepReceived                    metricNewrelicmysqlGaleraWsrepReceived
+	metricNewrelicmysqlGaleraWsrepReceivedBytes               metricNewrelicmysqlGaleraWsrepReceivedBytes
+	metricNewrelicmysqlGaleraWsrepReplicatedBytes             metricNewrelicmysqlGaleraWsrepReplicatedBytes
 	metricNewrelicmysqlInnodbActiveTransactions               metricNewrelicmysqlInnodbActiveTransactions
 	metricNewrelicmysqlInnodbAdaptiveHashHashSearches         metricNewrelicmysqlInnodbAdaptiveHashHashSearches
 	metricNewrelicmysqlInnodbAdaptiveHashNonHashSearches      metricNewrelicmysqlInnodbAdaptiveHashNonHashSearches
@@ -11579,6 +12403,21 @@ func NewMetricsBuilder(mbc MetricsBuilderConfig, settings receiver.Settings, opt
 		metricNewrelicmysqlConnectionCount:                        newMetricNewrelicmysqlConnectionCount(mbc.Metrics.NewrelicmysqlConnectionCount),
 		metricNewrelicmysqlDbHandlerRollback:                      newMetricNewrelicmysqlDbHandlerRollback(mbc.Metrics.NewrelicmysqlDbHandlerRollback),
 		metricNewrelicmysqlDbOpenedTables:                         newMetricNewrelicmysqlDbOpenedTables(mbc.Metrics.NewrelicmysqlDbOpenedTables),
+		metricNewrelicmysqlGaleraWsrepCertDepsDistance:            newMetricNewrelicmysqlGaleraWsrepCertDepsDistance(mbc.Metrics.NewrelicmysqlGaleraWsrepCertDepsDistance),
+		metricNewrelicmysqlGaleraWsrepClusterSize:                 newMetricNewrelicmysqlGaleraWsrepClusterSize(mbc.Metrics.NewrelicmysqlGaleraWsrepClusterSize),
+		metricNewrelicmysqlGaleraWsrepFlowControlPaused:           newMetricNewrelicmysqlGaleraWsrepFlowControlPaused(mbc.Metrics.NewrelicmysqlGaleraWsrepFlowControlPaused),
+		metricNewrelicmysqlGaleraWsrepFlowControlPausedNs:         newMetricNewrelicmysqlGaleraWsrepFlowControlPausedNs(mbc.Metrics.NewrelicmysqlGaleraWsrepFlowControlPausedNs),
+		metricNewrelicmysqlGaleraWsrepFlowControlRecv:             newMetricNewrelicmysqlGaleraWsrepFlowControlRecv(mbc.Metrics.NewrelicmysqlGaleraWsrepFlowControlRecv),
+		metricNewrelicmysqlGaleraWsrepFlowControlSent:             newMetricNewrelicmysqlGaleraWsrepFlowControlSent(mbc.Metrics.NewrelicmysqlGaleraWsrepFlowControlSent),
+		metricNewrelicmysqlGaleraWsrepLocalCertFailures:           newMetricNewrelicmysqlGaleraWsrepLocalCertFailures(mbc.Metrics.NewrelicmysqlGaleraWsrepLocalCertFailures),
+		metricNewrelicmysqlGaleraWsrepLocalRecvQueue:              newMetricNewrelicmysqlGaleraWsrepLocalRecvQueue(mbc.Metrics.NewrelicmysqlGaleraWsrepLocalRecvQueue),
+		metricNewrelicmysqlGaleraWsrepLocalRecvQueueAvg:           newMetricNewrelicmysqlGaleraWsrepLocalRecvQueueAvg(mbc.Metrics.NewrelicmysqlGaleraWsrepLocalRecvQueueAvg),
+		metricNewrelicmysqlGaleraWsrepLocalSendQueue:              newMetricNewrelicmysqlGaleraWsrepLocalSendQueue(mbc.Metrics.NewrelicmysqlGaleraWsrepLocalSendQueue),
+		metricNewrelicmysqlGaleraWsrepLocalSendQueueAvg:           newMetricNewrelicmysqlGaleraWsrepLocalSendQueueAvg(mbc.Metrics.NewrelicmysqlGaleraWsrepLocalSendQueueAvg),
+		metricNewrelicmysqlGaleraWsrepLocalState:                  newMetricNewrelicmysqlGaleraWsrepLocalState(mbc.Metrics.NewrelicmysqlGaleraWsrepLocalState),
+		metricNewrelicmysqlGaleraWsrepReceived:                    newMetricNewrelicmysqlGaleraWsrepReceived(mbc.Metrics.NewrelicmysqlGaleraWsrepReceived),
+		metricNewrelicmysqlGaleraWsrepReceivedBytes:               newMetricNewrelicmysqlGaleraWsrepReceivedBytes(mbc.Metrics.NewrelicmysqlGaleraWsrepReceivedBytes),
+		metricNewrelicmysqlGaleraWsrepReplicatedBytes:             newMetricNewrelicmysqlGaleraWsrepReplicatedBytes(mbc.Metrics.NewrelicmysqlGaleraWsrepReplicatedBytes),
 		metricNewrelicmysqlInnodbActiveTransactions:               newMetricNewrelicmysqlInnodbActiveTransactions(mbc.Metrics.NewrelicmysqlInnodbActiveTransactions),
 		metricNewrelicmysqlInnodbAdaptiveHashHashSearches:         newMetricNewrelicmysqlInnodbAdaptiveHashHashSearches(mbc.Metrics.NewrelicmysqlInnodbAdaptiveHashHashSearches),
 		metricNewrelicmysqlInnodbAdaptiveHashNonHashSearches:      newMetricNewrelicmysqlInnodbAdaptiveHashNonHashSearches(mbc.Metrics.NewrelicmysqlInnodbAdaptiveHashNonHashSearches),
@@ -11865,6 +12704,21 @@ func (mb *MetricsBuilder) EmitForResource(options ...ResourceMetricsOption) {
 	mb.metricNewrelicmysqlConnectionCount.emit(ils.Metrics())
 	mb.metricNewrelicmysqlDbHandlerRollback.emit(ils.Metrics())
 	mb.metricNewrelicmysqlDbOpenedTables.emit(ils.Metrics())
+	mb.metricNewrelicmysqlGaleraWsrepCertDepsDistance.emit(ils.Metrics())
+	mb.metricNewrelicmysqlGaleraWsrepClusterSize.emit(ils.Metrics())
+	mb.metricNewrelicmysqlGaleraWsrepFlowControlPaused.emit(ils.Metrics())
+	mb.metricNewrelicmysqlGaleraWsrepFlowControlPausedNs.emit(ils.Metrics())
+	mb.metricNewrelicmysqlGaleraWsrepFlowControlRecv.emit(ils.Metrics())
+	mb.metricNewrelicmysqlGaleraWsrepFlowControlSent.emit(ils.Metrics())
+	mb.metricNewrelicmysqlGaleraWsrepLocalCertFailures.emit(ils.Metrics())
+	mb.metricNewrelicmysqlGaleraWsrepLocalRecvQueue.emit(ils.Metrics())
+	mb.metricNewrelicmysqlGaleraWsrepLocalRecvQueueAvg.emit(ils.Metrics())
+	mb.metricNewrelicmysqlGaleraWsrepLocalSendQueue.emit(ils.Metrics())
+	mb.metricNewrelicmysqlGaleraWsrepLocalSendQueueAvg.emit(ils.Metrics())
+	mb.metricNewrelicmysqlGaleraWsrepLocalState.emit(ils.Metrics())
+	mb.metricNewrelicmysqlGaleraWsrepReceived.emit(ils.Metrics())
+	mb.metricNewrelicmysqlGaleraWsrepReceivedBytes.emit(ils.Metrics())
+	mb.metricNewrelicmysqlGaleraWsrepReplicatedBytes.emit(ils.Metrics())
 	mb.metricNewrelicmysqlInnodbActiveTransactions.emit(ils.Metrics())
 	mb.metricNewrelicmysqlInnodbAdaptiveHashHashSearches.emit(ils.Metrics())
 	mb.metricNewrelicmysqlInnodbAdaptiveHashNonHashSearches.emit(ils.Metrics())
@@ -12136,6 +12990,81 @@ func (mb *MetricsBuilder) RecordNewrelicmysqlDbHandlerRollbackDataPoint(ts pcomm
 // RecordNewrelicmysqlDbOpenedTablesDataPoint adds a data point to newrelicmysql.db.opened_tables metric.
 func (mb *MetricsBuilder) RecordNewrelicmysqlDbOpenedTablesDataPoint(ts pcommon.Timestamp, val int64) {
 	mb.metricNewrelicmysqlDbOpenedTables.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordNewrelicmysqlGaleraWsrepCertDepsDistanceDataPoint adds a data point to newrelicmysql.galera.wsrep_cert_deps_distance metric.
+func (mb *MetricsBuilder) RecordNewrelicmysqlGaleraWsrepCertDepsDistanceDataPoint(ts pcommon.Timestamp, val float64) {
+	mb.metricNewrelicmysqlGaleraWsrepCertDepsDistance.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordNewrelicmysqlGaleraWsrepClusterSizeDataPoint adds a data point to newrelicmysql.galera.wsrep_cluster_size metric.
+func (mb *MetricsBuilder) RecordNewrelicmysqlGaleraWsrepClusterSizeDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricNewrelicmysqlGaleraWsrepClusterSize.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordNewrelicmysqlGaleraWsrepFlowControlPausedDataPoint adds a data point to newrelicmysql.galera.wsrep_flow_control_paused metric.
+func (mb *MetricsBuilder) RecordNewrelicmysqlGaleraWsrepFlowControlPausedDataPoint(ts pcommon.Timestamp, val float64) {
+	mb.metricNewrelicmysqlGaleraWsrepFlowControlPaused.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordNewrelicmysqlGaleraWsrepFlowControlPausedNsDataPoint adds a data point to newrelicmysql.galera.wsrep_flow_control_paused_ns metric.
+func (mb *MetricsBuilder) RecordNewrelicmysqlGaleraWsrepFlowControlPausedNsDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricNewrelicmysqlGaleraWsrepFlowControlPausedNs.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordNewrelicmysqlGaleraWsrepFlowControlRecvDataPoint adds a data point to newrelicmysql.galera.wsrep_flow_control_recv metric.
+func (mb *MetricsBuilder) RecordNewrelicmysqlGaleraWsrepFlowControlRecvDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricNewrelicmysqlGaleraWsrepFlowControlRecv.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordNewrelicmysqlGaleraWsrepFlowControlSentDataPoint adds a data point to newrelicmysql.galera.wsrep_flow_control_sent metric.
+func (mb *MetricsBuilder) RecordNewrelicmysqlGaleraWsrepFlowControlSentDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricNewrelicmysqlGaleraWsrepFlowControlSent.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordNewrelicmysqlGaleraWsrepLocalCertFailuresDataPoint adds a data point to newrelicmysql.galera.wsrep_local_cert_failures metric.
+func (mb *MetricsBuilder) RecordNewrelicmysqlGaleraWsrepLocalCertFailuresDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricNewrelicmysqlGaleraWsrepLocalCertFailures.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordNewrelicmysqlGaleraWsrepLocalRecvQueueDataPoint adds a data point to newrelicmysql.galera.wsrep_local_recv_queue metric.
+func (mb *MetricsBuilder) RecordNewrelicmysqlGaleraWsrepLocalRecvQueueDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricNewrelicmysqlGaleraWsrepLocalRecvQueue.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordNewrelicmysqlGaleraWsrepLocalRecvQueueAvgDataPoint adds a data point to newrelicmysql.galera.wsrep_local_recv_queue_avg metric.
+func (mb *MetricsBuilder) RecordNewrelicmysqlGaleraWsrepLocalRecvQueueAvgDataPoint(ts pcommon.Timestamp, val float64) {
+	mb.metricNewrelicmysqlGaleraWsrepLocalRecvQueueAvg.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordNewrelicmysqlGaleraWsrepLocalSendQueueDataPoint adds a data point to newrelicmysql.galera.wsrep_local_send_queue metric.
+func (mb *MetricsBuilder) RecordNewrelicmysqlGaleraWsrepLocalSendQueueDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricNewrelicmysqlGaleraWsrepLocalSendQueue.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordNewrelicmysqlGaleraWsrepLocalSendQueueAvgDataPoint adds a data point to newrelicmysql.galera.wsrep_local_send_queue_avg metric.
+func (mb *MetricsBuilder) RecordNewrelicmysqlGaleraWsrepLocalSendQueueAvgDataPoint(ts pcommon.Timestamp, val float64) {
+	mb.metricNewrelicmysqlGaleraWsrepLocalSendQueueAvg.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordNewrelicmysqlGaleraWsrepLocalStateDataPoint adds a data point to newrelicmysql.galera.wsrep_local_state metric.
+func (mb *MetricsBuilder) RecordNewrelicmysqlGaleraWsrepLocalStateDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricNewrelicmysqlGaleraWsrepLocalState.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordNewrelicmysqlGaleraWsrepReceivedDataPoint adds a data point to newrelicmysql.galera.wsrep_received metric.
+func (mb *MetricsBuilder) RecordNewrelicmysqlGaleraWsrepReceivedDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricNewrelicmysqlGaleraWsrepReceived.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordNewrelicmysqlGaleraWsrepReceivedBytesDataPoint adds a data point to newrelicmysql.galera.wsrep_received_bytes metric.
+func (mb *MetricsBuilder) RecordNewrelicmysqlGaleraWsrepReceivedBytesDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricNewrelicmysqlGaleraWsrepReceivedBytes.recordDataPoint(mb.startTime, ts, val)
+}
+
+// RecordNewrelicmysqlGaleraWsrepReplicatedBytesDataPoint adds a data point to newrelicmysql.galera.wsrep_replicated_bytes metric.
+func (mb *MetricsBuilder) RecordNewrelicmysqlGaleraWsrepReplicatedBytesDataPoint(ts pcommon.Timestamp, val int64) {
+	mb.metricNewrelicmysqlGaleraWsrepReplicatedBytes.recordDataPoint(mb.startTime, ts, val)
 }
 
 // RecordNewrelicmysqlInnodbActiveTransactionsDataPoint adds a data point to newrelicmysql.innodb.active_transactions metric.

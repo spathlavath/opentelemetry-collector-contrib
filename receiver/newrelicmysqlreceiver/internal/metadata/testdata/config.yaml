@@ -13,6 +13,36 @@ all_set:
       enabled: true
     newrelicmysql.db.opened_tables:
       enabled: true
+    newrelicmysql.galera.wsrep_cert_deps_distance:
+      enabled: true
+    newrelicmysql.galera.wsrep_cluster_size:
+      enabled: true
+    newrelicmysql.galera.wsrep_flow_control_paused:
+      enabled: true
+    newrelicmysql.galera.wsrep_flow_control_paused_ns:
+      enabled: true
+    newrelicmysql.galera.wsrep_flow_control_recv:
+      enabled: true
+    newrelicmysql.galera.wsrep_flow_control_sent:
+      enabled: true
+    newrelicmysql.galera.wsrep_local_cert_failures:
+      enabled: true
+    newrelicmysql.galera.wsrep_local_recv_queue:
+      enabled: true
+    newrelicmysql.galera.wsrep_local_recv_queue_avg:
+      enabled: true
+    newrelicmysql.galera.wsrep_local_send_queue:
+      enabled: true
+    newrelicmysql.galera.wsrep_local_send_queue_avg:
+      enabled: true
+    newrelicmysql.galera.wsrep_local_state:
+      enabled: true
+    newrelicmysql.galera.wsrep_received:
+      enabled: true
+    newrelicmysql.galera.wsrep_received_bytes:
+      enabled: true
+    newrelicmysql.galera.wsrep_replicated_bytes:
+      enabled: true
     newrelicmysql.innodb.active_transactions:
       enabled: true
     newrelicmysql.innodb.adaptive_hash_hash_searches:
@@ -433,6 +463,36 @@ none_set:
     newrelicmysql.db.handler_rollback:
       enabled: false
     newrelicmysql.db.opened_tables:
+      enabled: false
+    newrelicmysql.galera.wsrep_cert_deps_distance:
+      enabled: false
+    newrelicmysql.galera.wsrep_cluster_size:
+      enabled: false
+    newrelicmysql.galera.wsrep_flow_control_paused:
+      enabled: false
+    newrelicmysql.galera.wsrep_flow_control_paused_ns:
+      enabled: false
+    newrelicmysql.galera.wsrep_flow_control_recv:
+      enabled: false
+    newrelicmysql.galera.wsrep_flow_control_sent:
+      enabled: false
+    newrelicmysql.galera.wsrep_local_cert_failures:
+      enabled: false
+    newrelicmysql.galera.wsrep_local_recv_queue:
+      enabled: false
+    newrelicmysql.galera.wsrep_local_recv_queue_avg:
+      enabled: false
+    newrelicmysql.galera.wsrep_local_send_queue:
+      enabled: false
+    newrelicmysql.galera.wsrep_local_send_queue_avg:
+      enabled: false
+    newrelicmysql.galera.wsrep_local_state:
+      enabled: false
+    newrelicmysql.galera.wsrep_received:
+      enabled: false
+    newrelicmysql.galera.wsrep_received_bytes:
+      enabled: false
+    newrelicmysql.galera.wsrep_replicated_bytes:
       enabled: false
     newrelicmysql.innodb.active_transactions:
       enabled: false
