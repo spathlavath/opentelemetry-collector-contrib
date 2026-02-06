@@ -567,6 +567,14 @@ func (s *QueryPerformanceScraper) processSlowQueryMetrics(result models.SlowQuer
 			normalizedSqlHash,
 			nrServiceGuid,
 		)
+
+		// Also emit as historical_avg_elapsed_time_ms (with only query_id and database_name attributes)
+		s.mb.RecordSqlserverSlowqueryHistoricalAvgElapsedTimeMsDataPoint(
+			timestamp,
+			*result.AvgElapsedTimeMS,
+			queryID,
+			databaseName,
+		)
 	}
 
 	if result.IntervalElapsedTimeMS != nil {
