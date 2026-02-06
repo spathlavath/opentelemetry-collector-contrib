@@ -54,7 +54,7 @@ type SlowQuery struct {
 	// New Relic Metadata Extraction (calculated in-memory from query comments, not from DB)
 	// These fields enable cross-language query correlation and APM integration
 	NrServiceGuid     *string `db:"-" metric_name:"nr_service_guid" source_type:"attribute"`     // Extracted from nr_apm_guid comment (APM service GUID)
-	NormalizedSqlHash *string `db:"-" metric_name:"normalized_sql_hash" source_type:"attribute"` // MD5 hash of normalized SQL for cross-language correlation
+	NormalisedSqlHash *string `db:"-" metric_name:"normalised_sql_hash" source_type:"attribute"` // MD5 hash of normalised SQL for cross-language correlation
 }
 
 // ExecutionPlanNode represents a parsed execution plan node with detailed operator information
@@ -170,12 +170,12 @@ type ActiveRunningQuery struct {
 	// K. APM Integration (calculated in-memory from query comments, not from DB)
 	// These fields enable cross-language query correlation for active queries
 	NrServiceGuid     *string `db:"-" metric_name:"nr_service_guid" source_type:"attribute"`     // Extracted from nr_apm_guid comment (APM service GUID)
-	NormalizedSqlHash *string `db:"-" metric_name:"normalized_sql_hash" source_type:"attribute"` // MD5 hash of normalized SQL for cross-language correlation
+	NormalisedSqlHash *string `db:"-" metric_name:"normalised_sql_hash" source_type:"attribute"` // MD5 hash of normalised SQL for cross-language correlation
 
 	// L. BLOCKING QUERY APM Integration (calculated from blocking query comments)
 	// These fields enable APM correlation for the blocker/blocking query
 	BlockingNrServiceGuid     *string `db:"-" metric_name:"blocking_nr_service_guid" source_type:"attribute"`     // Extracted from blocker's query comments
-	BlockingNormalizedSqlHash *string `db:"-" metric_name:"blocking_normalized_sql_hash" source_type:"attribute"` // MD5 hash of normalized blocking SQL
+	BlockingNormalisedSqlHash *string `db:"-" metric_name:"blocking_normalised_sql_hash" source_type:"attribute"` // MD5 hash of normalised blocking SQL
 }
 
 // BlockingQueryEvent represents a blocking query that should be emitted as a custom event
@@ -187,7 +187,7 @@ type BlockingQueryEvent struct {
 	BlockingSessionID         int64  // Who is blocking
 	BlockingQueryText         string // Full SQL text of blocking query (no truncation)
 	BlockingNrServiceGuid     string // APM service GUID extracted from blocking query (for APM correlation)
-	BlockingNormalizedSqlHash string // MD5 hash of normalized blocking SQL (for cross-language correlation)
+	BlockingNormalisedSqlHash string // MD5 hash of normalised blocking SQL (for cross-language correlation)
 }
 
 // SlowQueryPlanData represents lightweight plan data extracted from slow queries

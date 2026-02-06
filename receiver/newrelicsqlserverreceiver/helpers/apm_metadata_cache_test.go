@@ -26,7 +26,7 @@ func TestAPMMetadataCache_SetAndGet(t *testing.T) {
 	assert.True(t, found, "Metadata should be found")
 	assert.NotNil(t, metadata, "Metadata should not be nil")
 	assert.Equal(t, nrApmGuid, metadata.NrServiceGuid)
-	assert.Equal(t, normalizedHash, metadata.NormalizedSqlHash)
+	assert.Equal(t, normalizedHash, metadata.NormalisedSqlHash)
 }
 
 func TestAPMMetadataCache_GetNonExistent(t *testing.T) {
@@ -74,21 +74,21 @@ func TestAPMMetadataCache_SetPartialMetadata(t *testing.T) {
 	metadata, found := cache.Get(queryHash)
 	assert.True(t, found)
 	assert.Equal(t, "guid123", metadata.NrServiceGuid)
-	assert.Equal(t, "", metadata.NormalizedSqlHash)
+	assert.Equal(t, "", metadata.NormalisedSqlHash)
 
 	// Update with only hash
 	cache.Set(queryHash, "", "hash456")
 	metadata, found = cache.Get(queryHash)
 	assert.True(t, found)
 	assert.Equal(t, "", metadata.NrServiceGuid) // Overwritten with empty
-	assert.Equal(t, "hash456", metadata.NormalizedSqlHash)
+	assert.Equal(t, "hash456", metadata.NormalisedSqlHash)
 
 	// Set with all fields
 	cache.Set(queryHash, "guid456", "hash789")
 	metadata, found = cache.Get(queryHash)
 	assert.True(t, found)
 	assert.Equal(t, "guid456", metadata.NrServiceGuid)
-	assert.Equal(t, "hash789", metadata.NormalizedSqlHash)
+	assert.Equal(t, "hash789", metadata.NormalisedSqlHash)
 }
 
 func TestAPMMetadataCache_Clear(t *testing.T) {

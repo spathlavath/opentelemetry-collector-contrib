@@ -86,7 +86,7 @@ func TestSQLNormalizationIntegration(t *testing.T) {
 				if clientName != "" {
 				}
 				if sqlHash != "" {
-					result.NormalizedSqlHash = &sqlHash
+					result.NormalisedSqlHash = &sqlHash
 				}
 				result.QueryText = &normalizedSQL
 			}
@@ -105,12 +105,12 @@ func TestSQLNormalizationIntegration(t *testing.T) {
 
 			// Verify hash
 			if tt.expectedHashNotEmpty {
-				assert.NotNil(t, result.NormalizedSqlHash, "NormalizedSqlHash should not be nil")
-				assert.NotEmpty(t, *result.NormalizedSqlHash, "NormalizedSqlHash should not be empty")
+				assert.NotNil(t, result.NormalisedSqlHash, "NormalisedSqlHash should not be nil")
+				assert.NotEmpty(t, *result.NormalisedSqlHash, "NormalisedSqlHash should not be empty")
 				// Verify it's a valid MD5 hash (32 hex characters)
-				assert.Len(t, *result.NormalizedSqlHash, 32, "MD5 hash should be 32 characters")
+				assert.Len(t, *result.NormalisedSqlHash, 32, "MD5 hash should be 32 characters")
 			} else {
-				assert.Nil(t, result.NormalizedSqlHash, "NormalizedSqlHash should be nil for empty query")
+				assert.Nil(t, result.NormalisedSqlHash, "NormalisedSqlHash should be nil for empty query")
 			}
 		})
 	}
@@ -591,12 +591,12 @@ func TestBlockingQueryNormalization(t *testing.T) {
 
 func TestEmitBlockingQueriesAsCustomEvents(t *testing.T) {
 	tests := []struct {
-		name                          string
-		activeQueries                 []models.ActiveRunningQuery
-		expectedEventCount            int
-		expectedBlockingNrServiceGuid string
+		name                           string
+		activeQueries                  []models.ActiveRunningQuery
+		expectedEventCount             int
+		expectedBlockingNrServiceGuid  string
 		expectedBlockingNormalizedHash string
-		expectAnonymization           bool
+		expectAnonymization            bool
 	}{
 		{
 			name: "Blocking query with full APM metadata",
@@ -609,7 +609,7 @@ func TestEmitBlockingQueriesAsCustomEvents(t *testing.T) {
 					BlockingQueryStatementText: ptr(`/* nr_service_guid="blocker-guid-123" nr_service="blocker-service" */
 						UPDATE users SET status = 'active' WHERE id = 100`),
 					BlockingNrServiceGuid:     ptr("blocker-guid-123"),
-					BlockingNormalizedSqlHash: ptr("abc123def456"),
+					BlockingNormalisedSqlHash: ptr("abc123def456"),
 				},
 			},
 			expectedEventCount:             1,
@@ -621,13 +621,13 @@ func TestEmitBlockingQueriesAsCustomEvents(t *testing.T) {
 			name: "Blocking query without APM metadata",
 			activeQueries: []models.ActiveRunningQuery{
 				{
-					CurrentSessionID:       ptr(int64(200)),
-					RequestID:              ptr(int64(0)),
-					RequestStartTime:       ptr("2025-02-06 10:20:00"),
-					BlockingSessionID:      ptr(int64(300)),
+					CurrentSessionID:           ptr(int64(200)),
+					RequestID:                  ptr(int64(0)),
+					RequestStartTime:           ptr("2025-02-06 10:20:00"),
+					BlockingSessionID:          ptr(int64(300)),
 					BlockingQueryStatementText: ptr(`UPDATE products SET price = 99.99 WHERE product_id = 50`),
-					BlockingNrServiceGuid:     nil, // No APM metadata
-					BlockingNormalizedSqlHash: nil,
+					BlockingNrServiceGuid:      nil, // No APM metadata
+					BlockingNormalisedSqlHash:  nil,
 				},
 			},
 			expectedEventCount:             1,
@@ -639,23 +639,23 @@ func TestEmitBlockingQueriesAsCustomEvents(t *testing.T) {
 			name: "Multiple blocking queries - deduplication by composite key",
 			activeQueries: []models.ActiveRunningQuery{
 				{
-					CurrentSessionID:       ptr(int64(100)),
-					RequestID:              ptr(int64(0)),
-					RequestStartTime:       ptr("2025-02-06 11:00:00"),
-					BlockingSessionID:      ptr(int64(200)),
+					CurrentSessionID:           ptr(int64(100)),
+					RequestID:                  ptr(int64(0)),
+					RequestStartTime:           ptr("2025-02-06 11:00:00"),
+					BlockingSessionID:          ptr(int64(200)),
 					BlockingQueryStatementText: ptr(`DELETE FROM logs WHERE date < '2024-01-01'`),
-					BlockingNrServiceGuid:     ptr("guid-abc"),
-					BlockingNormalizedSqlHash: ptr("hash-xyz"),
+					BlockingNrServiceGuid:      ptr("guid-abc"),
+					BlockingNormalisedSqlHash:  ptr("hash-xyz"),
 				},
 				// Duplicate - same session, request, time, blocker
 				{
-					CurrentSessionID:       ptr(int64(100)),
-					RequestID:              ptr(int64(0)),
-					RequestStartTime:       ptr("2025-02-06 11:00:00"),
-					BlockingSessionID:      ptr(int64(200)),
+					CurrentSessionID:           ptr(int64(100)),
+					RequestID:                  ptr(int64(0)),
+					RequestStartTime:           ptr("2025-02-06 11:00:00"),
+					BlockingSessionID:          ptr(int64(200)),
 					BlockingQueryStatementText: ptr(`DELETE FROM logs WHERE date < '2024-01-01'`),
-					BlockingNrServiceGuid:     ptr("guid-abc"),
-					BlockingNormalizedSqlHash: ptr("hash-xyz"),
+					BlockingNrServiceGuid:      ptr("guid-abc"),
+					BlockingNormalisedSqlHash:  ptr("hash-xyz"),
 				},
 			},
 			expectedEventCount:             1, // Should deduplicate
@@ -691,22 +691,22 @@ func TestEmitBlockingQueriesAsCustomEvents(t *testing.T) {
 			name: "Multiple unique blocking events",
 			activeQueries: []models.ActiveRunningQuery{
 				{
-					CurrentSessionID:       ptr(int64(10)),
-					RequestID:              ptr(int64(0)),
-					RequestStartTime:       ptr("2025-02-06 13:00:00"),
-					BlockingSessionID:      ptr(int64(20)),
+					CurrentSessionID:           ptr(int64(10)),
+					RequestID:                  ptr(int64(0)),
+					RequestStartTime:           ptr("2025-02-06 13:00:00"),
+					BlockingSessionID:          ptr(int64(20)),
 					BlockingQueryStatementText: ptr(`/* nr_service_guid="guid-1" */ SELECT * FROM table1`),
-					BlockingNrServiceGuid:     ptr("guid-1"),
-					BlockingNormalizedSqlHash: ptr("hash-1"),
+					BlockingNrServiceGuid:      ptr("guid-1"),
+					BlockingNormalisedSqlHash:  ptr("hash-1"),
 				},
 				{
-					CurrentSessionID:       ptr(int64(30)),
-					RequestID:              ptr(int64(0)),
-					RequestStartTime:       ptr("2025-02-06 13:05:00"),
-					BlockingSessionID:      ptr(int64(40)),
+					CurrentSessionID:           ptr(int64(30)),
+					RequestID:                  ptr(int64(0)),
+					RequestStartTime:           ptr("2025-02-06 13:05:00"),
+					BlockingSessionID:          ptr(int64(40)),
 					BlockingQueryStatementText: ptr(`/* nr_service_guid="guid-2" */ SELECT * FROM table2`),
-					BlockingNrServiceGuid:     ptr("guid-2"),
-					BlockingNormalizedSqlHash: ptr("hash-2"),
+					BlockingNrServiceGuid:      ptr("guid-2"),
+					BlockingNormalisedSqlHash:  ptr("hash-2"),
 				},
 			},
 			expectedEventCount: 2, // Two distinct blocking events

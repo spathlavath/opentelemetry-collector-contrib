@@ -12,7 +12,7 @@ import (
 // APMMetadata stores APM correlation metadata extracted from active query comments
 type APMMetadata struct {
 	NrServiceGuid     string // New Relic APM service GUID
-	NormalizedSqlHash string // MD5 hash of normalized SQL
+	NormalisedSqlHash string // MD5 hash of normalized SQL
 }
 
 // APMMetadataCache provides thread-safe caching of APM metadata keyed by query_hash.
@@ -69,7 +69,7 @@ func (c *APMMetadataCache) Set(queryHash, nrServiceGuid, normalizedSqlHash strin
 
 	metadata := &APMMetadata{
 		NrServiceGuid:     nrServiceGuid,
-		NormalizedSqlHash: normalizedSqlHash,
+		NormalisedSqlHash: normalizedSqlHash,
 	}
 
 	c.cache[queryHash] = metadata
@@ -110,7 +110,7 @@ func (c *APMMetadataCache) Get(queryHash string) (*APMMetadata, bool) {
 	c.logger.Info("✅ CACHE GET: Retrieved metadata from cache",
 		zap.String("query_hash", queryHash),
 		zap.String("nr_service_guid", metadata.NrServiceGuid),
-		zap.String("normalized_sql_hash", metadata.NormalizedSqlHash))
+		zap.String("normalized_sql_hash", metadata.NormalisedSqlHash))
 
 	return metadata, true
 }
@@ -149,7 +149,7 @@ func (c *APMMetadataCache) GetCacheStats() map[string]interface{} {
 		if metadata.NrServiceGuid != "" {
 			withGuid++
 		}
-		if metadata.NormalizedSqlHash != "" {
+		if metadata.NormalisedSqlHash != "" {
 			withHash++
 		}
 	}

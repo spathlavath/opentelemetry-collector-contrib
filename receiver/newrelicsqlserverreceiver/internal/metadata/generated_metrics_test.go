@@ -74,11 +74,11 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordSqlserverActivequeryWaitTimeSecondsDataPoint(ts, 1, 10, 10, "database_name-val", "login_name-val", "host_name-val", "query_id-val", "normalized_sql_hash-val", "nr_service_guid-val", "wait_type-val", "wait_type_description-val", "wait_type_category-val", "wait_resource-val", "wait_resource_type-val", "wait_resource_object_name-val", "last_wait_type-val", "last_wait_type_description-val", "request_start_time-val", "collection_timestamp-val", 14, 22, "plan_handle-val", 19, "blocking_login_name-val", "blocking_query_hash-val", "blocking_nr_service_guid-val", "blocking_normalized_sql_hash-val")
+			mb.RecordSqlserverActivequeryWaitTimeSecondsDataPoint(ts, 1, 10, 10, "database_name-val", "login_name-val", "host_name-val", "query_id-val", "normalised_sql_hash-val", "nr_service_guid-val", "wait_type-val", "wait_type_description-val", "wait_type_category-val", "wait_resource-val", "wait_resource_type-val", "wait_resource_object_name-val", "last_wait_type-val", "last_wait_type_description-val", "request_start_time-val", "collection_timestamp-val", 14, 22, "plan_handle-val", 19, "blocking_login_name-val", "blocking_query_hash-val", "blocking_nr_service_guid-val", "blocking_normalised_sql_hash-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordSqlserverBlockingQueryDetailsDataPoint(ts, 1, 10, 10, "request_start_time-val", 19, "blocking_query_text-val", "blocking_nr_service_guid-val", "blocking_normalized_sql_hash-val", "newrelic.event.type-val")
+			mb.RecordSqlserverBlockingQueryDetailsDataPoint(ts, 1, 10, 10, "request_start_time-val", 19, "blocking_query_text-val", "blocking_nr_service_guid-val", "blocking_normalised_sql_hash-val", "newrelic.event.type-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
@@ -502,87 +502,87 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordSqlserverSlowqueryHistoricalElapsedTimeMsDataPoint(ts, 1, "query_id-val", "database_name-val", "normalized_sql_hash-val", "nr_service_guid-val")
+			mb.RecordSqlserverSlowqueryHistoricalElapsedTimeMsDataPoint(ts, 1, "query_id-val", "database_name-val", "normalised_sql_hash-val", "nr_service_guid-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordSqlserverSlowqueryHistoricalExecutionCountDataPoint(ts, 1, "query_id-val", "database_name-val", "normalized_sql_hash-val", "nr_service_guid-val")
+			mb.RecordSqlserverSlowqueryHistoricalExecutionCountDataPoint(ts, 1, "query_id-val", "database_name-val", "normalised_sql_hash-val", "nr_service_guid-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordSqlserverSlowqueryHistoricalLogicalReadsDataPoint(ts, 1, "query_id-val", "database_name-val", "normalized_sql_hash-val", "nr_service_guid-val")
+			mb.RecordSqlserverSlowqueryHistoricalLogicalReadsDataPoint(ts, 1, "query_id-val", "database_name-val", "normalised_sql_hash-val", "nr_service_guid-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordSqlserverSlowqueryHistoricalPhysicalReadsDataPoint(ts, 1, "query_id-val", "database_name-val", "normalized_sql_hash-val", "nr_service_guid-val")
+			mb.RecordSqlserverSlowqueryHistoricalPhysicalReadsDataPoint(ts, 1, "query_id-val", "database_name-val", "normalised_sql_hash-val", "nr_service_guid-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordSqlserverSlowqueryHistoricalRowsDataPoint(ts, 1, "query_id-val", "database_name-val", "normalized_sql_hash-val", "nr_service_guid-val")
+			mb.RecordSqlserverSlowqueryHistoricalRowsDataPoint(ts, 1, "query_id-val", "database_name-val", "normalised_sql_hash-val", "nr_service_guid-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordSqlserverSlowqueryHistoricalWaitTimeMsDataPoint(ts, 1, "query_id-val", "database_name-val", "normalized_sql_hash-val", "nr_service_guid-val")
+			mb.RecordSqlserverSlowqueryHistoricalWaitTimeMsDataPoint(ts, 1, "query_id-val", "database_name-val", "normalised_sql_hash-val", "nr_service_guid-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordSqlserverSlowqueryHistoricalWorkerTimeMsDataPoint(ts, 1, "query_id-val", "database_name-val", "normalized_sql_hash-val", "nr_service_guid-val")
+			mb.RecordSqlserverSlowqueryHistoricalWorkerTimeMsDataPoint(ts, 1, "query_id-val", "database_name-val", "normalised_sql_hash-val", "nr_service_guid-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordSqlserverSlowqueryIntervalAvgElapsedTimeMsDataPoint(ts, 1, "query_id-val", "database_name-val", "normalized_sql_hash-val", "nr_service_guid-val")
+			mb.RecordSqlserverSlowqueryIntervalAvgElapsedTimeMsDataPoint(ts, 1, "query_id-val", "database_name-val", "normalised_sql_hash-val", "nr_service_guid-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordSqlserverSlowqueryIntervalAvgLogicalReadsDataPoint(ts, 1, "query_id-val", "database_name-val", "normalized_sql_hash-val", "nr_service_guid-val")
+			mb.RecordSqlserverSlowqueryIntervalAvgLogicalReadsDataPoint(ts, 1, "query_id-val", "database_name-val", "normalised_sql_hash-val", "nr_service_guid-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordSqlserverSlowqueryIntervalAvgPhysicalReadsDataPoint(ts, 1, "query_id-val", "database_name-val", "normalized_sql_hash-val", "nr_service_guid-val")
+			mb.RecordSqlserverSlowqueryIntervalAvgPhysicalReadsDataPoint(ts, 1, "query_id-val", "database_name-val", "normalised_sql_hash-val", "nr_service_guid-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordSqlserverSlowqueryIntervalAvgRowsDataPoint(ts, 1, "query_id-val", "database_name-val", "normalized_sql_hash-val", "nr_service_guid-val")
+			mb.RecordSqlserverSlowqueryIntervalAvgRowsDataPoint(ts, 1, "query_id-val", "database_name-val", "normalised_sql_hash-val", "nr_service_guid-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordSqlserverSlowqueryIntervalAvgWaitTimeMsDataPoint(ts, 1, "query_id-val", "database_name-val", "normalized_sql_hash-val", "nr_service_guid-val")
+			mb.RecordSqlserverSlowqueryIntervalAvgWaitTimeMsDataPoint(ts, 1, "query_id-val", "database_name-val", "normalised_sql_hash-val", "nr_service_guid-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordSqlserverSlowqueryIntervalAvgWorkerTimeMsDataPoint(ts, 1, "query_id-val", "database_name-val", "normalized_sql_hash-val", "nr_service_guid-val")
+			mb.RecordSqlserverSlowqueryIntervalAvgWorkerTimeMsDataPoint(ts, 1, "query_id-val", "database_name-val", "normalised_sql_hash-val", "nr_service_guid-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordSqlserverSlowqueryIntervalElapsedTimeMsDataPoint(ts, 1, "query_id-val", "database_name-val", "normalized_sql_hash-val", "nr_service_guid-val")
+			mb.RecordSqlserverSlowqueryIntervalElapsedTimeMsDataPoint(ts, 1, "query_id-val", "database_name-val", "normalised_sql_hash-val", "nr_service_guid-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordSqlserverSlowqueryIntervalExecutionCountDataPoint(ts, 1, "query_id-val", "database_name-val", "normalized_sql_hash-val", "nr_service_guid-val")
+			mb.RecordSqlserverSlowqueryIntervalExecutionCountDataPoint(ts, 1, "query_id-val", "database_name-val", "normalised_sql_hash-val", "nr_service_guid-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordSqlserverSlowqueryIntervalLogicalReadsDataPoint(ts, 1, "query_id-val", "database_name-val", "normalized_sql_hash-val", "nr_service_guid-val")
+			mb.RecordSqlserverSlowqueryIntervalLogicalReadsDataPoint(ts, 1, "query_id-val", "database_name-val", "normalised_sql_hash-val", "nr_service_guid-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordSqlserverSlowqueryIntervalPhysicalReadsDataPoint(ts, 1, "query_id-val", "database_name-val", "normalized_sql_hash-val", "nr_service_guid-val")
+			mb.RecordSqlserverSlowqueryIntervalPhysicalReadsDataPoint(ts, 1, "query_id-val", "database_name-val", "normalised_sql_hash-val", "nr_service_guid-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordSqlserverSlowqueryIntervalRowsDataPoint(ts, 1, "query_id-val", "database_name-val", "normalized_sql_hash-val", "nr_service_guid-val")
+			mb.RecordSqlserverSlowqueryIntervalRowsDataPoint(ts, 1, "query_id-val", "database_name-val", "normalised_sql_hash-val", "nr_service_guid-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordSqlserverSlowqueryIntervalWaitTimeMsDataPoint(ts, 1, "query_id-val", "database_name-val", "normalized_sql_hash-val", "nr_service_guid-val")
+			mb.RecordSqlserverSlowqueryIntervalWaitTimeMsDataPoint(ts, 1, "query_id-val", "database_name-val", "normalised_sql_hash-val", "nr_service_guid-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordSqlserverSlowqueryIntervalWorkerTimeMsDataPoint(ts, 1, "query_id-val", "database_name-val", "normalized_sql_hash-val", "nr_service_guid-val")
+			mb.RecordSqlserverSlowqueryIntervalWorkerTimeMsDataPoint(ts, 1, "query_id-val", "database_name-val", "normalised_sql_hash-val", "nr_service_guid-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordSqlserverSlowqueryQueryDetailsDataPoint(ts, 1, "query_id-val", "database_name-val", "plan_handle-val", "query_text-val", "collection_timestamp-val", "last_execution_timestamp-val", "normalized_sql_hash-val", "nr_service_guid-val", "newrelic.event.type-val")
+			mb.RecordSqlserverSlowqueryQueryDetailsDataPoint(ts, 1, "query_id-val", "database_name-val", "plan_handle-val", "query_text-val", "collection_timestamp-val", "last_execution_timestamp-val", "normalised_sql_hash-val", "nr_service_guid-val", "newrelic.event.type-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
@@ -810,9 +810,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("query_id")
 					assert.True(t, ok)
 					assert.Equal(t, "query_id-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("normalized_sql_hash")
+					attrVal, ok = dp.Attributes().Get("normalised_sql_hash")
 					assert.True(t, ok)
-					assert.Equal(t, "normalized_sql_hash-val", attrVal.Str())
+					assert.Equal(t, "normalised_sql_hash-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("nr_service_guid")
 					assert.True(t, ok)
 					assert.Equal(t, "nr_service_guid-val", attrVal.Str())
@@ -867,9 +867,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("blocking_nr_service_guid")
 					assert.True(t, ok)
 					assert.Equal(t, "blocking_nr_service_guid-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("blocking_normalized_sql_hash")
+					attrVal, ok = dp.Attributes().Get("blocking_normalised_sql_hash")
 					assert.True(t, ok)
-					assert.Equal(t, "blocking_normalized_sql_hash-val", attrVal.Str())
+					assert.Equal(t, "blocking_normalised_sql_hash-val", attrVal.Str())
 				case "sqlserver.blocking_query.details":
 					assert.False(t, validatedMetrics["sqlserver.blocking_query.details"], "Found a duplicate in the metrics slice: sqlserver.blocking_query.details")
 					validatedMetrics["sqlserver.blocking_query.details"] = true
@@ -900,9 +900,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("blocking_nr_service_guid")
 					assert.True(t, ok)
 					assert.Equal(t, "blocking_nr_service_guid-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("blocking_normalized_sql_hash")
+					attrVal, ok = dp.Attributes().Get("blocking_normalised_sql_hash")
 					assert.True(t, ok)
-					assert.Equal(t, "blocking_normalized_sql_hash-val", attrVal.Str())
+					assert.Equal(t, "blocking_normalised_sql_hash-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("newrelic.event.type")
 					assert.True(t, ok)
 					assert.Equal(t, "newrelic.event.type-val", attrVal.Str())
@@ -2673,9 +2673,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("database_name")
 					assert.True(t, ok)
 					assert.Equal(t, "database_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("normalized_sql_hash")
+					attrVal, ok = dp.Attributes().Get("normalised_sql_hash")
 					assert.True(t, ok)
-					assert.Equal(t, "normalized_sql_hash-val", attrVal.Str())
+					assert.Equal(t, "normalised_sql_hash-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("nr_service_guid")
 					assert.True(t, ok)
 					assert.Equal(t, "nr_service_guid-val", attrVal.Str())
@@ -2697,9 +2697,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("database_name")
 					assert.True(t, ok)
 					assert.Equal(t, "database_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("normalized_sql_hash")
+					attrVal, ok = dp.Attributes().Get("normalised_sql_hash")
 					assert.True(t, ok)
-					assert.Equal(t, "normalized_sql_hash-val", attrVal.Str())
+					assert.Equal(t, "normalised_sql_hash-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("nr_service_guid")
 					assert.True(t, ok)
 					assert.Equal(t, "nr_service_guid-val", attrVal.Str())
@@ -2721,9 +2721,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("database_name")
 					assert.True(t, ok)
 					assert.Equal(t, "database_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("normalized_sql_hash")
+					attrVal, ok = dp.Attributes().Get("normalised_sql_hash")
 					assert.True(t, ok)
-					assert.Equal(t, "normalized_sql_hash-val", attrVal.Str())
+					assert.Equal(t, "normalised_sql_hash-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("nr_service_guid")
 					assert.True(t, ok)
 					assert.Equal(t, "nr_service_guid-val", attrVal.Str())
@@ -2745,9 +2745,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("database_name")
 					assert.True(t, ok)
 					assert.Equal(t, "database_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("normalized_sql_hash")
+					attrVal, ok = dp.Attributes().Get("normalised_sql_hash")
 					assert.True(t, ok)
-					assert.Equal(t, "normalized_sql_hash-val", attrVal.Str())
+					assert.Equal(t, "normalised_sql_hash-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("nr_service_guid")
 					assert.True(t, ok)
 					assert.Equal(t, "nr_service_guid-val", attrVal.Str())
@@ -2769,9 +2769,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("database_name")
 					assert.True(t, ok)
 					assert.Equal(t, "database_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("normalized_sql_hash")
+					attrVal, ok = dp.Attributes().Get("normalised_sql_hash")
 					assert.True(t, ok)
-					assert.Equal(t, "normalized_sql_hash-val", attrVal.Str())
+					assert.Equal(t, "normalised_sql_hash-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("nr_service_guid")
 					assert.True(t, ok)
 					assert.Equal(t, "nr_service_guid-val", attrVal.Str())
@@ -2793,9 +2793,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("database_name")
 					assert.True(t, ok)
 					assert.Equal(t, "database_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("normalized_sql_hash")
+					attrVal, ok = dp.Attributes().Get("normalised_sql_hash")
 					assert.True(t, ok)
-					assert.Equal(t, "normalized_sql_hash-val", attrVal.Str())
+					assert.Equal(t, "normalised_sql_hash-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("nr_service_guid")
 					assert.True(t, ok)
 					assert.Equal(t, "nr_service_guid-val", attrVal.Str())
@@ -2817,9 +2817,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("database_name")
 					assert.True(t, ok)
 					assert.Equal(t, "database_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("normalized_sql_hash")
+					attrVal, ok = dp.Attributes().Get("normalised_sql_hash")
 					assert.True(t, ok)
-					assert.Equal(t, "normalized_sql_hash-val", attrVal.Str())
+					assert.Equal(t, "normalised_sql_hash-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("nr_service_guid")
 					assert.True(t, ok)
 					assert.Equal(t, "nr_service_guid-val", attrVal.Str())
@@ -2841,9 +2841,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("database_name")
 					assert.True(t, ok)
 					assert.Equal(t, "database_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("normalized_sql_hash")
+					attrVal, ok = dp.Attributes().Get("normalised_sql_hash")
 					assert.True(t, ok)
-					assert.Equal(t, "normalized_sql_hash-val", attrVal.Str())
+					assert.Equal(t, "normalised_sql_hash-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("nr_service_guid")
 					assert.True(t, ok)
 					assert.Equal(t, "nr_service_guid-val", attrVal.Str())
@@ -2865,9 +2865,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("database_name")
 					assert.True(t, ok)
 					assert.Equal(t, "database_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("normalized_sql_hash")
+					attrVal, ok = dp.Attributes().Get("normalised_sql_hash")
 					assert.True(t, ok)
-					assert.Equal(t, "normalized_sql_hash-val", attrVal.Str())
+					assert.Equal(t, "normalised_sql_hash-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("nr_service_guid")
 					assert.True(t, ok)
 					assert.Equal(t, "nr_service_guid-val", attrVal.Str())
@@ -2889,9 +2889,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("database_name")
 					assert.True(t, ok)
 					assert.Equal(t, "database_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("normalized_sql_hash")
+					attrVal, ok = dp.Attributes().Get("normalised_sql_hash")
 					assert.True(t, ok)
-					assert.Equal(t, "normalized_sql_hash-val", attrVal.Str())
+					assert.Equal(t, "normalised_sql_hash-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("nr_service_guid")
 					assert.True(t, ok)
 					assert.Equal(t, "nr_service_guid-val", attrVal.Str())
@@ -2913,9 +2913,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("database_name")
 					assert.True(t, ok)
 					assert.Equal(t, "database_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("normalized_sql_hash")
+					attrVal, ok = dp.Attributes().Get("normalised_sql_hash")
 					assert.True(t, ok)
-					assert.Equal(t, "normalized_sql_hash-val", attrVal.Str())
+					assert.Equal(t, "normalised_sql_hash-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("nr_service_guid")
 					assert.True(t, ok)
 					assert.Equal(t, "nr_service_guid-val", attrVal.Str())
@@ -2937,9 +2937,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("database_name")
 					assert.True(t, ok)
 					assert.Equal(t, "database_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("normalized_sql_hash")
+					attrVal, ok = dp.Attributes().Get("normalised_sql_hash")
 					assert.True(t, ok)
-					assert.Equal(t, "normalized_sql_hash-val", attrVal.Str())
+					assert.Equal(t, "normalised_sql_hash-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("nr_service_guid")
 					assert.True(t, ok)
 					assert.Equal(t, "nr_service_guid-val", attrVal.Str())
@@ -2961,9 +2961,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("database_name")
 					assert.True(t, ok)
 					assert.Equal(t, "database_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("normalized_sql_hash")
+					attrVal, ok = dp.Attributes().Get("normalised_sql_hash")
 					assert.True(t, ok)
-					assert.Equal(t, "normalized_sql_hash-val", attrVal.Str())
+					assert.Equal(t, "normalised_sql_hash-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("nr_service_guid")
 					assert.True(t, ok)
 					assert.Equal(t, "nr_service_guid-val", attrVal.Str())
@@ -2985,9 +2985,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("database_name")
 					assert.True(t, ok)
 					assert.Equal(t, "database_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("normalized_sql_hash")
+					attrVal, ok = dp.Attributes().Get("normalised_sql_hash")
 					assert.True(t, ok)
-					assert.Equal(t, "normalized_sql_hash-val", attrVal.Str())
+					assert.Equal(t, "normalised_sql_hash-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("nr_service_guid")
 					assert.True(t, ok)
 					assert.Equal(t, "nr_service_guid-val", attrVal.Str())
@@ -3009,9 +3009,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("database_name")
 					assert.True(t, ok)
 					assert.Equal(t, "database_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("normalized_sql_hash")
+					attrVal, ok = dp.Attributes().Get("normalised_sql_hash")
 					assert.True(t, ok)
-					assert.Equal(t, "normalized_sql_hash-val", attrVal.Str())
+					assert.Equal(t, "normalised_sql_hash-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("nr_service_guid")
 					assert.True(t, ok)
 					assert.Equal(t, "nr_service_guid-val", attrVal.Str())
@@ -3033,9 +3033,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("database_name")
 					assert.True(t, ok)
 					assert.Equal(t, "database_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("normalized_sql_hash")
+					attrVal, ok = dp.Attributes().Get("normalised_sql_hash")
 					assert.True(t, ok)
-					assert.Equal(t, "normalized_sql_hash-val", attrVal.Str())
+					assert.Equal(t, "normalised_sql_hash-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("nr_service_guid")
 					assert.True(t, ok)
 					assert.Equal(t, "nr_service_guid-val", attrVal.Str())
@@ -3057,9 +3057,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("database_name")
 					assert.True(t, ok)
 					assert.Equal(t, "database_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("normalized_sql_hash")
+					attrVal, ok = dp.Attributes().Get("normalised_sql_hash")
 					assert.True(t, ok)
-					assert.Equal(t, "normalized_sql_hash-val", attrVal.Str())
+					assert.Equal(t, "normalised_sql_hash-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("nr_service_guid")
 					assert.True(t, ok)
 					assert.Equal(t, "nr_service_guid-val", attrVal.Str())
@@ -3081,9 +3081,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("database_name")
 					assert.True(t, ok)
 					assert.Equal(t, "database_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("normalized_sql_hash")
+					attrVal, ok = dp.Attributes().Get("normalised_sql_hash")
 					assert.True(t, ok)
-					assert.Equal(t, "normalized_sql_hash-val", attrVal.Str())
+					assert.Equal(t, "normalised_sql_hash-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("nr_service_guid")
 					assert.True(t, ok)
 					assert.Equal(t, "nr_service_guid-val", attrVal.Str())
@@ -3105,9 +3105,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("database_name")
 					assert.True(t, ok)
 					assert.Equal(t, "database_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("normalized_sql_hash")
+					attrVal, ok = dp.Attributes().Get("normalised_sql_hash")
 					assert.True(t, ok)
-					assert.Equal(t, "normalized_sql_hash-val", attrVal.Str())
+					assert.Equal(t, "normalised_sql_hash-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("nr_service_guid")
 					assert.True(t, ok)
 					assert.Equal(t, "nr_service_guid-val", attrVal.Str())
@@ -3129,9 +3129,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("database_name")
 					assert.True(t, ok)
 					assert.Equal(t, "database_name-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("normalized_sql_hash")
+					attrVal, ok = dp.Attributes().Get("normalised_sql_hash")
 					assert.True(t, ok)
-					assert.Equal(t, "normalized_sql_hash-val", attrVal.Str())
+					assert.Equal(t, "normalised_sql_hash-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("nr_service_guid")
 					assert.True(t, ok)
 					assert.Equal(t, "nr_service_guid-val", attrVal.Str())
@@ -3165,9 +3165,9 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("last_execution_timestamp")
 					assert.True(t, ok)
 					assert.Equal(t, "last_execution_timestamp-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("normalized_sql_hash")
+					attrVal, ok = dp.Attributes().Get("normalised_sql_hash")
 					assert.True(t, ok)
-					assert.Equal(t, "normalized_sql_hash-val", attrVal.Str())
+					assert.Equal(t, "normalised_sql_hash-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("nr_service_guid")
 					assert.True(t, ok)
 					assert.Equal(t, "nr_service_guid-val", attrVal.Str())

@@ -222,14 +222,14 @@ func (s *QueryPerformanceScraper) processActiveRunningQueryMetricsWithPlan(resul
 				zap.String("session_id", sessionIDStr),
 				zap.String("query_hash", queryHashStr),
 				zap.String("cached_nr_service_guid", cachedMetadata.NrServiceGuid),
-				zap.String("cached_normalized_sql_hash", cachedMetadata.NormalizedSqlHash))
+				zap.String("cached_normalized_sql_hash", cachedMetadata.NormalisedSqlHash))
 
 			// Use cached values if current extraction didn't find them
 			if nrApmGuid == "" && cachedMetadata.NrServiceGuid != "" {
 				nrApmGuid = cachedMetadata.NrServiceGuid
 			}
-			if sqlHash == "" && cachedMetadata.NormalizedSqlHash != "" {
-				sqlHash = cachedMetadata.NormalizedSqlHash
+			if sqlHash == "" && cachedMetadata.NormalisedSqlHash != "" {
+				sqlHash = cachedMetadata.NormalisedSqlHash
 			}
 		}
 	}
@@ -239,7 +239,7 @@ func (s *QueryPerformanceScraper) processActiveRunningQueryMetricsWithPlan(resul
 		result.NrServiceGuid = &nrApmGuid
 	}
 	if sqlHash != "" {
-		result.NormalizedSqlHash = &sqlHash
+		result.NormalisedSqlHash = &sqlHash
 	}
 
 	// Extract New Relic metadata from BLOCKING query text (blocker's query)
@@ -271,14 +271,14 @@ func (s *QueryPerformanceScraper) processActiveRunningQueryMetricsWithPlan(resul
 			result.BlockingNrServiceGuid = &blockingNrApmGuid
 		}
 		if blockingSqlHash != "" {
-			result.BlockingNormalizedSqlHash = &blockingSqlHash
+			result.BlockingNormalisedSqlHash = &blockingSqlHash
 		}
 
 		s.logger.Info("🏷️  BLOCKING QUERY: Extracted and normalized blocker metadata",
 			zap.String("victim_session_id", sessionIDStr),
 			zap.String("blocker_session_id", blockerSessionIDStr),
 			zap.String("blocking_nr_service_guid", blockingNrApmGuid),
-			zap.String("blocking_normalized_sql_hash", blockingSqlHash),
+			zap.String("blocking_normalised_sql_hash", blockingSqlHash),
 			zap.Bool("has_blocking_guid", blockingNrApmGuid != ""),
 			zap.Bool("has_blocking_hash", blockingSqlHash != ""))
 
@@ -290,7 +290,7 @@ func (s *QueryPerformanceScraper) processActiveRunningQueryMetricsWithPlan(resul
 			s.logger.Info("💾 BLOCKING QUERY: Cached blocker APM metadata",
 				zap.String("blocking_query_hash", blockingQueryHashStr),
 				zap.String("blocking_nr_service_guid", blockingNrApmGuid),
-				zap.String("blocking_normalized_sql_hash", blockingSqlHash))
+				zap.String("blocking_normalised_sql_hash", blockingSqlHash))
 		}
 	}
 
@@ -419,9 +419,9 @@ func (s *QueryPerformanceScraper) processActiveRunningQueryMetricsWithPlan(resul
 		}
 		return ""
 	}
-	getBlockingNormalizedSqlHash := func() string {
-		if result.BlockingNormalizedSqlHash != nil {
-			return *result.BlockingNormalizedSqlHash
+	getBlockingNormalisedSqlHash := func() string {
+		if result.BlockingNormalisedSqlHash != nil {
+			return *result.BlockingNormalisedSqlHash
 		}
 		return ""
 	}
@@ -473,9 +473,9 @@ func (s *QueryPerformanceScraper) processActiveRunningQueryMetricsWithPlan(resul
 		}
 		return ""
 	}
-	getNormalizedSqlHash := func() string {
-		if result.NormalizedSqlHash != nil {
-			return *result.NormalizedSqlHash
+	getNormalisedSqlHash := func() string {
+		if result.NormalisedSqlHash != nil {
+			return *result.NormalisedSqlHash
 		}
 		return ""
 	}
@@ -494,8 +494,8 @@ func (s *QueryPerformanceScraper) processActiveRunningQueryMetricsWithPlan(resul
 			zap.Any("wait_type", result.WaitType),
 			zap.Any("database_name", result.DatabaseName),
 			zap.String("nr_service_guid", getNrServiceGuid()),
-			zap.String("normalized_sql_hash", getNormalizedSqlHash()),
-			zap.Bool("has_apm_correlation", getNrServiceGuid() != "" && getNormalizedSqlHash() != ""),
+			zap.String("normalized_sql_hash", getNormalisedSqlHash()),
+			zap.Bool("has_apm_correlation", getNrServiceGuid() != "" && getNormalisedSqlHash() != ""),
 			zap.String("metric_name", "sqlserver.activequery.wait_time_seconds"))
 
 		s.mb.RecordSqlserverActivequeryWaitTimeSecondsDataPoint(
@@ -507,7 +507,7 @@ func (s *QueryPerformanceScraper) processActiveRunningQueryMetricsWithPlan(resul
 			getLoginName(),
 			getHostName(),
 			getQueryID(),
-			getNormalizedSqlHash(),
+			getNormalisedSqlHash(),
 			getNrServiceGuid(),
 			getWaitType(),
 			getWaitTypeDescription(),
@@ -526,7 +526,7 @@ func (s *QueryPerformanceScraper) processActiveRunningQueryMetricsWithPlan(resul
 			getBlockingLoginName(),
 			getBlockingQueryHash(),
 			getBlockingNrServiceGuid(),
-			getBlockingNormalizedSqlHash(),
+			getBlockingNormalisedSqlHash(),
 		)
 	} else {
 		s.logger.Warn("❌ SKIPPED wait_time metric (wait_time_s <= 0 or nil)",
@@ -634,9 +634,9 @@ func (s *QueryPerformanceScraper) EmitBlockingQueriesAsCustomEvents(activeQuerie
 			if activeQuery.BlockingNrServiceGuid != nil {
 				blockingNrServiceGuid = *activeQuery.BlockingNrServiceGuid
 			}
-			blockingNormalizedSqlHash := ""
-			if activeQuery.BlockingNormalizedSqlHash != nil {
-				blockingNormalizedSqlHash = *activeQuery.BlockingNormalizedSqlHash
+			blockingNormalisedSqlHash := ""
+			if activeQuery.BlockingNormalisedSqlHash != nil {
+				blockingNormalisedSqlHash = *activeQuery.BlockingNormalisedSqlHash
 			}
 
 			blockingEventsMap[key] = models.BlockingQueryEvent{
@@ -646,7 +646,7 @@ func (s *QueryPerformanceScraper) EmitBlockingQueriesAsCustomEvents(activeQuerie
 				BlockingSessionID:         *activeQuery.BlockingSessionID,
 				BlockingQueryText:         *activeQuery.BlockingQueryStatementText, // Full text, no truncation
 				BlockingNrServiceGuid:     blockingNrServiceGuid,                   // APM service GUID from blocking query
-				BlockingNormalizedSqlHash: blockingNormalizedSqlHash,               // Normalized SQL hash from blocking query
+				BlockingNormalisedSqlHash: blockingNormalisedSqlHash,               // Normalized SQL hash from blocking query
 			}
 		}
 	}
@@ -673,7 +673,7 @@ func (s *QueryPerformanceScraper) EmitBlockingQueriesAsCustomEvents(activeQuerie
 			event.BlockingSessionID,
 			anonymizedText,
 			event.BlockingNrServiceGuid,     // APM service GUID for correlation
-			event.BlockingNormalizedSqlHash, // Normalized SQL hash for cross-language correlation
+			event.BlockingNormalisedSqlHash, // Normalized SQL hash for cross-language correlation
 			"SqlServerSlowQueryDetails",     // event.name for New Relic custom events
 		)
 		emittedCount++

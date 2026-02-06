@@ -440,7 +440,7 @@ func (s *QueryPerformanceScraper) processSlowQueryMetrics(result models.SlowQuer
 
 		s.logger.Info("🔐 SLOW QUERY: Normalized SQL and generated hash",
 			zap.String("query_id", queryID),
-			zap.String("normalized_sql_hash", sqlHash),
+			zap.String("normalised_sql_hash", sqlHash),
 			zap.Int("normalized_length", len(normalizedSQL)),
 			zap.String("normalized_sql_preview", func() string {
 				if len(normalizedSQL) > 200 {
@@ -454,7 +454,7 @@ func (s *QueryPerformanceScraper) processSlowQueryMetrics(result models.SlowQuer
 			result.NrServiceGuid = &nrApmGuid
 		}
 		if sqlHash != "" {
-			result.NormalizedSqlHash = &sqlHash
+			result.NormalisedSqlHash = &sqlHash
 		}
 
 		// If no APM metadata found in query text (typical for cached plans),
@@ -469,16 +469,16 @@ func (s *QueryPerformanceScraper) processSlowQueryMetrics(result models.SlowQuer
 				s.logger.Info("✅ SLOW QUERY: Enriching with cached APM metadata",
 					zap.String("query_id", queryID),
 					zap.String("cached_nr_service_guid", cachedMetadata.NrServiceGuid),
-					zap.String("cached_normalized_sql_hash", cachedMetadata.NormalizedSqlHash))
+					zap.String("cached_normalized_sql_hash", cachedMetadata.NormalisedSqlHash))
 
 				// Use cached values if not already present
 				if nrApmGuid == "" && cachedMetadata.NrServiceGuid != "" {
 					nrApmGuid = cachedMetadata.NrServiceGuid
 					result.NrServiceGuid = &cachedMetadata.NrServiceGuid
 				}
-				if sqlHash == "" && cachedMetadata.NormalizedSqlHash != "" {
-					sqlHash = cachedMetadata.NormalizedSqlHash
-					result.NormalizedSqlHash = &cachedMetadata.NormalizedSqlHash
+				if sqlHash == "" && cachedMetadata.NormalisedSqlHash != "" {
+					sqlHash = cachedMetadata.NormalisedSqlHash
+					result.NormalisedSqlHash = &cachedMetadata.NormalisedSqlHash
 				}
 			} else {
 				s.logger.Warn("⚠️  SLOW QUERY: No cached APM metadata found",
@@ -518,8 +518,8 @@ func (s *QueryPerformanceScraper) processSlowQueryMetrics(result models.SlowQuer
 	}
 
 	normalizedSqlHash := ""
-	if result.NormalizedSqlHash != nil {
-		normalizedSqlHash = *result.NormalizedSqlHash
+	if result.NormalisedSqlHash != nil {
+		normalizedSqlHash = *result.NormalisedSqlHash
 	}
 
 	nrServiceGuid := ""
@@ -532,7 +532,7 @@ func (s *QueryPerformanceScraper) processSlowQueryMetrics(result models.SlowQuer
 	s.logger.Info("📤 SLOW QUERY: Emitting event with final metadata",
 		zap.String("query_id", queryID),
 		zap.String("database_name", databaseName),
-		zap.String("normalized_sql_hash", normalizedSqlHash),
+		zap.String("normalised_sql_hash", normalizedSqlHash),
 		zap.String("nr_service_guid", nrServiceGuid),
 		zap.Bool("has_apm_correlation", nrServiceGuid != "" && normalizedSqlHash != ""),
 		zap.String("event_type", "SqlServerSlowQueryDetails"))

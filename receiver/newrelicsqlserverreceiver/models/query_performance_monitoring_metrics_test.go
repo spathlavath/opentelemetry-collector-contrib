@@ -19,7 +19,7 @@ func TestSlowQueryModel(t *testing.T) {
 			QueryText:              &queryText,
 			QueryID:                &queryID,
 			NrServiceGuid:          &nrApmGuid,
-			NormalizedSqlHash:      &sqlHash,
+			NormalisedSqlHash:      &sqlHash,
 			ExecutionCount:         &executionCount,
 			IntervalExecutionCount: &intervalExecCount,
 		}
@@ -34,9 +34,9 @@ func TestSlowQueryModel(t *testing.T) {
 		assert.NotNil(t, slowQuery.NrServiceGuid)
 		assert.Equal(t, nrApmGuid, *slowQuery.NrServiceGuid)
 
-		assert.NotNil(t, slowQuery.NormalizedSqlHash)
-		assert.Equal(t, sqlHash, *slowQuery.NormalizedSqlHash)
-		assert.Len(t, *slowQuery.NormalizedSqlHash, 32, "MD5 hash should be 32 characters")
+		assert.NotNil(t, slowQuery.NormalisedSqlHash)
+		assert.Equal(t, sqlHash, *slowQuery.NormalisedSqlHash)
+		assert.Len(t, *slowQuery.NormalisedSqlHash, 32, "MD5 hash should be 32 characters")
 
 		assert.NotNil(t, slowQuery.ExecutionCount)
 		assert.Equal(t, executionCount, *slowQuery.ExecutionCount)
@@ -51,13 +51,13 @@ func TestSlowQueryModel(t *testing.T) {
 		slowQuery := SlowQuery{
 			QueryText:         &queryText,
 			NrServiceGuid:     nil,
-			NormalizedSqlHash: nil,
+			NormalisedSqlHash: nil,
 		}
 
 		// Verify metadata fields can be nil
 		assert.NotNil(t, slowQuery.QueryText)
 		assert.Nil(t, slowQuery.NrServiceGuid)
-		assert.Nil(t, slowQuery.NormalizedSqlHash)
+		assert.Nil(t, slowQuery.NormalisedSqlHash)
 	})
 
 	t.Run("SlowQuery model with empty client name and nr_service_guid", func(t *testing.T) {
@@ -68,7 +68,7 @@ func TestSlowQueryModel(t *testing.T) {
 		slowQuery := SlowQuery{
 			QueryText:         &queryText,
 			NrServiceGuid:     &emptyGuid,
-			NormalizedSqlHash: &sqlHash,
+			NormalisedSqlHash: &sqlHash,
 		}
 
 		// Empty strings are valid values
@@ -76,8 +76,8 @@ func TestSlowQueryModel(t *testing.T) {
 		assert.NotNil(t, slowQuery.NrServiceGuid)
 		assert.Equal(t, "", *slowQuery.NrServiceGuid)
 
-		assert.NotNil(t, slowQuery.NormalizedSqlHash)
-		assert.NotEmpty(t, *slowQuery.NormalizedSqlHash)
+		assert.NotNil(t, slowQuery.NormalisedSqlHash)
+		assert.NotEmpty(t, *slowQuery.NormalisedSqlHash)
 	})
 }
 
@@ -96,7 +96,7 @@ func TestActiveRunningQueryModel(t *testing.T) {
 			WaitType:          &waitType,
 			WaitTimeS:         &waitTime,
 			NrServiceGuid:     &nrApmGuid,
-			NormalizedSqlHash: &sqlHash,
+			NormalisedSqlHash: &sqlHash,
 		}
 
 		assert.NotNil(t, activeQuery.CurrentSessionID)
@@ -114,8 +114,8 @@ func TestActiveRunningQueryModel(t *testing.T) {
 		assert.NotNil(t, activeQuery.NrServiceGuid)
 		assert.Equal(t, nrApmGuid, *activeQuery.NrServiceGuid)
 
-		assert.NotNil(t, activeQuery.NormalizedSqlHash)
-		assert.Equal(t, sqlHash, *activeQuery.NormalizedSqlHash)
+		assert.NotNil(t, activeQuery.NormalisedSqlHash)
+		assert.Equal(t, sqlHash, *activeQuery.NormalisedSqlHash)
 	})
 }
 
@@ -159,7 +159,7 @@ func TestSlowQueryWithIntervalMetrics(t *testing.T) {
 		slowQuery := SlowQuery{
 			QueryText:              &queryText,
 			QueryID:                &queryID,
-			NormalizedSqlHash:      &sqlHash,
+			NormalisedSqlHash:      &sqlHash,
 			TotalElapsedTimeMS:     &totalElapsedTime,
 			ExecutionCount:         &executionCount,
 			IntervalExecutionCount: &intervalExecCount,
@@ -177,8 +177,8 @@ func TestSlowQueryWithIntervalMetrics(t *testing.T) {
 		assert.Equal(t, int64(25), *slowQuery.IntervalExecutionCount)
 
 		// Verify the query has normalized hash
-		assert.NotNil(t, slowQuery.NormalizedSqlHash)
-		assert.Len(t, *slowQuery.NormalizedSqlHash, 32)
+		assert.NotNil(t, slowQuery.NormalisedSqlHash)
+		assert.Len(t, *slowQuery.NormalisedSqlHash, 32)
 	})
 }
 
@@ -195,10 +195,10 @@ func TestModelTagging(t *testing.T) {
 		sqlHash := "abcd1234efgh5678ijkl9012mnop3456"
 
 		slowQuery.NrServiceGuid = &nrApmGuid
-		slowQuery.NormalizedSqlHash = &sqlHash
+		slowQuery.NormalisedSqlHash = &sqlHash
 
 		assert.Equal(t, "MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI5MjMzNDQwNw", *slowQuery.NrServiceGuid)
-		assert.Equal(t, "abcd1234efgh5678ijkl9012mnop3456", *slowQuery.NormalizedSqlHash)
+		assert.Equal(t, "abcd1234efgh5678ijkl9012mnop3456", *slowQuery.NormalisedSqlHash)
 	})
 }
 
@@ -226,14 +226,14 @@ func TestNilSafetyInModels(t *testing.T) {
 			QueryText:         nil,
 			QueryID:           nil,
 			NrServiceGuid:     nil,
-			NormalizedSqlHash: nil,
+			NormalisedSqlHash: nil,
 		}
 
 		// These should all be nil without causing issues
 		assert.Nil(t, slowQuery.QueryText)
 		assert.Nil(t, slowQuery.QueryID)
 		assert.Nil(t, slowQuery.NrServiceGuid)
-		assert.Nil(t, slowQuery.NormalizedSqlHash)
+		assert.Nil(t, slowQuery.NormalisedSqlHash)
 
 		// Setting values should work
 		newQueryText := "SELECT 1"
