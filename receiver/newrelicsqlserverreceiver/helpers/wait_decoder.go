@@ -168,7 +168,7 @@ func GetWaitTypeCategory(waitType string) string {
 // Only decodes table names when OBJECT identifier is available
 func DecodeWaitResource(waitResource string) (resourceType, description string) {
 	if waitResource == "" {
-		return "N/A", "Not Applicable"
+		return "", ""
 	}
 
 	// KEY: <database_id>:<hobt_id> (<hash_value>)

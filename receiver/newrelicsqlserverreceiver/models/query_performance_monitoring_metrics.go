@@ -93,11 +93,12 @@ type ExecutionPlanNode struct {
 	NoJoinPredicate        bool   `json:"no_join_predicate"`
 
 	// Performance Metrics
-	TotalWorkerTime   float64 `json:"total_worker_time"`
-	TotalElapsedTime  float64 `json:"total_elapsed_time"`
-	TotalLogicalReads int64   `json:"total_logical_reads"`
-	ExecutionCount    int64   `json:"execution_count"`
-	AvgElapsedTimeMs  float64 `json:"avg_elapsed_time_ms"`
+	TotalWorkerTime    float64 `json:"total_worker_time"`
+	TotalElapsedTime   float64 `json:"total_elapsed_time"`
+	TotalLogicalReads  int64   `json:"total_logical_reads"`
+	TotalLogicalWrites int64   `json:"total_logical_writes"`
+	ExecutionCount     int64   `json:"execution_count"`
+	AvgElapsedTimeMs   float64 `json:"avg_elapsed_time_ms"`
 
 	// Timestamps
 	CollectionTimestamp string `json:"collection_timestamp"`

@@ -506,6 +506,10 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
+			mb.RecordSqlserverSlowqueryHistoricalAvgElapsedTimeMsDataPoint(ts, 1, "query_id-val", "database_name-val", "normalised_sql_hash-val", "nr_service_guid-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
 			mb.RecordSqlserverSlowqueryHistoricalExecutionCountDataPoint(ts, 1, "query_id-val", "database_name-val", "normalised_sql_hash-val", "nr_service_guid-val")
 
 			defaultMetricsCount++
@@ -2660,7 +2664,31 @@ func TestMetricsBuilder(t *testing.T) {
 					validatedMetrics["sqlserver.slowquery.avg_elapsed_time_ms"] = true
 					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
 					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
-					assert.Equal(t, "Average elapsed time per execution in milliseconds (historical average since plan cached)", ms.At(i).Description())
+					assert.Equal(t, "Average elapsed time per execution in milliseconds (read from SQL query)", ms.At(i).Description())
+					assert.Equal(t, "ms", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
+					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
+					attrVal, ok := dp.Attributes().Get("query_id")
+					assert.True(t, ok)
+					assert.Equal(t, "query_id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("normalised_sql_hash")
+					assert.True(t, ok)
+					assert.Equal(t, "normalised_sql_hash-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("nr_service_guid")
+					assert.True(t, ok)
+					assert.Equal(t, "nr_service_guid-val", attrVal.Str())
+				case "sqlserver.slowquery.historical_avg_elapsed_time_ms":
+					assert.False(t, validatedMetrics["sqlserver.slowquery.historical_avg_elapsed_time_ms"], "Found a duplicate in the metrics slice: sqlserver.slowquery.historical_avg_elapsed_time_ms")
+					validatedMetrics["sqlserver.slowquery.historical_avg_elapsed_time_ms"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Historical average elapsed time in milliseconds (cumulative since plan cached)", ms.At(i).Description())
 					assert.Equal(t, "ms", ms.At(i).Unit())
 					dp := ms.At(i).Gauge().DataPoints().At(0)
 					assert.Equal(t, start, dp.StartTimestamp())

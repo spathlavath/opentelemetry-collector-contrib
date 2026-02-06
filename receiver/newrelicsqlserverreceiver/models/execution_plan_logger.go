@@ -120,6 +120,7 @@ func (epl *ExecutionPlanLogger) LogExecutionPlanNode(node *ExecutionPlanNode) {
 		"total_worker_time":        node.TotalWorkerTime,
 		"total_elapsed_time":       node.TotalElapsedTime,
 		"total_logical_reads":      node.TotalLogicalReads,
+		"total_logical_writes":     node.TotalLogicalWrites,
 		"execution_count":          node.ExecutionCount,
 		"avg_elapsed_time_ms":      node.AvgElapsedTimeMs,
 		"collection_timestamp":     node.CollectionTimestamp,

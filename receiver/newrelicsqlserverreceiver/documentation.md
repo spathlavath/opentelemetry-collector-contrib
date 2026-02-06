@@ -1450,7 +1450,24 @@ Total number of server role members
 
 ### sqlserver.slowquery.avg_elapsed_time_ms
 
-Average elapsed time per execution in milliseconds (historical average since plan cached)
+Average elapsed time per execution in milliseconds (read from SQL query)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| ms | Gauge | Double | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| query_id | Unique identifier for the SQL query | Any Str | Recommended |
+| database_name | Name of the database | Any Str | Recommended |
+| normalised_sql_hash | MD5 hash of normalized SQL for cross-language query correlation | Any Str | Recommended |
+| nr_service_guid | New Relic APM service GUID extracted from query comments for APM-DB correlation | Any Str | Recommended |
+
+### sqlserver.slowquery.historical_avg_elapsed_time_ms
+
+Historical average elapsed time in milliseconds (cumulative since plan cached)
 
 | Unit | Metric Type | Value Type | Stability |
 | ---- | ----------- | ---------- | --------- |
