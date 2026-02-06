@@ -422,13 +422,15 @@ func removeCommentsAndNormalizeWhitespace(sql string) string {
 		current := state.current()
 
 		if current == '-' && state.hasNext() && state.peek() == '-' {
-			// Skip single-line comment
+			// Replace single-line comment with placeholder
 			skipSingleLineComment(state)
-			state.lastWasWhitespace = true
+			result.WriteByte('?')
+			state.lastWasWhitespace = false
 		} else if current == '/' && state.hasNext() && state.peek() == '*' {
-			// Skip multi-line comment
+			// Replace multi-line comment with placeholder
 			skipMultiLineComment(state)
-			state.lastWasWhitespace = true
+			result.WriteByte('?')
+			state.lastWasWhitespace = false
 		} else if unicode.IsSpace(rune(current)) {
 			// Collapse multiple whitespace to single space
 			if !state.lastWasWhitespace {
