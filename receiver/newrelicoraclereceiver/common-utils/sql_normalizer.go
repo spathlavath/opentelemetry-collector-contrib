@@ -382,10 +382,16 @@ func removeCommentsAndNormalizeWhitespace(sql string) string {
 			processStringLiteral(&result, state)
 		} else if isMultilineCommentStart(state) {
 			processMultilineComment(state)
+			result.WriteByte('?')
+			state.lastWasWhitespace = false
 		} else if isSingleLineCommentStart(state) {
 			processSingleLineComment(state)
+			result.WriteByte('?')
+			state.lastWasWhitespace = false
 		} else if current == '#' {
 			processHashComment(state)
+			result.WriteByte('?')
+			state.lastWasWhitespace = false
 		} else if unicode.IsSpace(rune(current)) {
 			processWhitespace(&result, state)
 		} else {

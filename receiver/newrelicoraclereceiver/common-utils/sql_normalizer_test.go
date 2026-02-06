@@ -38,17 +38,17 @@ func TestNormalizeSql(t *testing.T) {
 		{
 			name:     "SELECT with single-line comment",
 			input:    "SELECT * FROM users -- this is a comment\nWHERE id = 1",
-			expected: "SELECT * FROM USERS WHERE ID = ?",
+			expected: "SELECT * FROM USERS ?WHERE ID = ?",
 		},
 		{
 			name:     "SELECT with multi-line comment",
 			input:    "SELECT * FROM users /* this is a\nmulti-line comment */ WHERE id = 1",
-			expected: "SELECT * FROM USERS WHERE ID = ?",
+			expected: "SELECT * FROM USERS ? WHERE ID = ?",
 		},
 		{
 			name:     "SELECT with hash comment",
 			input:    "SELECT * FROM users # this is a comment\nWHERE id = 1",
-			expected: "SELECT * FROM USERS WHERE ID = ?",
+			expected: "SELECT * FROM USERS ?WHERE ID = ?",
 		},
 		{
 			name:     "Complex query with multiple literals and whitespace",
@@ -74,6 +74,99 @@ func TestNormalizeSql(t *testing.T) {
 			name:     "Oracle-specific query with multiple bind variables",
 			input:    "SELECT employee_id, salary FROM employees WHERE department_id = :dept_id AND hire_date > :hire_date",
 			expected: "SELECT EMPLOYEE_ID, SALARY FROM EMPLOYEES WHERE DEPARTMENT_ID = ? AND HIRE_DATE > ?",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			result := NormalizeSql(tt.input)
+			if result != tt.expected {
+				t.Errorf("NormalizeSql(%q) = %q; want %q", tt.input, result, tt.expected)
+			}
+		})
+	}
+}
+
+func TestNormalizeSqlWithCommentBeforeSelect(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    string
+		expected string
+	}{
+		{
+			name:     "Comment before SELECT",
+			input:    "/* text */SELECT * FROM users",
+			expected: "?SELECT * FROM USERS",
+		},
+		{
+			name:     "Comment with nr_service_guid before SELECT",
+			input:    "/* nr_service_guid=\"ABC123\" */SELECT * FROM users WHERE id = 5",
+			expected: "?SELECT * FROM USERS WHERE ID = ?",
+		},
+		{
+			name:     "Complex query with comment",
+			input:    "/* text */SELECT D.DEPARTMENT_NAME, D.DEPARTMENT_ID, COUNT(DISTINCT E.EMPLOYEE_ID) AS CURRENT_EMPLOYEES FROM DEPARTMENTS D WHERE D.DEPARTMENT_NAME LIKE ? GROUP BY D.DEPARTMENT_NAME",
+			expected: "?SELECT D.DEPARTMENT_NAME, D.DEPARTMENT_ID, COUNT(DISTINCT E.EMPLOYEE_ID) AS CURRENT_EMPLOYEES FROM DEPARTMENTS D WHERE D.DEPARTMENT_NAME LIKE ? GROUP BY D.DEPARTMENT_NAME",
+		},
+		{
+			name:     "Multiple comments in query",
+			input:    "/* comment1 */SELECT * FROM users /* comment2 */ WHERE id = 1 -- inline comment",
+			expected: "?SELECT * FROM USERS ? WHERE ID = ? ?",
+		},
+		{
+			name:     "Comment in the middle of query",
+			input:    "SELECT * FROM users WHERE /* filtering */ id IN (1, 2, 3)",
+			expected: "SELECT * FROM USERS WHERE ? ID IN (?)",
+		},
+		{
+			name:     "Comment with special characters",
+			input:    "/* @app_name='MyApp' */SELECT * FROM orders WHERE price > 100",
+			expected: "?SELECT * FROM ORDERS WHERE PRICE > ?",
+		},
+		{
+			name:     "Multiple line breaks in comment",
+			input:    "/* This is a\n   multi-line\n   comment */SELECT * FROM products",
+			expected: "?SELECT * FROM PRODUCTS",
+		},
+		{
+			name:     "Comment followed by bind variable",
+			input:    "/* comment */SELECT * FROM users WHERE name = :name AND age = :age",
+			expected: "?SELECT * FROM USERS WHERE NAME = ? AND AGE = ?",
+		},
+		{
+			name:     "Hash comment with Oracle query",
+			input:    "SELECT * FROM v$session # active sessions only\nWHERE status = 'ACTIVE'",
+			expected: "SELECT * FROM V$SESSION ?WHERE STATUS = ?",
+		},
+		{
+			name:     "Single-line comment at end of query",
+			input:    "SELECT * FROM employees WHERE dept_id = 10 -- HR department",
+			expected: "SELECT * FROM EMPLOYEES WHERE DEPT_ID = ? ?",
+		},
+		{
+			name:     "Comment with nested slashes",
+			input:    "/* path: /usr/local/bin */SELECT * FROM config",
+			expected: "?SELECT * FROM CONFIG",
+		},
+		{
+			name:     "Mixed comments and literals",
+			input:    "SELECT * /* select all */ FROM users WHERE id = 123 -- get user\nAND name = 'John'",
+			expected: "SELECT * ? FROM USERS WHERE ID = ? ?AND NAME = ?",
+		},
+		{
+			name:     "Comment with SQL keywords inside",
+			input:    "/* SELECT UPDATE DELETE */SELECT column1 FROM table1",
+			expected: "?SELECT COLUMN1 FROM TABLE1",
+		},
+		{
+			name:     "Empty comment",
+			input:    "/**/SELECT * FROM users",
+			expected: "?SELECT * FROM USERS",
+		},
+		{
+			name:     "Comment with quotes inside",
+			input:    "/* This is 'quoted' text */SELECT * FROM products WHERE category = 'Electronics'",
+			expected: "?SELECT * FROM PRODUCTS WHERE CATEGORY = ?",
 		},
 	}
 
@@ -265,5 +358,18 @@ func TestOracleSpecificNormalization(t *testing.T) {
 				t.Errorf("NormalizeSql(%q) = %q; want %q", tt.input, result, tt.expected)
 			}
 		})
+	}
+}
+
+func TestPrintNormalizedQueries(t *testing.T) {
+	queries := []string{
+		"/* text */SELECT D.DEPARTMENT_NAME FROM DEPARTMENTS",
+		"/* nr_service_guid=\"ABC\" */SELECT * FROM users WHERE id = 5",
+	}
+	
+	for _, query := range queries {
+		normalized := NormalizeSql(query)
+		t.Logf("Input:      %s", query)
+		t.Logf("Normalized: %s\n", normalized)
 	}
 }

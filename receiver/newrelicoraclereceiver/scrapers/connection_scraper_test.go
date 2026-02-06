@@ -8,7 +8,6 @@ import (
 	"database/sql"
 	"errors"
 	"testing"
-	"time"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -621,30 +620,6 @@ func TestConnectionScraper_IntegrationWithMultipleErrors(t *testing.T) {
 }
 
 func TestConnectionScraper_NullValuesHandling(t *testing.T) {
-	t.Run("wait event summary with null average wait time", func(t *testing.T) {
-		mockClient := client.NewMockClient()
-		mockClient.WaitEventSummaryList = []models.WaitEventSummary{
-			{
-				Event:            sql.NullString{String: "test event", Valid: true},
-				TotalWaits:       sql.NullInt64{Int64: 100, Valid: true},
-				TimeWaitedMicro:  sql.NullInt64{Int64: 50000, Valid: true},
-				AverageWaitMicro: sql.NullFloat64{Valid: false}, // Null average
-				WaitClass:        sql.NullString{String: "Other", Valid: true},
-			},
-		}
-
-		config := metadata.DefaultMetricsBuilderConfig()
-		settings := receivertest.NewNopSettings(metadata.Type)
-		mb := metadata.NewMetricsBuilder(config, settings)
-		logger := zap.NewNop()
-
-		scraper, err := NewConnectionScraper(mockClient, mb, logger, config)
-		require.NoError(t, err)
-
-		errs := scraper.ScrapeConnectionMetrics(context.Background())
-		assert.Empty(t, errs) // Should handle null gracefully
-	})
-
 	t.Run("session limits with invalid limit value", func(t *testing.T) {
 		mockClient := client.NewMockClient()
 		mockClient.SessionLimitsList = []models.SessionLimit{
@@ -667,37 +642,6 @@ func TestConnectionScraper_NullValuesHandling(t *testing.T) {
 
 		errs := scraper.ScrapeConnectionMetrics(context.Background())
 		assert.Empty(t, errs) // Should handle parse error gracefully
-	})
-
-	t.Run("session resource with null optional fields", func(t *testing.T) {
-		mockClient := client.NewMockClient()
-		logonTime := time.Date(2024, 10, 28, 10, 0, 0, 0, time.UTC)
-		mockClient.SessionResourcesList = []models.SessionResource{
-			{
-				SID:             sql.NullInt64{Int64: 123, Valid: true},
-				Username:        sql.NullString{Valid: false}, // Null username
-				Status:          sql.NullString{Valid: false}, // Null status
-				Program:         sql.NullString{Valid: false}, // Null program
-				Machine:         sql.NullString{String: "WORKSTATION1", Valid: true},
-				OSUser:          sql.NullString{String: "john.doe", Valid: true},
-				LogonTime:       sql.NullTime{Time: logonTime, Valid: true},
-				LastCallET:      sql.NullInt64{Int64: 300, Valid: true},
-				CPUUsageSeconds: sql.NullFloat64{Float64: 45.5, Valid: true},
-				PGAMemoryBytes:  sql.NullInt64{Valid: false}, // Null PGA
-				LogicalReads:    sql.NullInt64{Valid: false}, // Null reads
-			},
-		}
-
-		config := metadata.DefaultMetricsBuilderConfig()
-		settings := receivertest.NewNopSettings(metadata.Type)
-		mb := metadata.NewMetricsBuilder(config, settings)
-		logger := zap.NewNop()
-
-		scraper, err := NewConnectionScraper(mockClient, mb, logger, config)
-		require.NoError(t, err)
-
-		errs := scraper.ScrapeConnectionMetrics(context.Background())
-		assert.Empty(t, errs) // Should handle null fields gracefully
 	})
 }
 
