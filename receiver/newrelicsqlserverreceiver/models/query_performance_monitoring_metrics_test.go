@@ -46,9 +46,8 @@ func TestSlowQueryModel(t *testing.T) {
 	})
 
 	t.Run("SlowQuery model with nil New Relic metadata fields", func(t *testing.T) {
-
 		slowQuery := SlowQuery{
-				NrServiceGuid:     nil,
+			NrServiceGuid:     nil,
 			NormalisedSqlHash: nil,
 		}
 
@@ -62,7 +61,7 @@ func TestSlowQueryModel(t *testing.T) {
 		sqlHash := "abc123def456abc123def456abc123de"
 
 		slowQuery := SlowQuery{
-				NrServiceGuid:     &emptyGuid,
+			NrServiceGuid:     &emptyGuid,
 			NormalisedSqlHash: &sqlHash,
 		}
 
@@ -86,7 +85,7 @@ func TestActiveRunningQueryModel(t *testing.T) {
 
 		activeQuery := ActiveRunningQuery{
 			CurrentSessionID:  &sessionID,
-				WaitType:          &waitType,
+			WaitType:          &waitType,
 			WaitTimeS:         &waitTime,
 			NrServiceGuid:     &nrApmGuid,
 			NormalisedSqlHash: &sqlHash,
@@ -94,7 +93,6 @@ func TestActiveRunningQueryModel(t *testing.T) {
 
 		assert.NotNil(t, activeQuery.CurrentSessionID)
 		assert.Equal(t, sessionID, *activeQuery.CurrentSessionID)
-
 
 		assert.NotNil(t, activeQuery.WaitType)
 		assert.Equal(t, waitType, *activeQuery.WaitType)
@@ -147,7 +145,7 @@ func TestSlowQueryWithIntervalMetrics(t *testing.T) {
 		intervalExecCount := int64(25) // 25 new executions
 
 		slowQuery := SlowQuery{
-				QueryID:                &queryID,
+			QueryID:                &queryID,
 			NormalisedSqlHash:      &sqlHash,
 			TotalElapsedTimeMS:     &totalElapsedTime,
 			ExecutionCount:         &executionCount,
@@ -212,7 +210,7 @@ func TestNilSafetyInModels(t *testing.T) {
 	t.Run("Models handle nil pointer fields safely", func(t *testing.T) {
 		// Test that models can be created with all nil fields without panicking
 		slowQuery := SlowQuery{
-				QueryID:           nil,
+			QueryID:           nil,
 			NrServiceGuid:     nil,
 			NormalisedSqlHash: nil,
 		}
@@ -242,7 +240,7 @@ func TestActiveRunningQueryBlockingMetadata(t *testing.T) {
 		activeQuery := ActiveRunningQuery{
 			CurrentSessionID:           &sessionID,
 			BlockingSessionID:          &blockingSessionID,
-				BlockingQueryStatementText: &blockingQueryText,
+			BlockingQueryStatementText: &blockingQueryText,
 			NrServiceGuid:              &victimGuid,
 		}
 
@@ -267,7 +265,7 @@ func TestActiveRunningQueryBlockingMetadata(t *testing.T) {
 		activeQuery := ActiveRunningQuery{
 			CurrentSessionID:           &sessionID,
 			BlockingSessionID:          &blockingSessionID,
-				BlockingQueryStatementText: &blockingQueryText,
+			BlockingQueryStatementText: &blockingQueryText,
 			NrServiceGuid:              &victimGuid,
 		}
 
@@ -288,7 +286,7 @@ func TestActiveRunningQueryBlockingMetadata(t *testing.T) {
 		activeQuery := ActiveRunningQuery{
 			CurrentSessionID:           &sessionID,
 			BlockingSessionID:          nil, // No blocking
-				BlockingQueryStatementText: nil, // No blocker query
+			BlockingQueryStatementText: nil, // No blocker query
 			NrServiceGuid:              &serviceGuid,
 		}
 
@@ -309,7 +307,7 @@ func TestActiveRunningQueryBlockingMetadata(t *testing.T) {
 		activeQuery := ActiveRunningQuery{
 			CurrentSessionID:           &sessionID,
 			BlockingSessionID:          &blockingSessionID,
-				BlockingQueryStatementText: &blockingQueryText,
+			BlockingQueryStatementText: &blockingQueryText,
 			NrServiceGuid:              nil, // No victim metadata
 		}
 
@@ -367,7 +365,7 @@ func TestActiveRunningQueryCompleteBlockingScenario(t *testing.T) {
 		activeQuery := ActiveRunningQuery{
 			// Victim details
 			CurrentSessionID: &victimSessionID,
-				QueryID:          &victimQueryID,
+			QueryID:          &victimQueryID,
 			NrServiceGuid:    &victimGuid,
 
 			// Blocker details
@@ -390,7 +388,7 @@ func TestActiveRunningQueryCompleteBlockingScenario(t *testing.T) {
 
 		// Verify victim details
 		assert.Equal(t, int64(55), *activeQuery.CurrentSessionID)
-			assert.Equal(t, victimGuid, *activeQuery.NrServiceGuid)
+		assert.Equal(t, victimGuid, *activeQuery.NrServiceGuid)
 		assert.Equal(t, "0x1A2B3C4D5E6F7890", activeQuery.QueryID.String())
 
 		// Verify blocker details
