@@ -192,22 +192,22 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		SqlserverBufferCacheHitRatio: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverBufferCheckpointPagesPerSec: MetricConfig{
 			Enabled: true,
 		},
 		SqlserverBufferPageLifeExpectancy: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverBufferpoolBatchRequestsPerSec: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverBufferpoolPageLifeExpectancyMs: MetricConfig{
 			Enabled: true,
 		},
 		SqlserverConnectionsUser: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverDatabaseBufferpoolSizePerDatabaseBytes: MetricConfig{
 			Enabled: true,
@@ -216,10 +216,10 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		SqlserverDatabaseLogBytesFlushedPerSec: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverDatabaseLogFlushWaitsPerSec: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverDatabaseLogFlushesPerSec: MetricConfig{
 			Enabled: true,
@@ -228,7 +228,7 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		SqlserverDatabaseLogUsedSpaceMb: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverDatabaseMaxDiskSizeBytes: MetricConfig{
 			Enabled: true,
@@ -240,70 +240,70 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		SqlserverDatabasePrincipalsApplicationRoles: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverDatabasePrincipalsOld: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverDatabasePrincipalsOrphanedUsers: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverDatabasePrincipalsRecentlyCreated: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverDatabasePrincipalsRoles: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverDatabasePrincipalsSQLUsers: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverDatabasePrincipalsTotal: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverDatabasePrincipalsUsers: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverDatabasePrincipalsWindowsUsers: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverDatabaseRoleMembersApplicationRoles: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverDatabaseRoleMembersCrossRole: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverDatabaseRoleMembersHighPrivilege: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverDatabaseRoleMembersUnique: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverDatabaseRoleMembershipsActive: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverDatabaseRoleMembershipsCustom: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverDatabaseRoleMembershipsNested: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverDatabaseRoleMembershipsTotal: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverDatabaseRoleMembershipsUsers: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverDatabaseRolePermissionMemberCount: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverDatabaseRolePermissionRiskLevel: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverDatabaseRoleRolesEmpty: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverDatabaseRoleRolesWithMembers: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverDatabaseSizeDataMb: MetricConfig{
 			Enabled: true,
@@ -312,49 +312,49 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		SqlserverDatabaseTransactionsActive: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverExecutionPlan: MetricConfig{
 			Enabled: true,
 		},
 		SqlserverFailoverClusterAgClusterType: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverFailoverClusterAgFailureConditionLevel: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverFailoverClusterAgHealthCheckTimeout: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverFailoverClusterAgReplicaRole: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverFailoverClusterAgRequiredSyncSecondaries: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverFailoverClusterAgSynchronizationHealth: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverFailoverClusterFlowControlTimeMs: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverFailoverClusterLogBytesReceivedPerSec: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverFailoverClusterLogSendQueueKb: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverFailoverClusterRedoQueueKb: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverFailoverClusterRedoRateKbSec: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverFailoverClusterTransactionDelayMs: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverInstanceBackgroundProcessesCount: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverInstanceBlockedProcessesCount: MetricConfig{
 			Enabled: true,
@@ -372,10 +372,10 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		SqlserverInstanceDiskInBytes: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverInstanceDormantProcessesCount: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverInstanceForcedParameterizationsPerSec: MetricConfig{
 			Enabled: true,
@@ -390,7 +390,7 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		SqlserverInstanceMemoryTotal: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverInstanceMemoryUtilizationPercent: MetricConfig{
 			Enabled: true,
@@ -399,22 +399,22 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		SqlserverInstancePreconnectProcessesCount: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverInstanceRunnableProcessesCount: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverInstanceRunnableTasks: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverInstanceRunningProcessesCount: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverInstanceSleepingProcessesCount: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverInstanceSuspendedProcessesCount: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverInstanceTargetMemoryKb: MetricConfig{
 			Enabled: true,
@@ -423,82 +423,82 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		SqlserverLockModeBulkUpdate: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverLockModeExclusive: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverLockModeIntent: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverLockModeSchema: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverLockModeShared: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverLockModeSharedIntentExclusive: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverLockModeTotal: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverLockModeUpdate: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverLockResourceAllocationUnit: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverLockResourceApplication: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverLockResourceDatabaseLevel: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverLockResourceExtent: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverLockResourceFile: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverLockResourceHobt: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverLockResourceKey: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverLockResourceMetadata: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverLockResourcePage: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverLockResourceRow: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverLockResourceTable: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverLockResourceTotal: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverLockedObject: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverMemoryTarget: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverMemoryTotal: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverPlanAvgElapsedTimeMs: MetricConfig{
 			Enabled: true,
 		},
 		SqlserverSecurityServerPrincipalsCount: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverSecurityServerRoleMembersCount: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverSlowqueryHistoricalAvgElapsedTimeMs: MetricConfig{
 			Enabled: true,
@@ -537,100 +537,100 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		SqlserverTempdbAllocationWaitsMs: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverTempdbCurrentWaiters: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverTempdbDataFileCount: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverTempdbPagelatchWaitsMs: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverTempdbTotalSizeMb: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverThreadpoolCurrentTasks: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverThreadpoolMaxWorkers: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverThreadpoolRunnableTasks: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverThreadpoolRunningWorkers: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverThreadpoolUtilizationPercent: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverThreadpoolWaitingTasks: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverThreadpoolWorkQueueCount: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverUserConnectionsAuthenticationChurnRate: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverUserConnectionsAuthenticationLoginsPerSec: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverUserConnectionsAuthenticationRecentFailedLogins: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverUserConnectionsAuthenticationTotalFailedLogins: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverUserConnectionsAuthenticationUniqueFailedSources: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverUserConnectionsAuthenticationUniqueFailedUsers: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverUserConnectionsClientCount: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverUserConnectionsClientUniqueHosts: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverUserConnectionsClientUniquePrograms: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverUserConnectionsRunnable: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverUserConnectionsRunning: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverUserConnectionsSleeping: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverUserConnectionsSuspended: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverUserConnectionsTotal: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverUserConnectionsUtilizationActiveRatio: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverUserConnectionsUtilizationIdleRatio: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverWaitStatsLatchWaitTimeMs: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverWaitStatsLatchWaitingTasksCount: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		SqlserverWaitStatsWaitTimeMs: MetricConfig{
 			Enabled: true,
 		},
 		SqlserverWaitStatsWaitingTasksCount: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 	}
 }

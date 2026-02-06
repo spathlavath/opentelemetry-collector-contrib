@@ -22,8 +22,6 @@ type SlowQuery struct {
 	IntervalExecutionCount   *int64   `db:"-" metric_name:"sqlserver.slowquery.interval_execution_count" source_type:"gauge"`
 }
 
-
-
 // ExecutionPlanNode represents a parsed execution plan node with detailed operator information
 // This model contains the parsed data structure from XML execution plans for New Relic logging
 type ExecutionPlanNode struct {
@@ -142,7 +140,6 @@ type BlockingQueryEvent struct {
 	BlockingSessionID int64  // Who is blocking
 	BlockingQueryText string // Full SQL text of blocking query (no truncation)
 }
-
 
 // SlowQueryPlanData represents lightweight plan data extracted from slow queries
 // Used for in-memory correlation with active queries (NO database query needed)

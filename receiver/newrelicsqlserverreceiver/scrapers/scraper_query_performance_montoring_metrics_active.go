@@ -217,7 +217,6 @@ func (s *QueryPerformanceScraper) processActiveRunningQueryMetricsWithPlan(resul
 		blockingQueryHash = result.BlockingQueryHash.String()
 	}
 
-
 	// Extract query statement text (for logging/debugging, not sent as attribute)
 	var queryStatementText string
 	if result.QueryStatementText != nil {

@@ -80,6 +80,7 @@ func TestMetricsBuilder(t *testing.T) {
 			allMetricsCount++
 			mb.RecordSqlserverBlockingQueryDetailsDataPoint(ts, 1, 10, 10, "request_start_time-val", 19, "blocking_query_text-val", "newrelic.event.type-val")
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverBufferCacheHitRatioDataPoint(ts, 1)
 
@@ -87,9 +88,11 @@ func TestMetricsBuilder(t *testing.T) {
 			allMetricsCount++
 			mb.RecordSqlserverBufferCheckpointPagesPerSecDataPoint(ts, 1)
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverBufferPageLifeExpectancyDataPoint(ts, 1)
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverBufferpoolBatchRequestsPerSecDataPoint(ts, 1)
 
@@ -97,6 +100,7 @@ func TestMetricsBuilder(t *testing.T) {
 			allMetricsCount++
 			mb.RecordSqlserverBufferpoolPageLifeExpectancyMsDataPoint(ts, 1)
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverConnectionsUserDataPoint(ts, 1)
 
@@ -108,9 +112,11 @@ func TestMetricsBuilder(t *testing.T) {
 			allMetricsCount++
 			mb.RecordSqlserverDatabaseIoStallMsDataPoint(ts, 1, "database_name-val", "metric_source-val", "engine_edition-val", 17)
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverDatabaseLogBytesFlushedPerSecDataPoint(ts, 1, "metric_source-val", "engine_edition-val", 17)
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverDatabaseLogFlushWaitsPerSecDataPoint(ts, 1, "metric_source-val", "engine_edition-val", 17)
 
@@ -122,6 +128,7 @@ func TestMetricsBuilder(t *testing.T) {
 			allMetricsCount++
 			mb.RecordSqlserverDatabaseLogTransactionGrowthDataPoint(ts, 1, "database_name-val", "metric_source-val", "engine_edition-val", 17)
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverDatabaseLogUsedSpaceMbDataPoint(ts, 1, "database_name-val", "metric_source-val", "engine_edition-val", 17)
 
@@ -137,69 +144,91 @@ func TestMetricsBuilder(t *testing.T) {
 			allMetricsCount++
 			mb.RecordSqlserverDatabasePageFileTotalBytesDataPoint(ts, 1, "database_name-val", "metric_source-val", "engine_edition-val", 17)
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverDatabasePrincipalsApplicationRolesDataPoint(ts, 1, "database_name-val")
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverDatabasePrincipalsOldDataPoint(ts, 1, "database_name-val")
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverDatabasePrincipalsOrphanedUsersDataPoint(ts, 1, "database_name-val")
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverDatabasePrincipalsRecentlyCreatedDataPoint(ts, 1, "database_name-val")
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverDatabasePrincipalsRolesDataPoint(ts, 1, "database_name-val")
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverDatabasePrincipalsSQLUsersDataPoint(ts, 1, "database_name-val")
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverDatabasePrincipalsTotalDataPoint(ts, 1, "database_name-val")
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverDatabasePrincipalsUsersDataPoint(ts, 1, "database_name-val")
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverDatabasePrincipalsWindowsUsersDataPoint(ts, 1, "database_name-val")
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverDatabaseRoleMembersApplicationRolesDataPoint(ts, 1, "database_name-val")
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverDatabaseRoleMembersCrossRoleDataPoint(ts, 1, "database_name-val")
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverDatabaseRoleMembersHighPrivilegeDataPoint(ts, 1, "database_name-val")
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverDatabaseRoleMembersUniqueDataPoint(ts, 1, "database_name-val")
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverDatabaseRoleMembershipsActiveDataPoint(ts, 1, "database_name-val")
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverDatabaseRoleMembershipsCustomDataPoint(ts, 1, "database_name-val")
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverDatabaseRoleMembershipsNestedDataPoint(ts, 1, "database_name-val")
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverDatabaseRoleMembershipsTotalDataPoint(ts, 1, "database_name-val")
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverDatabaseRoleMembershipsUsersDataPoint(ts, 1, "database_name-val")
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverDatabaseRolePermissionMemberCountDataPoint(ts, 1, "database_name-val", "role_name-val", "permission_scope-val")
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverDatabaseRolePermissionRiskLevelDataPoint(ts, 1, "database_name-val", "role_name-val", "permission_scope-val")
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverDatabaseRoleRolesEmptyDataPoint(ts, 1, "database_name-val")
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverDatabaseRoleRolesWithMembersDataPoint(ts, 1, "database_name-val")
 
@@ -211,6 +240,7 @@ func TestMetricsBuilder(t *testing.T) {
 			allMetricsCount++
 			mb.RecordSqlserverDatabaseSizeTotalMbDataPoint(ts, 1, "database_name-val", "metric_source-val", "engine_edition-val", 17)
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverDatabaseTransactionsActiveDataPoint(ts, 1, "metric_source-val", "engine_edition-val", 17)
 
@@ -218,42 +248,55 @@ func TestMetricsBuilder(t *testing.T) {
 			allMetricsCount++
 			mb.RecordSqlserverExecutionPlanDataPoint(ts, 1, "query_id-val", "plan_handle-val", 7, 14, "physical_op-val", "logical_op-val", "input_type-val", "schema_name-val", "table_name-val", "index_name-val", "referenced_columns-val", 13.100000, 11.100000, 12.100000, 12.100000, 18.100000, 23.100000, "estimated_execution_mode-val", 17, true, false, 17.100000, 18.100000, 19, 20, 15, "request_start_time-val", "last_execution_time-val", "newrelic.event.type-val")
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverFailoverClusterAgClusterTypeDataPoint(ts, 1, "group_name-val", "cluster_type_desc-val")
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverFailoverClusterAgFailureConditionLevelDataPoint(ts, 1, "group_name-val", "cluster_type_desc-val")
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverFailoverClusterAgHealthCheckTimeoutDataPoint(ts, 1, "group_name-val", "cluster_type_desc-val")
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverFailoverClusterAgReplicaRoleDataPoint(ts, 1, "replica_server_name-val", "role_desc-val", "synchronization_health_desc-val")
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverFailoverClusterAgRequiredSyncSecondariesDataPoint(ts, 1, "group_name-val", "cluster_type_desc-val")
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverFailoverClusterAgSynchronizationHealthDataPoint(ts, 1, "replica_server_name-val", "role_desc-val", "synchronization_health_desc-val")
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverFailoverClusterFlowControlTimeMsDataPoint(ts, 1, "instance_name-val")
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverFailoverClusterLogBytesReceivedPerSecDataPoint(ts, 1, "instance_name-val")
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverFailoverClusterLogSendQueueKbDataPoint(ts, 1, "replica_server_name-val", "database_name-val")
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverFailoverClusterRedoQueueKbDataPoint(ts, 1, "replica_server_name-val", "database_name-val")
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverFailoverClusterRedoRateKbSecDataPoint(ts, 1, "replica_server_name-val", "database_name-val")
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverFailoverClusterTransactionDelayMsDataPoint(ts, 1, "instance_name-val")
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverInstanceBackgroundProcessesCountDataPoint(ts, 1)
 
@@ -277,9 +320,11 @@ func TestMetricsBuilder(t *testing.T) {
 			allMetricsCount++
 			mb.RecordSqlserverInstanceConnectionsActiveDataPoint(ts, 1)
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverInstanceDiskInBytesDataPoint(ts, 1)
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverInstanceDormantProcessesCountDataPoint(ts, 1)
 
@@ -299,6 +344,7 @@ func TestMetricsBuilder(t *testing.T) {
 			allMetricsCount++
 			mb.RecordSqlserverInstanceMemoryAvailableDataPoint(ts, 1)
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverInstanceMemoryTotalDataPoint(ts, 1)
 
@@ -310,21 +356,27 @@ func TestMetricsBuilder(t *testing.T) {
 			allMetricsCount++
 			mb.RecordSqlserverInstancePageSplitsPerBatchDataPoint(ts, 1)
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverInstancePreconnectProcessesCountDataPoint(ts, 1)
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverInstanceRunnableProcessesCountDataPoint(ts, 1)
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverInstanceRunnableTasksDataPoint(ts, 1)
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverInstanceRunningProcessesCountDataPoint(ts, 1)
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverInstanceSleepingProcessesCountDataPoint(ts, 1)
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverInstanceSuspendedProcessesCountDataPoint(ts, 1)
 
@@ -336,72 +388,95 @@ func TestMetricsBuilder(t *testing.T) {
 			allMetricsCount++
 			mb.RecordSqlserverInstanceTransactionsPerSecDataPoint(ts, 1)
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverLockModeBulkUpdateDataPoint(ts, 1, "database_name-val")
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverLockModeExclusiveDataPoint(ts, 1, "database_name-val")
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverLockModeIntentDataPoint(ts, 1, "database_name-val")
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverLockModeSchemaDataPoint(ts, 1, "database_name-val")
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverLockModeSharedDataPoint(ts, 1, "database_name-val")
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverLockModeSharedIntentExclusiveDataPoint(ts, 1, "database_name-val")
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverLockModeTotalDataPoint(ts, 1, "database_name-val")
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverLockModeUpdateDataPoint(ts, 1, "database_name-val")
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverLockResourceAllocationUnitDataPoint(ts, 1, "database_name-val")
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverLockResourceApplicationDataPoint(ts, 1, "database_name-val")
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverLockResourceDatabaseLevelDataPoint(ts, 1, "database_name-val")
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverLockResourceExtentDataPoint(ts, 1, "database_name-val")
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverLockResourceFileDataPoint(ts, 1, "database_name-val")
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverLockResourceHobtDataPoint(ts, 1, "database_name-val")
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverLockResourceKeyDataPoint(ts, 1, "database_name-val")
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverLockResourceMetadataDataPoint(ts, 1, "database_name-val")
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverLockResourcePageDataPoint(ts, 1, "database_name-val")
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverLockResourceRowDataPoint(ts, 1, "database_name-val")
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverLockResourceTableDataPoint(ts, 1, "database_name-val")
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverLockResourceTotalDataPoint(ts, 1, "database_name-val")
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverLockedObjectDataPoint(ts, 1)
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverMemoryTargetDataPoint(ts, 1)
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverMemoryTotalDataPoint(ts, 1)
 
@@ -409,9 +484,11 @@ func TestMetricsBuilder(t *testing.T) {
 			allMetricsCount++
 			mb.RecordSqlserverPlanAvgElapsedTimeMsDataPoint(ts, 1, "query_id-val", "plan_handle-val", "last_execution_time-val", "creation_time-val")
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverSecurityServerPrincipalsCountDataPoint(ts, 1, "metric.type-val")
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverSecurityServerRoleMembersCountDataPoint(ts, 1, "metric.type-val")
 
@@ -463,93 +540,123 @@ func TestMetricsBuilder(t *testing.T) {
 			allMetricsCount++
 			mb.RecordSqlserverStatsUserErrorsPerSecDataPoint(ts, 1)
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverTempdbAllocationWaitsMsDataPoint(ts, 1, "sql_hostname-val", "tempdb_health_status-val", "collection_timestamp-val")
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverTempdbCurrentWaitersDataPoint(ts, 1, "sql_hostname-val", "tempdb_health_status-val", "collection_timestamp-val")
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverTempdbDataFileCountDataPoint(ts, 1, "sql_hostname-val", "tempdb_health_status-val", "collection_timestamp-val")
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverTempdbPagelatchWaitsMsDataPoint(ts, 1, "sql_hostname-val", "tempdb_health_status-val", "collection_timestamp-val")
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverTempdbTotalSizeMbDataPoint(ts, 1, "sql_hostname-val", "tempdb_health_status-val", "collection_timestamp-val")
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverThreadpoolCurrentTasksDataPoint(ts, 1, "sql_hostname-val", "health_status-val", "collection_timestamp-val")
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverThreadpoolMaxWorkersDataPoint(ts, 1, "sql_hostname-val", "health_status-val", "collection_timestamp-val")
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverThreadpoolRunnableTasksDataPoint(ts, 1, "sql_hostname-val", "health_status-val", "collection_timestamp-val")
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverThreadpoolRunningWorkersDataPoint(ts, 1, "sql_hostname-val", "health_status-val", "collection_timestamp-val")
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverThreadpoolUtilizationPercentDataPoint(ts, 1, "sql_hostname-val", "health_status-val", "collection_timestamp-val")
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverThreadpoolWaitingTasksDataPoint(ts, 1, "sql_hostname-val", "health_status-val", "collection_timestamp-val")
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverThreadpoolWorkQueueCountDataPoint(ts, 1, "sql_hostname-val", "health_status-val", "collection_timestamp-val")
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverUserConnectionsAuthenticationChurnRateDataPoint(ts, 1)
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverUserConnectionsAuthenticationLoginsPerSecDataPoint(ts, 1)
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverUserConnectionsAuthenticationRecentFailedLoginsDataPoint(ts, 1)
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverUserConnectionsAuthenticationTotalFailedLoginsDataPoint(ts, 1)
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverUserConnectionsAuthenticationUniqueFailedSourcesDataPoint(ts, 1)
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverUserConnectionsAuthenticationUniqueFailedUsersDataPoint(ts, 1)
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverUserConnectionsClientCountDataPoint(ts, 1, "host_name-val", "program_name-val")
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverUserConnectionsClientUniqueHostsDataPoint(ts, 1)
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverUserConnectionsClientUniqueProgramsDataPoint(ts, 1)
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverUserConnectionsRunnableDataPoint(ts, 1)
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverUserConnectionsRunningDataPoint(ts, 1)
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverUserConnectionsSleepingDataPoint(ts, 1)
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverUserConnectionsSuspendedDataPoint(ts, 1)
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverUserConnectionsTotalDataPoint(ts, 1)
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverUserConnectionsUtilizationActiveRatioDataPoint(ts, 1)
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverUserConnectionsUtilizationIdleRatioDataPoint(ts, 1)
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverWaitStatsLatchWaitTimeMsDataPoint(ts, 1, "wait_type-val")
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverWaitStatsLatchWaitingTasksCountDataPoint(ts, 1, "wait_type-val")
 
@@ -557,6 +664,7 @@ func TestMetricsBuilder(t *testing.T) {
 			allMetricsCount++
 			mb.RecordSqlserverWaitStatsWaitTimeMsDataPoint(ts, 1, "wait_type-val")
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordSqlserverWaitStatsWaitingTasksCountDataPoint(ts, 1, "wait_type-val")
 

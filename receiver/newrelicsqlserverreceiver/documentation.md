@@ -74,9 +74,33 @@ Blocking query details for correlation with active queries (emitted as custom ev
 | blocking_query_text | SQL query text of the blocking session | Any Str | Recommended |
 | newrelic.event.type | Event type for New Relic integration | Any Str | Recommended |
 
+### sqlserver.buffer.cache_hit_ratio
+
+Buffer cache hit ratio percentage
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| % | Gauge | Double | Alpha |
+
 ### sqlserver.buffer.checkpoint_pages_per_sec
 
 Checkpoint pages per second
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1/s | Gauge | Int | Alpha |
+
+### sqlserver.buffer.page_life_expectancy
+
+Page life expectancy in seconds
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| s | Gauge | Int | Alpha |
+
+### sqlserver.bufferpool.batch_requests_per_sec
+
+Batch requests per second
 
 | Unit | Metric Type | Value Type | Stability |
 | ---- | ----------- | ---------- | --------- |
@@ -89,6 +113,14 @@ Page life expectancy in milliseconds
 | Unit | Metric Type | Value Type | Stability |
 | ---- | ----------- | ---------- | --------- |
 | ms | Gauge | Double | Alpha |
+
+### sqlserver.connections.user
+
+Number of user connections
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {connections} | Gauge | Int | Alpha |
 
 ### sqlserver.database.bufferpool.size_per_database_bytes
 
@@ -124,6 +156,38 @@ Total IO stall time for the SQL Server database
 | engine_edition | SQL Server engine edition name (e.g., Enterprise, Standard, Azure SQL Database) | Any Str | Recommended |
 | engine_edition_id | SQL Server engine edition ID | Any Int | Recommended |
 
+### sqlserver.database.log.bytes_flushed_per_sec
+
+Number of log bytes flushed per second
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| By/s | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| metric_source | Source of the metric data (e.g., sys.dm_os_buffer_descriptors, DATABASEPROPERTYEX) | Any Str | Recommended |
+| engine_edition | SQL Server engine edition name (e.g., Enterprise, Standard, Azure SQL Database) | Any Str | Recommended |
+| engine_edition_id | SQL Server engine edition ID | Any Int | Recommended |
+
+### sqlserver.database.log.flush_waits_per_sec
+
+Number of flush wait operations per second
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {operations}/s | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| metric_source | Source of the metric data (e.g., sys.dm_os_buffer_descriptors, DATABASEPROPERTYEX) | Any Str | Recommended |
+| engine_edition | SQL Server engine edition name (e.g., Enterprise, Standard, Azure SQL Database) | Any Str | Recommended |
+| engine_edition_id | SQL Server engine edition ID | Any Int | Recommended |
+
 ### sqlserver.database.log.flushes_per_sec
 
 Number of log flush operations per second
@@ -147,6 +211,23 @@ Number of log growth events for the SQL Server database
 | Unit | Metric Type | Value Type | Stability |
 | ---- | ----------- | ---------- | --------- |
 | {events} | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| database_name | Name of the database | Any Str | Recommended |
+| metric_source | Source of the metric data (e.g., sys.dm_os_buffer_descriptors, DATABASEPROPERTYEX) | Any Str | Recommended |
+| engine_edition | SQL Server engine edition name (e.g., Enterprise, Standard, Azure SQL Database) | Any Str | Recommended |
+| engine_edition_id | SQL Server engine edition ID | Any Int | Recommended |
+
+### sqlserver.database.log.used_space_mb
+
+Used log space in megabytes
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| MBy | Gauge | Double | Alpha |
 
 #### Attributes
 
@@ -198,444 +279,6 @@ Total page file space (total reserved space) for the SQL Server database
 | Unit | Metric Type | Value Type | Stability |
 | ---- | ----------- | ---------- | --------- |
 | By | Gauge | Double | Alpha |
-
-#### Attributes
-
-| Name | Description | Values | Requirement Level |
-| ---- | ----------- | ------ | -------- |
-| database_name | Name of the database | Any Str | Recommended |
-| metric_source | Source of the metric data (e.g., sys.dm_os_buffer_descriptors, DATABASEPROPERTYEX) | Any Str | Recommended |
-| engine_edition | SQL Server engine edition name (e.g., Enterprise, Standard, Azure SQL Database) | Any Str | Recommended |
-| engine_edition_id | SQL Server engine edition ID | Any Int | Recommended |
-
-### sqlserver.database.size.data_mb
-
-Total data file size excluding log files
-
-| Unit | Metric Type | Value Type | Stability |
-| ---- | ----------- | ---------- | --------- |
-| MBy | Gauge | Double | Alpha |
-
-#### Attributes
-
-| Name | Description | Values | Requirement Level |
-| ---- | ----------- | ------ | -------- |
-| database_name | Name of the database | Any Str | Recommended |
-| metric_source | Source of the metric data (e.g., sys.dm_os_buffer_descriptors, DATABASEPROPERTYEX) | Any Str | Recommended |
-| engine_edition | SQL Server engine edition name (e.g., Enterprise, Standard, Azure SQL Database) | Any Str | Recommended |
-| engine_edition_id | SQL Server engine edition ID | Any Int | Recommended |
-
-### sqlserver.database.size.total_mb
-
-Total database size including data and log files
-
-| Unit | Metric Type | Value Type | Stability |
-| ---- | ----------- | ---------- | --------- |
-| MBy | Gauge | Double | Alpha |
-
-#### Attributes
-
-| Name | Description | Values | Requirement Level |
-| ---- | ----------- | ------ | -------- |
-| database_name | Name of the database | Any Str | Recommended |
-| metric_source | Source of the metric data (e.g., sys.dm_os_buffer_descriptors, DATABASEPROPERTYEX) | Any Str | Recommended |
-| engine_edition | SQL Server engine edition name (e.g., Enterprise, Standard, Azure SQL Database) | Any Str | Recommended |
-| engine_edition_id | SQL Server engine edition ID | Any Int | Recommended |
-
-### sqlserver.execution.plan
-
-SQL Server execution plan operator with detailed cost estimates, performance metrics, and resource usage
-
-| Unit | Metric Type | Value Type | Stability |
-| ---- | ----------- | ---------- | --------- |
-| 1 | Gauge | Int | Alpha |
-
-#### Attributes
-
-| Name | Description | Values | Requirement Level |
-| ---- | ----------- | ------ | -------- |
-| query_id | Unique identifier for the SQL query | Any Str | Recommended |
-| plan_handle | Handle to the cached execution plan | Any Str | Recommended |
-| node_id | Execution plan node identifier | Any Int | Recommended |
-| parent_node_id | Parent node identifier in execution plan tree | Any Int | Recommended |
-| physical_op | Physical operator name (e.g., Index Seek, Table Scan) | Any Str | Recommended |
-| logical_op | Logical operator name | Any Str | Recommended |
-| input_type | Type of input to the operator | Any Str | Recommended |
-| schema_name | Schema name of the database object | Any Str | Recommended |
-| table_name | Table name referenced in the operator | Any Str | Recommended |
-| index_name | Index name used by the operator | Any Str | Recommended |
-| referenced_columns | Comma-separated list of columns referenced | Any Str | Recommended |
-| estimate_rows | Estimated number of rows | Any Double | Recommended |
-| estimate_io | Estimated I/O cost | Any Double | Recommended |
-| estimate_cpu | Estimated CPU cost | Any Double | Recommended |
-| avg_row_size | Average row size in bytes | Any Double | Recommended |
-| total_subtree_cost | Cumulative cost of this operator and its children | Any Double | Recommended |
-| estimated_operator_cost | Estimated cost of this operator alone | Any Double | Recommended |
-| estimated_execution_mode | Execution mode (Row, Batch) | Any Str | Recommended |
-| granted_memory_kb | Memory granted in KB | Any Int | Recommended |
-| spill_occurred | Whether memory spill occurred | Any Bool | Recommended |
-| no_join_predicate | Whether join lacks a predicate (potential Cartesian product) | Any Bool | Recommended |
-| total_worker_time | Total CPU time for this operator | Any Double | Recommended |
-| total_elapsed_time | Total elapsed time for this operator | Any Double | Recommended |
-| total_logical_reads | Total logical reads for this operator | Any Int | Recommended |
-| total_logical_writes | Total logical writes for this operator | Any Int | Recommended |
-| execution_count | Number of times this operator executed | Any Int | Recommended |
-| request_start_time | Timestamp when the request started | Any Str | Recommended |
-| last_execution_time | Timestamp of last execution | Any Str | Recommended |
-| newrelic.event.type | Event type for New Relic integration | Any Str | Recommended |
-
-### sqlserver.instance.blocked_processes_count
-
-Number of blocked processes
-
-| Unit | Metric Type | Value Type | Stability |
-| ---- | ----------- | ---------- | --------- |
-| 1 | Gauge | Int | Alpha |
-
-### sqlserver.instance.buffer_pool_hit_percent
-
-Buffer pool hit percentage
-
-| Unit | Metric Type | Value Type | Stability |
-| ---- | ----------- | ---------- | --------- |
-| Percent | Gauge | Double | Alpha |
-
-### sqlserver.instance.buffer_pool_size
-
-Buffer pool size
-
-| Unit | Metric Type | Value Type | Stability |
-| ---- | ----------- | ---------- | --------- |
-| By | Gauge | Int | Alpha |
-
-### sqlserver.instance.compilations_per_batch
-
-SQL compilations per batch request
-
-| Unit | Metric Type | Value Type | Stability |
-| ---- | ----------- | ---------- | --------- |
-| 1 | Gauge | Double | Alpha |
-
-### sqlserver.instance.connections_active
-
-Number of active connections
-
-| Unit | Metric Type | Value Type | Stability |
-| ---- | ----------- | ---------- | --------- |
-| 1 | Gauge | Int | Alpha |
-
-### sqlserver.instance.forced_parameterizations_per_sec
-
-Forced parameterizations per second
-
-| Unit | Metric Type | Value Type | Stability |
-| ---- | ----------- | ---------- | --------- |
-| 1/s | Gauge | Int | Alpha |
-
-### sqlserver.instance.full_scans_rate
-
-Full table/index scans per second
-
-| Unit | Metric Type | Value Type | Stability |
-| ---- | ----------- | ---------- | --------- |
-| 1/s | Gauge | Double | Alpha |
-
-### sqlserver.instance.lock_timeouts_rate
-
-Number of lock timeouts per second
-
-| Unit | Metric Type | Value Type | Stability |
-| ---- | ----------- | ---------- | --------- |
-| 1/s | Gauge | Double | Alpha |
-
-### sqlserver.instance.memory_available
-
-Available physical memory on the system
-
-| Unit | Metric Type | Value Type | Stability |
-| ---- | ----------- | ---------- | --------- |
-| By | Gauge | Double | Alpha |
-
-### sqlserver.instance.memory_utilization_percent
-
-Percentage of memory utilization
-
-| Unit | Metric Type | Value Type | Stability |
-| ---- | ----------- | ---------- | --------- |
-| % | Gauge | Double | Alpha |
-
-### sqlserver.instance.page_splits_per_batch
-
-Page splits per batch request
-
-| Unit | Metric Type | Value Type | Stability |
-| ---- | ----------- | ---------- | --------- |
-| 1 | Gauge | Double | Alpha |
-
-### sqlserver.instance.target_memory_kb
-
-Target server memory in KB
-
-| Unit | Metric Type | Value Type | Stability |
-| ---- | ----------- | ---------- | --------- |
-| kb | Gauge | Double | Alpha |
-
-### sqlserver.instance.transactions_per_sec
-
-Transactions per second
-
-| Unit | Metric Type | Value Type | Stability |
-| ---- | ----------- | ---------- | --------- |
-| 1/s | Gauge | Int | Alpha |
-
-### sqlserver.plan.avg_elapsed_time_ms
-
-Average elapsed time per execution of this plan (historical) - Used in NRQL queries
-
-| Unit | Metric Type | Value Type | Stability |
-| ---- | ----------- | ---------- | --------- |
-| ms | Gauge | Double | Alpha |
-
-#### Attributes
-
-| Name | Description | Values | Requirement Level |
-| ---- | ----------- | ------ | -------- |
-| query_id | Unique identifier for the SQL query | Any Str | Recommended |
-| plan_handle | Handle to the cached execution plan | Any Str | Recommended |
-| last_execution_time | Timestamp of last execution | Any Str | Recommended |
-| creation_time | Timestamp when the plan was created | Any Str | Recommended |
-
-### sqlserver.slowquery.historical_avg_elapsed_time_ms
-
-Historical average elapsed time in milliseconds (cumulative since plan cached)
-
-| Unit | Metric Type | Value Type | Stability |
-| ---- | ----------- | ---------- | --------- |
-| ms | Gauge | Double | Alpha |
-
-#### Attributes
-
-| Name | Description | Values | Requirement Level |
-| ---- | ----------- | ------ | -------- |
-| query_id | Unique identifier for the SQL query | Any Str | Recommended |
-| database_name | Name of the database | Any Str | Recommended |
-
-### sqlserver.slowquery.historical_execution_count
-
-Historical execution count (cumulative since plan cached)
-
-| Unit | Metric Type | Value Type | Stability |
-| ---- | ----------- | ---------- | --------- |
-| {executions} | Gauge | Int | Alpha |
-
-#### Attributes
-
-| Name | Description | Values | Requirement Level |
-| ---- | ----------- | ------ | -------- |
-| query_id | Unique identifier for the SQL query | Any Str | Recommended |
-| database_name | Name of the database | Any Str | Recommended |
-
-### sqlserver.slowquery.interval_avg_elapsed_time_ms
-
-Interval average elapsed time in milliseconds (delta for this collection interval)
-
-| Unit | Metric Type | Value Type | Stability |
-| ---- | ----------- | ---------- | --------- |
-| ms | Gauge | Double | Alpha |
-
-#### Attributes
-
-| Name | Description | Values | Requirement Level |
-| ---- | ----------- | ------ | -------- |
-| query_id | Unique identifier for the SQL query | Any Str | Recommended |
-| database_name | Name of the database | Any Str | Recommended |
-
-### sqlserver.slowquery.interval_execution_count
-
-Interval execution count (delta for this collection interval)
-
-| Unit | Metric Type | Value Type | Stability |
-| ---- | ----------- | ---------- | --------- |
-| {executions} | Gauge | Int | Alpha |
-
-#### Attributes
-
-| Name | Description | Values | Requirement Level |
-| ---- | ----------- | ------ | -------- |
-| query_id | Unique identifier for the SQL query | Any Str | Recommended |
-| database_name | Name of the database | Any Str | Recommended |
-
-### sqlserver.slowquery.query_details
-
-Query details including text and timestamps for slow queries
-
-| Unit | Metric Type | Value Type | Stability |
-| ---- | ----------- | ---------- | --------- |
-| 1 | Gauge | Int | Alpha |
-
-#### Attributes
-
-| Name | Description | Values | Requirement Level |
-| ---- | ----------- | ------ | -------- |
-| query_id | Unique identifier for the SQL query | Any Str | Recommended |
-| database_name | Name of the database | Any Str | Recommended |
-| plan_handle | Handle to the cached execution plan | Any Str | Recommended |
-| query_text | SQL query text (anonymized) | Any Str | Recommended |
-| collection_timestamp | Timestamp when the metric was collected | Any Str | Recommended |
-| last_execution_timestamp | Timestamp of the last execution of this query | Any Str | Recommended |
-| newrelic.event.type | Event type for New Relic integration | Any Str | Recommended |
-
-### sqlserver.stats.connections
-
-Current user connections
-
-| Unit | Metric Type | Value Type | Stability |
-| ---- | ----------- | ---------- | --------- |
-| 1 | Gauge | Int | Alpha |
-
-### sqlserver.stats.deadlocks_per_sec
-
-Deadlocks per second
-
-| Unit | Metric Type | Value Type | Stability |
-| ---- | ----------- | ---------- | --------- |
-| 1/s | Gauge | Int | Alpha |
-
-### sqlserver.stats.kill_connection_errors_per_sec
-
-Kill connection errors per second
-
-| Unit | Metric Type | Value Type | Stability |
-| ---- | ----------- | ---------- | --------- |
-| 1/s | Gauge | Int | Alpha |
-
-### sqlserver.stats.lock_waits_per_sec
-
-Lock waits per second
-
-| Unit | Metric Type | Value Type | Stability |
-| ---- | ----------- | ---------- | --------- |
-| 1/s | Gauge | Int | Alpha |
-
-### sqlserver.stats.sql_compilations_per_sec
-
-SQL compilations per second
-
-| Unit | Metric Type | Value Type | Stability |
-| ---- | ----------- | ---------- | --------- |
-| 1/s | Gauge | Int | Alpha |
-
-### sqlserver.stats.sql_recompilations_per_sec
-
-SQL recompilations per second
-
-| Unit | Metric Type | Value Type | Stability |
-| ---- | ----------- | ---------- | --------- |
-| 1/s | Gauge | Int | Alpha |
-
-### sqlserver.stats.user_errors_per_sec
-
-User errors per second
-
-| Unit | Metric Type | Value Type | Stability |
-| ---- | ----------- | ---------- | --------- |
-| 1/s | Gauge | Int | Alpha |
-
-### sqlserver.wait_stats.wait_time_ms
-
-Total wait time in milliseconds
-
-| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
-| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
-| ms | Sum | Double | Cumulative | true | Alpha |
-
-#### Attributes
-
-| Name | Description | Values | Requirement Level |
-| ---- | ----------- | ------ | -------- |
-| wait_type | Type of wait (e.g., PAGEIOLATCH_SH, LCK_M_S) | Any Str | Recommended |
-
-## Optional Metrics
-
-The following metrics are not emitted by default. Each of them can be enabled by applying the following configuration:
-
-```yaml
-metrics:
-  <metric_name>:
-    enabled: true
-```
-
-### sqlserver.buffer.cache_hit_ratio
-
-Buffer cache hit ratio percentage
-
-| Unit | Metric Type | Value Type | Stability |
-| ---- | ----------- | ---------- | --------- |
-| % | Gauge | Double | Alpha |
-
-### sqlserver.buffer.page_life_expectancy
-
-Page life expectancy in seconds
-
-| Unit | Metric Type | Value Type | Stability |
-| ---- | ----------- | ---------- | --------- |
-| s | Gauge | Int | Alpha |
-
-### sqlserver.bufferpool.batch_requests_per_sec
-
-Batch requests per second
-
-| Unit | Metric Type | Value Type | Stability |
-| ---- | ----------- | ---------- | --------- |
-| 1/s | Gauge | Int | Alpha |
-
-### sqlserver.connections.user
-
-Number of user connections
-
-| Unit | Metric Type | Value Type | Stability |
-| ---- | ----------- | ---------- | --------- |
-| {connections} | Gauge | Int | Alpha |
-
-### sqlserver.database.log.bytes_flushed_per_sec
-
-Number of log bytes flushed per second
-
-| Unit | Metric Type | Value Type | Stability |
-| ---- | ----------- | ---------- | --------- |
-| By/s | Gauge | Int | Alpha |
-
-#### Attributes
-
-| Name | Description | Values | Requirement Level |
-| ---- | ----------- | ------ | -------- |
-| metric_source | Source of the metric data (e.g., sys.dm_os_buffer_descriptors, DATABASEPROPERTYEX) | Any Str | Recommended |
-| engine_edition | SQL Server engine edition name (e.g., Enterprise, Standard, Azure SQL Database) | Any Str | Recommended |
-| engine_edition_id | SQL Server engine edition ID | Any Int | Recommended |
-
-### sqlserver.database.log.flush_waits_per_sec
-
-Number of flush wait operations per second
-
-| Unit | Metric Type | Value Type | Stability |
-| ---- | ----------- | ---------- | --------- |
-| {operations}/s | Gauge | Int | Alpha |
-
-#### Attributes
-
-| Name | Description | Values | Requirement Level |
-| ---- | ----------- | ------ | -------- |
-| metric_source | Source of the metric data (e.g., sys.dm_os_buffer_descriptors, DATABASEPROPERTYEX) | Any Str | Recommended |
-| engine_edition | SQL Server engine edition name (e.g., Enterprise, Standard, Azure SQL Database) | Any Str | Recommended |
-| engine_edition_id | SQL Server engine edition ID | Any Int | Recommended |
-
-### sqlserver.database.log.used_space_mb
-
-Used log space in megabytes
-
-| Unit | Metric Type | Value Type | Stability |
-| ---- | ----------- | ---------- | --------- |
-| MBy | Gauge | Double | Alpha |
 
 #### Attributes
 
@@ -958,6 +601,40 @@ Number of unique roles with members
 | ---- | ----------- | ------ | -------- |
 | database_name | Name of the database | Any Str | Recommended |
 
+### sqlserver.database.size.data_mb
+
+Total data file size excluding log files
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| MBy | Gauge | Double | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| database_name | Name of the database | Any Str | Recommended |
+| metric_source | Source of the metric data (e.g., sys.dm_os_buffer_descriptors, DATABASEPROPERTYEX) | Any Str | Recommended |
+| engine_edition | SQL Server engine edition name (e.g., Enterprise, Standard, Azure SQL Database) | Any Str | Recommended |
+| engine_edition_id | SQL Server engine edition ID | Any Int | Recommended |
+
+### sqlserver.database.size.total_mb
+
+Total database size including data and log files
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| MBy | Gauge | Double | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| database_name | Name of the database | Any Str | Recommended |
+| metric_source | Source of the metric data (e.g., sys.dm_os_buffer_descriptors, DATABASEPROPERTYEX) | Any Str | Recommended |
+| engine_edition | SQL Server engine edition name (e.g., Enterprise, Standard, Azure SQL Database) | Any Str | Recommended |
+| engine_edition_id | SQL Server engine edition ID | Any Int | Recommended |
+
 ### sqlserver.database.transactions.active
 
 Number of active transactions
@@ -973,6 +650,48 @@ Number of active transactions
 | metric_source | Source of the metric data (e.g., sys.dm_os_buffer_descriptors, DATABASEPROPERTYEX) | Any Str | Recommended |
 | engine_edition | SQL Server engine edition name (e.g., Enterprise, Standard, Azure SQL Database) | Any Str | Recommended |
 | engine_edition_id | SQL Server engine edition ID | Any Int | Recommended |
+
+### sqlserver.execution.plan
+
+SQL Server execution plan operator with detailed cost estimates, performance metrics, and resource usage
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| query_id | Unique identifier for the SQL query | Any Str | Recommended |
+| plan_handle | Handle to the cached execution plan | Any Str | Recommended |
+| node_id | Execution plan node identifier | Any Int | Recommended |
+| parent_node_id | Parent node identifier in execution plan tree | Any Int | Recommended |
+| physical_op | Physical operator name (e.g., Index Seek, Table Scan) | Any Str | Recommended |
+| logical_op | Logical operator name | Any Str | Recommended |
+| input_type | Type of input to the operator | Any Str | Recommended |
+| schema_name | Schema name of the database object | Any Str | Recommended |
+| table_name | Table name referenced in the operator | Any Str | Recommended |
+| index_name | Index name used by the operator | Any Str | Recommended |
+| referenced_columns | Comma-separated list of columns referenced | Any Str | Recommended |
+| estimate_rows | Estimated number of rows | Any Double | Recommended |
+| estimate_io | Estimated I/O cost | Any Double | Recommended |
+| estimate_cpu | Estimated CPU cost | Any Double | Recommended |
+| avg_row_size | Average row size in bytes | Any Double | Recommended |
+| total_subtree_cost | Cumulative cost of this operator and its children | Any Double | Recommended |
+| estimated_operator_cost | Estimated cost of this operator alone | Any Double | Recommended |
+| estimated_execution_mode | Execution mode (Row, Batch) | Any Str | Recommended |
+| granted_memory_kb | Memory granted in KB | Any Int | Recommended |
+| spill_occurred | Whether memory spill occurred | Any Bool | Recommended |
+| no_join_predicate | Whether join lacks a predicate (potential Cartesian product) | Any Bool | Recommended |
+| total_worker_time | Total CPU time for this operator | Any Double | Recommended |
+| total_elapsed_time | Total elapsed time for this operator | Any Double | Recommended |
+| total_logical_reads | Total logical reads for this operator | Any Int | Recommended |
+| total_logical_writes | Total logical writes for this operator | Any Int | Recommended |
+| execution_count | Number of times this operator executed | Any Int | Recommended |
+| request_start_time | Timestamp when the request started | Any Str | Recommended |
+| last_execution_time | Timestamp of last execution | Any Str | Recommended |
+| newrelic.event.type | Event type for New Relic integration | Any Str | Recommended |
 
 ### sqlserver.failover_cluster.ag_cluster_type
 
@@ -1161,6 +880,46 @@ Number of background processes
 | ---- | ----------- | ---------- | --------- |
 | 1 | Gauge | Int | Alpha |
 
+### sqlserver.instance.blocked_processes_count
+
+Number of blocked processes
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Alpha |
+
+### sqlserver.instance.buffer_pool_hit_percent
+
+Buffer pool hit percentage
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| Percent | Gauge | Double | Alpha |
+
+### sqlserver.instance.buffer_pool_size
+
+Buffer pool size
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| By | Gauge | Int | Alpha |
+
+### sqlserver.instance.compilations_per_batch
+
+SQL compilations per batch request
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
+
+### sqlserver.instance.connections_active
+
+Number of active connections
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Alpha |
+
 ### sqlserver.instance.disk_in_bytes
 
 Total disk space in bytes
@@ -1177,6 +936,38 @@ Number of dormant processes
 | ---- | ----------- | ---------- | --------- |
 | 1 | Gauge | Int | Alpha |
 
+### sqlserver.instance.forced_parameterizations_per_sec
+
+Forced parameterizations per second
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1/s | Gauge | Int | Alpha |
+
+### sqlserver.instance.full_scans_rate
+
+Full table/index scans per second
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1/s | Gauge | Double | Alpha |
+
+### sqlserver.instance.lock_timeouts_rate
+
+Number of lock timeouts per second
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1/s | Gauge | Double | Alpha |
+
+### sqlserver.instance.memory_available
+
+Available physical memory on the system
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| By | Gauge | Double | Alpha |
+
 ### sqlserver.instance.memory_total
 
 Total physical memory on the system
@@ -1184,6 +975,22 @@ Total physical memory on the system
 | Unit | Metric Type | Value Type | Stability |
 | ---- | ----------- | ---------- | --------- |
 | By | Gauge | Double | Alpha |
+
+### sqlserver.instance.memory_utilization_percent
+
+Percentage of memory utilization
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| % | Gauge | Double | Alpha |
+
+### sqlserver.instance.page_splits_per_batch
+
+Page splits per batch request
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 ### sqlserver.instance.preconnect_processes_count
 
@@ -1232,6 +1039,22 @@ Number of suspended processes
 | Unit | Metric Type | Value Type | Stability |
 | ---- | ----------- | ---------- | --------- |
 | 1 | Gauge | Int | Alpha |
+
+### sqlserver.instance.target_memory_kb
+
+Target server memory in KB
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| kb | Gauge | Double | Alpha |
+
+### sqlserver.instance.transactions_per_sec
+
+Transactions per second
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1/s | Gauge | Int | Alpha |
 
 ### sqlserver.lock.mode.bulk_update
 
@@ -1537,6 +1360,23 @@ Total server memory in KB
 | ---- | ----------- | ---------- | --------- |
 | kBy | Gauge | Int | Alpha |
 
+### sqlserver.plan.avg_elapsed_time_ms
+
+Average elapsed time per execution of this plan (historical) - Used in NRQL queries
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| ms | Gauge | Double | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| query_id | Unique identifier for the SQL query | Any Str | Recommended |
+| plan_handle | Handle to the cached execution plan | Any Str | Recommended |
+| last_execution_time | Timestamp of last execution | Any Str | Recommended |
+| creation_time | Timestamp when the plan was created | Any Str | Recommended |
+
 ### sqlserver.security.server_principals_count
 
 Total number of server principals (logins)
@@ -1564,6 +1404,142 @@ Total number of server role members
 | Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
 | metric.type | Metric aggregation type | Any Str | Recommended |
+
+### sqlserver.slowquery.historical_avg_elapsed_time_ms
+
+Historical average elapsed time in milliseconds (cumulative since plan cached)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| ms | Gauge | Double | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| query_id | Unique identifier for the SQL query | Any Str | Recommended |
+| database_name | Name of the database | Any Str | Recommended |
+
+### sqlserver.slowquery.historical_execution_count
+
+Historical execution count (cumulative since plan cached)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {executions} | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| query_id | Unique identifier for the SQL query | Any Str | Recommended |
+| database_name | Name of the database | Any Str | Recommended |
+
+### sqlserver.slowquery.interval_avg_elapsed_time_ms
+
+Interval average elapsed time in milliseconds (delta for this collection interval)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| ms | Gauge | Double | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| query_id | Unique identifier for the SQL query | Any Str | Recommended |
+| database_name | Name of the database | Any Str | Recommended |
+
+### sqlserver.slowquery.interval_execution_count
+
+Interval execution count (delta for this collection interval)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {executions} | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| query_id | Unique identifier for the SQL query | Any Str | Recommended |
+| database_name | Name of the database | Any Str | Recommended |
+
+### sqlserver.slowquery.query_details
+
+Query details including text and timestamps for slow queries
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| query_id | Unique identifier for the SQL query | Any Str | Recommended |
+| database_name | Name of the database | Any Str | Recommended |
+| plan_handle | Handle to the cached execution plan | Any Str | Recommended |
+| query_text | SQL query text (anonymized) | Any Str | Recommended |
+| collection_timestamp | Timestamp when the metric was collected | Any Str | Recommended |
+| last_execution_timestamp | Timestamp of the last execution of this query | Any Str | Recommended |
+| newrelic.event.type | Event type for New Relic integration | Any Str | Recommended |
+
+### sqlserver.stats.connections
+
+Current user connections
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Alpha |
+
+### sqlserver.stats.deadlocks_per_sec
+
+Deadlocks per second
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1/s | Gauge | Int | Alpha |
+
+### sqlserver.stats.kill_connection_errors_per_sec
+
+Kill connection errors per second
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1/s | Gauge | Int | Alpha |
+
+### sqlserver.stats.lock_waits_per_sec
+
+Lock waits per second
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1/s | Gauge | Int | Alpha |
+
+### sqlserver.stats.sql_compilations_per_sec
+
+SQL compilations per second
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1/s | Gauge | Int | Alpha |
+
+### sqlserver.stats.sql_recompilations_per_sec
+
+SQL recompilations per second
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1/s | Gauge | Int | Alpha |
+
+### sqlserver.stats.user_errors_per_sec
+
+User errors per second
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1/s | Gauge | Int | Alpha |
 
 ### sqlserver.tempdb.allocation_waits_ms
 
@@ -1913,6 +1889,20 @@ Number of tasks waiting on latches
 | Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
 | ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
 | {tasks} | Sum | Double | Cumulative | true | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| wait_type | Type of wait (e.g., PAGEIOLATCH_SH, LCK_M_S) | Any Str | Recommended |
+
+### sqlserver.wait_stats.wait_time_ms
+
+Total wait time in milliseconds
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| ms | Sum | Double | Cumulative | true | Alpha |
 
 #### Attributes
 

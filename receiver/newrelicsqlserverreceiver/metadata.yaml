@@ -93,7 +93,7 @@ metrics:
       ]
 
   sqlserver.buffer.cache_hit_ratio:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Buffer cache hit ratio percentage
@@ -111,7 +111,7 @@ metrics:
       value_type: int
 
   sqlserver.buffer.page_life_expectancy:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Page life expectancy in seconds
@@ -120,7 +120,7 @@ metrics:
       value_type: int
 
   sqlserver.bufferpool.batch_requests_per_sec:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Batch requests per second
@@ -138,7 +138,7 @@ metrics:
       value_type: double
 
   sqlserver.connections.user:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Number of user connections
@@ -171,7 +171,7 @@ metrics:
 
   # Database Log Metrics
   sqlserver.database.log.bytes_flushed_per_sec:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Number of log bytes flushed per second
@@ -181,7 +181,7 @@ metrics:
     attributes: [metric_source, engine_edition, engine_edition_id]
 
   sqlserver.database.log.flush_waits_per_sec:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Number of flush wait operations per second
@@ -212,7 +212,7 @@ metrics:
       [database_name, metric_source, engine_edition, engine_edition_id]
 
   sqlserver.database.log.used_space_mb:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Used log space in megabytes
@@ -260,7 +260,7 @@ metrics:
   # Database Transaction Metrics
 
   sqlserver.database.principals.applicationRoles:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Number of application roles
@@ -270,7 +270,7 @@ metrics:
     attributes: [database_name]
 
   sqlserver.database.principals.old:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Number of old principals (older than 365 days)
@@ -280,7 +280,7 @@ metrics:
     attributes: [database_name]
 
   sqlserver.database.principals.orphanedUsers:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Number of orphaned users without server login
@@ -291,7 +291,7 @@ metrics:
 
   # Database Role Membership Metrics
   sqlserver.database.principals.recentlyCreated:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Number of recently created principals (last 30 days)
@@ -301,7 +301,7 @@ metrics:
     attributes: [database_name]
 
   sqlserver.database.principals.roles:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Number of database roles
@@ -311,7 +311,7 @@ metrics:
     attributes: [database_name]
 
   sqlserver.database.principals.sqlUsers:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Number of SQL authentication users
@@ -321,7 +321,7 @@ metrics:
     attributes: [database_name]
 
   sqlserver.database.principals.total:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Total number of database principals
@@ -331,7 +331,7 @@ metrics:
     attributes: [database_name]
 
   sqlserver.database.principals.users:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Number of database users
@@ -341,7 +341,7 @@ metrics:
     attributes: [database_name]
 
   sqlserver.database.principals.windowsUsers:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Number of Windows authentication users
@@ -351,7 +351,7 @@ metrics:
     attributes: [database_name]
 
   sqlserver.database.role.members.applicationRoles:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Number of application role members
@@ -361,7 +361,7 @@ metrics:
     attributes: [database_name]
 
   sqlserver.database.role.members.crossRole:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Number of cross-role members
@@ -371,7 +371,7 @@ metrics:
     attributes: [database_name]
 
   sqlserver.database.role.members.highPrivilege:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Number of high privilege role members
@@ -381,7 +381,7 @@ metrics:
     attributes: [database_name]
 
   sqlserver.database.role.members.unique:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Number of unique members in roles
@@ -393,7 +393,7 @@ metrics:
   # Removed: sqlserver.database.role.membership.active (too granular - individual role-member records)
 
   sqlserver.database.role.memberships.active:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Number of active role memberships
@@ -403,7 +403,7 @@ metrics:
     attributes: [database_name]
 
   sqlserver.database.role.memberships.custom:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Number of custom role memberships
@@ -413,7 +413,7 @@ metrics:
     attributes: [database_name]
 
   sqlserver.database.role.memberships.nested:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Number of nested role memberships
@@ -423,7 +423,7 @@ metrics:
     attributes: [database_name]
 
   sqlserver.database.role.memberships.total:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Total number of role memberships
@@ -433,7 +433,7 @@ metrics:
     attributes: [database_name]
 
   sqlserver.database.role.memberships.users:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Number of user role memberships
@@ -445,7 +445,7 @@ metrics:
   # Removed: sqlserver.database.role.nesting.level (too granular - individual nesting records)
 
   sqlserver.database.role.permission.memberCount:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Number of members in role
@@ -455,7 +455,7 @@ metrics:
     attributes: [database_name, role_name, permission_scope]
 
   sqlserver.database.role.permission.riskLevel:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Role risk level
@@ -468,7 +468,7 @@ metrics:
 
   # Failover Cluster / Always On Availability Group Metrics
   sqlserver.database.role.roles.empty:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Number of empty roles
@@ -478,7 +478,7 @@ metrics:
     attributes: [database_name]
 
   sqlserver.database.role.roles.withMembers:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Number of unique roles with members
@@ -511,7 +511,7 @@ metrics:
       [database_name, metric_source, engine_edition, engine_edition_id]
 
   sqlserver.database.transactions.active:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Number of active transactions
@@ -564,7 +564,7 @@ metrics:
 
   # Instance Memory Metrics
   sqlserver.failover_cluster.ag_cluster_type:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Cluster type for the availability group (WSFC, EXTERNAL, NONE)
@@ -575,7 +575,7 @@ metrics:
 
   # Instance Comprehensive Stats Metrics
   sqlserver.failover_cluster.ag_failure_condition_level:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Automatic failover condition level for the availability group (1-5)
@@ -585,7 +585,7 @@ metrics:
     attributes: [group_name, cluster_type_desc]
 
   sqlserver.failover_cluster.ag_health_check_timeout:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Health check timeout for the availability group in milliseconds
@@ -595,7 +595,7 @@ metrics:
     attributes: [group_name, cluster_type_desc]
 
   sqlserver.failover_cluster.ag_replica_role:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Current role of the replica within the Availability Group (PRIMARY or SECONDARY)
@@ -605,7 +605,7 @@ metrics:
     attributes: [replica_server_name, role_desc, synchronization_health_desc]
 
   sqlserver.failover_cluster.ag_required_sync_secondaries:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Number of synchronous secondary replicas required to commit transactions
@@ -615,7 +615,7 @@ metrics:
     attributes: [group_name, cluster_type_desc]
 
   sqlserver.failover_cluster.ag_synchronization_health:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Health of data synchronization between primary and secondary replica (HEALTHY, PARTIALLY_HEALTHY, NOT_HEALTHY)
@@ -625,7 +625,7 @@ metrics:
     attributes: [replica_server_name, role_desc, synchronization_health_desc]
 
   sqlserver.failover_cluster.flow_control_time_ms:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Time spent in flow control by log records from primary replica in milliseconds per second
@@ -635,7 +635,7 @@ metrics:
     attributes: [instance_name]
 
   sqlserver.failover_cluster.log_bytes_received_per_sec:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Rate of log records received by secondary replica from primary replica in bytes per second
@@ -645,7 +645,7 @@ metrics:
     attributes: [instance_name]
 
   sqlserver.failover_cluster.log_send_queue_kb:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Amount of log records in the log send queue waiting to be sent to the secondary replica in kilobytes
@@ -655,7 +655,7 @@ metrics:
     attributes: [replica_server_name, database_name]
 
   sqlserver.failover_cluster.redo_queue_kb:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Amount of log records in the redo queue waiting to be redone on the secondary replica in kilobytes
@@ -665,7 +665,7 @@ metrics:
     attributes: [replica_server_name, database_name]
 
   sqlserver.failover_cluster.redo_rate_kb_sec:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Rate at which log records are being redone on the secondary replica in kilobytes per second
@@ -675,7 +675,7 @@ metrics:
     attributes: [replica_server_name, database_name]
 
   sqlserver.failover_cluster.transaction_delay_ms:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Average delay for transactions on the secondary replica in milliseconds
@@ -686,7 +686,7 @@ metrics:
 
   # Security Metrics
   sqlserver.instance.background_processes_count:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Number of background processes
@@ -742,7 +742,7 @@ metrics:
 
   # Instance Disk Metrics
   sqlserver.instance.disk_in_bytes:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Total disk space in bytes
@@ -752,7 +752,7 @@ metrics:
 
   # Instance Target Memory Metrics
   sqlserver.instance.dormant_processes_count:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Number of dormant processes
@@ -800,7 +800,7 @@ metrics:
       value_type: double
 
   sqlserver.instance.memory_total:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Total physical memory on the system
@@ -829,7 +829,7 @@ metrics:
 
   # Instance Index Metrics
   sqlserver.instance.preconnect_processes_count:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Number of preconnect processes
@@ -838,7 +838,7 @@ metrics:
       value_type: int
 
   sqlserver.instance.runnable_processes_count:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Number of runnable processes
@@ -847,7 +847,7 @@ metrics:
       value_type: int
 
   sqlserver.instance.runnable_tasks:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Number of runnable tasks
@@ -857,7 +857,7 @@ metrics:
 
   # Instance Active Connections Metrics
   sqlserver.instance.running_processes_count:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Number of running processes
@@ -866,7 +866,7 @@ metrics:
       value_type: int
 
   sqlserver.instance.sleeping_processes_count:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Number of sleeping processes
@@ -876,7 +876,7 @@ metrics:
 
   # Instance Runnable Tasks Metrics
   sqlserver.instance.suspended_processes_count:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Number of suspended processes
@@ -904,7 +904,7 @@ metrics:
       value_type: int
 
   sqlserver.lock.mode.bulk_update:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Number of bulk update locks
@@ -914,7 +914,7 @@ metrics:
     attributes: [database_name]
 
   sqlserver.lock.mode.exclusive:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Number of exclusive locks
@@ -924,7 +924,7 @@ metrics:
     attributes: [database_name]
 
   sqlserver.lock.mode.intent:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Number of intent locks
@@ -934,7 +934,7 @@ metrics:
     attributes: [database_name]
 
   sqlserver.lock.mode.schema:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Number of schema locks
@@ -944,7 +944,7 @@ metrics:
     attributes: [database_name]
 
   sqlserver.lock.mode.shared:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Number of shared locks
@@ -954,7 +954,7 @@ metrics:
     attributes: [database_name]
 
   sqlserver.lock.mode.shared_intent_exclusive:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Number of shared intent exclusive locks
@@ -965,7 +965,7 @@ metrics:
 
   # Database Size Metrics
   sqlserver.lock.mode.total:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Total active locks by mode
@@ -975,7 +975,7 @@ metrics:
     attributes: [database_name]
 
   sqlserver.lock.mode.update:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Number of update locks
@@ -985,7 +985,7 @@ metrics:
     attributes: [database_name]
 
   sqlserver.lock.resource.allocation_unit:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Number of allocation unit locks
@@ -996,7 +996,7 @@ metrics:
 
   # Lock Mode Metrics (how it's locked)
   sqlserver.lock.resource.application:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Number of application locks
@@ -1006,7 +1006,7 @@ metrics:
     attributes: [database_name]
 
   sqlserver.lock.resource.database_level:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Number of database-level locks
@@ -1016,7 +1016,7 @@ metrics:
     attributes: [database_name]
 
   sqlserver.lock.resource.extent:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Number of extent-level locks
@@ -1026,7 +1026,7 @@ metrics:
     attributes: [database_name]
 
   sqlserver.lock.resource.file:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Number of file-level locks
@@ -1036,7 +1036,7 @@ metrics:
     attributes: [database_name]
 
   sqlserver.lock.resource.hobt:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Number of heap or B-tree locks
@@ -1046,7 +1046,7 @@ metrics:
     attributes: [database_name]
 
   sqlserver.lock.resource.key:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Number of key-level locks
@@ -1056,7 +1056,7 @@ metrics:
     attributes: [database_name]
 
   sqlserver.lock.resource.metadata:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Number of metadata locks
@@ -1066,7 +1066,7 @@ metrics:
     attributes: [database_name]
 
   sqlserver.lock.resource.page:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Number of page-level locks
@@ -1076,7 +1076,7 @@ metrics:
     attributes: [database_name]
 
   sqlserver.lock.resource.row:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Number of row-level locks
@@ -1086,7 +1086,7 @@ metrics:
     attributes: [database_name]
 
   sqlserver.lock.resource.table:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Number of table-level locks
@@ -1096,7 +1096,7 @@ metrics:
     attributes: [database_name]
 
   sqlserver.lock.resource.total:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Total active locks in the database
@@ -1106,7 +1106,7 @@ metrics:
     attributes: [database_name]
 
   sqlserver.locked_object:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Database object locked by a session
@@ -1116,7 +1116,7 @@ metrics:
 
   # Slow Query Metrics
   sqlserver.memory.target:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Target server memory in KB
@@ -1126,7 +1126,7 @@ metrics:
 
   # Lock Resource Metrics (what's being locked)
   sqlserver.memory.total:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Total server memory in KB
@@ -1152,7 +1152,7 @@ metrics:
 
   # Individual Query Analysis Metrics
   sqlserver.security.server_principals_count:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Total number of server principals (logins)
@@ -1162,7 +1162,7 @@ metrics:
     attributes: [metric.type]
 
   sqlserver.security.server_role_members_count:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Total number of server role members
@@ -1294,7 +1294,7 @@ metrics:
       value_type: int
 
   sqlserver.tempdb.allocation_waits_ms:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Total allocation-related wait time (GAM, SGAM, PFS)
@@ -1304,7 +1304,7 @@ metrics:
     attributes: [sql_hostname, tempdb_health_status, collection_timestamp]
 
   sqlserver.tempdb.current_waiters:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Number of tasks currently waiting on TempDB page latches
@@ -1314,7 +1314,7 @@ metrics:
     attributes: [sql_hostname, tempdb_health_status, collection_timestamp]
 
   sqlserver.tempdb.data_file_count:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Number of TempDB data files
@@ -1324,7 +1324,7 @@ metrics:
     attributes: [sql_hostname, tempdb_health_status, collection_timestamp]
 
   sqlserver.tempdb.pagelatch_waits_ms:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Total page latch wait time since server start
@@ -1334,7 +1334,7 @@ metrics:
     attributes: [sql_hostname, tempdb_health_status, collection_timestamp]
 
   sqlserver.tempdb.total_size_mb:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Total size of TempDB data files
@@ -1345,7 +1345,7 @@ metrics:
 
   # Thread Pool Health Metrics
   sqlserver.threadpool.current_tasks:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Total tasks currently assigned to schedulers
@@ -1355,7 +1355,7 @@ metrics:
     attributes: [sql_hostname, health_status, collection_timestamp]
 
   sqlserver.threadpool.max_workers:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Maximum configured worker threads
@@ -1365,7 +1365,7 @@ metrics:
     attributes: [sql_hostname, health_status, collection_timestamp]
 
   sqlserver.threadpool.runnable_tasks:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Tasks ready to run but waiting for CPU time
@@ -1376,7 +1376,7 @@ metrics:
 
   # User Connection Status Metrics
   sqlserver.threadpool.running_workers:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Number of worker threads currently running
@@ -1386,7 +1386,7 @@ metrics:
     attributes: [sql_hostname, health_status, collection_timestamp]
 
   sqlserver.threadpool.utilization_percent:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Percentage of worker threads currently in use
@@ -1396,7 +1396,7 @@ metrics:
     attributes: [sql_hostname, health_status, collection_timestamp]
 
   sqlserver.threadpool.waiting_tasks:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Number of tasks currently waiting for threadpool worker threads
@@ -1406,7 +1406,7 @@ metrics:
     attributes: [sql_hostname, health_status, collection_timestamp]
 
   sqlserver.threadpool.work_queue_count:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Total number of tasks in scheduler work queues
@@ -1416,7 +1416,7 @@ metrics:
     attributes: [sql_hostname, health_status, collection_timestamp]
 
   sqlserver.user_connections.authentication.churn_rate:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Connection churn rate (logout/login ratio as percentage)
@@ -1425,7 +1425,7 @@ metrics:
       value_type: double
 
   sqlserver.user_connections.authentication.logins_per_sec:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Current login rate per second
@@ -1434,7 +1434,7 @@ metrics:
       value_type: int
 
   sqlserver.user_connections.authentication.recent_failed_logins:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Count of failed logins in the last hour
@@ -1443,7 +1443,7 @@ metrics:
       value_type: int
 
   sqlserver.user_connections.authentication.total_failed_logins:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Total count of failed login attempts in current error log
@@ -1452,7 +1452,7 @@ metrics:
       value_type: int
 
   sqlserver.user_connections.authentication.unique_failed_sources:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Count of distinct source IPs with failed logins
@@ -1461,7 +1461,7 @@ metrics:
       value_type: int
 
   sqlserver.user_connections.authentication.unique_failed_users:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Count of distinct usernames with failed logins
@@ -1470,7 +1470,7 @@ metrics:
       value_type: int
 
   sqlserver.user_connections.client.count:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Number of connections grouped by client host and program
@@ -1480,7 +1480,7 @@ metrics:
     attributes: [host_name, program_name]
 
   sqlserver.user_connections.client.unique_hosts:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Count of unique client hosts with active connections
@@ -1489,7 +1489,7 @@ metrics:
       value_type: int
 
   sqlserver.user_connections.client.unique_programs:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Count of unique programs with active connections
@@ -1498,7 +1498,7 @@ metrics:
       value_type: int
 
   sqlserver.user_connections.runnable:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Number of runnable user connections
@@ -1507,7 +1507,7 @@ metrics:
       value_type: int
 
   sqlserver.user_connections.running:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Number of running user connections
@@ -1516,7 +1516,7 @@ metrics:
       value_type: int
 
   sqlserver.user_connections.sleeping:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Number of sleeping user connections
@@ -1525,7 +1525,7 @@ metrics:
       value_type: int
 
   sqlserver.user_connections.suspended:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Number of suspended user connections
@@ -1534,7 +1534,7 @@ metrics:
       value_type: int
 
   sqlserver.user_connections.total:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Total number of user connections across all statuses
@@ -1543,7 +1543,7 @@ metrics:
       value_type: int
 
   sqlserver.user_connections.utilization.active_ratio:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Ratio of active connections to total connections
@@ -1552,7 +1552,7 @@ metrics:
       value_type: double
 
   sqlserver.user_connections.utilization.idle_ratio:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Ratio of idle connections to total connections
@@ -1561,7 +1561,7 @@ metrics:
       value_type: double
 
   sqlserver.wait_stats.latch.wait_time_ms:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Latch wait time in milliseconds
@@ -1573,7 +1573,7 @@ metrics:
     attributes: [wait_type]
 
   sqlserver.wait_stats.latch.waiting_tasks_count:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Number of tasks waiting on latches
@@ -1597,7 +1597,7 @@ metrics:
     attributes: [wait_type]
 
   sqlserver.wait_stats.waiting_tasks_count:
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     description: Number of tasks currently waiting
