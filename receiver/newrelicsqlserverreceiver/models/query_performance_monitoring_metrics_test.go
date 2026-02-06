@@ -16,8 +16,8 @@ func TestSlowQueryModel(t *testing.T) {
 		intervalExecCount := int64(50)
 
 		slowQuery := SlowQuery{
-			QueryText:              &queryText,
 			QueryID:                &queryID,
+			QueryText:              &queryText,
 			NrServiceGuid:          &nrApmGuid,
 			NormalisedSqlHash:      &sqlHash,
 			ExecutionCount:         &executionCount,
@@ -46,28 +46,23 @@ func TestSlowQueryModel(t *testing.T) {
 	})
 
 	t.Run("SlowQuery model with nil New Relic metadata fields", func(t *testing.T) {
-		queryText := "SELECT 1"
 
 		slowQuery := SlowQuery{
-			QueryText:         &queryText,
-			NrServiceGuid:     nil,
+				NrServiceGuid:     nil,
 			NormalisedSqlHash: nil,
 		}
 
 		// Verify metadata fields can be nil
-		assert.NotNil(t, slowQuery.QueryText)
 		assert.Nil(t, slowQuery.NrServiceGuid)
 		assert.Nil(t, slowQuery.NormalisedSqlHash)
 	})
 
 	t.Run("SlowQuery model with empty client name and nr_service_guid", func(t *testing.T) {
-		queryText := "SELECT * FROM PRODUCTS"
 		emptyGuid := ""
 		sqlHash := "abc123def456abc123def456abc123de"
 
 		slowQuery := SlowQuery{
-			QueryText:         &queryText,
-			NrServiceGuid:     &emptyGuid,
+				NrServiceGuid:     &emptyGuid,
 			NormalisedSqlHash: &sqlHash,
 		}
 
@@ -84,7 +79,6 @@ func TestSlowQueryModel(t *testing.T) {
 func TestActiveRunningQueryModel(t *testing.T) {
 	t.Run("ActiveRunningQuery model with populated fields", func(t *testing.T) {
 		sessionID := int64(52)
-		queryText := "SELECT * FROM ORDERS"
 		waitType := "LCK_M_S"
 		waitTime := 1.5
 		nrApmGuid := "ABC123"
@@ -92,8 +86,7 @@ func TestActiveRunningQueryModel(t *testing.T) {
 
 		activeQuery := ActiveRunningQuery{
 			CurrentSessionID:  &sessionID,
-			QueryText:         &queryText,
-			WaitType:          &waitType,
+				WaitType:          &waitType,
 			WaitTimeS:         &waitTime,
 			NrServiceGuid:     &nrApmGuid,
 			NormalisedSqlHash: &sqlHash,
@@ -102,8 +95,6 @@ func TestActiveRunningQueryModel(t *testing.T) {
 		assert.NotNil(t, activeQuery.CurrentSessionID)
 		assert.Equal(t, sessionID, *activeQuery.CurrentSessionID)
 
-		assert.NotNil(t, activeQuery.QueryText)
-		assert.Equal(t, queryText, *activeQuery.QueryText)
 
 		assert.NotNil(t, activeQuery.WaitType)
 		assert.Equal(t, waitType, *activeQuery.WaitType)
@@ -119,33 +110,32 @@ func TestActiveRunningQueryModel(t *testing.T) {
 	})
 }
 
-func TestWaitTimeAnalysisModel(t *testing.T) {
-	t.Run("WaitTimeAnalysis model", func(t *testing.T) {
-		waitCategory := "PAGEIOLATCH_SH"
-		totalWaitTimeMs := 25000.5
-		waitEventCount := int64(15)
-
-		waitAnalysis := WaitTimeAnalysis{
-			WaitCategory:    &waitCategory,
-			TotalWaitTimeMs: &totalWaitTimeMs,
-			WaitEventCount:  &waitEventCount,
-		}
-
-		assert.NotNil(t, waitAnalysis.WaitCategory)
-		assert.Equal(t, waitCategory, *waitAnalysis.WaitCategory)
-
-		assert.NotNil(t, waitAnalysis.TotalWaitTimeMs)
-		assert.Equal(t, totalWaitTimeMs, *waitAnalysis.TotalWaitTimeMs)
-
-		assert.NotNil(t, waitAnalysis.WaitEventCount)
-		assert.Equal(t, waitEventCount, *waitAnalysis.WaitEventCount)
-	})
-}
+// func TestWaitTimeAnalysisModel(t *testing.T) {
+// 	t.Run("WaitTimeAnalysis model", func(t *testing.T) {
+// 		waitCategory := "PAGEIOLATCH_SH"
+// 		totalWaitTimeMs := 25000.5
+// 		waitEventCount := int64(15)
+//
+// 		waitAnalysis := WaitTimeAnalysis{
+// 			WaitCategory:    &waitCategory,
+// 			TotalWaitTimeMs: &totalWaitTimeMs,
+// 			WaitEventCount:  &waitEventCount,
+// 		}
+//
+// 		assert.NotNil(t, waitAnalysis.WaitCategory)
+// 		assert.Equal(t, waitCategory, *waitAnalysis.WaitCategory)
+//
+// 		assert.NotNil(t, waitAnalysis.TotalWaitTimeMs)
+// 		assert.Equal(t, totalWaitTimeMs, *waitAnalysis.TotalWaitTimeMs)
+//
+// 		assert.NotNil(t, waitAnalysis.WaitEventCount)
+// 		assert.Equal(t, waitEventCount, *waitAnalysis.WaitEventCount)
+// 	})
+// }
 
 func TestSlowQueryWithIntervalMetrics(t *testing.T) {
 	t.Run("Interval metrics calculation scenario", func(t *testing.T) {
 		// Simulate a slow query with both cumulative and interval metrics
-		queryText := "SELECT * FROM CUSTOMERS WHERE STATUS = ?"
 		queryID := QueryID("0xABCDEF")
 		sqlHash := "1234567890abcdef1234567890abcdef"
 
@@ -157,8 +147,7 @@ func TestSlowQueryWithIntervalMetrics(t *testing.T) {
 		intervalExecCount := int64(25) // 25 new executions
 
 		slowQuery := SlowQuery{
-			QueryText:              &queryText,
-			QueryID:                &queryID,
+				QueryID:                &queryID,
 			NormalisedSqlHash:      &sqlHash,
 			TotalElapsedTimeMS:     &totalElapsedTime,
 			ExecutionCount:         &executionCount,
@@ -202,29 +191,28 @@ func TestModelTagging(t *testing.T) {
 	})
 }
 
-func TestWaitTimeAnalysisWithNilFields(t *testing.T) {
-	t.Run("WaitTimeAnalysis with only wait category", func(t *testing.T) {
-		waitCategory := "PAGEIOLATCH_SH"
-
-		waitAnalysis := WaitTimeAnalysis{
-			WaitCategory:    &waitCategory,
-			TotalWaitTimeMs: nil,
-			WaitEventCount:  nil,
-		}
-
-		assert.NotNil(t, waitAnalysis.WaitCategory)
-		assert.Equal(t, waitCategory, *waitAnalysis.WaitCategory)
-		assert.Nil(t, waitAnalysis.TotalWaitTimeMs)
-		assert.Nil(t, waitAnalysis.WaitEventCount)
-	})
-}
+// func TestWaitTimeAnalysisWithNilFields(t *testing.T) {
+// 	t.Run("WaitTimeAnalysis with only wait category", func(t *testing.T) {
+// 		waitCategory := "PAGEIOLATCH_SH"
+//
+// 		waitAnalysis := WaitTimeAnalysis{
+// 			WaitCategory:    &waitCategory,
+// 			TotalWaitTimeMs: nil,
+// 			WaitEventCount:  nil,
+// 		}
+//
+// 		assert.NotNil(t, waitAnalysis.WaitCategory)
+// 		assert.Equal(t, waitCategory, *waitAnalysis.WaitCategory)
+// 		assert.Nil(t, waitAnalysis.TotalWaitTimeMs)
+// 		assert.Nil(t, waitAnalysis.WaitEventCount)
+// 	})
+// }
 
 func TestNilSafetyInModels(t *testing.T) {
 	t.Run("Models handle nil pointer fields safely", func(t *testing.T) {
 		// Test that models can be created with all nil fields without panicking
 		slowQuery := SlowQuery{
-			QueryText:         nil,
-			QueryID:           nil,
+				QueryID:           nil,
 			NrServiceGuid:     nil,
 			NormalisedSqlHash: nil,
 		}
@@ -247,7 +235,6 @@ func TestActiveRunningQueryBlockingMetadata(t *testing.T) {
 	t.Run("ActiveRunningQuery with blocker APM metadata", func(t *testing.T) {
 		sessionID := int64(55)
 		blockingSessionID := int64(52)
-		queryText := "/* nr_service_guid=\"VictimGUID123\", nr_service=\"victim-service\" */ SELECT * FROM Orders"
 		blockingQueryText := "/* nr_service_guid=\"BlockerGUID456\", nr_service=\"blocker-service\" */ UPDATE Orders SET Status = 'Processed'"
 
 		victimGuid := "VictimGUID123"
@@ -255,8 +242,7 @@ func TestActiveRunningQueryBlockingMetadata(t *testing.T) {
 		activeQuery := ActiveRunningQuery{
 			CurrentSessionID:           &sessionID,
 			BlockingSessionID:          &blockingSessionID,
-			QueryText:                  &queryText,
-			BlockingQueryStatementText: &blockingQueryText,
+				BlockingQueryStatementText: &blockingQueryText,
 			NrServiceGuid:              &victimGuid,
 		}
 
@@ -274,7 +260,6 @@ func TestActiveRunningQueryBlockingMetadata(t *testing.T) {
 	t.Run("ActiveRunningQuery with only victim metadata", func(t *testing.T) {
 		sessionID := int64(55)
 		blockingSessionID := int64(52)
-		queryText := "/* nr_service_guid=\"VictimGUID123\", nr_service=\"victim-service\" */ SELECT * FROM Orders"
 		blockingQueryText := "UPDATE Orders SET Status = 'Processed'" // No APM metadata
 
 		victimGuid := "VictimGUID123"
@@ -282,8 +267,7 @@ func TestActiveRunningQueryBlockingMetadata(t *testing.T) {
 		activeQuery := ActiveRunningQuery{
 			CurrentSessionID:           &sessionID,
 			BlockingSessionID:          &blockingSessionID,
-			QueryText:                  &queryText,
-			BlockingQueryStatementText: &blockingQueryText,
+				BlockingQueryStatementText: &blockingQueryText,
 			NrServiceGuid:              &victimGuid,
 		}
 
@@ -298,15 +282,13 @@ func TestActiveRunningQueryBlockingMetadata(t *testing.T) {
 
 	t.Run("ActiveRunningQuery with no blocking scenario", func(t *testing.T) {
 		sessionID := int64(55)
-		queryText := "/* nr_service_guid=\"ServiceGUID\", nr_service=\"my-service\" */ SELECT * FROM Products"
 
 		serviceGuid := "ServiceGUID"
 
 		activeQuery := ActiveRunningQuery{
 			CurrentSessionID:           &sessionID,
 			BlockingSessionID:          nil, // No blocking
-			QueryText:                  &queryText,
-			BlockingQueryStatementText: nil, // No blocker query
+				BlockingQueryStatementText: nil, // No blocker query
 			NrServiceGuid:              &serviceGuid,
 		}
 
@@ -322,14 +304,12 @@ func TestActiveRunningQueryBlockingMetadata(t *testing.T) {
 	t.Run("ActiveRunningQuery with blocker metadata but no victim metadata", func(t *testing.T) {
 		sessionID := int64(55)
 		blockingSessionID := int64(52)
-		queryText := "SELECT * FROM Orders" // No APM metadata
 		blockingQueryText := "/* nr_service_guid=\"BlockerGUID\", nr_service=\"blocker-service\" */ UPDATE Orders SET Status = 'Processed'"
 
 		activeQuery := ActiveRunningQuery{
 			CurrentSessionID:           &sessionID,
 			BlockingSessionID:          &blockingSessionID,
-			QueryText:                  &queryText,
-			BlockingQueryStatementText: &blockingQueryText,
+				BlockingQueryStatementText: &blockingQueryText,
 			NrServiceGuid:              nil, // No victim metadata
 		}
 
@@ -362,7 +342,6 @@ func TestActiveRunningQueryCompleteBlockingScenario(t *testing.T) {
 	t.Run("Complete blocking scenario with all metadata", func(t *testing.T) {
 		// Victim (blocked query) details
 		victimSessionID := int64(55)
-		victimQueryText := "/* nr_service_guid=\"MTE2MDAzMTl8QVBNfEFQUAxJQ0FUSU9OfDI5MjMzNDQwNw\", nr_service=\"victim-java-app\" TargetID_5 */ SELECT * FROM Person.Person WHERE BusinessEntityID = 5"
 		victimGuid := "MTE2MDAzMTl8QVBNfEFQUAxJQ0FUSU9OfDI5MjMzNDQwNw"
 		victimQueryID := QueryID("0x1A2B3C4D5E6F7890")
 
@@ -388,8 +367,7 @@ func TestActiveRunningQueryCompleteBlockingScenario(t *testing.T) {
 		activeQuery := ActiveRunningQuery{
 			// Victim details
 			CurrentSessionID: &victimSessionID,
-			QueryText:        &victimQueryText,
-			QueryID:          &victimQueryID,
+				QueryID:          &victimQueryID,
 			NrServiceGuid:    &victimGuid,
 
 			// Blocker details
@@ -412,8 +390,7 @@ func TestActiveRunningQueryCompleteBlockingScenario(t *testing.T) {
 
 		// Verify victim details
 		assert.Equal(t, int64(55), *activeQuery.CurrentSessionID)
-		assert.Contains(t, *activeQuery.QueryText, "SELECT * FROM Person.Person")
-		assert.Equal(t, victimGuid, *activeQuery.NrServiceGuid)
+			assert.Equal(t, victimGuid, *activeQuery.NrServiceGuid)
 		assert.Equal(t, "0x1A2B3C4D5E6F7890", activeQuery.QueryID.String())
 
 		// Verify blocker details

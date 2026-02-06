@@ -147,7 +147,7 @@ func (s *SlowQuerySmoother) Smooth(rawQueries []models.SlowQuery) []models.SlowQ
 
 			s.logger.Debug("New query added to smoothing history",
 				zap.String("query_id", queryID),
-				zap.Float64("avg_elapsed_time_ms", getFloat64Value(rawQuery.TotalElapsedTimeMS)))
+				zap.Float64("avg_elapsed_time_ms", getFloat64Value(rawQuery.AvgElapsedTimeMS)))
 		} else {
 			// Existing query - apply exponential smoothing
 			history.LastSeen = now
@@ -160,8 +160,8 @@ func (s *SlowQuerySmoother) Smooth(rawQueries []models.SlowQuery) []models.SlowQ
 
 			s.logger.Debug("Query updated with smoothing",
 				zap.String("query_id", queryID),
-				zap.Float64("raw_avg_elapsed_ms", getFloat64Value(rawQuery.TotalElapsedTimeMS)),
-				zap.Float64("smoothed_avg_elapsed_ms", getFloat64Value(history.SmoothedMetrics.TotalElapsedTimeMS)),
+				zap.Float64("raw_avg_elapsed_ms", getFloat64Value(rawQuery.AvgElapsedTimeMS)),
+				zap.Float64("smoothed_avg_elapsed_ms", getFloat64Value(history.SmoothedMetrics.AvgElapsedTimeMS)),
 				zap.Int64("observation_count", history.RawMetricsCount))
 		}
 
@@ -218,8 +218,8 @@ func (s *SlowQuerySmoother) applyExponentialSmoothing(previous, current *models.
 	smoothed := copySlowQuery(current) // Start with current query structure
 
 	// Apply EWMA to each numeric metric
-	if current.TotalElapsedTimeMS != nil && previous.TotalElapsedTimeMS != nil {
-		smoothed.TotalElapsedTimeMS = smootherFloatPtr(α*(*current.TotalElapsedTimeMS) + β*(*previous.TotalElapsedTimeMS))
+	if current.AvgElapsedTimeMS != nil && previous.AvgElapsedTimeMS != nil {
+		smoothed.AvgElapsedTimeMS = smootherFloatPtr(α*(*current.AvgElapsedTimeMS) + β*(*previous.AvgElapsedTimeMS))
 	}
 
 	// For execution count, use simple addition (cumulative)
@@ -294,8 +294,8 @@ func copySlowQuery(src *models.SlowQuery) *models.SlowQuery {
 	if src.ExecutionCount != nil {
 		dst.ExecutionCount = smootherInt64Ptr(*src.ExecutionCount)
 	}
-	if src.TotalElapsedTimeMS != nil {
-		dst.TotalElapsedTimeMS = smootherFloatPtr(*src.TotalElapsedTimeMS)
+	if src.AvgElapsedTimeMS != nil {
+		dst.AvgElapsedTimeMS = smootherFloatPtr(*src.AvgElapsedTimeMS)
 	}
 	if src.CollectionTimestamp != nil {
 		dst.CollectionTimestamp = smootherStringPtr(*src.CollectionTimestamp)

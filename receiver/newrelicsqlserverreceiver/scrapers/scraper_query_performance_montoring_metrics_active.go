@@ -245,175 +245,79 @@ func (s *QueryPerformanceScraper) processActiveRunningQueryMetricsWithPlan(resul
 
 	timestamp := pcommon.NewTimestampFromTime(time.Now())
 
-	// Define getter functions for all attributes based on the actual ActiveRunningQuery model
-	// Only including fields that exist in the simplified ActiveRunningQuery struct
-	getSessionID := func() int64 {
-		if result.CurrentSessionID != nil {
-			return *result.CurrentSessionID
+	// Helper functions for safe string extraction
+	stringValue := func(s *string) string {
+		if s != nil {
+			return *s
+		}
+		return ""
+	}
+	int64Value := func(i *int64) int64 {
+		if i != nil {
+			return *i
 		}
 		return 0
 	}
-	getRequestID := func() int64 {
-		if result.RequestID != nil {
-			return *result.RequestID
-		}
-		return 0
-	}
-	getDatabaseName := func() string {
-		if result.DatabaseName != nil {
-			return *result.DatabaseName
+	queryIDValue := func(qid *models.QueryID) string {
+		if qid != nil && !qid.IsEmpty() {
+			return qid.String()
 		}
 		return ""
 	}
-	getLoginName := func() string {
-		if result.LoginName != nil {
-			return *result.LoginName
-		}
-		return ""
+
+	// Extract values
+	sessionID := int64Value(result.CurrentSessionID)
+	requestID := int64Value(result.RequestID)
+	databaseName := stringValue(result.DatabaseName)
+	loginName := stringValue(result.LoginName)
+	hostName := stringValue(result.HostName)
+	queryID := queryIDValue(result.QueryID)
+	normalisedSqlHash := stringValue(result.NormalisedSqlHash)
+	nrServiceGuidVal := stringValue(result.NrServiceGuid)
+	waitType := stringValue(result.WaitType)
+	waitResource := stringValue(result.WaitResource)
+	waitResourceObjectName := stringValue(result.WaitResourceObjectName)
+	lastWaitType := stringValue(result.LastWaitType)
+	requestStartTime := stringValue(result.RequestStartTime)
+	collectionTimestamp := stringValue(result.CollectionTimestamp)
+	transactionID := int64Value(result.TransactionID)
+	openTransactionCount := int64Value(result.OpenTransactionCount)
+	blockingSessionID := int64Value(result.BlockingSessionID)
+	blockingLoginName := stringValue(result.BlockerLoginName)
+	blockingQueryHash := queryIDValue(result.BlockingQueryHash)
+	blockingNrServiceGuid := stringValue(result.BlockingNrServiceGuid)
+	blockingNormalisedSqlHash := stringValue(result.BlockingNormalisedSqlHash)
+
+	// Use slow query plan_handle for consistency
+	planHandle := ""
+	if slowQueryPlanHandle != nil && !slowQueryPlanHandle.IsEmpty() {
+		planHandle = slowQueryPlanHandle.String()
 	}
-	getHostName := func() string {
-		if result.HostName != nil {
-			return *result.HostName
-		}
-		return ""
+
+	// Decode wait types
+	waitTypeForDecoding := waitType
+	if waitTypeForDecoding == "" {
+		waitTypeForDecoding = "N/A"
 	}
-	getWaitType := func() string {
-		if result.WaitType != nil {
-			return *result.WaitType
-		}
-		return ""
+	waitTypeDescription := helpers.DecodeWaitType(waitTypeForDecoding)
+	if waitTypeDescription == "" {
+		waitTypeDescription = waitTypeForDecoding
 	}
-	getWaitResource := func() string {
-		if result.WaitResource != nil {
-			return *result.WaitResource
-		}
-		return ""
+	waitTypeCategory := helpers.GetWaitTypeCategory(waitTypeForDecoding)
+	if waitTypeCategory == "" {
+		waitTypeCategory = "Other"
 	}
-	getWaitResourceObjectName := func() string {
-		if result.WaitResourceObjectName != nil {
-			return *result.WaitResourceObjectName
-		}
-		return ""
+
+	// Decode wait resource
+	waitResourceType := ""
+	if result.WaitResource != nil {
+		waitResourceType, _ = helpers.DecodeWaitResource(*result.WaitResource)
 	}
-	getLastWaitType := func() string {
-		if result.LastWaitType != nil {
-			return *result.LastWaitType
-		}
-		return ""
-	}
-	getRequestStartTime := func() string {
-		if result.RequestStartTime != nil {
-			return *result.RequestStartTime
-		}
-		return ""
-	}
-	getCollectionTimestamp := func() string {
-		if result.CollectionTimestamp != nil {
-			return *result.CollectionTimestamp
-		}
-		return ""
-	}
-	getTransactionID := func() int64 {
-		if result.TransactionID != nil {
-			return *result.TransactionID
-		}
-		return 0
-	}
-	getOpenTransactionCount := func() int64 {
-		if result.OpenTransactionCount != nil {
-			return *result.OpenTransactionCount
-		}
-		return 0
-	}
-	getBlockingSessionID := func() int64 {
-		if result.BlockingSessionID != nil {
-			return *result.BlockingSessionID
-		}
-		return 0
-	}
-	getBlockingLoginName := func() string {
-		if result.BlockerLoginName != nil {
-			return *result.BlockerLoginName
-		}
-		return ""
-	}
-	getBlockingQueryHash := func() string {
-		if result.BlockingQueryHash != nil && !result.BlockingQueryHash.IsEmpty() {
-			return result.BlockingQueryHash.String()
-		}
-		return ""
-	}
-	getBlockingNrServiceGuid := func() string {
-		if result.BlockingNrServiceGuid != nil {
-			return *result.BlockingNrServiceGuid
-		}
-		return ""
-	}
-	getBlockingNormalisedSqlHash := func() string {
-		if result.BlockingNormalisedSqlHash != nil {
-			return *result.BlockingNormalisedSqlHash
-		}
-		return ""
-	}
-	getQueryID := func() string {
-		if result.QueryID != nil && !result.QueryID.IsEmpty() {
-			return result.QueryID.String()
-		}
-		return ""
-	}
-	getPlanHandle := func() string {
-		// Use slow query plan_handle for consistency across all metrics and logs
-		if slowQueryPlanHandle != nil && !slowQueryPlanHandle.IsEmpty() {
-			return slowQueryPlanHandle.String()
-		}
-		return ""
-	}
-	getWaitTypeDescription := func() string {
-		waitType := getWaitType()
-		if waitType == "" {
-			waitType = "N/A"
-		}
-		description := helpers.DecodeWaitType(waitType)
-		if description == "" {
-			return waitType
-		}
-		return description
-	}
-	getWaitTypeCategory := func() string {
-		waitType := getWaitType()
-		if waitType == "" {
-			waitType = "N/A"
-		}
-		category := helpers.GetWaitTypeCategory(waitType)
-		if category == "" {
-			return "Other"
-		}
-		return category
-	}
-	getWaitResourceType := func() string {
-		if result.WaitResource != nil {
-			resourceType, _ := helpers.DecodeWaitResource(*result.WaitResource)
-			return resourceType
-		}
-		return ""
-	}
-	getLastWaitTypeDescription := func() string {
-		if result.LastWaitType != nil {
-			return helpers.DecodeWaitType(*result.LastWaitType)
-		}
-		return ""
-	}
-	getNormalisedSqlHash := func() string {
-		if result.NormalisedSqlHash != nil {
-			return *result.NormalisedSqlHash
-		}
-		return ""
-	}
-	getNrServiceGuid := func() string {
-		if result.NrServiceGuid != nil {
-			return *result.NrServiceGuid
-		}
-		return ""
+
+	// Decode last wait type
+	lastWaitTypeDescription := ""
+	if result.LastWaitType != nil {
+		lastWaitTypeDescription = helpers.DecodeWaitType(*result.LastWaitType)
 	}
 
 	// Active query wait time
@@ -423,40 +327,40 @@ func (s *QueryPerformanceScraper) processActiveRunningQueryMetricsWithPlan(resul
 			zap.Float64("wait_time_seconds", *result.WaitTimeS),
 			zap.Any("wait_type", result.WaitType),
 			zap.Any("database_name", result.DatabaseName),
-			zap.String("nr_service_guid", getNrServiceGuid()),
-			zap.String("normalized_sql_hash", getNormalisedSqlHash()),
-			zap.Bool("has_apm_correlation", getNrServiceGuid() != "" && getNormalisedSqlHash() != ""),
+			zap.String("nr_service_guid", nrServiceGuidVal),
+			zap.String("normalized_sql_hash", normalisedSqlHash),
+			zap.Bool("has_apm_correlation", nrServiceGuidVal != "" && normalisedSqlHash != ""),
 			zap.String("metric_name", "sqlserver.activequery.wait_time_seconds"))
 
 		s.mb.RecordSqlserverActivequeryWaitTimeSecondsDataPoint(
 			timestamp,
 			*result.WaitTimeS,
-			getSessionID(),
-			getRequestID(),
-			getDatabaseName(),
-			getLoginName(),
-			getHostName(),
-			getQueryID(),
-			getNormalisedSqlHash(),
-			getNrServiceGuid(),
-			getWaitType(),
-			getWaitTypeDescription(),
-			getWaitTypeCategory(),
-			getWaitResource(),
-			getWaitResourceType(),
-			getWaitResourceObjectName(),
-			getLastWaitType(),
-			getLastWaitTypeDescription(),
-			getRequestStartTime(),
-			getCollectionTimestamp(),
-			getTransactionID(),
-			getOpenTransactionCount(),
-			getPlanHandle(),
-			getBlockingSessionID(),
-			getBlockingLoginName(),
-			getBlockingQueryHash(),
-			getBlockingNrServiceGuid(),
-			getBlockingNormalisedSqlHash(),
+			sessionID,
+			requestID,
+			databaseName,
+			loginName,
+			hostName,
+			queryID,
+			normalisedSqlHash,
+			nrServiceGuidVal,
+			waitType,
+			waitTypeDescription,
+			waitTypeCategory,
+			waitResource,
+			waitResourceType,
+			waitResourceObjectName,
+			lastWaitType,
+			lastWaitTypeDescription,
+			requestStartTime,
+			collectionTimestamp,
+			transactionID,
+			openTransactionCount,
+			planHandle,
+			blockingSessionID,
+			blockingLoginName,
+			blockingQueryHash,
+			blockingNrServiceGuid,
+			blockingNormalisedSqlHash,
 		)
 	} else {
 		s.logger.Warn("❌ SKIPPED wait_time metric (wait_time_s <= 0 or nil)",

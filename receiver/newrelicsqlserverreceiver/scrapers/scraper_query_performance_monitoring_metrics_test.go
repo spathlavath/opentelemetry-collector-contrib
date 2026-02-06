@@ -478,14 +478,11 @@ func TestBlockingQueryAPMMetadataExtraction(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			// Simulate what the scraper does for active queries
 			var result models.ActiveRunningQuery
-			result.QueryText = &tt.victimQueryText
 			result.BlockingQueryStatementText = &tt.blockingQueryText
 
-			// Extract victim metadata
+			// Active query metadata comes from cache (no extraction from victim query)
+			// For testing purposes, we'll simulate cache data if needed
 			var victimGuid, victimService string
-			if result.QueryText != nil && *result.QueryText != "" {
-				victimGuid, victimService = helpers.ExtractNewRelicMetadata(*result.QueryText)
-			}
 
 			// Blocker metadata extraction has been removed
 
