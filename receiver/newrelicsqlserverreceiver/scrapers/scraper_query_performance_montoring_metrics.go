@@ -295,6 +295,7 @@ func (s *QueryPerformanceScraper) convertPlanDataToPlanHandleResult(planData mod
 		PlanHandle:        planData.PlanHandle,
 		LastExecutionTime: planData.LastExecutionTime,
 		CreationTime:      planData.CreationTime,
+		AvgElapsedTimeMs:  planData.AvgElapsedTimeMs,
 	}
 }
 
@@ -838,6 +839,7 @@ func (s *QueryPerformanceScraper) ExtractQueryDataFromSlowQueries(slowQueries []
 							PlanHandle:        slowQuery.PlanHandle,
 							CreationTime:      slowQuery.CreationTime,
 							LastExecutionTime: slowQuery.LastExecutionTimestamp,
+							AvgElapsedTimeMs:  slowQuery.AvgElapsedTimeMS,
 						}
 					}
 				} else {
@@ -846,6 +848,7 @@ func (s *QueryPerformanceScraper) ExtractQueryDataFromSlowQueries(slowQueries []
 						PlanHandle:        slowQuery.PlanHandle,
 						CreationTime:      slowQuery.CreationTime,
 						LastExecutionTime: slowQuery.LastExecutionTimestamp,
+						AvgElapsedTimeMs:  slowQuery.AvgElapsedTimeMS,
 					}
 				}
 			}

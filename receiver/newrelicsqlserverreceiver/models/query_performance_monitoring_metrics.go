@@ -194,6 +194,7 @@ type SlowQueryPlanData struct {
 	PlanHandle        *QueryID // plan_handle - for fetching XML
 	CreationTime      *string  // When plan was created
 	LastExecutionTime *string  // Last execution timestamp
+	AvgElapsedTimeMs  *float64 // Average elapsed time per execution
 }
 
 // PlanHandleResult represents lightweight plan data for emitting plan metrics
