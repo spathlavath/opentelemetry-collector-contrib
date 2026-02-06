@@ -115,10 +115,6 @@ all_set:
       enabled: true
     sqlserver.failover_cluster.transaction_delay_ms:
       enabled: true
-    sqlserver.individual_query.total_cpu_ms:
-      enabled: true
-    sqlserver.individual_query.total_elapsed_ms:
-      enabled: true
     sqlserver.instance.background_processes_count:
       enabled: true
     sqlserver.instance.blocked_processes_count:
@@ -431,10 +427,6 @@ none_set:
     sqlserver.failover_cluster.redo_rate_kb_sec:
       enabled: false
     sqlserver.failover_cluster.transaction_delay_ms:
-      enabled: false
-    sqlserver.individual_query.total_cpu_ms:
-      enabled: false
-    sqlserver.individual_query.total_elapsed_ms:
       enabled: false
     sqlserver.instance.background_processes_count:
       enabled: false
