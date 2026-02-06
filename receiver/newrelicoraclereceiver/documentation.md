@@ -16,43 +16,43 @@ metrics:
 
 Available free space in the ASM disk group in MB
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| MB | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| MB | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| diskgroup.name | ASM disk group name | Any Str | false |
+| diskgroup.name | ASM disk group name | Any Str | Recommended |
 
 ### newrelicoracledb.asm.diskgroup.offline_disks
 
 Number of offline disks in the ASM disk group
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {disks} | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {disks} | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| diskgroup.name | ASM disk group name | Any Str | false |
+| diskgroup.name | ASM disk group name | Any Str | Recommended |
 
 ### newrelicoracledb.asm.diskgroup.total_mb
 
 Total capacity of the ASM disk group in MB
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| MB | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| MB | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| diskgroup.name | ASM disk group name | Any Str | false |
+| diskgroup.name | ASM disk group name | Any Str | Recommended |
 
 ### newrelicoracledb.blocking_queries.wait_time_ms
 
@@ -66,309 +66,309 @@ Only emitted for sessions that are actually blocked (FINAL_BLOCKING_SESSION is n
 Source: Same as current_wait_time_ms (WAIT_TIME_MICRO / 1000).
 
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| ms | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| ms | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
-| user_name | Oracle username for slow queries | Any Str | false |
-| session_id | Oracle session ID (SID) | Any Str | false |
-| session_serial | Oracle session serial number | Any Int | false |
-| session_state | Oracle session state (WAITING or not WAITING) | Any Str | false |
-| query_id | SQL query identifier | Any Str | false |
-| sql_child_number | SQL child cursor number | Any Int | false |
-| sql_exec_id | SQL execution identifier | Any Int | false |
-| sql_exec_start | Timestamp when the SQL execution started | Any Str | false |
-| wait_event_name | Oracle wait event name for wait events | Any Str | false |
-| wait_category | Oracle wait event category/class for wait events and active sessions | Any Str | false |
-| wait_object_name | Name of the database object being waited on | Any Str | false |
-| wait_object_owner | Owner of the database object being waited on | Any Str | false |
-| wait_object_type | Type of the database object being waited on (TABLE, INDEX, etc.) | Any Str | false |
-| blocking_session_status | Status of the blocking session (VALID, NO HOLDER, etc.) | Any Str | false |
-| immediate_blocker_sid | Session ID of the immediate blocking session (not necessarily the root cause) | Any Str | false |
-| final_blocking_session_status | Status of the final blocking session (VALID, NO HOLDER, etc.) | Any Str | false |
-| final_blocker_user | Username of the final blocking session (root cause) | Any Str | false |
-| final_blocker_sid | Session ID of the final blocking session (root cause) | Any Str | false |
-| final_blocker_serial | Serial number of the final blocking session (root cause) | Any Str | false |
-| final_blocker_query_id | SQL query ID of the final blocking session's query | Any Str | false |
-| final_blocker_query_text | SQL query text of the final blocking session's query | Any Str | false |
-| nr_service_guid | New Relic Service entity GUID | Any Str | false |
-| normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | false |
-| nr_blocking_service_guid | New Relic Service entity GUID for the blocking query | Any Str | false |
-| normalised_blocking_sql_hash | MD5 hash of normalized blocking SQL query following New Relic Java agent normalization logic | Any Str | false |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | Recommended |
+| database_name | Oracle database name | Any Str | Recommended |
+| user_name | Oracle username for slow queries | Any Str | Recommended |
+| session_id | Oracle session ID (SID) | Any Str | Recommended |
+| session_serial | Oracle session serial number | Any Int | Recommended |
+| session_state | Oracle session state (WAITING or not WAITING) | Any Str | Recommended |
+| query_id | SQL query identifier | Any Str | Recommended |
+| sql_child_number | SQL child cursor number | Any Int | Recommended |
+| sql_exec_id | SQL execution identifier | Any Int | Recommended |
+| sql_exec_start | Timestamp when the SQL execution started | Any Str | Recommended |
+| wait_event_name | Oracle wait event name for wait events | Any Str | Recommended |
+| wait_category | Oracle wait event category/class for wait events and active sessions | Any Str | Recommended |
+| wait_object_name | Name of the database object being waited on | Any Str | Recommended |
+| wait_object_owner | Owner of the database object being waited on | Any Str | Recommended |
+| wait_object_type | Type of the database object being waited on (TABLE, INDEX, etc.) | Any Str | Recommended |
+| blocking_session_status | Status of the blocking session (VALID, NO HOLDER, etc.) | Any Str | Recommended |
+| immediate_blocker_sid | Session ID of the immediate blocking session (not necessarily the root cause) | Any Str | Recommended |
+| final_blocking_session_status | Status of the final blocking session (VALID, NO HOLDER, etc.) | Any Str | Recommended |
+| final_blocker_user | Username of the final blocking session (root cause) | Any Str | Recommended |
+| final_blocker_sid | Session ID of the final blocking session (root cause) | Any Str | Recommended |
+| final_blocker_serial | Serial number of the final blocking session (root cause) | Any Str | Recommended |
+| final_blocker_query_id | SQL query ID of the final blocking session's query | Any Str | Recommended |
+| final_blocker_query_text | SQL query text of the final blocking session's query | Any Str | Recommended |
+| nr_service_guid | New Relic Service entity GUID | Any Str | Recommended |
+| normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | Recommended |
+| nr_blocking_service_guid | New Relic Service entity GUID for the blocking query | Any Str | Recommended |
+| normalised_blocking_sql_hash | MD5 hash of normalized blocking SQL query following New Relic Java agent normalization logic | Any Str | Recommended |
 
 ### newrelicoracledb.child_cursors.details
 
 Child cursor details including load times
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {count} | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {count} | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
-| query_id | SQL query identifier | Any Str | false |
-| child_number | Child cursor number | Any Int | false |
-| plan_hash_value | Oracle execution plan hash value | Any Str | false |
-| first_load_time | Time when the SQL statement was first loaded into the library cache | Any Str | false |
-| last_load_time | Time at which the query plan was loaded into the library cache | Any Str | false |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | Recommended |
+| database_name | Oracle database name | Any Str | Recommended |
+| query_id | SQL query identifier | Any Str | Recommended |
+| child_number | Child cursor number | Any Int | Recommended |
+| plan_hash_value | Oracle execution plan hash value | Any Str | Recommended |
+| first_load_time | Time when the SQL statement was first loaded into the library cache | Any Str | Recommended |
+| last_load_time | Time at which the query plan was loaded into the library cache | Any Str | Recommended |
 
 ### newrelicoracledb.child_cursors.elapsed_time
 
 Average elapsed time per execution for this child cursor (in milliseconds)
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| ms | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| ms | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
-| query_id | SQL query identifier | Any Str | false |
-| child_number | Child cursor number | Any Int | false |
-| plan_hash_value | Oracle execution plan hash value | Any Str | false |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | Recommended |
+| database_name | Oracle database name | Any Str | Recommended |
+| query_id | SQL query identifier | Any Str | Recommended |
+| child_number | Child cursor number | Any Int | Recommended |
+| plan_hash_value | Oracle execution plan hash value | Any Str | Recommended |
 
 ### newrelicoracledb.connection.active_sessions
 
 Number of active Oracle database sessions
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {sessions} | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {sessions} | Gauge | Double | Alpha |
 
 ### newrelicoracledb.connection.bytes_received
 
 Bytes received via SQL*Net from client
 
-| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic |
-| ---- | ----------- | ---------- | ----------------------- | --------- |
-| By | Sum | Double | Cumulative | true |
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| By | Sum | Double | Cumulative | true | Alpha |
 
 ### newrelicoracledb.connection.bytes_sent
 
 Bytes sent via SQL*Net to client
 
-| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic |
-| ---- | ----------- | ---------- | ----------------------- | --------- |
-| By | Sum | Double | Cumulative | true |
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| By | Sum | Double | Cumulative | true | Alpha |
 
 ### newrelicoracledb.connection.circuits
 
 Number of active circuits
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {circuits} | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {circuits} | Gauge | Double | Alpha |
 
 ### newrelicoracledb.connection.dispatchers
 
 Number of dispatchers
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {dispatchers} | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {dispatchers} | Gauge | Double | Alpha |
 
 ### newrelicoracledb.connection.execute_count
 
 Number of SQL executions
 
-| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic |
-| ---- | ----------- | ---------- | ----------------------- | --------- |
-| {executions} | Sum | Double | Cumulative | true |
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {executions} | Sum | Double | Cumulative | true | Alpha |
 
 ### newrelicoracledb.connection.inactive_sessions
 
 Number of inactive Oracle database sessions
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {sessions} | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {sessions} | Gauge | Double | Alpha |
 
 ### newrelicoracledb.connection.logons_cumulative
 
 Cumulative number of logons since instance startup
 
-| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic |
-| ---- | ----------- | ---------- | ----------------------- | --------- |
-| {logons} | Sum | Double | Cumulative | true |
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {logons} | Sum | Double | Cumulative | true | Alpha |
 
 ### newrelicoracledb.connection.logons_current
 
 Current number of active logons
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {logons} | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {logons} | Gauge | Double | Alpha |
 
 ### newrelicoracledb.connection.parse_count_hard
 
 Number of hard parse calls
 
-| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic |
-| ---- | ----------- | ---------- | ----------------------- | --------- |
-| {parses} | Sum | Double | Cumulative | true |
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {parses} | Sum | Double | Cumulative | true | Alpha |
 
 ### newrelicoracledb.connection.parse_count_total
 
 Total number of parse calls
 
-| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic |
-| ---- | ----------- | ---------- | ----------------------- | --------- |
-| {parses} | Sum | Double | Cumulative | true |
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {parses} | Sum | Double | Cumulative | true | Alpha |
 
 ### newrelicoracledb.connection.resource_current_utilization
 
 Current utilization of Oracle resources
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {resources} | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {resources} | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| resource.name | Oracle resource name | Any Str | false |
+| resource.name | Oracle resource name | Any Str | Recommended |
 
 ### newrelicoracledb.connection.resource_limit
 
 Limit value for Oracle resources
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {resources} | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {resources} | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| resource.name | Oracle resource name | Any Str | false |
+| resource.name | Oracle resource name | Any Str | Recommended |
 
 ### newrelicoracledb.connection.resource_max_utilization
 
 Maximum utilization of Oracle resources since startup
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {resources} | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {resources} | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| resource.name | Oracle resource name | Any Str | false |
+| resource.name | Oracle resource name | Any Str | Recommended |
 
 ### newrelicoracledb.connection.sessions_by_status
 
 Number of sessions grouped by status
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {sessions} | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {sessions} | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| session.status | Oracle session status (ACTIVE, INACTIVE, etc.) | Any Str | false |
+| session.status | Oracle session status (ACTIVE, INACTIVE, etc.) | Any Str | Recommended |
 
 ### newrelicoracledb.connection.sessions_by_type
 
 Number of sessions grouped by type
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {sessions} | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {sessions} | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| session.type | Oracle session type (USER, BACKGROUND, etc.) | Any Str | false |
+| session.type | Oracle session type (USER, BACKGROUND, etc.) | Any Str | Recommended |
 
 ### newrelicoracledb.connection.shared_servers
 
 Number of shared servers
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {servers} | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {servers} | Gauge | Double | Alpha |
 
 ### newrelicoracledb.connection.sqlnet_roundtrips
 
 Number of SQL*Net roundtrips to/from client
 
-| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic |
-| ---- | ----------- | ---------- | ----------------------- | --------- |
-| {roundtrips} | Sum | Double | Cumulative | true |
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {roundtrips} | Sum | Double | Cumulative | true | Alpha |
 
 ### newrelicoracledb.connection.total_sessions
 
 Total number of Oracle database sessions
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {sessions} | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {sessions} | Gauge | Double | Alpha |
 
 ### newrelicoracledb.connection.user_commits
 
 Number of user commits
 
-| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic |
-| ---- | ----------- | ---------- | ----------------------- | --------- |
-| {commits} | Sum | Double | Cumulative | true |
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {commits} | Sum | Double | Cumulative | true | Alpha |
 
 ### newrelicoracledb.connection.user_rollbacks
 
 Number of user rollbacks
 
-| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic |
-| ---- | ----------- | ---------- | ----------------------- | --------- |
-| {rollbacks} | Sum | Double | Cumulative | true |
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {rollbacks} | Sum | Double | Cumulative | true | Alpha |
 
 ### newrelicoracledb.container.restricted
 
 Oracle container restricted status (1=YES, 0=NO)
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| con.id | Oracle container ID (CDB/PDB) | Any Str | false |
-| container.name | Oracle container name | Any Str | false |
-| restricted.status | Oracle container restricted status (YES, NO) | Any Str | false |
+| con.id | Oracle container ID (CDB/PDB) | Any Str | Recommended |
+| container.name | Oracle container name | Any Str | Recommended |
+| restricted.status | Oracle container restricted status (YES, NO) | Any Str | Recommended |
 
 ### newrelicoracledb.container.status
 
 Oracle container status (1=READ WRITE, 0=other)
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| con.id | Oracle container ID (CDB/PDB) | Any Str | false |
-| container.name | Oracle container name | Any Str | false |
-| open.mode | Oracle container open mode (READ WRITE, READ ONLY, etc.) | Any Str | false |
+| con.id | Oracle container ID (CDB/PDB) | Any Str | Recommended |
+| container.name | Oracle container name | Any Str | Recommended |
+| open.mode | Oracle container open mode (READ WRITE, READ ONLY, etc.) | Any Str | Recommended |
 
 ### newrelicoracledb.database.info
 
@@ -376,18 +376,18 @@ Database version and configuration information
 
 Provides database version, edition, and configuration details following OpenTelemetry semantic conventions
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| db.version | The version of the database management system (DBMS) product | Any Str | false |
-| db.version.full | Full version string of the database including patch information | Any Str | false |
-| db.edition | Oracle database edition (Enterprise, Standard, Express) | Any Str | false |
-| db.compatible | Oracle database compatible parameter setting | Any Str | false |
+| db.version | The version of the database management system (DBMS) product | Any Str | Recommended |
+| db.version.full | Full version string of the database including patch information | Any Str | Recommended |
+| db.edition | Oracle database edition (Enterprise, Standard, Express) | Any Str | Recommended |
+| db.compatible | Oracle database compatible parameter setting | Any Str | Recommended |
 
 ### newrelicoracledb.database.role
 
@@ -395,216 +395,216 @@ Database role and Data Guard configuration
 
 Provides information about the database role (PRIMARY, PHYSICAL STANDBY, LOGICAL STANDBY, SNAPSHOT STANDBY), open mode, and protection mode for Oracle Data Guard configurations
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| db.role | Oracle database role (PRIMARY, PHYSICAL STANDBY, LOGICAL STANDBY, SNAPSHOT STANDBY) | Any Str | false |
-| db.open_mode | Database open mode (READ WRITE, READ ONLY, MOUNTED, etc.) | Any Str | false |
-| db.protection_mode | Oracle Data Guard protection mode (MAXIMUM PROTECTION, MAXIMUM AVAILABILITY, MAXIMUM PERFORMANCE) | Any Str | false |
-| db.protection_level | Oracle Data Guard protection level | Any Str | false |
+| db.role | Oracle database role (PRIMARY, PHYSICAL STANDBY, LOGICAL STANDBY, SNAPSHOT STANDBY) | Any Str | Recommended |
+| db.open_mode | Database open mode (READ WRITE, READ ONLY, MOUNTED, etc.) | Any Str | Recommended |
+| db.protection_mode | Oracle Data Guard protection mode (MAXIMUM PROTECTION, MAXIMUM AVAILABILITY, MAXIMUM PERFORMANCE) | Any Str | Recommended |
+| db.protection_level | Oracle Data Guard protection level | Any Str | Recommended |
 
 ### newrelicoracledb.datafile.autoextensible
 
 Data file autoextensible status (1=YES, 0=NO)
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| con.id | Oracle container ID (CDB/PDB) | Any Str | false |
-| tablespace.name | Name of the Oracle tablespace | Any Str | false |
-| file.name | Oracle data file name | Any Str | false |
-| container.status | Oracle container status (NORMAL, RESTRICTED, etc.) | Any Str | false |
+| con.id | Oracle container ID (CDB/PDB) | Any Str | Recommended |
+| tablespace.name | Name of the Oracle tablespace | Any Str | Recommended |
+| file.name | Oracle data file name | Any Str | Recommended |
+| container.status | Oracle container status (NORMAL, RESTRICTED, etc.) | Any Str | Recommended |
 
 ### newrelicoracledb.datafile.size_bytes
 
 Size of data file in bytes
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| By | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| By | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| con.id | Oracle container ID (CDB/PDB) | Any Str | false |
-| tablespace.name | Name of the Oracle tablespace | Any Str | false |
-| file.name | Oracle data file name | Any Str | false |
+| con.id | Oracle container ID (CDB/PDB) | Any Str | Recommended |
+| tablespace.name | Name of the Oracle tablespace | Any Str | Recommended |
+| file.name | Oracle data file name | Any Str | Recommended |
 
 ### newrelicoracledb.datafile.used_bytes
 
 Used bytes in data file
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| By | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| By | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| con.id | Oracle container ID (CDB/PDB) | Any Str | false |
-| tablespace.name | Name of the Oracle tablespace | Any Str | false |
-| file.name | Oracle data file name | Any Str | false |
+| con.id | Oracle container ID (CDB/PDB) | Any Str | Recommended |
+| tablespace.name | Name of the Oracle tablespace | Any Str | Recommended |
+| file.name | Oracle data file name | Any Str | Recommended |
 
 ### newrelicoracledb.db_id
 
 Oracle database ID information
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| db.id | Oracle database ID | Any Str | false |
+| db.id | Oracle database ID | Any Str | Recommended |
 
 ### newrelicoracledb.disk.blocks_read
 
 Number of physical blocks read from disk
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.disk.blocks_written
 
 Number of physical blocks written to disk
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.disk.read_time_milliseconds
 
 Time spent reading from disk in milliseconds
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| ms | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| ms | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.disk.reads
 
 Number of physical disk reads
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.disk.write_time_milliseconds
 
 Time spent writing to disk in milliseconds
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| ms | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| ms | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.disk.writes
 
 Number of physical disk writes
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.execution_plan
 
 Oracle SQL execution plan details including operation costs, cardinality, and resource estimates
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| newrelic.event.type |   | Any Str | false |
-| query_id | SQL query identifier | Any Str | false |
-| plan_hash_value | Oracle execution plan hash value | Any Str | false |
-| child_number | Child cursor number | Any Int | false |
-| plan_id | Step ID in the execution plan | Any Int | false |
-| parent_id | Parent step ID in the execution plan | Any Int | false |
-| depth | Depth level in the execution plan tree | Any Int | false |
-| operation | Operation name in the execution plan (e.g., TABLE ACCESS, INDEX SCAN) | Any Str | false |
-| options | Options for the operation (e.g., FULL, RANGE) | Any Str | false |
-| object_owner | Owner of the database object being accessed | Any Str | false |
-| object_name | Name of the database object being accessed | Any Str | false |
-| position | Order of execution for steps at the same depth level | Any Int | false |
-| cost | Estimated cost of the operation | Any Int | false |
-| cardinality | Estimated number of rows the operation will return | Any Int | false |
-| bytes | Estimated number of bytes the operation will return | Any Int | false |
-| cpu_cost | Estimated CPU cost of the operation | Any Int | false |
-| io_cost | Estimated I/O cost of the operation | Any Int | false |
-| timestamp | Timestamp when the query was captured/observed (from wait event or slow query) | Any Str | false |
-| plan_generated_timestamp | Timestamp when the execution plan was created by Oracle (from V$SQL_PLAN.TIMESTAMP) | Any Str | false |
-| temp_space | Estimated temporary space required for the operation (in bytes) | Any Int | false |
-| access_predicates | Access predicates used to locate rows in an access structure | Any Str | false |
-| projection | Column projection information from the operation | Any Str | false |
-| time | Estimated elapsed time for the operation (in seconds) | Any Int | false |
-| filter_predicates | Filter predicates applied after accessing rows | Any Str | false |
+| newrelic.event.type |   | Any Str | Recommended |
+| query_id | SQL query identifier | Any Str | Recommended |
+| plan_hash_value | Oracle execution plan hash value | Any Str | Recommended |
+| child_number | Child cursor number | Any Int | Recommended |
+| plan_id | Step ID in the execution plan | Any Int | Recommended |
+| parent_id | Parent step ID in the execution plan | Any Int | Recommended |
+| depth | Depth level in the execution plan tree | Any Int | Recommended |
+| operation | Operation name in the execution plan (e.g., TABLE ACCESS, INDEX SCAN) | Any Str | Recommended |
+| options | Options for the operation (e.g., FULL, RANGE) | Any Str | Recommended |
+| object_owner | Owner of the database object being accessed | Any Str | Recommended |
+| object_name | Name of the database object being accessed | Any Str | Recommended |
+| position | Order of execution for steps at the same depth level | Any Int | Recommended |
+| cost | Estimated cost of the operation | Any Int | Recommended |
+| cardinality | Estimated number of rows the operation will return | Any Int | Recommended |
+| bytes | Estimated number of bytes the operation will return | Any Int | Recommended |
+| cpu_cost | Estimated CPU cost of the operation | Any Int | Recommended |
+| io_cost | Estimated I/O cost of the operation | Any Int | Recommended |
+| timestamp | Timestamp when the query was captured/observed (from wait event or slow query) | Any Str | Recommended |
+| plan_generated_timestamp | Timestamp when the execution plan was created by Oracle (from V$SQL_PLAN.TIMESTAMP) | Any Str | Recommended |
+| temp_space | Estimated temporary space required for the operation (in bytes) | Any Int | Recommended |
+| access_predicates | Access predicates used to locate rows in an access structure | Any Str | Recommended |
+| projection | Column projection information from the operation | Any Str | Recommended |
+| time | Estimated elapsed time for the operation (in seconds) | Any Int | Recommended |
+| filter_predicates | Filter predicates applied after accessing rows | Any Str | Recommended |
 
 ### newrelicoracledb.global_name
 
 Oracle database global name information
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| global.name | Oracle database global name | Any Str | false |
+| global.name | Oracle database global name | Any Str | Recommended |
 
 ### newrelicoracledb.hosting.info
 
@@ -612,4134 +612,4134 @@ Database hosting and platform information
 
 Provides information about the host architecture and operating system platform
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| host.arch | The CPU architecture the host system is running on | Any Str | false |
-| platform.name | Operating system platform name | Any Str | false |
+| host.arch | The CPU architecture the host system is running on | Any Str | Recommended |
+| platform.name | Operating system platform name | Any Str | Recommended |
 
 ### newrelicoracledb.locked_accounts
 
 Count of locked user accounts in the database
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.long_running_queries
 
 Number of long running queries (active sessions running for more than 60 seconds)
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.memory.pga_allocated_bytes
 
 Total PGA memory allocated in bytes
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| By | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| By | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.memory.pga_freeable_bytes
 
 Total freeable PGA memory in bytes
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| By | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| By | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.memory.pga_in_use_bytes
 
 Total PGA memory currently in use in bytes
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| By | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| By | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.memory.pga_max_size_bytes
 
 Global memory bound for PGA in bytes
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| By | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| By | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.memory.sga_shared_pool_library_cache_sharable_bytes
 
 SGA shared pool library cache sharable memory in bytes for statements with more than 5 executions
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| By | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| By | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.memory.sga_shared_pool_library_cache_user_bytes
 
 SGA shared pool library cache shareable memory per user in bytes (250 * users_opening)
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| By | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| By | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.memory.sga_uga_total_bytes
 
 Total SGA UGA memory in bytes (session uga memory max)
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| By | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| By | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.pdb.active_parallel_sessions
 
 Number of active parallel sessions in PDB
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
+| database_name | Oracle database name | Any Str | Recommended |
 
 ### newrelicoracledb.pdb.active_serial_sessions
 
 Number of active serial sessions in PDB
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
+| database_name | Oracle database name | Any Str | Recommended |
 
 ### newrelicoracledb.pdb.average_active_sessions
 
 Average number of active sessions in PDB
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
+| database_name | Oracle database name | Any Str | Recommended |
 
 ### newrelicoracledb.pdb.background_cpu_usage_per_second
 
 Background CPU usage per second in PDB
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
+| database_name | Oracle database name | Any Str | Recommended |
 
 ### newrelicoracledb.pdb.background_time_per_second
 
 Background time per second in PDB
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
+| database_name | Oracle database name | Any Str | Recommended |
 
 ### newrelicoracledb.pdb.block_changes_per_second
 
 DB block changes per second in PDB
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
+| database_name | Oracle database name | Any Str | Recommended |
 
 ### newrelicoracledb.pdb.block_changes_per_transaction
 
 DB block changes per transaction in PDB
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
+| database_name | Oracle database name | Any Str | Recommended |
 
 ### newrelicoracledb.pdb.cpu_time_ratio
 
 Database CPU time ratio in PDB
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
+| database_name | Oracle database name | Any Str | Recommended |
 
 ### newrelicoracledb.pdb.cpu_usage_per_second
 
 CPU usage per second in PDB
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
+| database_name | Oracle database name | Any Str | Recommended |
 
 ### newrelicoracledb.pdb.cpu_usage_per_transaction
 
 CPU usage per transaction in PDB
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
+| database_name | Oracle database name | Any Str | Recommended |
 
 ### newrelicoracledb.pdb.current_logons
 
 Current number of logons in PDB
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
+| database_name | Oracle database name | Any Str | Recommended |
 
 ### newrelicoracledb.pdb.current_open_cursors
 
 Current number of open cursors in PDB
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
+| database_name | Oracle database name | Any Str | Recommended |
 
 ### newrelicoracledb.pdb.db_physical_read_bytes_per_second
 
 Physical read bytes per second in PDB
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| By/s | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| By/s | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
+| database_name | Oracle database name | Any Str | Recommended |
 
 ### newrelicoracledb.pdb.db_physical_reads_per_second
 
 Physical reads per second in PDB
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
+| database_name | Oracle database name | Any Str | Recommended |
 
 ### newrelicoracledb.pdb.db_physical_write_bytes_per_second
 
 Physical write bytes per second in PDB
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| By/s | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| By/s | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
+| database_name | Oracle database name | Any Str | Recommended |
 
 ### newrelicoracledb.pdb.db_physical_writes_per_second
 
 Physical writes per second in PDB
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
+| database_name | Oracle database name | Any Str | Recommended |
 
 ### newrelicoracledb.pdb.execute_without_parse_ratio
 
 Execute without parse ratio in PDB
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
+| database_name | Oracle database name | Any Str | Recommended |
 
 ### newrelicoracledb.pdb.executions_per_second
 
 Executions per second in PDB
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
+| database_name | Oracle database name | Any Str | Recommended |
 
 ### newrelicoracledb.pdb.executions_per_transaction
 
 Executions per transaction in PDB
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
+| database_name | Oracle database name | Any Str | Recommended |
 
 ### newrelicoracledb.pdb.hard_parse_count_per_second
 
 Hard parse count per second in PDB
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
+| database_name | Oracle database name | Any Str | Recommended |
 
 ### newrelicoracledb.pdb.hard_parse_count_per_transaction
 
 Hard parse count per transaction in PDB
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
+| database_name | Oracle database name | Any Str | Recommended |
 
 ### newrelicoracledb.pdb.logical_reads_per_second
 
 Logical reads per second in PDB
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
+| database_name | Oracle database name | Any Str | Recommended |
 
 ### newrelicoracledb.pdb.logical_reads_per_transaction
 
 Logical reads per transaction in PDB
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
+| database_name | Oracle database name | Any Str | Recommended |
 
 ### newrelicoracledb.pdb.logons_per_second
 
 Logons per second in PDB
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
+| database_name | Oracle database name | Any Str | Recommended |
 
 ### newrelicoracledb.pdb.logons_per_transaction
 
 Logons per transaction in PDB
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
+| database_name | Oracle database name | Any Str | Recommended |
 
 ### newrelicoracledb.pdb.network_traffic_byte_per_second
 
 Network traffic volume per second in bytes in PDB
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| By/s | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| By/s | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
+| database_name | Oracle database name | Any Str | Recommended |
 
 ### newrelicoracledb.pdb.open_cursors_per_second
 
 Open cursors per second in PDB
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
+| database_name | Oracle database name | Any Str | Recommended |
 
 ### newrelicoracledb.pdb.open_cursors_per_transaction
 
 Open cursors per transaction in PDB
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
+| database_name | Oracle database name | Any Str | Recommended |
 
 ### newrelicoracledb.pdb.open_mode
 
 Oracle PDB open mode (1=READ WRITE, 0=other)
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| con.id | Oracle container ID (CDB/PDB) | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
-| open.mode | Oracle container open mode (READ WRITE, READ ONLY, etc.) | Any Str | false |
+| con.id | Oracle container ID (CDB/PDB) | Any Str | Recommended |
+| database_name | Oracle database name | Any Str | Recommended |
+| open.mode | Oracle container open mode (READ WRITE, READ ONLY, etc.) | Any Str | Recommended |
 
 ### newrelicoracledb.pdb.parse_failure_count_per_second
 
 Parse failure count per second in PDB
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
+| database_name | Oracle database name | Any Str | Recommended |
 
 ### newrelicoracledb.pdb.physical_read_bytes_per_second
 
 Physical read total bytes per second in PDB
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| By/s | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| By/s | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
+| database_name | Oracle database name | Any Str | Recommended |
 
 ### newrelicoracledb.pdb.physical_reads_per_transaction
 
 Physical reads per transaction in PDB
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
+| database_name | Oracle database name | Any Str | Recommended |
 
 ### newrelicoracledb.pdb.physical_write_bytes_per_second
 
 Physical write total bytes per second in PDB
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| By/s | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| By/s | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
+| database_name | Oracle database name | Any Str | Recommended |
 
 ### newrelicoracledb.pdb.physical_writes_per_transaction
 
 Physical writes per transaction in PDB
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
+| database_name | Oracle database name | Any Str | Recommended |
 
 ### newrelicoracledb.pdb.redo_generated_bytes_per_second
 
 Redo generated per second in bytes in PDB
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| By/s | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| By/s | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
+| database_name | Oracle database name | Any Str | Recommended |
 
 ### newrelicoracledb.pdb.redo_generated_bytes_per_transaction
 
 Redo generated per transaction in bytes in PDB
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| By/s | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| By/s | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
+| database_name | Oracle database name | Any Str | Recommended |
 
 ### newrelicoracledb.pdb.response_time_per_transaction
 
 Response time per transaction in PDB
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| s | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| s | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
+| database_name | Oracle database name | Any Str | Recommended |
 
 ### newrelicoracledb.pdb.session_count
 
 Session count in PDB
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
+| database_name | Oracle database name | Any Str | Recommended |
 
 ### newrelicoracledb.pdb.soft_parse_ratio
 
 Soft parse ratio in PDB
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
+| database_name | Oracle database name | Any Str | Recommended |
 
 ### newrelicoracledb.pdb.sql_service_response_time
 
 SQL service response time in PDB
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| s | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| s | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
+| database_name | Oracle database name | Any Str | Recommended |
 
 ### newrelicoracledb.pdb.total_parse_count_per_second
 
 Total parse count per second in PDB
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
+| database_name | Oracle database name | Any Str | Recommended |
 
 ### newrelicoracledb.pdb.total_parse_count_per_transaction
 
 Total parse count per transaction in PDB
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
+| database_name | Oracle database name | Any Str | Recommended |
 
 ### newrelicoracledb.pdb.total_size_bytes
 
 Total size of PDB in bytes
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| By | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| By | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| con.id | Oracle container ID (CDB/PDB) | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
+| con.id | Oracle container ID (CDB/PDB) | Any Str | Recommended |
+| database_name | Oracle database name | Any Str | Recommended |
 
 ### newrelicoracledb.pdb.transactions_per_second
 
 User transactions per second in PDB
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
+| database_name | Oracle database name | Any Str | Recommended |
 
 ### newrelicoracledb.pdb.user_calls_per_second
 
 User calls per second in PDB
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
+| database_name | Oracle database name | Any Str | Recommended |
 
 ### newrelicoracledb.pdb.user_calls_per_transaction
 
 User calls per transaction in PDB
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
+| database_name | Oracle database name | Any Str | Recommended |
 
 ### newrelicoracledb.pdb.user_commits_per_second
 
 User commits per second in PDB
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
+| database_name | Oracle database name | Any Str | Recommended |
 
 ### newrelicoracledb.pdb.user_commits_percentage
 
 User commits percentage in PDB
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
+| database_name | Oracle database name | Any Str | Recommended |
 
 ### newrelicoracledb.pdb.user_rollbacks_per_second
 
 User rollbacks per second in PDB
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
+| database_name | Oracle database name | Any Str | Recommended |
 
 ### newrelicoracledb.pdb.user_rollbacks_percentage
 
 User rollbacks percentage in PDB
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
+| database_name | Oracle database name | Any Str | Recommended |
 
 ### newrelicoracledb.pdb.wait_time_ratio
 
 Database wait time ratio in PDB
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
+| database_name | Oracle database name | Any Str | Recommended |
 
 ### newrelicoracledb.rac.instance.active_state
 
 Instance active state indicator (1=NORMAL, 0=other)
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
-| rac.instance.name | Oracle RAC instance name | Any Str | false |
-| host.name.rac | Oracle RAC host name | Any Str | false |
-| active.state | Oracle instance active state (NORMAL, QUIESCING, etc.) | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
+| rac.instance.name | Oracle RAC instance name | Any Str | Recommended |
+| host.name.rac | Oracle RAC host name | Any Str | Recommended |
+| active.state | Oracle instance active state (NORMAL, QUIESCING, etc.) | Any Str | Recommended |
 
 ### newrelicoracledb.rac.instance.archiver_started
 
 Archiver status indicator (1=STARTED, 0=STOPPED)
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
-| rac.instance.name | Oracle RAC instance name | Any Str | false |
-| host.name.rac | Oracle RAC host name | Any Str | false |
-| archiver.status | Oracle archiver status (STARTED, STOPPED) | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
+| rac.instance.name | Oracle RAC instance name | Any Str | Recommended |
+| host.name.rac | Oracle RAC host name | Any Str | Recommended |
+| archiver.status | Oracle archiver status (STARTED, STOPPED) | Any Str | Recommended |
 
 ### newrelicoracledb.rac.instance.database_status
 
 Database status indicator (1=ACTIVE, 0=other)
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
-| rac.instance.name | Oracle RAC instance name | Any Str | false |
-| host.name.rac | Oracle RAC host name | Any Str | false |
-| database.status | Oracle database status (ACTIVE, SUSPENDED, etc.) | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
+| rac.instance.name | Oracle RAC instance name | Any Str | Recommended |
+| host.name.rac | Oracle RAC host name | Any Str | Recommended |
+| database.status | Oracle database status (ACTIVE, SUSPENDED, etc.) | Any Str | Recommended |
 
 ### newrelicoracledb.rac.instance.logins_allowed
 
 Instance login status indicator (1=ALLOWED, 0=RESTRICTED)
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
-| rac.instance.name | Oracle RAC instance name | Any Str | false |
-| host.name.rac | Oracle RAC host name | Any Str | false |
-| logins.status | Oracle instance login status (ALLOWED, RESTRICTED) | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
+| rac.instance.name | Oracle RAC instance name | Any Str | Recommended |
+| host.name.rac | Oracle RAC host name | Any Str | Recommended |
+| logins.status | Oracle instance login status (ALLOWED, RESTRICTED) | Any Str | Recommended |
 
 ### newrelicoracledb.rac.instance.status
 
 RAC instance status (1=OPEN, 0=other)
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
-| rac.instance.name | Oracle RAC instance name | Any Str | false |
-| host.name.rac | Oracle RAC host name | Any Str | false |
-| instance.status | Oracle RAC instance status | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
+| rac.instance.name | Oracle RAC instance name | Any Str | Recommended |
+| host.name.rac | Oracle RAC host name | Any Str | Recommended |
+| instance.status | Oracle RAC instance status | Any Str | Recommended |
 
 ### newrelicoracledb.rac.instance.uptime_seconds
 
 Instance uptime in seconds since startup
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| s | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| s | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
-| rac.instance.name | Oracle RAC instance name | Any Str | false |
-| host.name.rac | Oracle RAC host name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
+| rac.instance.name | Oracle RAC instance name | Any Str | Recommended |
+| host.name.rac | Oracle RAC host name | Any Str | Recommended |
 
 ### newrelicoracledb.rac.instance.version_info
 
 Oracle database version information (always 1, version in attributes)
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| rac.instance.name | Oracle RAC instance name | Any Str | false |
-| host.name.rac | Oracle RAC host name | Any Str | false |
-| oracle.version | Oracle database version | Any Str | false |
+| rac.instance.name | Oracle RAC instance name | Any Str | Recommended |
+| host.name.rac | Oracle RAC host name | Any Str | Recommended |
+| oracle.version | Oracle database version | Any Str | Recommended |
 
 ### newrelicoracledb.rac.service.blocked_status
 
 Service blocked indicator (1=blocked, 0=not blocked)
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| service.blocked | Service blocked status (YES/NO) | Any Str | false |
+| service.blocked | Service blocked status (YES/NO) | Any Str | Recommended |
 
 ### newrelicoracledb.rac.service.clb_config
 
 Connection load balancing configuration (always 1, config in attributes)
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| clb.goal | Oracle service connection load balancing goal | Any Str | false |
+| clb.goal | Oracle service connection load balancing goal | Any Str | Recommended |
 
 ### newrelicoracledb.rac.service.drain_timeout_seconds
 
 Session drain timeout in seconds before service stop
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| s | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| s | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| service.drain_timeout | Session drain timeout in seconds | Any Str | false |
+| service.drain_timeout | Session drain timeout in seconds | Any Str | Recommended |
 
 ### newrelicoracledb.rac.service.fan_enabled
 
 Fast Application Notification (FAN) enabled indicator (1=enabled, 0=disabled)
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| service.fan_enabled | Fast Application Notification (FAN) enabled status (YES/NO) | Any Str | false |
+| service.fan_enabled | Fast Application Notification (FAN) enabled status (YES/NO) | Any Str | Recommended |
 
 ### newrelicoracledb.rac.service.goal_config
 
 Service goal configuration (always 1, goal in attributes)
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| service.goal | Oracle service goal (THROUGHPUT or SERVICE_TIME) | Any Str | false |
+| service.goal | Oracle service goal (THROUGHPUT or SERVICE_TIME) | Any Str | Recommended |
 
 ### newrelicoracledb.rac.service.instance_id
 
 Instance ID where the service is currently running
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.rac.service.network_config
 
 Service network configuration (always 1, config in attributes)
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| network.name | Oracle service network name | Any Str | false |
+| network.name | Oracle service network name | Any Str | Recommended |
 
 ### newrelicoracledb.rac.service.replay_timeout_seconds
 
 Application Continuity replay initiation timeout in seconds
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| s | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| s | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| service.replay_timeout | Application Continuity replay initiation timeout in seconds | Any Str | false |
+| service.replay_timeout | Application Continuity replay initiation timeout in seconds | Any Str | Recommended |
 
 ### newrelicoracledb.rac.service.transaction_guard_enabled
 
 Transaction Guard enabled indicator (1=enabled, 0=disabled)
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| service.transaction_guard | Transaction Guard (COMMIT_OUTCOME) enabled status (TRUE/FALSE) | Any Str | false |
+| service.transaction_guard | Transaction Guard (COMMIT_OUTCOME) enabled status (TRUE/FALSE) | Any Str | Recommended |
 
 ### newrelicoracledb.rac.total_waits
 
 Total number of cluster wait events
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {waits} | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {waits} | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
-| wait.event | Oracle wait event name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
+| wait.event | Oracle wait event name | Any Str | Recommended |
 
 ### newrelicoracledb.rac.wait_time
 
 Rate of cluster wait time in microseconds per second
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| us/s | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| us/s | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
-| wait.event | Oracle wait event name | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
+| wait.event | Oracle wait event name | Any Str | Recommended |
 
 ### newrelicoracledb.redo_log_parallel_write_waits
 
 Number of waits for log file parallel write events
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.redo_log_switch_archiving_needed_waits
 
 Number of waits for log file switch (archiving needed) events
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.redo_log_switch_checkpoint_incomplete_waits
 
 Number of waits for log file switch (checkpoint incomplete) events
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.redo_log_switch_completion_waits
 
 Number of waits for log file switch completion events
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.rollback_segments_gets
 
 Number of gets on rollback segments
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.rollback_segments_wait_ratio
 
 Rollback segments wait ratio (waits/gets)
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.rollback_segments_waits
 
 Number of waits on rollback segments
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.service.count
 
 Count of services per container
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {services} | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {services} | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| con.id | Oracle container ID (CDB/PDB) | Any Str | false |
+| con.id | Oracle container ID (CDB/PDB) | Any Str | Recommended |
 
 ### newrelicoracledb.service.status
 
 Oracle service status (1=active, 0=inactive)
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| con.id | Oracle container ID (CDB/PDB) | Any Str | false |
+| con.id | Oracle container ID (CDB/PDB) | Any Str | Recommended |
 
 ### newrelicoracledb.sessions.count
 
 Total number of active Oracle database sessions
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {sessions} | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {sessions} | Gauge | Int | Alpha |
 
 ### newrelicoracledb.sga_buffer_busy_waits
 
 Number of buffer busy waits events
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.sga_fixed_size_bytes
 
 SGA fixed size memory in bytes
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| By | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| By | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.sga_free_buffer_inspected_waits
 
 Number of free buffer inspected waits events
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.sga_free_buffer_waits
 
 Number of free buffer waits events
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.sga_hit_ratio
 
 SGA hit ratio (session logical reads minus physical reads / session logical reads)
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.sga_log_allocation_retries_ratio
 
 SGA log allocation retries ratio (redo buffer allocation retries / redo entries)
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.sga_log_buffer_redo_allocation_retries
 
 Number of redo buffer allocation retries from sysstat
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.sga_log_buffer_redo_entries
 
 Number of redo entries from sysstat
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.sga_log_buffer_space_waits
 
 Number of sessions waiting for log buffer space
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.sga_redo_buffers_bytes
 
 SGA redo buffers memory in bytes
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| By | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| By | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.sga_shared_pool_dict_cache_miss_ratio
 
 SGA shared pool dictionary cache miss ratio (getmisses/gets)
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.sga_shared_pool_library_cache_hit_ratio
 
 SGA shared pool library cache hit ratio for SQL AREA namespace
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.sga_shared_pool_library_cache_reload_ratio
 
 SGA shared pool library cache reload ratio (reloads/pins)
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.slow_queries.execution_count
 
 Number of executions for slow queries
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {executions} | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {executions} | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
-| query_id | SQL query identifier | Any Str | false |
-| user_name | Oracle username for slow queries | Any Str | false |
-| normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | false |
-| nr_service_guid | New Relic Service entity GUID | Any Str | false |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | Recommended |
+| database_name | Oracle database name | Any Str | Recommended |
+| query_id | SQL query identifier | Any Str | Recommended |
+| user_name | Oracle username for slow queries | Any Str | Recommended |
+| normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | Recommended |
+| nr_service_guid | New Relic Service entity GUID | Any Str | Recommended |
 
 ### newrelicoracledb.slow_queries.interval_avg_buffer_gets
 
 Average buffer gets (logical reads) per execution in the last polling interval (delta metric)
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {gets} | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {gets} | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
-| query_id | SQL query identifier | Any Str | false |
-| user_name | Oracle username for slow queries | Any Str | false |
-| normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | false |
-| nr_service_guid | New Relic Service entity GUID | Any Str | false |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | Recommended |
+| database_name | Oracle database name | Any Str | Recommended |
+| query_id | SQL query identifier | Any Str | Recommended |
+| user_name | Oracle username for slow queries | Any Str | Recommended |
+| normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | Recommended |
+| nr_service_guid | New Relic Service entity GUID | Any Str | Recommended |
 
 ### newrelicoracledb.slow_queries.interval_avg_cpu_time
 
 Average CPU time per execution in the last polling interval (delta metric)
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| ms | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| ms | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
-| query_id | SQL query identifier | Any Str | false |
-| user_name | Oracle username for slow queries | Any Str | false |
-| normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | false |
-| nr_service_guid | New Relic Service entity GUID | Any Str | false |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | Recommended |
+| database_name | Oracle database name | Any Str | Recommended |
+| query_id | SQL query identifier | Any Str | Recommended |
+| user_name | Oracle username for slow queries | Any Str | Recommended |
+| normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | Recommended |
+| nr_service_guid | New Relic Service entity GUID | Any Str | Recommended |
 
 ### newrelicoracledb.slow_queries.interval_avg_disk_reads
 
 Average disk reads per execution in the last polling interval (delta metric)
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {reads} | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {reads} | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
-| query_id | SQL query identifier | Any Str | false |
-| user_name | Oracle username for slow queries | Any Str | false |
-| normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | false |
-| nr_service_guid | New Relic Service entity GUID | Any Str | false |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | Recommended |
+| database_name | Oracle database name | Any Str | Recommended |
+| query_id | SQL query identifier | Any Str | Recommended |
+| user_name | Oracle username for slow queries | Any Str | Recommended |
+| normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | Recommended |
+| nr_service_guid | New Relic Service entity GUID | Any Str | Recommended |
 
 ### newrelicoracledb.slow_queries.interval_avg_disk_writes
 
 Average direct writes per execution in the last polling interval - writes bypassing buffer cache (delta metric)
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {writes} | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {writes} | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
-| query_id | SQL query identifier | Any Str | false |
-| user_name | Oracle username for slow queries | Any Str | false |
-| normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | false |
-| nr_service_guid | New Relic Service entity GUID | Any Str | false |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | Recommended |
+| database_name | Oracle database name | Any Str | Recommended |
+| query_id | SQL query identifier | Any Str | Recommended |
+| user_name | Oracle username for slow queries | Any Str | Recommended |
+| normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | Recommended |
+| nr_service_guid | New Relic Service entity GUID | Any Str | Recommended |
 
 ### newrelicoracledb.slow_queries.interval_avg_elapsed_time
 
 Average elapsed time per execution in the last polling interval (delta metric)
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| ms | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| ms | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
-| query_id | SQL query identifier | Any Str | false |
-| user_name | Oracle username for slow queries | Any Str | false |
-| normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | false |
-| nr_service_guid | New Relic Service entity GUID | Any Str | false |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | Recommended |
+| database_name | Oracle database name | Any Str | Recommended |
+| query_id | SQL query identifier | Any Str | Recommended |
+| user_name | Oracle username for slow queries | Any Str | Recommended |
+| normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | Recommended |
+| nr_service_guid | New Relic Service entity GUID | Any Str | Recommended |
 
 ### newrelicoracledb.slow_queries.interval_avg_rows_processed
 
 Average rows processed (returned) per execution in the last polling interval (delta metric)
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {rows} | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {rows} | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
-| query_id | SQL query identifier | Any Str | false |
-| user_name | Oracle username for slow queries | Any Str | false |
-| normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | false |
-| nr_service_guid | New Relic Service entity GUID | Any Str | false |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | Recommended |
+| database_name | Oracle database name | Any Str | Recommended |
+| query_id | SQL query identifier | Any Str | Recommended |
+| user_name | Oracle username for slow queries | Any Str | Recommended |
+| normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | Recommended |
+| nr_service_guid | New Relic Service entity GUID | Any Str | Recommended |
 
 ### newrelicoracledb.slow_queries.interval_avg_wait_time
 
 Average wait time per execution in the last polling interval (delta metric)
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| ms | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| ms | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
-| query_id | SQL query identifier | Any Str | false |
-| user_name | Oracle username for slow queries | Any Str | false |
-| normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | false |
-| nr_service_guid | New Relic Service entity GUID | Any Str | false |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | Recommended |
+| database_name | Oracle database name | Any Str | Recommended |
+| query_id | SQL query identifier | Any Str | Recommended |
+| user_name | Oracle username for slow queries | Any Str | Recommended |
+| normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | Recommended |
+| nr_service_guid | New Relic Service entity GUID | Any Str | Recommended |
 
 ### newrelicoracledb.slow_queries.interval_buffer_gets
 
 Total buffer gets (logical reads) in the last polling interval (delta metric, not averaged)
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {gets} | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {gets} | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
-| query_id | SQL query identifier | Any Str | false |
-| user_name | Oracle username for slow queries | Any Str | false |
-| normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | false |
-| nr_service_guid | New Relic Service entity GUID | Any Str | false |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | Recommended |
+| database_name | Oracle database name | Any Str | Recommended |
+| query_id | SQL query identifier | Any Str | Recommended |
+| user_name | Oracle username for slow queries | Any Str | Recommended |
+| normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | Recommended |
+| nr_service_guid | New Relic Service entity GUID | Any Str | Recommended |
 
 ### newrelicoracledb.slow_queries.interval_cpu_time
 
 Total CPU time in the last polling interval (delta metric, not averaged)
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| ms | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| ms | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
-| query_id | SQL query identifier | Any Str | false |
-| user_name | Oracle username for slow queries | Any Str | false |
-| normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | false |
-| nr_service_guid | New Relic Service entity GUID | Any Str | false |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | Recommended |
+| database_name | Oracle database name | Any Str | Recommended |
+| query_id | SQL query identifier | Any Str | Recommended |
+| user_name | Oracle username for slow queries | Any Str | Recommended |
+| normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | Recommended |
+| nr_service_guid | New Relic Service entity GUID | Any Str | Recommended |
 
 ### newrelicoracledb.slow_queries.interval_disk_reads
 
 Total disk reads in the last polling interval (delta metric, not averaged)
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {reads} | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {reads} | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
-| query_id | SQL query identifier | Any Str | false |
-| user_name | Oracle username for slow queries | Any Str | false |
-| normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | false |
-| nr_service_guid | New Relic Service entity GUID | Any Str | false |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | Recommended |
+| database_name | Oracle database name | Any Str | Recommended |
+| query_id | SQL query identifier | Any Str | Recommended |
+| user_name | Oracle username for slow queries | Any Str | Recommended |
+| normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | Recommended |
+| nr_service_guid | New Relic Service entity GUID | Any Str | Recommended |
 
 ### newrelicoracledb.slow_queries.interval_disk_writes
 
 Total direct writes in the last polling interval - writes bypassing buffer cache (delta metric, not averaged)
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {writes} | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {writes} | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
-| query_id | SQL query identifier | Any Str | false |
-| user_name | Oracle username for slow queries | Any Str | false |
-| normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | false |
-| nr_service_guid | New Relic Service entity GUID | Any Str | false |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | Recommended |
+| database_name | Oracle database name | Any Str | Recommended |
+| query_id | SQL query identifier | Any Str | Recommended |
+| user_name | Oracle username for slow queries | Any Str | Recommended |
+| normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | Recommended |
+| nr_service_guid | New Relic Service entity GUID | Any Str | Recommended |
 
 ### newrelicoracledb.slow_queries.interval_elapsed_time
 
 Total elapsed time in the last polling interval (delta metric, not averaged)
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| ms | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| ms | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
-| query_id | SQL query identifier | Any Str | false |
-| user_name | Oracle username for slow queries | Any Str | false |
-| normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | false |
-| nr_service_guid | New Relic Service entity GUID | Any Str | false |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | Recommended |
+| database_name | Oracle database name | Any Str | Recommended |
+| query_id | SQL query identifier | Any Str | Recommended |
+| user_name | Oracle username for slow queries | Any Str | Recommended |
+| normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | Recommended |
+| nr_service_guid | New Relic Service entity GUID | Any Str | Recommended |
 
 ### newrelicoracledb.slow_queries.interval_execution_count
 
 Number of new executions since last scrape (delta metric). On first scrape or after cache reset, represents all executions since plan cache load.
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {executions} | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {executions} | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
-| query_id | SQL query identifier | Any Str | false |
-| user_name | Oracle username for slow queries | Any Str | false |
-| normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | false |
-| nr_service_guid | New Relic Service entity GUID | Any Str | false |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | Recommended |
+| database_name | Oracle database name | Any Str | Recommended |
+| query_id | SQL query identifier | Any Str | Recommended |
+| user_name | Oracle username for slow queries | Any Str | Recommended |
+| normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | Recommended |
+| nr_service_guid | New Relic Service entity GUID | Any Str | Recommended |
 
 ### newrelicoracledb.slow_queries.interval_rows_processed
 
 Total rows processed (returned) in the last polling interval (delta metric, not averaged)
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {rows} | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {rows} | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
-| query_id | SQL query identifier | Any Str | false |
-| user_name | Oracle username for slow queries | Any Str | false |
-| normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | false |
-| nr_service_guid | New Relic Service entity GUID | Any Str | false |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | Recommended |
+| database_name | Oracle database name | Any Str | Recommended |
+| query_id | SQL query identifier | Any Str | Recommended |
+| user_name | Oracle username for slow queries | Any Str | Recommended |
+| normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | Recommended |
+| nr_service_guid | New Relic Service entity GUID | Any Str | Recommended |
 
 ### newrelicoracledb.slow_queries.interval_wait_time
 
 Total wait time in the last polling interval (delta metric, not averaged)
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| ms | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| ms | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
-| query_id | SQL query identifier | Any Str | false |
-| user_name | Oracle username for slow queries | Any Str | false |
-| normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | false |
-| nr_service_guid | New Relic Service entity GUID | Any Str | false |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | Recommended |
+| database_name | Oracle database name | Any Str | Recommended |
+| query_id | SQL query identifier | Any Str | Recommended |
+| user_name | Oracle username for slow queries | Any Str | Recommended |
+| normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | Recommended |
+| nr_service_guid | New Relic Service entity GUID | Any Str | Recommended |
 
 ### newrelicoracledb.slow_queries.query_details
 
 Slow Query Details
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {count} | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {count} | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| newrelic.event.type |   | Any Str | false |
-| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
-| query_id | SQL query identifier | Any Str | false |
-| query_text | SQL query text | Any Str | false |
-| schema_name | Schema name where the query is executed | Any Str | false |
-| user_name | Oracle username for slow queries | Any Str | false |
-| last_active_time | Last active time for the SQL query | Any Str | false |
-| normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | false |
-| nr_service_guid | New Relic Service entity GUID | Any Str | false |
-| normalised_blocking_sql_hash | MD5 hash of normalized blocking SQL query following New Relic Java agent normalization logic | Any Str | false |
-| nr_blocking_service_guid | New Relic Service entity GUID for the blocking query | Any Str | false |
+| newrelic.event.type |   | Any Str | Recommended |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | Recommended |
+| database_name | Oracle database name | Any Str | Recommended |
+| query_id | SQL query identifier | Any Str | Recommended |
+| query_text | SQL query text | Any Str | Recommended |
+| schema_name | Schema name where the query is executed | Any Str | Recommended |
+| user_name | Oracle username for slow queries | Any Str | Recommended |
+| last_active_time | Last active time for the SQL query | Any Str | Recommended |
+| normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | Recommended |
+| nr_service_guid | New Relic Service entity GUID | Any Str | Recommended |
+| normalised_blocking_sql_hash | MD5 hash of normalized blocking SQL query following New Relic Java agent normalization logic | Any Str | Recommended |
+| nr_blocking_service_guid | New Relic Service entity GUID for the blocking query | Any Str | Recommended |
 
 ### newrelicoracledb.slow_queries.total_cpu_time
 
 Total cumulative CPU time for slow queries (raw value from V$SQLAREA)
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| ms | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| ms | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
-| query_id | SQL query identifier | Any Str | false |
-| user_name | Oracle username for slow queries | Any Str | false |
-| normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | false |
-| nr_service_guid | New Relic Service entity GUID | Any Str | false |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | Recommended |
+| database_name | Oracle database name | Any Str | Recommended |
+| query_id | SQL query identifier | Any Str | Recommended |
+| user_name | Oracle username for slow queries | Any Str | Recommended |
+| normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | Recommended |
+| nr_service_guid | New Relic Service entity GUID | Any Str | Recommended |
 
 ### newrelicoracledb.slow_queries.total_disk_reads
 
 Total cumulative disk reads for slow queries (raw value from V$SQLAREA)
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {reads} | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {reads} | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
-| query_id | SQL query identifier | Any Str | false |
-| user_name | Oracle username for slow queries | Any Str | false |
-| normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | false |
-| nr_service_guid | New Relic Service entity GUID | Any Str | false |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | Recommended |
+| database_name | Oracle database name | Any Str | Recommended |
+| query_id | SQL query identifier | Any Str | Recommended |
+| user_name | Oracle username for slow queries | Any Str | Recommended |
+| normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | Recommended |
+| nr_service_guid | New Relic Service entity GUID | Any Str | Recommended |
 
 ### newrelicoracledb.slow_queries.total_disk_writes
 
 Total cumulative direct writes for slow queries - writes bypassing buffer cache (raw value from V$SQLAREA DIRECT_WRITES)
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {writes} | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {writes} | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
-| query_id | SQL query identifier | Any Str | false |
-| user_name | Oracle username for slow queries | Any Str | false |
-| normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | false |
-| nr_service_guid | New Relic Service entity GUID | Any Str | false |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | Recommended |
+| database_name | Oracle database name | Any Str | Recommended |
+| query_id | SQL query identifier | Any Str | Recommended |
+| user_name | Oracle username for slow queries | Any Str | Recommended |
+| normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | Recommended |
+| nr_service_guid | New Relic Service entity GUID | Any Str | Recommended |
 
 ### newrelicoracledb.slow_queries.total_elapsed_time
 
 Total cumulative elapsed time for slow queries (raw value from V$SQLAREA)
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| ms | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| ms | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
-| query_id | SQL query identifier | Any Str | false |
-| user_name | Oracle username for slow queries | Any Str | false |
-| normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | false |
-| nr_service_guid | New Relic Service entity GUID | Any Str | false |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | Recommended |
+| database_name | Oracle database name | Any Str | Recommended |
+| query_id | SQL query identifier | Any Str | Recommended |
+| user_name | Oracle username for slow queries | Any Str | Recommended |
+| normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | Recommended |
+| nr_service_guid | New Relic Service entity GUID | Any Str | Recommended |
 
 ### newrelicoracledb.slow_queries.total_rows_examined
 
 Total cumulative rows examined for slow queries (buffer gets/logical reads, raw value from V$SQLAREA)
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {rows} | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {rows} | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
-| query_id | SQL query identifier | Any Str | false |
-| user_name | Oracle username for slow queries | Any Str | false |
-| normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | false |
-| nr_service_guid | New Relic Service entity GUID | Any Str | false |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | Recommended |
+| database_name | Oracle database name | Any Str | Recommended |
+| query_id | SQL query identifier | Any Str | Recommended |
+| user_name | Oracle username for slow queries | Any Str | Recommended |
+| normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | Recommended |
+| nr_service_guid | New Relic Service entity GUID | Any Str | Recommended |
 
 ### newrelicoracledb.slow_queries.total_rows_returned
 
 Total cumulative rows returned for slow queries (rows processed, raw value from V$SQLAREA)
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {rows} | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {rows} | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
-| query_id | SQL query identifier | Any Str | false |
-| user_name | Oracle username for slow queries | Any Str | false |
-| normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | false |
-| nr_service_guid | New Relic Service entity GUID | Any Str | false |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | Recommended |
+| database_name | Oracle database name | Any Str | Recommended |
+| query_id | SQL query identifier | Any Str | Recommended |
+| user_name | Oracle username for slow queries | Any Str | Recommended |
+| normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | Recommended |
+| nr_service_guid | New Relic Service entity GUID | Any Str | Recommended |
 
 ### newrelicoracledb.slow_queries.total_wait_time
 
 Total cumulative wait time for slow queries (elapsed_time - cpu_time, raw value from V$SQLAREA)
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| ms | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| ms | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
-| query_id | SQL query identifier | Any Str | false |
-| user_name | Oracle username for slow queries | Any Str | false |
-| normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | false |
-| nr_service_guid | New Relic Service entity GUID | Any Str | false |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | Recommended |
+| database_name | Oracle database name | Any Str | Recommended |
+| query_id | SQL query identifier | Any Str | Recommended |
+| user_name | Oracle username for slow queries | Any Str | Recommended |
+| normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | Recommended |
+| nr_service_guid | New Relic Service entity GUID | Any Str | Recommended |
 
 ### newrelicoracledb.sorts_disk
 
 Number of sorts performed on disk from sysstat
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.sorts_memory
 
 Number of sorts performed in memory from sysstat
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.active_parallel_sessions
 
 Active Parallel Sessions
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.active_serial_sessions
 
 Active Serial Sessions
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.average_active_sessions
 
 Average Active Sessions
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.background_checkpoints_per_second
 
 Background Checkpoints Per Sec
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.background_cpu_usage_per_second
 
 Background CPU Usage Per Sec
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| s | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| s | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.background_time_per_second
 
 Background Time Per Sec
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| s | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| s | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.branch_node_splits_per_second
 
 Branch Node Splits Per Sec
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.branch_node_splits_per_transaction
 
 Branch Node Splits Per Txn
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.buffer_cache_hit_ratio
 
 Buffer Cache Hit Ratio
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| % | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| % | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.captured_user_calls
 
 Captured user calls
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.consistent_read_changes_per_second
 
 Consistent Read Changes Per Sec
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.consistent_read_changes_per_transaction
 
 Consistent Read Changes Per Txn
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.consistent_read_gets_per_second
 
 Consistent Read Gets Per Sec
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.consistent_read_gets_per_transaction
 
 Consistent Read Gets Per Txn
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.cpu_usage_per_second
 
 CPU Usage Per Sec
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| s | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| s | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.cpu_usage_per_transaction
 
 CPU Usage Per Txn
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| s | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| s | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.cr_blocks_created_per_second
 
 CR Blocks Created Per Sec
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.cr_blocks_created_per_transaction
 
 CR Blocks Created Per Txn
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.cr_undo_records_applied_per_second
 
 CR Undo Records Applied Per Sec
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.cr_undo_records_applied_per_transaction
 
 CR Undo Records Applied Per Txn
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.current_logons_count
 
 Current Logons Count
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.current_open_cursors_count
 
 Current Open Cursors Count
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.current_os_load
 
 Current OS Load
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.cursor_cache_hit_ratio
 
 Cursor Cache Hit Ratio
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| % | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| % | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.database_cpu_time_ratio
 
 Database CPU Time Ratio
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| % | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| % | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.database_time_per_second
 
 Database Time Per Sec
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| s | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| s | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.database_wait_time_ratio
 
 Database Wait Time Ratio
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| % | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| % | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.db_block_changes_per_second
 
 DB Block Changes Per Sec
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.db_block_changes_per_transaction
 
 DB Block Changes Per Txn
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.db_block_changes_per_user_call
 
 DB Block Changes Per User Call
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.db_block_gets_per_second
 
 DB Block Gets Per Sec
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.db_block_gets_per_transaction
 
 DB Block Gets Per Txn
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.db_block_gets_per_user_call
 
 DB Block Gets Per User Call
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.dbwr_checkpoints_per_second
 
 DBWR Checkpoints Per Sec
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.disk_sort_per_second
 
 Disk Sort Per Sec
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.disk_sort_per_transaction
 
 Disk Sort Per Txn
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.enqueue_deadlocks_per_second
 
 Enqueue Deadlocks Per Sec
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.enqueue_deadlocks_per_transaction
 
 Enqueue Deadlocks Per Txn
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.enqueue_requests_per_second
 
 Enqueue Requests Per Sec
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.enqueue_requests_per_transaction
 
 Enqueue Requests Per Txn
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.enqueue_timeouts_per_second
 
 Enqueue Timeouts Per Sec
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.enqueue_timeouts_per_transaction
 
 Enqueue Timeouts Per Txn
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.enqueue_waits_per_second
 
 Enqueue Waits Per Sec
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.enqueue_waits_per_transaction
 
 Enqueue Waits Per Txn
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.execute_without_parse_ratio
 
 Execute Without Parse Ratio
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| % | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| % | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.executions_per_second
 
 Executions Per Sec
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.executions_per_transaction
 
 Executions Per Txn
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.executions_per_user_call
 
 Executions Per User Call
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.full_index_scans_per_second
 
 Full Index Scans Per Sec
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.full_index_scans_per_transaction
 
 Full Index Scans Per Txn
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.gc_cr_block_received_per_second
 
 GC CR Block Received Per Second
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.gc_cr_block_received_per_transaction
 
 GC CR Block Received Per Txn
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.gc_current_block_received_per_second
 
 GC Current Block Received Per Second
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.gc_current_block_received_per_transaction
 
 GC Current Block Received Per Txn
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.global_cache_average_cr_get_time
 
 Global Cache Average CR Get Time
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| ms | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| ms | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.global_cache_average_current_get_time
 
 Global Cache Average Current Get Time
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| ms | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| ms | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.global_cache_blocks_corrupted
 
 Global Cache Blocks Corrupted
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.global_cache_blocks_lost
 
 Global Cache Blocks Lost
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.hard_parse_count_per_second
 
 Hard Parse Count Per Sec
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.hard_parse_count_per_transaction
 
 Hard Parse Count Per Txn
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.host_cpu_usage_per_second
 
 Host CPU Usage Per Sec
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| s | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| s | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.host_cpu_utilization
 
 Host CPU Utilization (%)
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| % | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| % | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.io_megabytes_per_second
 
 I/O Megabytes per Second
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| MBy/s | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| MBy/s | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.io_requests_per_second
 
 I/O Requests per Second
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.leaf_node_splits_per_second
 
 Leaf Node Splits Per Sec
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.leaf_node_splits_per_transaction
 
 Leaf Node Splits Per Txn
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.library_cache_hit_ratio
 
 Library Cache Hit Ratio
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| % | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| % | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.library_cache_miss_ratio
 
 Library Cache Miss Ratio
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| % | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| % | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.logical_reads_per_second
 
 Logical Reads Per Sec
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.logical_reads_per_transaction
 
 Logical Reads Per Txn
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.logical_reads_per_user_call
 
 Logical Reads Per User Call
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.logons_per_second
 
 Logons Per Sec
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.logons_per_transaction
 
 Logons Per Txn
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.long_table_scans_per_second
 
 Long Table Scans Per Sec
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.long_table_scans_per_transaction
 
 Long Table Scans Per Txn
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.memory_sorts_ratio
 
 Memory Sorts Ratio
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| % | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| % | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.network_traffic_volume_per_second
 
 Network Traffic Volume Per Sec
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| By/s | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| By/s | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.open_cursors_per_second
 
 Open Cursors Per Sec
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.open_cursors_per_transaction
 
 Open Cursors Per Txn
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.parse_failure_count_per_second
 
 Parse Failure Count Per Sec
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.parse_failure_count_per_transaction
 
 Parse Failure Count Per Txn
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.pga_cache_hit_percentage
 
 PGA Cache Hit %
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| % | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| % | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.physical_lobs_reads_per_second
 
 Physical Reads Direct Lobs Per Sec
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.physical_lobs_reads_per_transaction
 
 Physical Reads Direct Lobs Per Txn
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.physical_lobs_writes_per_second
 
 Physical Writes Direct Lobs Per Sec
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.physical_lobs_writes_per_transaction
 
 Physical Writes Direct Lobs Per Txn
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.physical_read_bytes_per_second
 
 Physical Read Bytes Per Sec
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| By/s | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| By/s | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.physical_read_io_requests_per_second
 
 Physical Read IO Requests Per Sec
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.physical_read_total_bytes_per_second
 
 Physical Read Total Bytes Per Sec
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| By/s | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| By/s | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.physical_read_total_io_requests_per_second
 
 Physical Read Total IO Requests Per Sec
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.physical_reads_direct_per_second
 
 Physical Reads Direct Per Sec
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.physical_reads_direct_per_transaction
 
 Physical Reads Direct Per Txn
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.physical_reads_per_second
 
 Physical Reads Per Sec
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.physical_reads_per_transaction
 
 Physical Reads Per Txn
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.physical_write_bytes_per_second
 
 Physical Write Bytes Per Sec
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| By/s | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| By/s | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.physical_write_io_requests_per_second
 
 Physical Write IO Requests Per Sec
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.physical_write_total_bytes_per_second
 
 Physical Write Total Bytes Per Sec
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| By/s | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| By/s | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.physical_write_total_io_requests_per_second
 
 Physical Write Total IO Requests Per Sec
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.physical_writes_direct_per_second
 
 Physical Writes Direct Per Sec
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.physical_writes_direct_per_transaction
 
 Physical Writes Direct Per Txn
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.physical_writes_per_second
 
 Physical Writes Per Sec
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.physical_writes_per_transaction
 
 Physical Writes Per Txn
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.process_limit_percentage
 
 Process Limit %
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| % | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| % | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.recursive_calls_per_second
 
 Recursive Calls Per Sec
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.recursive_calls_per_transaction
 
 Recursive Calls Per Txn
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.redo_allocation_hit_ratio
 
 Redo Allocation Hit Ratio
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| % | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| % | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.redo_generated_bytes_per_second
 
 Redo Generated Per Sec
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| By/s | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| By/s | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.redo_generated_bytes_per_transaction
 
 Redo Generated Per Txn
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| By | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| By | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.redo_writes_per_second
 
 Redo Writes Per Sec
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.redo_writes_per_transaction
 
 Redo Writes Per Txn
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.response_time_per_transaction
 
 Response Time Per Txn
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| ms | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| ms | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.row_cache_hit_ratio
 
 Row Cache Hit Ratio
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| % | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| % | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.row_cache_miss_ratio
 
 Row Cache Miss Ratio
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| % | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| % | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.rows_per_sort
 
 Rows Per Sort
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.session_count
 
 Session Count
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.session_limit_percentage
 
 Session Limit %
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| % | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| % | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.shared_pool_free_percentage
 
 Shared Pool Free %
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| % | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| % | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.soft_parse_ratio
 
 Soft Parse Ratio
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| % | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| % | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.sql_service_response_time
 
 SQL Service Response Time
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| ms | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| ms | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.streams_pool_usage_percentage
 
 Streams Pool Usage Percentage
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| % | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| % | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.temp_space_used
 
 Temp Space Used
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| By | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| By | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.total_index_scans_per_second
 
 Total Index Scans Per Sec
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.total_index_scans_per_transaction
 
 Total Index Scans Per Txn
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.total_parse_count_per_second
 
 Total Parse Count Per Sec
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.total_parse_count_per_transaction
 
 Total Parse Count Per Txn
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.total_sorts_per_user_call
 
 Total Sorts Per User Call
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.total_table_scans_per_second
 
 Total Table Scans Per Sec
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.total_table_scans_per_transaction
 
 Total Table Scans Per Txn
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.total_table_scans_per_user_call
 
 Total Table Scans Per User Call
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.transactions_per_logon
 
 Txns Per Logon
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.transactions_per_second
 
 User Transaction Per Sec
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.user_calls_per_second
 
 User Calls Per Sec
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.user_calls_per_transaction
 
 User Calls Per Txn
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.user_calls_ratio
 
 User Calls Ratio
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| % | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| % | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.user_commits_per_second
 
 User Commits Per Sec
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.user_commits_percentage
 
 User Commits Percentage
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| % | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| % | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.user_limit_percentage
 
 User Limit %
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| % | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| % | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.user_rollback_undo_records_applied_per_second
 
 User Rollback UndoRec Applied Per Sec
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.user_rollback_undo_records_applied_per_transaction
 
 User Rollback Undo Records Applied Per Txn
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.user_rollbacks_per_second
 
 User Rollbacks Per Sec
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.system.user_rollbacks_percentage
 
 User Rollbacks Percentage
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| % | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| % | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| instance.id | Oracle database instance ID | Any Str | false |
+| instance.id | Oracle database instance ID | Any Str | Recommended |
 
 ### newrelicoracledb.tablespace.db_id
 
 Database ID information for tablespace
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| tablespace.name | Name of the Oracle tablespace | Any Str | false |
-| db.id | Oracle database ID | Any Str | false |
+| tablespace.name | Name of the Oracle tablespace | Any Str | Recommended |
+| db.id | Oracle database ID | Any Str | Recommended |
 
 ### newrelicoracledb.tablespace.global_name
 
 Global name information for tablespace
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| tablespace.name | Name of the Oracle tablespace | Any Str | false |
-| global.name | Oracle database global name | Any Str | false |
+| tablespace.name | Name of the Oracle tablespace | Any Str | Recommended |
+| global.name | Oracle database global name | Any Str | Recommended |
 
 ### newrelicoracledb.tablespace.is_offline
 
 Whether the tablespace is offline (1) or online (0)
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| tablespace.name | Name of the Oracle tablespace | Any Str | false |
+| tablespace.name | Name of the Oracle tablespace | Any Str | Recommended |
 
 ### newrelicoracledb.tablespace.offline_cdb_datafiles
 
 Count of offline CDB datafiles by tablespace
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| tablespace.name | Name of the Oracle tablespace | Any Str | false |
+| tablespace.name | Name of the Oracle tablespace | Any Str | Recommended |
 
 ### newrelicoracledb.tablespace.offline_pdb_datafiles
 
 Count of offline PDB datafiles by tablespace
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| tablespace.name | Name of the Oracle tablespace | Any Str | false |
+| tablespace.name | Name of the Oracle tablespace | Any Str | Recommended |
 
 ### newrelicoracledb.tablespace.pdb_non_write_mode
 
 Count of PDB datafiles in non-write mode by tablespace
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| 1 | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| tablespace.name | Name of the Oracle tablespace | Any Str | false |
+| tablespace.name | Name of the Oracle tablespace | Any Str | Recommended |
 
 ### newrelicoracledb.tablespace.space_consumed_bytes
 
 Total bytes consumed by the tablespace
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| By | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| By | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| tablespace.name | Name of the Oracle tablespace | Any Str | false |
+| tablespace.name | Name of the Oracle tablespace | Any Str | Recommended |
 
 ### newrelicoracledb.tablespace.space_reserved_bytes
 
 Total bytes reserved by the tablespace
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| By | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| By | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| tablespace.name | Name of the Oracle tablespace | Any Str | false |
+| tablespace.name | Name of the Oracle tablespace | Any Str | Recommended |
 
 ### newrelicoracledb.tablespace.space_used_percentage
 
 Percentage of tablespace space currently used
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| % | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| % | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| tablespace.name | Name of the Oracle tablespace | Any Str | false |
+| tablespace.name | Name of the Oracle tablespace | Any Str | Recommended |
 
 ### newrelicoracledb.tablespace.total_bytes
 
 Total bytes in tablespace
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| By | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| By | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| con.id | Oracle container ID (CDB/PDB) | Any Str | false |
-| tablespace.name | Name of the Oracle tablespace | Any Str | false |
+| con.id | Oracle container ID (CDB/PDB) | Any Str | Recommended |
+| tablespace.name | Name of the Oracle tablespace | Any Str | Recommended |
 
 ### newrelicoracledb.tablespace.used_bytes
 
 Used bytes in tablespace
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| By | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| By | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| con.id | Oracle container ID (CDB/PDB) | Any Str | false |
-| tablespace.name | Name of the Oracle tablespace | Any Str | false |
+| con.id | Oracle container ID (CDB/PDB) | Any Str | Recommended |
+| tablespace.name | Name of the Oracle tablespace | Any Str | Recommended |
 
 ### newrelicoracledb.tablespace.used_percent
 
 Used percentage of tablespace
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| % | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| % | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| con.id | Oracle container ID (CDB/PDB) | Any Str | false |
-| tablespace.name | Name of the Oracle tablespace | Any Str | false |
+| con.id | Oracle container ID (CDB/PDB) | Any Str | Recommended |
+| tablespace.name | Name of the Oracle tablespace | Any Str | Recommended |
 
 ### newrelicoracledb.wait_events.current_wait_time_ms
 
@@ -4752,37 +4752,37 @@ Only emitted for active sessions with non-idle waits (status='ACTIVE', wait_clas
 Source: WAIT_TIME_MICRO / 1000 (rounded to 2 decimal places).
 
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| ms | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| ms | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
-| user_name | Oracle username for slow queries | Any Str | false |
-| session_id | Oracle session ID (SID) | Any Str | false |
-| session_serial | Oracle session serial number | Any Int | false |
-| session_status | Oracle session status (ACTIVE, INACTIVE, etc.) | Any Str | false |
-| session_state | Oracle session state (WAITING or not WAITING) | Any Str | false |
-| query_id | SQL query identifier | Any Str | false |
-| sql_child_number | SQL child cursor number | Any Int | false |
-| wait_event_name | Oracle wait event name for wait events | Any Str | false |
-| wait_category | Oracle wait event category/class for wait events and active sessions | Any Str | false |
-| session_program | Program name of the session | Any Str | false |
-| session_machine | Machine name where the session is running | Any Str | false |
-| wait_object_owner | Owner of the database object being waited on | Any Str | false |
-| wait_object_name | Name of the database object being waited on | Any Str | false |
-| wait_object_type | Type of the database object being waited on (TABLE, INDEX, etc.) | Any Str | false |
-| sql_exec_start | Timestamp when the SQL execution started | Any Str | false |
-| sql_exec_id | SQL execution identifier | Any Int | false |
-| row_wait_obj_id | Object ID of the row being waited on | Any Str | false |
-| row_wait_file_id | File ID of the row being waited on | Any Str | false |
-| row_wait_block_id | Block ID of the row being waited on | Any Str | false |
-| nr_service_guid | New Relic Service entity GUID | Any Str | false |
-| normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | false |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | Recommended |
+| database_name | Oracle database name | Any Str | Recommended |
+| user_name | Oracle username for slow queries | Any Str | Recommended |
+| session_id | Oracle session ID (SID) | Any Str | Recommended |
+| session_serial | Oracle session serial number | Any Int | Recommended |
+| session_status | Oracle session status (ACTIVE, INACTIVE, etc.) | Any Str | Recommended |
+| session_state | Oracle session state (WAITING or not WAITING) | Any Str | Recommended |
+| query_id | SQL query identifier | Any Str | Recommended |
+| sql_child_number | SQL child cursor number | Any Int | Recommended |
+| wait_event_name | Oracle wait event name for wait events | Any Str | Recommended |
+| wait_category | Oracle wait event category/class for wait events and active sessions | Any Str | Recommended |
+| session_program | Program name of the session | Any Str | Recommended |
+| session_machine | Machine name where the session is running | Any Str | Recommended |
+| wait_object_owner | Owner of the database object being waited on | Any Str | Recommended |
+| wait_object_name | Name of the database object being waited on | Any Str | Recommended |
+| wait_object_type | Type of the database object being waited on (TABLE, INDEX, etc.) | Any Str | Recommended |
+| sql_exec_start | Timestamp when the SQL execution started | Any Str | Recommended |
+| sql_exec_id | SQL execution identifier | Any Int | Recommended |
+| row_wait_obj_id | Object ID of the row being waited on | Any Str | Recommended |
+| row_wait_file_id | File ID of the row being waited on | Any Str | Recommended |
+| row_wait_block_id | Block ID of the row being waited on | Any Str | Recommended |
+| nr_service_guid | New Relic Service entity GUID | Any Str | Recommended |
+| normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | Recommended |
 
 ## Optional Metrics
 
@@ -4798,109 +4798,109 @@ metrics:
 
 Average number of buffer gets per execution for this child cursor
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {gets} | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {gets} | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
-| query_id | SQL query identifier | Any Str | false |
-| child_number | Child cursor number | Any Int | false |
-| plan_hash_value | Oracle execution plan hash value | Any Str | false |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | Recommended |
+| database_name | Oracle database name | Any Str | Recommended |
+| query_id | SQL query identifier | Any Str | Recommended |
+| child_number | Child cursor number | Any Int | Recommended |
+| plan_hash_value | Oracle execution plan hash value | Any Str | Recommended |
 
 ### newrelicoracledb.child_cursors.cpu_time
 
 Average CPU time per execution for this child cursor (in milliseconds)
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| ms | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| ms | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
-| query_id | SQL query identifier | Any Str | false |
-| child_number | Child cursor number | Any Int | false |
-| plan_hash_value | Oracle execution plan hash value | Any Str | false |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | Recommended |
+| database_name | Oracle database name | Any Str | Recommended |
+| query_id | SQL query identifier | Any Str | Recommended |
+| child_number | Child cursor number | Any Int | Recommended |
+| plan_hash_value | Oracle execution plan hash value | Any Str | Recommended |
 
 ### newrelicoracledb.child_cursors.disk_reads
 
 Average number of disk reads per execution for this child cursor
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {reads} | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {reads} | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
-| query_id | SQL query identifier | Any Str | false |
-| child_number | Child cursor number | Any Int | false |
-| plan_hash_value | Oracle execution plan hash value | Any Str | false |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | Recommended |
+| database_name | Oracle database name | Any Str | Recommended |
+| query_id | SQL query identifier | Any Str | Recommended |
+| child_number | Child cursor number | Any Int | Recommended |
+| plan_hash_value | Oracle execution plan hash value | Any Str | Recommended |
 
 ### newrelicoracledb.child_cursors.executions
 
 Total number of executions of this child cursor
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {executions} | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {executions} | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
-| query_id | SQL query identifier | Any Str | false |
-| child_number | Child cursor number | Any Int | false |
-| plan_hash_value | Oracle execution plan hash value | Any Str | false |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | Recommended |
+| database_name | Oracle database name | Any Str | Recommended |
+| query_id | SQL query identifier | Any Str | Recommended |
+| child_number | Child cursor number | Any Int | Recommended |
+| plan_hash_value | Oracle execution plan hash value | Any Str | Recommended |
 
 ### newrelicoracledb.child_cursors.invalidations
 
 Number of times this child cursor was invalidated
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| {invalidations} | Gauge | Int |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {invalidations} | Gauge | Int | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
-| query_id | SQL query identifier | Any Str | false |
-| child_number | Child cursor number | Any Int | false |
-| plan_hash_value | Oracle execution plan hash value | Any Str | false |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | Recommended |
+| database_name | Oracle database name | Any Str | Recommended |
+| query_id | SQL query identifier | Any Str | Recommended |
+| child_number | Child cursor number | Any Int | Recommended |
+| plan_hash_value | Oracle execution plan hash value | Any Str | Recommended |
 
 ### newrelicoracledb.child_cursors.user_io_wait_time
 
 Average user I/O wait time per execution for this child cursor (in milliseconds)
 
-| Unit | Metric Type | Value Type |
-| ---- | ----------- | ---------- |
-| ms | Gauge | Double |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| ms | Gauge | Double | Alpha |
 
 #### Attributes
 
-| Name | Description | Values | Optional |
+| Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | false |
-| database_name | Oracle database name | Any Str | false |
-| query_id | SQL query identifier | Any Str | false |
-| child_number | Child cursor number | Any Int | false |
-| plan_hash_value | Oracle execution plan hash value | Any Str | false |
+| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | Recommended |
+| database_name | Oracle database name | Any Str | Recommended |
+| query_id | SQL query identifier | Any Str | Recommended |
+| child_number | Child cursor number | Any Int | Recommended |
+| plan_hash_value | Oracle execution plan hash value | Any Str | Recommended |
 
 ## Resource Attributes
 
