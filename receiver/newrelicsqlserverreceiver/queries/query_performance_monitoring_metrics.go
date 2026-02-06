@@ -18,8 +18,6 @@ WITH StatementDetails AS (
 		qs.creation_time,
 		qs.last_execution_time,
 		qs.execution_count,
-		-- Historical average metrics (reflecting all runs since caching)
-		(qs.total_elapsed_time / qs.execution_count) / 1000.0 AS avg_elapsed_time_ms,
 		-- Total elapsed time for precise delta calculation (avoids floating point precision loss)
 		qs.total_elapsed_time / 1000.0 AS total_elapsed_time_ms,
 		-- New metrics from dm_exec_query_stats (for historical and interval calculations)
@@ -27,7 +25,6 @@ WITH StatementDetails AS (
 		qs.total_rows,
 		qs.total_logical_reads,
 		qs.total_physical_reads,
-		qs.total_logical_writes,
 		CONVERT(INT, pa.value) AS database_id,
 		qt.objectid
 	FROM
@@ -60,13 +57,11 @@ SELECT
     CONVERT(VARCHAR(25), SWITCHOFFSET(CAST(s.creation_time AS DATETIMEOFFSET), '+00:00'), 127) + 'Z' AS creation_time,
     CONVERT(VARCHAR(25), SWITCHOFFSET(CAST(s.last_execution_time AS DATETIMEOFFSET), '+00:00'), 127) + 'Z' AS last_execution_timestamp,
     s.execution_count,
-    s.avg_elapsed_time_ms,
     s.total_elapsed_time_ms,
     s.total_worker_time_ms,
     s.total_rows,
     s.total_logical_reads,
     s.total_physical_reads,
-    s.total_logical_writes,
     CONVERT(VARCHAR(25), SWITCHOFFSET(SYSDATETIMEOFFSET(), '+00:00'), 127) + 'Z' AS collection_timestamp
 FROM
     StatementDetails s`
@@ -252,7 +247,8 @@ WHERE
     r_wait.session_id > 50
     AND r_wait.database_id > 4
     AND r_wait.wait_type IS NOT NULL
-    AND r_wait.query_hash IS NOT NULL  -- Filter out queries without query_hash (PREEMPTIVE waits, system queries)
+    -- Include queries with query_hash OR blocked queries (blocking scenarios often lack query_hash during lock wait)
+    AND (r_wait.query_hash IS NOT NULL OR r_wait.blocking_session_id != 0)
     AND r_wait.total_elapsed_time >= @ElapsedTimeThresholdMs  -- Filter by elapsed time threshold
     %s  -- Placeholder for additional query_hash IN filter (injected from Go code)
 ORDER BY

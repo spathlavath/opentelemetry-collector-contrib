@@ -135,24 +135,22 @@ type MetricsConfig struct {
 	SqlserverPlanAvgElapsedTimeMs                             MetricConfig `mapstructure:"sqlserver.plan.avg_elapsed_time_ms"`
 	SqlserverSecurityServerPrincipalsCount                    MetricConfig `mapstructure:"sqlserver.security.server_principals_count"`
 	SqlserverSecurityServerRoleMembersCount                   MetricConfig `mapstructure:"sqlserver.security.server_role_members_count"`
-	SqlserverSlowqueryHistoricalAvgElapsedTimeMs              MetricConfig `mapstructure:"sqlserver.slowquery.historical_avg_elapsed_time_ms"`
+	SqlserverSlowqueryHistoricalElapsedTimeMs                 MetricConfig `mapstructure:"sqlserver.slowquery.historical_elapsed_time_ms"`
 	SqlserverSlowqueryHistoricalExecutionCount                MetricConfig `mapstructure:"sqlserver.slowquery.historical_execution_count"`
 	SqlserverSlowqueryHistoricalLogicalReads                  MetricConfig `mapstructure:"sqlserver.slowquery.historical_logical_reads"`
-	SqlserverSlowqueryHistoricalLogicalWrites                 MetricConfig `mapstructure:"sqlserver.slowquery.historical_logical_writes"`
 	SqlserverSlowqueryHistoricalPhysicalReads                 MetricConfig `mapstructure:"sqlserver.slowquery.historical_physical_reads"`
 	SqlserverSlowqueryHistoricalRows                          MetricConfig `mapstructure:"sqlserver.slowquery.historical_rows"`
 	SqlserverSlowqueryHistoricalWaitTimeMs                    MetricConfig `mapstructure:"sqlserver.slowquery.historical_wait_time_ms"`
 	SqlserverSlowqueryHistoricalWorkerTimeMs                  MetricConfig `mapstructure:"sqlserver.slowquery.historical_worker_time_ms"`
 	SqlserverSlowqueryIntervalAvgElapsedTimeMs                MetricConfig `mapstructure:"sqlserver.slowquery.interval_avg_elapsed_time_ms"`
 	SqlserverSlowqueryIntervalAvgLogicalReads                 MetricConfig `mapstructure:"sqlserver.slowquery.interval_avg_logical_reads"`
-	SqlserverSlowqueryIntervalAvgLogicalWrites                MetricConfig `mapstructure:"sqlserver.slowquery.interval_avg_logical_writes"`
 	SqlserverSlowqueryIntervalAvgPhysicalReads                MetricConfig `mapstructure:"sqlserver.slowquery.interval_avg_physical_reads"`
 	SqlserverSlowqueryIntervalAvgRows                         MetricConfig `mapstructure:"sqlserver.slowquery.interval_avg_rows"`
 	SqlserverSlowqueryIntervalAvgWaitTimeMs                   MetricConfig `mapstructure:"sqlserver.slowquery.interval_avg_wait_time_ms"`
 	SqlserverSlowqueryIntervalAvgWorkerTimeMs                 MetricConfig `mapstructure:"sqlserver.slowquery.interval_avg_worker_time_ms"`
+	SqlserverSlowqueryIntervalElapsedTimeMs                   MetricConfig `mapstructure:"sqlserver.slowquery.interval_elapsed_time_ms"`
 	SqlserverSlowqueryIntervalExecutionCount                  MetricConfig `mapstructure:"sqlserver.slowquery.interval_execution_count"`
 	SqlserverSlowqueryIntervalLogicalReads                    MetricConfig `mapstructure:"sqlserver.slowquery.interval_logical_reads"`
-	SqlserverSlowqueryIntervalLogicalWrites                   MetricConfig `mapstructure:"sqlserver.slowquery.interval_logical_writes"`
 	SqlserverSlowqueryIntervalPhysicalReads                   MetricConfig `mapstructure:"sqlserver.slowquery.interval_physical_reads"`
 	SqlserverSlowqueryIntervalRows                            MetricConfig `mapstructure:"sqlserver.slowquery.interval_rows"`
 	SqlserverSlowqueryIntervalWaitTimeMs                      MetricConfig `mapstructure:"sqlserver.slowquery.interval_wait_time_ms"`
@@ -522,16 +520,13 @@ func DefaultMetricsConfig() MetricsConfig {
 		SqlserverSecurityServerRoleMembersCount: MetricConfig{
 			Enabled: true,
 		},
-		SqlserverSlowqueryHistoricalAvgElapsedTimeMs: MetricConfig{
+		SqlserverSlowqueryHistoricalElapsedTimeMs: MetricConfig{
 			Enabled: true,
 		},
 		SqlserverSlowqueryHistoricalExecutionCount: MetricConfig{
 			Enabled: true,
 		},
 		SqlserverSlowqueryHistoricalLogicalReads: MetricConfig{
-			Enabled: true,
-		},
-		SqlserverSlowqueryHistoricalLogicalWrites: MetricConfig{
 			Enabled: true,
 		},
 		SqlserverSlowqueryHistoricalPhysicalReads: MetricConfig{
@@ -552,9 +547,6 @@ func DefaultMetricsConfig() MetricsConfig {
 		SqlserverSlowqueryIntervalAvgLogicalReads: MetricConfig{
 			Enabled: true,
 		},
-		SqlserverSlowqueryIntervalAvgLogicalWrites: MetricConfig{
-			Enabled: true,
-		},
 		SqlserverSlowqueryIntervalAvgPhysicalReads: MetricConfig{
 			Enabled: true,
 		},
@@ -567,13 +559,13 @@ func DefaultMetricsConfig() MetricsConfig {
 		SqlserverSlowqueryIntervalAvgWorkerTimeMs: MetricConfig{
 			Enabled: true,
 		},
+		SqlserverSlowqueryIntervalElapsedTimeMs: MetricConfig{
+			Enabled: true,
+		},
 		SqlserverSlowqueryIntervalExecutionCount: MetricConfig{
 			Enabled: true,
 		},
 		SqlserverSlowqueryIntervalLogicalReads: MetricConfig{
-			Enabled: true,
-		},
-		SqlserverSlowqueryIntervalLogicalWrites: MetricConfig{
 			Enabled: true,
 		},
 		SqlserverSlowqueryIntervalPhysicalReads: MetricConfig{

@@ -55,9 +55,7 @@ metrics:
         database_name,
         login_name,
         host_name,
-        client_name,
         query_id,
-        query_text,
         normalised_sql_hash,
         nr_service_guid,
         wait_type,
@@ -75,8 +73,9 @@ metrics:
         plan_handle,
         blocking_session_id,
         blocking_login_name,
-        blocking_query_text,
         blocking_query_hash,
+        blocking_nr_service_guid,
+        blocking_normalised_sql_hash,
       ]
 
   sqlserver.buffer.cache_hit_ratio:
@@ -542,7 +541,6 @@ metrics:
         total_worker_time,
         total_elapsed_time,
         total_logical_reads,
-        total_logical_writes,
         execution_count,
         request_start_time,
         last_execution_time,
@@ -1194,15 +1192,15 @@ metrics:
       value_type: int
     attributes: [metric.type]
 
-  sqlserver.slowquery.historical_avg_elapsed_time_ms:
+  sqlserver.slowquery.historical_elapsed_time_ms:
     enabled: true
     stability:
       level: alpha
-    description: Historical average elapsed time in milliseconds (cumulative since plan cached)
+    description: Historical total elapsed time in milliseconds (cumulative since plan cached)
     unit: ms
     gauge:
-      value_type: double
-    attributes: [query_id, database_name, normalised_sql_hash]
+      value_type: int
+    attributes: [query_id, database_name, normalised_sql_hash, nr_service_guid]
 
   sqlserver.slowquery.historical_execution_count:
     enabled: true
@@ -1212,7 +1210,7 @@ metrics:
     unit: "{executions}"
     gauge:
       value_type: int
-    attributes: [query_id, database_name, normalised_sql_hash]
+    attributes: [query_id, database_name, normalised_sql_hash, nr_service_guid]
 
   sqlserver.slowquery.historical_logical_reads:
     enabled: true
@@ -1222,17 +1220,7 @@ metrics:
     unit: "{reads}"
     gauge:
       value_type: int
-    attributes: [query_id, database_name, normalised_sql_hash]
-
-  sqlserver.slowquery.historical_logical_writes:
-    enabled: true
-    stability:
-      level: alpha
-    description: Historical total logical writes (cumulative since plan cached)
-    unit: "{writes}"
-    gauge:
-      value_type: int
-    attributes: [query_id, database_name, normalised_sql_hash]
+    attributes: [query_id, database_name, normalised_sql_hash, nr_service_guid]
 
   sqlserver.slowquery.historical_physical_reads:
     enabled: true
@@ -1242,7 +1230,7 @@ metrics:
     unit: "{reads}"
     gauge:
       value_type: int
-    attributes: [query_id, database_name, normalised_sql_hash]
+    attributes: [query_id, database_name, normalised_sql_hash, nr_service_guid]
 
   sqlserver.slowquery.historical_rows:
     enabled: true
@@ -1252,7 +1240,7 @@ metrics:
     unit: "{rows}"
     gauge:
       value_type: int
-    attributes: [query_id, database_name, normalised_sql_hash]
+    attributes: [query_id, database_name, normalised_sql_hash, nr_service_guid]
 
   sqlserver.slowquery.historical_wait_time_ms:
     enabled: true
@@ -1262,7 +1250,7 @@ metrics:
     unit: ms
     gauge:
       value_type: int
-    attributes: [query_id, database_name, normalised_sql_hash]
+    attributes: [query_id, database_name, normalised_sql_hash, nr_service_guid]
 
   sqlserver.slowquery.historical_worker_time_ms:
     enabled: true
@@ -1272,7 +1260,7 @@ metrics:
     unit: ms
     gauge:
       value_type: int
-    attributes: [query_id, database_name, normalised_sql_hash]
+    attributes: [query_id, database_name, normalised_sql_hash, nr_service_guid]
 
   sqlserver.slowquery.interval_avg_elapsed_time_ms:
     enabled: true
@@ -1282,7 +1270,7 @@ metrics:
     unit: ms
     gauge:
       value_type: double
-    attributes: [query_id, database_name, normalised_sql_hash]
+    attributes: [query_id, database_name, normalised_sql_hash, nr_service_guid]
 
   sqlserver.slowquery.interval_avg_logical_reads:
     enabled: true
@@ -1292,17 +1280,7 @@ metrics:
     unit: "{reads}"
     gauge:
       value_type: double
-    attributes: [query_id, database_name, normalised_sql_hash]
-
-  sqlserver.slowquery.interval_avg_logical_writes:
-    enabled: true
-    stability:
-      level: alpha
-    description: Interval average logical writes per execution
-    unit: "{writes}"
-    gauge:
-      value_type: double
-    attributes: [query_id, database_name, normalised_sql_hash]
+    attributes: [query_id, database_name, normalised_sql_hash, nr_service_guid]
 
   sqlserver.slowquery.interval_avg_physical_reads:
     enabled: true
@@ -1312,7 +1290,7 @@ metrics:
     unit: "{reads}"
     gauge:
       value_type: double
-    attributes: [query_id, database_name, normalised_sql_hash]
+    attributes: [query_id, database_name, normalised_sql_hash, nr_service_guid]
 
   sqlserver.slowquery.interval_avg_rows:
     enabled: true
@@ -1322,7 +1300,7 @@ metrics:
     unit: "{rows}"
     gauge:
       value_type: double
-    attributes: [query_id, database_name, normalised_sql_hash]
+    attributes: [query_id, database_name, normalised_sql_hash, nr_service_guid]
 
   sqlserver.slowquery.interval_avg_wait_time_ms:
     enabled: true
@@ -1332,7 +1310,7 @@ metrics:
     unit: ms
     gauge:
       value_type: double
-    attributes: [query_id, database_name, normalised_sql_hash]
+    attributes: [query_id, database_name, normalised_sql_hash, nr_service_guid]
 
   sqlserver.slowquery.interval_avg_worker_time_ms:
     enabled: true
@@ -1342,7 +1320,17 @@ metrics:
     unit: ms
     gauge:
       value_type: double
-    attributes: [query_id, database_name, normalised_sql_hash]
+    attributes: [query_id, database_name, normalised_sql_hash, nr_service_guid]
+
+  sqlserver.slowquery.interval_elapsed_time_ms:
+    enabled: true
+    stability:
+      level: alpha
+    description: Interval total elapsed time in milliseconds (delta for this collection interval)
+    unit: ms
+    gauge:
+      value_type: int
+    attributes: [query_id, database_name, normalised_sql_hash, nr_service_guid]
 
   sqlserver.slowquery.interval_execution_count:
     enabled: true
@@ -1352,7 +1340,7 @@ metrics:
     unit: "{executions}"
     gauge:
       value_type: int
-    attributes: [query_id, database_name, normalised_sql_hash]
+    attributes: [query_id, database_name, normalised_sql_hash, nr_service_guid]
 
   sqlserver.slowquery.interval_logical_reads:
     enabled: true
@@ -1362,17 +1350,7 @@ metrics:
     unit: "{reads}"
     gauge:
       value_type: int
-    attributes: [query_id, database_name, normalised_sql_hash]
-
-  sqlserver.slowquery.interval_logical_writes:
-    enabled: true
-    stability:
-      level: alpha
-    description: Interval logical writes (delta for this collection interval)
-    unit: "{writes}"
-    gauge:
-      value_type: int
-    attributes: [query_id, database_name, normalised_sql_hash]
+    attributes: [query_id, database_name, normalised_sql_hash, nr_service_guid]
 
   sqlserver.slowquery.interval_physical_reads:
     enabled: true
@@ -1382,7 +1360,7 @@ metrics:
     unit: "{reads}"
     gauge:
       value_type: int
-    attributes: [query_id, database_name, normalised_sql_hash]
+    attributes: [query_id, database_name, normalised_sql_hash, nr_service_guid]
 
   sqlserver.slowquery.interval_rows:
     enabled: true
@@ -1392,7 +1370,7 @@ metrics:
     unit: "{rows}"
     gauge:
       value_type: int
-    attributes: [query_id, database_name, normalised_sql_hash]
+    attributes: [query_id, database_name, normalised_sql_hash, nr_service_guid]
 
   sqlserver.slowquery.interval_wait_time_ms:
     enabled: true
@@ -1402,7 +1380,7 @@ metrics:
     unit: ms
     gauge:
       value_type: int
-    attributes: [query_id, database_name, normalised_sql_hash]
+    attributes: [query_id, database_name, normalised_sql_hash, nr_service_guid]
 
   sqlserver.slowquery.interval_worker_time_ms:
     enabled: true
@@ -1412,7 +1390,7 @@ metrics:
     unit: ms
     gauge:
       value_type: int
-    attributes: [query_id, database_name, normalised_sql_hash]
+    attributes: [query_id, database_name, normalised_sql_hash, nr_service_guid]
 
   sqlserver.slowquery.query_details:
     enabled: true
@@ -1432,7 +1410,6 @@ metrics:
         last_execution_timestamp,
         normalised_sql_hash,
         nr_service_guid,
-        client_name,
         newrelic.event.type,
       ]
 
@@ -1821,18 +1798,18 @@ attributes:
   blocking_login_name:
     description: Login name of the blocking session
     type: string
+  blocking_normalised_sql_hash:
+    description: MD5 hash of normalized blocking SQL for cross-language query correlation
+    type: string
+  blocking_nr_service_guid:
+    description: New Relic APM service GUID extracted from blocking query comments for APM-DB correlation
+    type: string
   blocking_query_hash:
     description: Query hash of the blocking session for correlation
-    type: string
-  blocking_query_text:
-    description: SQL query text of the blocking session
     type: string
   blocking_session_id:
     description: Session ID that is blocking this request
     type: int
-  client_name:
-    description: Client application name extracted from New Relic query comments (nr_service)
-    type: string
   # Removed: child_role_name (used by removed granular metrics)
   cluster_type_desc:
     description: Cluster type description (WSFC, EXTERNAL, NONE)
@@ -2004,9 +1981,6 @@ attributes:
     type: double
   total_logical_reads:
     description: Total logical reads for this operator
-    type: int
-  total_logical_writes:
-    description: Total logical writes for this operator
     type: int
   total_subtree_cost:
     description: Cumulative cost of this operator and its children

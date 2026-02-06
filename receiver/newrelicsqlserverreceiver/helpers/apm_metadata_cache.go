@@ -5,61 +5,58 @@ package helpers
 
 import (
 	"sync"
-	"time"
 
 	"go.uber.org/zap"
 )
 
 // APMMetadata stores APM correlation metadata extracted from active query comments
 type APMMetadata struct {
-	NrServiceGuid     string    // New Relic APM service GUID
-	ClientName        string    // Client/service name (from nr_service)
-	NormalisedSqlHash string    // MD5 hash of normalized SQL
-	LastSeen          time.Time // Last time this metadata was observed
+	NrServiceGuid     string // New Relic APM service GUID
+	NormalisedSqlHash string // MD5 hash of normalized SQL
 }
 
 // APMMetadataCache provides thread-safe caching of APM metadata keyed by query_hash.
-// This enables enriching slow query metrics (from sys.dm_exec_query_stats) with APM
-// correlation data captured from active running queries (from sys.dm_exec_requests).
+// This cache is SCOPED TO A SINGLE SCRAPE CYCLE and is recreated fresh for each scrape.
 //
-// Flow:
+// This ensures:
+// 1. No stale metadata persists across scrapes
+// 2. Cache reflects only the current scrape's active queries
+// 3. Simple lifecycle management (create at scrape start, discard at scrape end)
+//
+// Flow within a single scrape:
 // 1. Active queries with APM comments (/* nr_apm_guid="...", nr_service="..." */) are captured
 // 2. APM metadata is extracted and cached by query_hash
 // 3. Slow queries are enriched with cached metadata using their query_hash
 // 4. Both slow and active query metrics have consistent APM correlation attributes
+// 5. Cache is discarded after scrape completes
 type APMMetadataCache struct {
 	cache  map[string]*APMMetadata // key = query_hash (hex string)
-	ttl    time.Duration
 	mu     sync.RWMutex
 	logger *zap.Logger
 }
 
-// NewAPMMetadataCache creates a new APM metadata cache with configurable TTL
-// Default TTL: 1 hour (metadata remains valid as long as the query plan is cached)
-func NewAPMMetadataCache(ttlMinutes int, logger *zap.Logger) *APMMetadataCache {
-	ttl := time.Duration(ttlMinutes) * time.Minute
-	logger.Info("Creating APM metadata cache",
-		zap.Int("ttl_minutes", ttlMinutes),
-		zap.Duration("ttl", ttl))
+// NewAPMMetadataCache creates a new APM metadata cache for a single scrape cycle
+// This cache is recreated fresh for each scrape to ensure no stale data
+func NewAPMMetadataCache(logger *zap.Logger) *APMMetadataCache {
+	logger.Info("🆕 CACHE CREATE: New APM metadata cache created for scrape cycle")
 
 	return &APMMetadataCache{
 		cache:  make(map[string]*APMMetadata),
-		ttl:    ttl,
 		logger: logger,
 	}
 }
 
 // Set stores APM metadata for a query_hash (thread-safe)
-// If the entry already exists, it updates the metadata and refreshes the timestamp
-func (c *APMMetadataCache) Set(queryHash, nrServiceGuid, clientName, normalisedSqlHash string) {
+// If the entry already exists, it updates the metadata with latest values
+func (c *APMMetadataCache) Set(queryHash, nrServiceGuid, normalisedSqlHash string) {
 	if queryHash == "" {
-		c.logger.Debug("Empty query_hash, skipping APM metadata cache set")
+		c.logger.Debug("❌ CACHE SET: Empty query_hash, skipping")
 		return
 	}
 
 	// Only cache if we have at least one piece of APM metadata
-	if nrServiceGuid == "" && clientName == "" && normalisedSqlHash == "" {
-		c.logger.Debug("No APM metadata to cache",
+	if nrServiceGuid == "" && normalisedSqlHash == "" {
+		c.logger.Debug("❌ CACHE SET: No APM metadata to cache",
 			zap.String("query_hash", queryHash))
 		return
 	}
@@ -67,26 +64,35 @@ func (c *APMMetadataCache) Set(queryHash, nrServiceGuid, clientName, normalisedS
 	c.mu.Lock()
 	defer c.mu.Unlock()
 
+	// Check if this is an update or new entry
+	_, exists := c.cache[queryHash]
+
 	metadata := &APMMetadata{
 		NrServiceGuid:     nrServiceGuid,
-		ClientName:        clientName,
 		NormalisedSqlHash: normalisedSqlHash,
-		LastSeen:          time.Now(),
 	}
 
 	c.cache[queryHash] = metadata
 
-	c.logger.Info("Cached APM metadata for query_hash",
-		zap.String("query_hash", queryHash),
-		zap.String("nr_service_guid", nrServiceGuid),
-		zap.String("client_name", clientName),
-		zap.String("normalised_sql_hash", normalisedSqlHash))
+	if exists {
+		c.logger.Info("🔄 CACHE SET: Updated existing entry",
+			zap.String("query_hash", queryHash),
+			zap.String("nr_service_guid", nrServiceGuid),
+			zap.String("normalised_sql_hash", normalisedSqlHash))
+	} else {
+		c.logger.Info("✅ CACHE SET: Added new entry",
+			zap.String("query_hash", queryHash),
+			zap.String("nr_service_guid", nrServiceGuid),
+			zap.String("normalised_sql_hash", normalisedSqlHash),
+			zap.Int("total_cache_entries", len(c.cache)))
+	}
 }
 
 // Get retrieves APM metadata for a query_hash (thread-safe)
-// Returns (metadata, true) if found and not expired, or (nil, false) if not found/expired
+// Returns (metadata, true) if found in current scrape, or (nil, false) if not found
 func (c *APMMetadataCache) Get(queryHash string) (*APMMetadata, bool) {
 	if queryHash == "" {
+		c.logger.Debug("❌ CACHE GET: Empty query_hash")
 		return nil, false
 	}
 
@@ -95,48 +101,34 @@ func (c *APMMetadataCache) Get(queryHash string) (*APMMetadata, bool) {
 
 	metadata, exists := c.cache[queryHash]
 	if !exists {
-		return nil, false
-	}
-
-	// Check if expired
-	age := time.Since(metadata.LastSeen)
-	if age > c.ttl {
-		c.logger.Debug("APM metadata expired",
+		c.logger.Debug("❌ CACHE GET: Entry not found",
 			zap.String("query_hash", queryHash),
-			zap.Duration("age", age),
-			zap.Duration("ttl", c.ttl))
+			zap.Int("total_cache_entries", len(c.cache)))
 		return nil, false
 	}
 
-	c.logger.Debug("Retrieved APM metadata from cache",
+	c.logger.Info("✅ CACHE GET: Retrieved metadata from cache",
 		zap.String("query_hash", queryHash),
 		zap.String("nr_service_guid", metadata.NrServiceGuid),
-		zap.String("client_name", metadata.ClientName),
-		zap.String("normalised_sql_hash", metadata.NormalisedSqlHash),
-		zap.Duration("age", age))
+		zap.String("normalised_sql_hash", metadata.NormalisedSqlHash))
 
 	return metadata, true
 }
 
-// CleanupStaleEntries removes expired entries from the cache to prevent unbounded growth
-func (c *APMMetadataCache) CleanupStaleEntries() {
+// Clear removes all entries from the cache
+// This is called at the end of each scrape cycle to ensure fresh data next time
+func (c *APMMetadataCache) Clear() {
 	c.mu.Lock()
 	defer c.mu.Unlock()
 
-	now := time.Now()
-	removed := 0
+	entryCount := len(c.cache)
+	c.cache = make(map[string]*APMMetadata)
 
-	for key, metadata := range c.cache {
-		if now.Sub(metadata.LastSeen) > c.ttl {
-			delete(c.cache, key)
-			removed++
-		}
-	}
-
-	if removed > 0 {
-		c.logger.Info("Cleaned up stale APM metadata cache entries",
-			zap.Int("removed_count", removed),
-			zap.Int("remaining_count", len(c.cache)))
+	if entryCount > 0 {
+		c.logger.Info("🗑️  CACHE CLEAR: Cleared cache at end of scrape cycle",
+			zap.Int("cleared_entries", entryCount))
+	} else {
+		c.logger.Debug("CACHE CLEAR: Cache was already empty")
 	}
 }
 
@@ -151,15 +143,11 @@ func (c *APMMetadataCache) GetCacheStats() map[string]interface{} {
 
 	// Count entries with each type of metadata
 	withGuid := 0
-	withClientName := 0
 	withHash := 0
 
 	for _, metadata := range c.cache {
 		if metadata.NrServiceGuid != "" {
 			withGuid++
-		}
-		if metadata.ClientName != "" {
-			withClientName++
 		}
 		if metadata.NormalisedSqlHash != "" {
 			withHash++
@@ -167,7 +155,6 @@ func (c *APMMetadataCache) GetCacheStats() map[string]interface{} {
 	}
 
 	stats["with_nr_service_guid"] = withGuid
-	stats["with_client_name"] = withClientName
 	stats["with_normalised_hash"] = withHash
 
 	return stats

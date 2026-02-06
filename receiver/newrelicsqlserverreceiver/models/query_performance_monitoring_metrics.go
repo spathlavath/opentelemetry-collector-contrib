@@ -13,20 +13,22 @@ type SlowQuery struct {
 	CreationTime           *string  `db:"creation_time" metric_name:"creation_time" source_type:"attribute"`
 	LastExecutionTimestamp *string  `db:"last_execution_timestamp" metric_name:"last_execution_timestamp" source_type:"attribute"`
 	ExecutionCount         *int64   `db:"execution_count" metric_name:"execution_count" source_type:"gauge"`
-	AvgElapsedTimeMS       *float64 `db:"avg_elapsed_time_ms" metric_name:"sqlserver.slowquery.avg_elapsed_time_ms" source_type:"gauge"`
 	TotalElapsedTimeMS     *float64 `db:"total_elapsed_time_ms"` // Used for precise delta calculation only
 	CollectionTimestamp    *string  `db:"collection_timestamp" metric_name:"collection_timestamp" source_type:"attribute"`
+
+	// Historical metric for elapsed time (cumulative since plan cached)
+	HistoricalElapsedTimeMS *int64 `db:"-" metric_name:"sqlserver.slowquery.historical_elapsed_time_ms" source_type:"gauge"`
 
 	// Historical metrics from dm_exec_query_stats (cumulative since plan cached)
 	TotalWorkerTimeMS  *float64 `db:"total_worker_time_ms"` // Used for delta calculation (in milliseconds)
 	TotalRows          *int64   `db:"total_rows"`           // Used for delta calculation
 	TotalLogicalReads  *int64   `db:"total_logical_reads"`  // Used for delta calculation
 	TotalPhysicalReads *int64   `db:"total_physical_reads"` // Used for delta calculation
-	TotalLogicalWrites *int64   `db:"total_logical_writes"` // Used for delta calculation
 	TotalWaitTimeMS    *int64   `db:"-"`                    // Calculated: total_elapsed_time_ms - total_worker_time_ms
 
 	// Interval-based delta metrics (calculated in-memory, not from DB)
 	// These are populated by the SimplifiedIntervalCalculator
+	IntervalElapsedTimeMS    *int64   `db:"-" metric_name:"sqlserver.slowquery.interval_elapsed_time_ms" source_type:"gauge"`
 	IntervalAvgElapsedTimeMS *float64 `db:"-" metric_name:"sqlserver.slowquery.interval_avg_elapsed_time_ms" source_type:"gauge"`
 	IntervalExecutionCount   *int64   `db:"-" metric_name:"sqlserver.slowquery.interval_execution_count" source_type:"gauge"`
 
@@ -46,19 +48,13 @@ type SlowQuery struct {
 	IntervalPhysicalReads    *int64   `db:"-" metric_name:"sqlserver.slowquery.interval_physical_reads" source_type:"gauge"`
 	IntervalAvgPhysicalReads *float64 `db:"-" metric_name:"sqlserver.slowquery.interval_avg_physical_reads" source_type:"gauge"`
 
-	// New interval metrics for logical writes
-	IntervalLogicalWrites    *int64   `db:"-" metric_name:"sqlserver.slowquery.interval_logical_writes" source_type:"gauge"`
-	IntervalAvgLogicalWrites *float64 `db:"-" metric_name:"sqlserver.slowquery.interval_avg_logical_writes" source_type:"gauge"`
-
 	// New interval metrics for wait time
 	IntervalWaitTimeMS    *int64   `db:"-" metric_name:"sqlserver.slowquery.interval_wait_time_ms" source_type:"gauge"`
 	IntervalAvgWaitTimeMS *float64 `db:"-" metric_name:"sqlserver.slowquery.interval_avg_wait_time_ms" source_type:"gauge"`
 
 	// New Relic Metadata Extraction (calculated in-memory from query comments, not from DB)
 	// These fields enable cross-language query correlation and APM integration
-	// These are ONLY emitted in query_details metric (converted to logs), not in performance metrics
 	NrServiceGuid     *string `db:"-" metric_name:"nr_service_guid" source_type:"attribute"`     // Extracted from nr_apm_guid comment (APM service GUID)
-	ClientName        *string `db:"-" metric_name:"client_name" source_type:"attribute"`         // Extracted from nr_service comment
 	NormalisedSqlHash *string `db:"-" metric_name:"normalised_sql_hash" source_type:"attribute"` // MD5 hash of normalized SQL for cross-language correlation
 }
 
@@ -127,12 +123,11 @@ type ExecutionPlanNode struct {
 	NoJoinPredicate        bool   `json:"no_join_predicate"`
 
 	// Performance Metrics
-	TotalWorkerTime    float64 `json:"total_worker_time"`
-	TotalElapsedTime   float64 `json:"total_elapsed_time"`
-	TotalLogicalReads  int64   `json:"total_logical_reads"`
-	TotalLogicalWrites int64   `json:"total_logical_writes"`
-	ExecutionCount     int64   `json:"execution_count"`
-	AvgElapsedTimeMs   float64 `json:"avg_elapsed_time_ms"`
+	TotalWorkerTime   float64 `json:"total_worker_time"`
+	TotalElapsedTime  float64 `json:"total_elapsed_time"`
+	TotalLogicalReads int64   `json:"total_logical_reads"`
+	ExecutionCount    int64   `json:"execution_count"`
+	AvgElapsedTimeMs  float64 `json:"avg_elapsed_time_ms"`
 
 	// Timestamps
 	CollectionTimestamp string `json:"collection_timestamp"`
@@ -199,10 +194,13 @@ type ActiveRunningQuery struct {
 
 	// K. APM Integration (calculated in-memory from query comments, not from DB)
 	// These fields enable cross-language query correlation for active queries
-	// These are NOT emitted as metric dimensions - they are only stored in query_details (logs)
 	NrServiceGuid     *string `db:"-" metric_name:"nr_service_guid" source_type:"attribute"`     // Extracted from nr_apm_guid comment (APM service GUID)
-	ClientName        *string `db:"-" metric_name:"client_name" source_type:"attribute"`         // Extracted from nr_service comment
 	NormalisedSqlHash *string `db:"-" metric_name:"normalised_sql_hash" source_type:"attribute"` // MD5 hash of normalized SQL for cross-language correlation
+
+	// L. BLOCKING QUERY APM Integration (calculated from blocking query comments)
+	// These fields enable APM correlation for the blocker/blocking query
+	BlockingNrServiceGuid     *string `db:"-" metric_name:"blocking_nr_service_guid" source_type:"attribute"`     // Extracted from blocker's query comments
+	BlockingNormalisedSqlHash *string `db:"-" metric_name:"blocking_normalised_sql_hash" source_type:"attribute"` // MD5 hash of normalized blocking SQL
 }
 
 // LockedObject represents detailed information about database objects locked by a session
@@ -236,7 +234,6 @@ type SlowQueryPlanData struct {
 	PlanHandle        *QueryID // plan_handle - for fetching XML
 	CreationTime      *string  // When plan was created
 	LastExecutionTime *string  // Last execution timestamp
-	AvgElapsedTimeMs  *float64 // Average elapsed time per execution
 }
 
 // PlanHandleResult represents lightweight plan data for emitting plan metrics

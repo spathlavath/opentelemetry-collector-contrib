@@ -52,7 +52,6 @@ type SimplifiedQueryState struct {
 	PrevTotalRows          int64
 	PrevTotalLogicalReads  int64
 	PrevTotalPhysicalReads int64
-	PrevTotalLogicalWrites int64
 
 	// Timestamps for TTL-based cleanup
 	LastSeenTimestamp  time.Time
@@ -62,6 +61,7 @@ type SimplifiedQueryState struct {
 // SimplifiedIntervalMetrics holds both interval and historical metrics
 type SimplifiedIntervalMetrics struct {
 	// Interval-based metrics (delta calculation) - elapsed time
+	IntervalElapsedTimeMs    int64
 	IntervalAvgElapsedTimeMs float64
 	IntervalExecutionCount   int64
 
@@ -78,8 +78,6 @@ type SimplifiedIntervalMetrics struct {
 	IntervalAvgLogicalReads  float64
 	IntervalPhysicalReads    int64
 	IntervalAvgPhysicalReads float64
-	IntervalLogicalWrites    int64
-	IntervalAvgLogicalWrites float64
 	IntervalWaitTimeMs       int64
 	IntervalAvgWaitTimeMs    float64
 
@@ -88,7 +86,6 @@ type SimplifiedIntervalMetrics struct {
 	HistoricalRows          int64
 	HistoricalLogicalReads  int64
 	HistoricalPhysicalReads int64
-	HistoricalLogicalWrites int64
 	HistoricalWaitTimeMs    int64
 
 	// Metadata
@@ -159,10 +156,12 @@ func (sic *SimplifiedIntervalCalculator) CalculateMetrics(query *models.SlowQuer
 	currentTotalRows := getInt64FromPtr(query.TotalRows)
 	currentTotalLogicalReads := getInt64FromPtr(query.TotalLogicalReads)
 	currentTotalPhysicalReads := getInt64FromPtr(query.TotalPhysicalReads)
-	currentTotalLogicalWrites := getInt64FromPtr(query.TotalLogicalWrites)
 
-	// Historical (cumulative) averages
-	historicalAvgElapsedMs := getFloat64FromPtr(query.AvgElapsedTimeMS)
+	// Calculate historical average elapsed time from total / count
+	historicalAvgElapsedMs := 0.0
+	if currentExecCount > 0 && currentTotalElapsedMs > 0 {
+		historicalAvgElapsedMs = currentTotalElapsedMs / float64(currentExecCount)
+	}
 
 	// Calculate time since last execution from DB timestamp
 	timeSinceLastExec := 0.0
@@ -207,7 +206,6 @@ func (sic *SimplifiedIntervalCalculator) CalculateMetrics(query *models.SlowQuer
 			PrevTotalRows:          currentTotalRows,
 			PrevTotalLogicalReads:  currentTotalLogicalReads,
 			PrevTotalPhysicalReads: currentTotalPhysicalReads,
-			PrevTotalLogicalWrites: currentTotalLogicalWrites,
 			FirstSeenTimestamp:     now,
 			LastSeenTimestamp:      now,
 		}
@@ -218,6 +216,7 @@ func (sic *SimplifiedIntervalCalculator) CalculateMetrics(query *models.SlowQuer
 		// For first scrape, use cumulative values as interval values
 		// Caller will filter by threshold
 		return &SimplifiedIntervalMetrics{
+			IntervalElapsedTimeMs:      int64(currentTotalElapsedMs),
 			IntervalAvgElapsedTimeMs:   historicalAvgElapsedMs,
 			IntervalExecutionCount:     currentExecCount,
 			HistoricalAvgElapsedTimeMs: historicalAvgElapsedMs,
@@ -231,8 +230,6 @@ func (sic *SimplifiedIntervalCalculator) CalculateMetrics(query *models.SlowQuer
 			IntervalAvgLogicalReads:  float64(currentTotalLogicalReads) / float64(currentExecCount),
 			IntervalPhysicalReads:    currentTotalPhysicalReads,
 			IntervalAvgPhysicalReads: float64(currentTotalPhysicalReads) / float64(currentExecCount),
-			IntervalLogicalWrites:    currentTotalLogicalWrites,
-			IntervalAvgLogicalWrites: float64(currentTotalLogicalWrites) / float64(currentExecCount),
 			IntervalWaitTimeMs:       historicalWaitTimeMs,
 			IntervalAvgWaitTimeMs:    float64(historicalWaitTimeMs) / float64(currentExecCount),
 			// Historical metrics
@@ -240,7 +237,6 @@ func (sic *SimplifiedIntervalCalculator) CalculateMetrics(query *models.SlowQuer
 			HistoricalRows:          currentTotalRows,
 			HistoricalLogicalReads:  currentTotalLogicalReads,
 			HistoricalPhysicalReads: currentTotalPhysicalReads,
-			HistoricalLogicalWrites: currentTotalLogicalWrites,
 			HistoricalWaitTimeMs:    historicalWaitTimeMs,
 			// Metadata
 			IsFirstScrape:        true,
@@ -271,6 +267,7 @@ func (sic *SimplifiedIntervalCalculator) CalculateMetrics(query *models.SlowQuer
 		// Return metrics but flag as no new executions
 		// Caller can decide whether to emit
 		return &SimplifiedIntervalMetrics{
+			IntervalElapsedTimeMs:      0,
 			IntervalAvgElapsedTimeMs:   0,
 			IntervalExecutionCount:     0,
 			HistoricalAvgElapsedTimeMs: historicalAvgElapsedMs,
@@ -284,8 +281,6 @@ func (sic *SimplifiedIntervalCalculator) CalculateMetrics(query *models.SlowQuer
 			IntervalAvgLogicalReads:  0,
 			IntervalPhysicalReads:    0,
 			IntervalAvgPhysicalReads: 0,
-			IntervalLogicalWrites:    0,
-			IntervalAvgLogicalWrites: 0,
 			IntervalWaitTimeMs:       0,
 			IntervalAvgWaitTimeMs:    0,
 			// Historical metrics still populated
@@ -293,7 +288,6 @@ func (sic *SimplifiedIntervalCalculator) CalculateMetrics(query *models.SlowQuer
 			HistoricalRows:          currentTotalRows,
 			HistoricalLogicalReads:  currentTotalLogicalReads,
 			HistoricalPhysicalReads: currentTotalPhysicalReads,
-			HistoricalLogicalWrites: currentTotalLogicalWrites,
 			HistoricalWaitTimeMs:    historicalWaitTimeMs,
 			// Metadata
 			IsFirstScrape:        false,
@@ -330,7 +324,6 @@ func (sic *SimplifiedIntervalCalculator) CalculateMetrics(query *models.SlowQuer
 			PrevTotalRows:          currentTotalRows,
 			PrevTotalLogicalReads:  currentTotalLogicalReads,
 			PrevTotalPhysicalReads: currentTotalPhysicalReads,
-			PrevTotalLogicalWrites: currentTotalLogicalWrites,
 			FirstSeenTimestamp:     state.FirstSeenTimestamp, // FIX #4: Preserve original timestamp
 			LastSeenTimestamp:      now,
 		}
@@ -339,6 +332,7 @@ func (sic *SimplifiedIntervalCalculator) CalculateMetrics(query *models.SlowQuer
 		historicalWaitTimeMs := int64(currentTotalElapsedMs - currentTotalWorkerTimeMs)
 
 		return &SimplifiedIntervalMetrics{
+			IntervalElapsedTimeMs:      int64(currentTotalElapsedMs),
 			IntervalAvgElapsedTimeMs:   historicalAvgElapsedMs,
 			IntervalExecutionCount:     currentExecCount,
 			HistoricalAvgElapsedTimeMs: historicalAvgElapsedMs,
@@ -352,8 +346,6 @@ func (sic *SimplifiedIntervalCalculator) CalculateMetrics(query *models.SlowQuer
 			IntervalAvgLogicalReads:  float64(currentTotalLogicalReads) / float64(currentExecCount),
 			IntervalPhysicalReads:    currentTotalPhysicalReads,
 			IntervalAvgPhysicalReads: float64(currentTotalPhysicalReads) / float64(currentExecCount),
-			IntervalLogicalWrites:    currentTotalLogicalWrites,
-			IntervalAvgLogicalWrites: float64(currentTotalLogicalWrites) / float64(currentExecCount),
 			IntervalWaitTimeMs:       historicalWaitTimeMs,
 			IntervalAvgWaitTimeMs:    float64(historicalWaitTimeMs) / float64(currentExecCount),
 			// Historical metrics
@@ -361,7 +353,6 @@ func (sic *SimplifiedIntervalCalculator) CalculateMetrics(query *models.SlowQuer
 			HistoricalRows:          currentTotalRows,
 			HistoricalLogicalReads:  currentTotalLogicalReads,
 			HistoricalPhysicalReads: currentTotalPhysicalReads,
-			HistoricalLogicalWrites: currentTotalLogicalWrites,
 			HistoricalWaitTimeMs:    historicalWaitTimeMs,
 			// Metadata
 			IsFirstScrape:        true, // Treat as first scrape after reset
@@ -379,7 +370,6 @@ func (sic *SimplifiedIntervalCalculator) CalculateMetrics(query *models.SlowQuer
 	deltaRows := currentTotalRows - state.PrevTotalRows
 	deltaLogicalReads := currentTotalLogicalReads - state.PrevTotalLogicalReads
 	deltaPhysicalReads := currentTotalPhysicalReads - state.PrevTotalPhysicalReads
-	deltaLogicalWrites := currentTotalLogicalWrites - state.PrevTotalLogicalWrites
 
 	// Calculate wait time (elapsed - worker)
 	deltaWaitTimeMs := deltaElapsedMs - deltaWorkerTimeMs
@@ -390,7 +380,6 @@ func (sic *SimplifiedIntervalCalculator) CalculateMetrics(query *models.SlowQuer
 	intervalAvgRows := float64(deltaRows) / float64(deltaExecCount)
 	intervalAvgLogicalReads := float64(deltaLogicalReads) / float64(deltaExecCount)
 	intervalAvgPhysicalReads := float64(deltaPhysicalReads) / float64(deltaExecCount)
-	intervalAvgLogicalWrites := float64(deltaLogicalWrites) / float64(deltaExecCount)
 	intervalAvgWaitTimeMs := deltaWaitTimeMs / float64(deltaExecCount)
 
 	// Warn if we have executions but zero elapsed time (possible data corruption or sub-microsecond queries)
@@ -421,10 +410,10 @@ func (sic *SimplifiedIntervalCalculator) CalculateMetrics(query *models.SlowQuer
 	state.PrevTotalRows = currentTotalRows
 	state.PrevTotalLogicalReads = currentTotalLogicalReads
 	state.PrevTotalPhysicalReads = currentTotalPhysicalReads
-	state.PrevTotalLogicalWrites = currentTotalLogicalWrites
 	state.LastSeenTimestamp = now
 
 	return &SimplifiedIntervalMetrics{
+		IntervalElapsedTimeMs:      int64(deltaElapsedMs),
 		IntervalAvgElapsedTimeMs:   intervalAvgElapsedMs,
 		IntervalExecutionCount:     deltaExecCount,
 		HistoricalAvgElapsedTimeMs: historicalAvgElapsedMs,
@@ -438,8 +427,6 @@ func (sic *SimplifiedIntervalCalculator) CalculateMetrics(query *models.SlowQuer
 		IntervalAvgLogicalReads:  intervalAvgLogicalReads,
 		IntervalPhysicalReads:    deltaPhysicalReads,
 		IntervalAvgPhysicalReads: intervalAvgPhysicalReads,
-		IntervalLogicalWrites:    deltaLogicalWrites,
-		IntervalAvgLogicalWrites: intervalAvgLogicalWrites,
 		IntervalWaitTimeMs:       int64(deltaWaitTimeMs),
 		IntervalAvgWaitTimeMs:    intervalAvgWaitTimeMs,
 		// Historical metrics
@@ -447,7 +434,6 @@ func (sic *SimplifiedIntervalCalculator) CalculateMetrics(query *models.SlowQuer
 		HistoricalRows:          currentTotalRows,
 		HistoricalLogicalReads:  currentTotalLogicalReads,
 		HistoricalPhysicalReads: currentTotalPhysicalReads,
-		HistoricalLogicalWrites: currentTotalLogicalWrites,
 		HistoricalWaitTimeMs:    historicalWaitTimeMs,
 		// Metadata
 		IsFirstScrape:        false,
