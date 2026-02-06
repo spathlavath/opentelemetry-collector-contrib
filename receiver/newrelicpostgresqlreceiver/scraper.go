@@ -49,6 +49,7 @@ type newRelicPostgreSQLScraper struct {
 	tableIOScraper            *scrapers.TableIOScraper
 	pgbouncerScraper          *scrapers.PgBouncerScraper
 	locksScraper              *scrapers.LocksScraper
+	slowQueriesScraper        *scrapers.SlowQueriesScraper
 
 	// Database and configuration
 	db             *sql.DB
@@ -341,6 +342,32 @@ func (s *newRelicPostgreSQLScraper) initializeScrapers() error {
 		s.instanceName,
 	)
 	s.logger.Info("Locks scraper initialized")
+
+	// Initialize Slow Queries scraper (collects slow query statistics from pg_stat_statements)
+	// This scraper collects query performance metrics from the pg_stat_statements extension
+	// Uses SQL LIMIT instead of time filtering
+	if s.config.EnableSlowQueryMonitoring {
+		s.slowQueriesScraper = scrapers.NewSlowQueriesScraper(
+			s.client,
+			s.mb,
+			s.logger,
+			s.instanceName,
+			s.metricsBuilderConfig,
+			s.pgVersion,
+			s.config.QueryMonitoringSQLRowLimit,
+			s.config.QueryMonitoringResponseTimeThreshold,
+			s.config.QueryMonitoringCountThreshold,
+			s.config.EnableIntervalBasedAveraging,
+			s.config.IntervalCalculatorCacheTTLMinutes,
+		)
+		s.logger.Info("Slow Queries scraper initialized",
+			zap.Bool("interval_calculator_enabled", s.config.EnableIntervalBasedAveraging),
+			zap.Int("sql_row_limit", s.config.QueryMonitoringSQLRowLimit),
+			zap.Int("response_time_threshold_ms", s.config.QueryMonitoringResponseTimeThreshold),
+			zap.Int("count_threshold", s.config.QueryMonitoringCountThreshold))
+	} else {
+		s.logger.Info("Slow Queries scraper disabled (enable_slow_query_monitoring is false)")
+	}
 
 	return nil
 }
@@ -725,6 +752,19 @@ func (s *newRelicPostgreSQLScraper) scrape(ctx context.Context) (pmetric.Metrics
 		scrapeErrors = append(scrapeErrors, locksErrs...)
 	} else {
 		s.logger.Debug("Successfully scraped lock statistics")
+	}
+
+	// Scrape slow query statistics from pg_stat_statements (optional, requires extension)
+	if s.slowQueriesScraper != nil {
+		s.logger.Debug("Attempting to scrape slow queries")
+		slowQueriesErrs := s.slowQueriesScraper.ScrapeSlowQueries(scrapeCtx)
+		if len(slowQueriesErrs) > 0 {
+			s.logger.Debug("pg_stat_statements extension not available or query failed",
+				zap.Int("error_count", len(slowQueriesErrs)))
+			// Don't append to scrapeErrors - extension may not be installed, which is acceptable
+		} else {
+			s.logger.Debug("Successfully scraped slow queries")
+		}
 	}
 
 	metrics := s.buildMetrics()

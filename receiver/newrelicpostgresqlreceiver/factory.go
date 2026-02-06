@@ -57,6 +57,9 @@ func createMetricsReceiverFunc(sqlOpenerFunc sqlOpenerFunc) receiver.CreateMetri
 	) (receiver.Metrics, error) {
 		sqlCfg := cfg.(*Config)
 
+		// Set default values for unspecified configuration fields
+		sqlCfg.SetDefaults()
+
 		// Validate configuration
 		if err := sqlCfg.Validate(); err != nil {
 			return nil, fmt.Errorf("invalid configuration: %w", err)

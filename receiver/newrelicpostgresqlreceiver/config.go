@@ -14,6 +14,27 @@ import (
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicpostgresqlreceiver/internal/metadata"
 )
 
+const (
+	// Slow queries defaults
+	defaultQueryMonitoringSQLRowLimit           = 5000 // Fetch top 5000 candidates by historical average
+	defaultQueryMonitoringResponseTimeThreshold = 1000 // 1000ms threshold
+	defaultQueryMonitoringCountThreshold        = 100  // Top 100 queries after delta calculation
+
+	// Interval calculator defaults
+	defaultEnableIntervalBasedAveraging      = true // Enable by default for better slow query detection
+	defaultIntervalCalculatorCacheTTLMinutes = 10   // 10 minutes cache TTL
+
+	// Validation ranges
+	minQueryMonitoringSQLRowLimit = 100
+	maxQueryMonitoringSQLRowLimit = 50000
+	minResponseTimeThreshold      = 1
+	maxResponseTimeThreshold      = 5000
+	minCountThreshold             = 10
+	maxCountThreshold             = 500
+	minCacheTTLMinutes            = 1
+	maxCacheTTLMinutes            = 60
+)
+
 // RelationConfig configures which tables to collect per-table metrics from
 // This is an opt-in feature to prevent cardinality explosion
 type RelationConfig struct {
@@ -56,6 +77,58 @@ type Config struct {
 	//     schemas: [public, myapp]
 	//     tables: [users, orders, payments]
 	Relations *RelationConfig `mapstructure:"relations"`
+
+	// Slow Query Monitoring Configuration (similar to Oracle's query_monitoring)
+	// Controls slow query detection from pg_stat_statements extension
+	EnableSlowQueryMonitoring bool `mapstructure:"enable_slow_query_monitoring"`
+
+	// SQL row limit for pre-filtering (replaces Oracle's interval_seconds)
+	// Fetches top N queries by historical average to reduce memory usage
+	// Default: 5000 queries
+	QueryMonitoringSQLRowLimit int `mapstructure:"query_monitoring_sql_row_limit"`
+
+	// Response time threshold in milliseconds (applied AFTER delta calculation)
+	// Only emit queries with interval average > threshold
+	// Default: 1000ms
+	QueryMonitoringResponseTimeThreshold int `mapstructure:"query_monitoring_response_time_threshold"`
+
+	// Count threshold for top N selection (applied AFTER delta calculation and threshold filtering)
+	// Limits cardinality for monitoring system
+	// Default: 100 queries
+	QueryMonitoringCountThreshold int `mapstructure:"query_monitoring_count_threshold"`
+
+	// Interval Calculator Configuration (same as Oracle)
+	// Enable interval-based delta calculation for immediate performance change detection
+	// Default: true
+	EnableIntervalBasedAveraging bool `mapstructure:"enable_interval_based_averaging"`
+
+	// Cache TTL for interval calculator in minutes
+	// Removes inactive queries from cache after this period
+	// Default: 10 minutes
+	IntervalCalculatorCacheTTLMinutes int `mapstructure:"interval_calculator_cache_ttl_minutes"`
+}
+
+// SetDefaults sets default values for configuration fields that are not explicitly set
+func (cfg *Config) SetDefaults() {
+	// Set slow query monitoring defaults
+	if cfg.QueryMonitoringSQLRowLimit == 0 {
+		cfg.QueryMonitoringSQLRowLimit = defaultQueryMonitoringSQLRowLimit
+	}
+	if cfg.QueryMonitoringResponseTimeThreshold == 0 {
+		cfg.QueryMonitoringResponseTimeThreshold = defaultQueryMonitoringResponseTimeThreshold
+	}
+	if cfg.QueryMonitoringCountThreshold == 0 {
+		cfg.QueryMonitoringCountThreshold = defaultQueryMonitoringCountThreshold
+	}
+
+	// Set interval calculator defaults
+	// Note: EnableIntervalBasedAveraging defaults to true if EnableSlowQueryMonitoring is true
+	if cfg.EnableSlowQueryMonitoring && !cfg.EnableIntervalBasedAveraging {
+		cfg.EnableIntervalBasedAveraging = defaultEnableIntervalBasedAveraging
+	}
+	if cfg.IntervalCalculatorCacheTTLMinutes == 0 {
+		cfg.IntervalCalculatorCacheTTLMinutes = defaultIntervalCalculatorCacheTTLMinutes
+	}
 }
 
 // Validate checks if the receiver configuration is valid
@@ -89,6 +162,33 @@ func (cfg *Config) Validate() error {
 	}
 
 	// Timeout is optional, no validation needed
+
+	// Validate slow query monitoring settings
+	if cfg.EnableSlowQueryMonitoring {
+		if cfg.QueryMonitoringSQLRowLimit < minQueryMonitoringSQLRowLimit ||
+			cfg.QueryMonitoringSQLRowLimit > maxQueryMonitoringSQLRowLimit {
+			return fmt.Errorf("query_monitoring_sql_row_limit must be between %d and %d, got %d",
+				minQueryMonitoringSQLRowLimit, maxQueryMonitoringSQLRowLimit, cfg.QueryMonitoringSQLRowLimit)
+		}
+
+		if cfg.QueryMonitoringResponseTimeThreshold < minResponseTimeThreshold ||
+			cfg.QueryMonitoringResponseTimeThreshold > maxResponseTimeThreshold {
+			return fmt.Errorf("query_monitoring_response_time_threshold must be between %d and %d ms, got %d",
+				minResponseTimeThreshold, maxResponseTimeThreshold, cfg.QueryMonitoringResponseTimeThreshold)
+		}
+
+		if cfg.QueryMonitoringCountThreshold < minCountThreshold ||
+			cfg.QueryMonitoringCountThreshold > maxCountThreshold {
+			return fmt.Errorf("query_monitoring_count_threshold must be between %d and %d, got %d",
+				minCountThreshold, maxCountThreshold, cfg.QueryMonitoringCountThreshold)
+		}
+
+		if cfg.IntervalCalculatorCacheTTLMinutes < minCacheTTLMinutes ||
+			cfg.IntervalCalculatorCacheTTLMinutes > maxCacheTTLMinutes {
+			return fmt.Errorf("interval_calculator_cache_ttl_minutes must be between %d and %d, got %d",
+				minCacheTTLMinutes, maxCacheTTLMinutes, cfg.IntervalCalculatorCacheTTLMinutes)
+		}
+	}
 
 	return nil
 }

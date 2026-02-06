@@ -253,4 +253,16 @@ type PostgreSQLClient interface {
 	// Takes an index OID and returns the size in bytes
 	// Available in PostgreSQL 9.6+
 	QueryIndexSize(ctx context.Context, indexOID int64) (int64, error)
+
+	// QuerySlowQueries retrieves slow query statistics from pg_stat_statements
+	// Uses version-specific queries:
+	// - PostgreSQL 9.6-12: Does not include mean_plan_time (not available)
+	// - PostgreSQL 13+: Includes mean_plan_time for query planning statistics
+	// Parameters:
+	// - version: PostgreSQL version number (e.g., 130000 for 13.0.0)
+	// - sqlRowLimit: Maximum rows to fetch (SQL pre-filter by historical average)
+	// Requires pg_stat_statements extension to be installed and enabled
+	// Returns empty slice if extension is not available
+	// Available in PostgreSQL 9.6+
+	QuerySlowQueries(ctx context.Context, version, sqlRowLimit int) ([]models.PgSlowQueryMetric, error)
 }

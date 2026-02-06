@@ -1,13 +1,15 @@
 type: newrelicpostgresql
-
 status:
   class: receiver
   stability:
-    alpha: [metrics]
-  distributions: [contrib]
+    alpha:
+    - metrics
+  distributions:
+  - contrib
   codeowners:
-    active: [pkudikyala, rmalhan]
-
+    active:
+    - pkudikyala
+    - rmalhan
 resource_attributes:
   database_name:
     description: Name of the PostgreSQL database
@@ -33,7 +35,6 @@ resource_attributes:
     description: PostgreSQL server port number
     type: string
     enabled: true
-
 attributes:
   application_name:
     description: Name of the replication application
@@ -61,6 +62,12 @@ attributes:
     type: string
   pool_mode:
     description: PgBouncer pool mode (session, transaction, or statement)
+    type: string
+  query_id:
+    description: Unique identifier for a normalized query (hash from pg_stat_statements)
+    type: string
+  query_text:
+    description: Normalized SQL query text from pg_stat_statements
     type: string
   replication_state:
     description: State of the replication connection (streaming, catchup, etc.)
@@ -95,228 +102,273 @@ attributes:
   wait_event:
     description: Type of wait event (lock, IO, etc.) or NoWaitEvent if not waiting
     type: string
-
 metrics:
   pgbouncer.pools.client_connections_active:
     description: Number of active client connections (PgBouncer 1.8+)
     enabled: true
     gauge:
       value_type: int
-    attributes: [newrelicpostgresql.instance_name, database_name, user_name, pool_mode]
-    unit: "{connections}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    - database_name
+    - user_name
+    - pool_mode
+    unit: '{connections}'
     stability:
       level: alpha
-
   pgbouncer.pools.client_connections_active_cancel_req:
     description: Number of client connections with active cancel requests (PgBouncer 1.8+)
     enabled: true
     gauge:
       value_type: int
-    attributes: [newrelicpostgresql.instance_name, database_name, user_name, pool_mode]
-    unit: "{connections}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    - database_name
+    - user_name
+    - pool_mode
+    unit: '{connections}'
     stability:
       level: alpha
-
   pgbouncer.pools.client_connections_waiting:
     description: Number of client connections waiting for a server connection (PgBouncer 1.8+)
     enabled: true
     gauge:
       value_type: int
-    attributes: [newrelicpostgresql.instance_name, database_name, user_name, pool_mode]
-    unit: "{connections}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    - database_name
+    - user_name
+    - pool_mode
+    unit: '{connections}'
     stability:
       level: alpha
-
   pgbouncer.pools.client_connections_waiting_cancel_req:
     description: Number of client connections waiting with cancel requests (PgBouncer 1.8+)
     enabled: true
     gauge:
       value_type: int
-    attributes: [newrelicpostgresql.instance_name, database_name, user_name, pool_mode]
-    unit: "{connections}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    - database_name
+    - user_name
+    - pool_mode
+    unit: '{connections}'
     stability:
       level: alpha
-
   pgbouncer.pools.maxwait_in_milliseconds:
     description: Maximum wait time for clients in milliseconds (PgBouncer 1.8+)
     enabled: true
     gauge:
       value_type: double
-    attributes: [newrelicpostgresql.instance_name, database_name, user_name, pool_mode]
+    attributes:
+    - newrelicpostgresql.instance_name
+    - database_name
+    - user_name
+    - pool_mode
     unit: ms
     stability:
       level: alpha
-
   pgbouncer.pools.server_connections_active:
     description: Number of server connections actively linked to a client (PgBouncer 1.8+)
     enabled: true
     gauge:
       value_type: int
-    attributes: [newrelicpostgresql.instance_name, database_name, user_name, pool_mode]
-    unit: "{connections}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    - database_name
+    - user_name
+    - pool_mode
+    unit: '{connections}'
     stability:
       level: alpha
-
   pgbouncer.pools.server_connections_active_cancel:
     description: Number of server connections currently being canceled (PgBouncer 1.8+)
     enabled: true
     gauge:
       value_type: int
-    attributes: [newrelicpostgresql.instance_name, database_name, user_name, pool_mode]
-    unit: "{connections}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    - database_name
+    - user_name
+    - pool_mode
+    unit: '{connections}'
     stability:
       level: alpha
-
   pgbouncer.pools.server_connections_being_cancel:
     description: Number of server connections in the process of being canceled (PgBouncer 1.8+)
     enabled: true
     gauge:
       value_type: int
-    attributes: [newrelicpostgresql.instance_name, database_name, user_name, pool_mode]
-    unit: "{connections}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    - database_name
+    - user_name
+    - pool_mode
+    unit: '{connections}'
     stability:
       level: alpha
-
   pgbouncer.pools.server_connections_idle:
     description: Number of server connections idle and ready (PgBouncer 1.8+)
     enabled: true
     gauge:
       value_type: int
-    attributes: [newrelicpostgresql.instance_name, database_name, user_name, pool_mode]
-    unit: "{connections}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    - database_name
+    - user_name
+    - pool_mode
+    unit: '{connections}'
     stability:
       level: alpha
-
   pgbouncer.pools.server_connections_login:
     description: Number of server connections currently logging in (PgBouncer 1.8+)
     enabled: true
     gauge:
       value_type: int
-    attributes: [newrelicpostgresql.instance_name, database_name, user_name, pool_mode]
-    unit: "{connections}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    - database_name
+    - user_name
+    - pool_mode
+    unit: '{connections}'
     stability:
       level: alpha
-
   pgbouncer.pools.server_connections_tested:
     description: Number of server connections currently being tested (PgBouncer 1.8+)
     enabled: true
     gauge:
       value_type: int
-    attributes: [newrelicpostgresql.instance_name, database_name, user_name, pool_mode]
-    unit: "{connections}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    - database_name
+    - user_name
+    - pool_mode
+    unit: '{connections}'
     stability:
       level: alpha
-
   pgbouncer.pools.server_connections_used:
     description: Number of server connections idle more than server_check_delay (PgBouncer 1.8+)
     enabled: true
     gauge:
       value_type: int
-    attributes: [newrelicpostgresql.instance_name, database_name, user_name, pool_mode]
-    unit: "{connections}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    - database_name
+    - user_name
+    - pool_mode
+    unit: '{connections}'
     stability:
       level: alpha
-
   pgbouncer.stats.avg_bytes_in:
     description: Average bytes received per request (PgBouncer 1.8+)
     enabled: true
     gauge:
       value_type: int
-    attributes: [newrelicpostgresql.instance_name, database_name]
+    attributes:
+    - newrelicpostgresql.instance_name
+    - database_name
     unit: By
     stability:
       level: alpha
-
   pgbouncer.stats.avg_bytes_out:
     description: Average bytes sent per request (PgBouncer 1.8+)
     enabled: true
     gauge:
       value_type: int
-    attributes: [newrelicpostgresql.instance_name, database_name]
+    attributes:
+    - newrelicpostgresql.instance_name
+    - database_name
     unit: By
     stability:
       level: alpha
-
   pgbouncer.stats.avg_requests_per_second:
     description: Average requests per second (PgBouncer 1.8+)
     enabled: true
     gauge:
       value_type: int
-    attributes: [newrelicpostgresql.instance_name, database_name]
-    unit: "{requests}/s"
+    attributes:
+    - newrelicpostgresql.instance_name
+    - database_name
+    unit: '{requests}/s'
     stability:
       level: alpha
-
   pgbouncer.stats.avg_server_assignment_count:
     description: Average number of server assignments per transaction (PgBouncer 1.8+)
     enabled: true
     gauge:
       value_type: int
-    attributes: [newrelicpostgresql.instance_name, database_name]
-    unit: "{assignments}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    - database_name
+    unit: '{assignments}'
     stability:
       level: alpha
-
   pgbouncer.stats.avg_transaction_count:
     description: Average transaction count (PgBouncer 1.8+)
     enabled: true
     gauge:
       value_type: int
-    attributes: [newrelicpostgresql.instance_name, database_name]
-    unit: "{transactions}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    - database_name
+    unit: '{transactions}'
     stability:
       level: alpha
-
   pgbouncer.stats.avg_transaction_duration_milliseconds:
     description: Average transaction duration in milliseconds (PgBouncer 1.8+)
     enabled: true
     gauge:
       value_type: double
-    attributes: [newrelicpostgresql.instance_name, database_name]
+    attributes:
+    - newrelicpostgresql.instance_name
+    - database_name
     unit: ms
     stability:
       level: alpha
-
   pgbouncer.stats.bytes_in_per_second:
     description: Average bytes received per second from clients (PgBouncer 1.8+)
     enabled: true
     gauge:
       value_type: int
-    attributes: [newrelicpostgresql.instance_name, database_name]
+    attributes:
+    - newrelicpostgresql.instance_name
+    - database_name
     unit: By/s
     stability:
       level: alpha
-
   pgbouncer.stats.bytes_out_per_second:
     description: Average bytes sent per second to clients (PgBouncer 1.8+)
     enabled: true
     gauge:
       value_type: int
-    attributes: [newrelicpostgresql.instance_name, database_name]
+    attributes:
+    - newrelicpostgresql.instance_name
+    - database_name
     unit: By/s
     stability:
       level: alpha
-
   pgbouncer.stats.queries_per_second:
     description: Average SQL queries per second (PgBouncer 1.8+)
     enabled: true
     gauge:
       value_type: int
-    attributes: [newrelicpostgresql.instance_name, database_name]
-    unit: "{queries}/s"
+    attributes:
+    - newrelicpostgresql.instance_name
+    - database_name
+    unit: '{queries}/s'
     stability:
       level: alpha
-
   pgbouncer.stats.requests_per_second:
     description: Average client requests per second (PgBouncer 1.8+)
     enabled: true
     gauge:
       value_type: int
-    attributes: [newrelicpostgresql.instance_name, database_name]
-    unit: "{requests}/s"
+    attributes:
+    - newrelicpostgresql.instance_name
+    - database_name
+    unit: '{requests}/s'
     stability:
       level: alpha
-
   pgbouncer.stats.total_server_assignment_count:
     description: Total number of server assignments since PgBouncer start (PgBouncer 1.8+)
     enabled: true
@@ -324,131 +376,172 @@ metrics:
       aggregation_temporality: cumulative
       monotonic: true
       value_type: int
-    attributes: [newrelicpostgresql.instance_name, database_name]
-    unit: "{assignments}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    - database_name
+    unit: '{assignments}'
     stability:
       level: alpha
-
   pgbouncer.stats.transactions_per_second:
     description: Average transactions per second (PgBouncer 1.8+)
     enabled: true
     gauge:
       value_type: int
-    attributes: [newrelicpostgresql.instance_name, database_name]
-    unit: "{transactions}/s"
+    attributes:
+    - newrelicpostgresql.instance_name
+    - database_name
+    unit: '{transactions}/s'
     stability:
       level: alpha
-
   postgresql.active_waiting_queries:
     description: Number of active queries currently waiting on locks or other resources (PostgreSQL 9.6+)
     enabled: true
     gauge:
       value_type: int
-    attributes: [newrelicpostgresql.instance_name, database_name, user_name, application_name, backend_type]
-    unit: "{queries}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    - database_name
+    - user_name
+    - application_name
+    - backend_type
+    unit: '{queries}'
     stability:
       level: alpha
-
   postgresql.activity.backend_xid_age:
     description: Maximum age of backend transaction IDs currently in use (PostgreSQL 9.6+)
     enabled: true
     gauge:
       value_type: int
-    attributes: [newrelicpostgresql.instance_name, database_name, user_name, application_name, backend_type]
-    unit: "{transactions}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    - database_name
+    - user_name
+    - application_name
+    - backend_type
+    unit: '{transactions}'
     stability:
       level: alpha
-
   postgresql.activity.backend_xmin_age:
     description: Maximum age of backend xmin values (oldest transaction visible to any backend) (PostgreSQL 9.6+)
     enabled: true
     gauge:
       value_type: int
-    attributes: [newrelicpostgresql.instance_name, database_name, user_name, application_name, backend_type]
-    unit: "{transactions}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    - database_name
+    - user_name
+    - application_name
+    - backend_type
+    unit: '{transactions}'
     stability:
       level: alpha
-
   postgresql.activity.wait_event:
     description: Count of backends grouped by wait event type for performance analysis (PostgreSQL 9.6+)
     enabled: true
     gauge:
       value_type: int
-    attributes: [newrelicpostgresql.instance_name, database_name, user_name, application_name, backend_type, wait_event]
-    unit: "{backends}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    - database_name
+    - user_name
+    - application_name
+    - backend_type
+    - wait_event
+    unit: '{backends}'
     stability:
       level: alpha
-
   postgresql.activity.xact_start_age:
     description: Maximum age in seconds of the oldest transaction start time across all backends (PostgreSQL 9.6+)
     enabled: true
     gauge:
       value_type: double
-    attributes: [newrelicpostgresql.instance_name, database_name, user_name, application_name, backend_type]
+    attributes:
+    - newrelicpostgresql.instance_name
+    - database_name
+    - user_name
+    - application_name
+    - backend_type
     unit: s
     stability:
       level: alpha
-
   postgresql.analyze.child_tables_done:
     description: Number of child tables processed during ANALYZE operation (PostgreSQL 13+)
     enabled: true
     gauge:
       value_type: int
-    attributes: [database_name, newrelicpostgresql.instance_name, schema_name, table_name]
-    unit: "{tables}"
+    attributes:
+    - database_name
+    - newrelicpostgresql.instance_name
+    - schema_name
+    - table_name
+    unit: '{tables}'
     stability:
       level: alpha
-
   postgresql.analyze.child_tables_total:
     description: Total number of child tables to be analyzed (PostgreSQL 13+)
     enabled: true
     gauge:
       value_type: int
-    attributes: [database_name, newrelicpostgresql.instance_name, schema_name, table_name]
-    unit: "{tables}"
+    attributes:
+    - database_name
+    - newrelicpostgresql.instance_name
+    - schema_name
+    - table_name
+    unit: '{tables}'
     stability:
       level: alpha
-
   postgresql.analyze.ext_stats_computed:
     description: Number of extended statistics computed during ANALYZE operation (PostgreSQL 13+)
     enabled: true
     gauge:
       value_type: int
-    attributes: [database_name, newrelicpostgresql.instance_name, schema_name, table_name]
-    unit: "{statistics}"
+    attributes:
+    - database_name
+    - newrelicpostgresql.instance_name
+    - schema_name
+    - table_name
+    unit: '{statistics}'
     stability:
       level: alpha
-
   postgresql.analyze.ext_stats_total:
     description: Total number of extended statistics to be computed (PostgreSQL 13+)
     enabled: true
     gauge:
       value_type: int
-    attributes: [database_name, newrelicpostgresql.instance_name, schema_name, table_name]
-    unit: "{statistics}"
+    attributes:
+    - database_name
+    - newrelicpostgresql.instance_name
+    - schema_name
+    - table_name
+    unit: '{statistics}'
     stability:
       level: alpha
-
   postgresql.analyze.sample_blks_scanned:
     description: Number of sample blocks scanned during ANALYZE operation (PostgreSQL 13+)
     enabled: true
     gauge:
       value_type: int
-    attributes: [database_name, newrelicpostgresql.instance_name, schema_name, table_name]
-    unit: "{blocks}"
+    attributes:
+    - database_name
+    - newrelicpostgresql.instance_name
+    - schema_name
+    - table_name
+    unit: '{blocks}'
     stability:
       level: alpha
-
   postgresql.analyze.sample_blks_total:
     description: Total number of sample blocks to be scanned (PostgreSQL 13+)
     enabled: true
     gauge:
       value_type: int
-    attributes: [database_name, newrelicpostgresql.instance_name, schema_name, table_name]
-    unit: "{blocks}"
+    attributes:
+    - database_name
+    - newrelicpostgresql.instance_name
+    - schema_name
+    - table_name
+    unit: '{blocks}'
     stability:
       level: alpha
-
   postgresql.analyzed:
     description: Number of times this table has been manually analyzed (PostgreSQL 9.6+)
     enabled: true
@@ -456,11 +549,13 @@ metrics:
       aggregation_temporality: cumulative
       monotonic: true
       value_type: int
-    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
-    unit: "{operations}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    - schema_name
+    - table_name
+    unit: '{operations}'
     stability:
       level: alpha
-
   postgresql.archiver.archived_count:
     description: Number of WAL files successfully archived (PostgreSQL 9.6+)
     enabled: true
@@ -468,11 +563,11 @@ metrics:
       aggregation_temporality: cumulative
       monotonic: true
       value_type: int
-    attributes: [newrelicpostgresql.instance_name]
-    unit: "{files}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    unit: '{files}'
     stability:
       level: alpha
-
   postgresql.archiver.failed_count:
     description: Number of failed attempts to archive WAL files (PostgreSQL 9.6+)
     enabled: true
@@ -480,11 +575,11 @@ metrics:
       aggregation_temporality: cumulative
       monotonic: true
       value_type: int
-    attributes: [newrelicpostgresql.instance_name]
-    unit: "{files}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    unit: '{files}'
     stability:
       level: alpha
-
   postgresql.autoanalyzed:
     description: Number of times this table has been analyzed by autoanalyze (PostgreSQL 9.6+)
     enabled: true
@@ -492,11 +587,13 @@ metrics:
       aggregation_temporality: cumulative
       monotonic: true
       value_type: int
-    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
-    unit: "{operations}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    - schema_name
+    - table_name
+    unit: '{operations}'
     stability:
       level: alpha
-
   postgresql.autovacuumed:
     description: Number of times this table has been vacuumed by autovacuum (PostgreSQL 9.6+)
     enabled: true
@@ -504,21 +601,24 @@ metrics:
       aggregation_temporality: cumulative
       monotonic: true
       value_type: int
-    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
-    unit: "{operations}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    - schema_name
+    - table_name
+    unit: '{operations}'
     stability:
       level: alpha
-
   postgresql.before_xid_wraparound:
     description: Number of transactions before XID wraparound occurs
     enabled: true
     gauge:
       value_type: int
-    attributes: [database_name, newrelicpostgresql.instance_name]
-    unit: "{transactions}"
+    attributes:
+    - database_name
+    - newrelicpostgresql.instance_name
+    unit: '{transactions}'
     stability:
       level: alpha
-
   postgresql.bgwriter.buffers_alloc:
     description: Number of buffers allocated (PostgreSQL 9.6+)
     enabled: true
@@ -526,11 +626,11 @@ metrics:
       aggregation_temporality: cumulative
       monotonic: true
       value_type: int
-    attributes: [newrelicpostgresql.instance_name]
-    unit: "{buffers}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    unit: '{buffers}'
     stability:
       level: alpha
-
   postgresql.bgwriter.buffers_backend:
     description: Number of buffers written directly by a backend (PostgreSQL 9.6+)
     enabled: true
@@ -538,11 +638,11 @@ metrics:
       aggregation_temporality: cumulative
       monotonic: true
       value_type: int
-    attributes: [newrelicpostgresql.instance_name]
-    unit: "{buffers}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    unit: '{buffers}'
     stability:
       level: alpha
-
   postgresql.bgwriter.buffers_backend_fsync:
     description: Number of times a backend had to execute its own fsync call (PostgreSQL 9.6+)
     enabled: true
@@ -550,11 +650,11 @@ metrics:
       aggregation_temporality: cumulative
       monotonic: true
       value_type: int
-    attributes: [newrelicpostgresql.instance_name]
-    unit: "{operations}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    unit: '{operations}'
     stability:
       level: alpha
-
   postgresql.bgwriter.buffers_checkpoint:
     description: Number of buffers written during checkpoints (PostgreSQL 9.6+)
     enabled: true
@@ -562,11 +662,11 @@ metrics:
       aggregation_temporality: cumulative
       monotonic: true
       value_type: int
-    attributes: [newrelicpostgresql.instance_name]
-    unit: "{buffers}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    unit: '{buffers}'
     stability:
       level: alpha
-
   postgresql.bgwriter.buffers_clean:
     description: Number of buffers written by the background writer (PostgreSQL 9.6+)
     enabled: true
@@ -574,11 +674,11 @@ metrics:
       aggregation_temporality: cumulative
       monotonic: true
       value_type: int
-    attributes: [newrelicpostgresql.instance_name]
-    unit: "{buffers}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    unit: '{buffers}'
     stability:
       level: alpha
-
   postgresql.bgwriter.checkpoints_requested:
     description: Number of requested checkpoints that have been performed (PostgreSQL 9.6+)
     enabled: true
@@ -586,11 +686,11 @@ metrics:
       aggregation_temporality: cumulative
       monotonic: true
       value_type: int
-    attributes: [newrelicpostgresql.instance_name]
-    unit: "{checkpoints}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    unit: '{checkpoints}'
     stability:
       level: alpha
-
   postgresql.bgwriter.checkpoints_timed:
     description: Number of scheduled checkpoints that have been performed (PostgreSQL 9.6+)
     enabled: true
@@ -598,11 +698,11 @@ metrics:
       aggregation_temporality: cumulative
       monotonic: true
       value_type: int
-    attributes: [newrelicpostgresql.instance_name]
-    unit: "{checkpoints}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    unit: '{checkpoints}'
     stability:
       level: alpha
-
   postgresql.bgwriter.maxwritten_clean:
     description: Number of times the background writer stopped a cleaning scan because it had written too many buffers (PostgreSQL 9.6+)
     enabled: true
@@ -610,11 +710,11 @@ metrics:
       aggregation_temporality: cumulative
       monotonic: true
       value_type: int
-    attributes: [newrelicpostgresql.instance_name]
-    unit: "{operations}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    unit: '{operations}'
     stability:
       level: alpha
-
   postgresql.bgwriter.sync_time:
     description: Total time spent syncing checkpoint data to disk in milliseconds (PostgreSQL 9.6+)
     enabled: true
@@ -622,11 +722,11 @@ metrics:
       aggregation_temporality: cumulative
       monotonic: true
       value_type: double
-    attributes: [newrelicpostgresql.instance_name]
-    unit: "ms"
+    attributes:
+    - newrelicpostgresql.instance_name
+    unit: ms
     stability:
       level: alpha
-
   postgresql.bgwriter.write_time:
     description: Total time spent writing checkpoint data to disk in milliseconds (PostgreSQL 9.6+)
     enabled: true
@@ -634,31 +734,33 @@ metrics:
       aggregation_temporality: cumulative
       monotonic: true
       value_type: double
-    attributes: [newrelicpostgresql.instance_name]
-    unit: "ms"
+    attributes:
+    - newrelicpostgresql.instance_name
+    unit: ms
     stability:
       level: alpha
-
   postgresql.blk_read_time:
     description: Time spent reading data file blocks (milliseconds)
     enabled: true
     gauge:
       value_type: double
-    attributes: [database_name, newrelicpostgresql.instance_name]
-    unit: "ms"
+    attributes:
+    - database_name
+    - newrelicpostgresql.instance_name
+    unit: ms
     stability:
       level: alpha
-
   postgresql.blk_write_time:
     description: Time spent writing data file blocks (milliseconds)
     enabled: true
     gauge:
       value_type: double
-    attributes: [database_name, newrelicpostgresql.instance_name]
-    unit: "ms"
+    attributes:
+    - database_name
+    - newrelicpostgresql.instance_name
+    unit: ms
     stability:
       level: alpha
-
   postgresql.buffer_hit:
     description: Number of times disk blocks were found in the buffer cache
     enabled: true
@@ -666,71 +768,88 @@ metrics:
       aggregation_temporality: cumulative
       monotonic: true
       value_type: int
-    attributes: [database_name, newrelicpostgresql.instance_name]
-    unit: "{blocks}"
+    attributes:
+    - database_name
+    - newrelicpostgresql.instance_name
+    unit: '{blocks}'
     stability:
       level: alpha
-
   postgresql.buffercache.dirty_buffers:
     description: Number of dirty buffers in the shared buffer cache (requires pg_buffercache extension, PostgreSQL 9.6+)
     enabled: true
     gauge:
       value_type: int
-    attributes: [newrelicpostgresql.instance_name, database_name, schema_name, table_name]
-    unit: "{buffers}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    - database_name
+    - schema_name
+    - table_name
+    unit: '{buffers}'
     stability:
       level: alpha
-
   postgresql.buffercache.pinning_backends:
     description: Number of backends pinning buffers in the shared buffer cache (requires pg_buffercache extension, PostgreSQL 9.6+)
     enabled: true
     gauge:
       value_type: int
-    attributes: [newrelicpostgresql.instance_name, database_name, schema_name, table_name]
-    unit: "{backends}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    - database_name
+    - schema_name
+    - table_name
+    unit: '{backends}'
     stability:
       level: alpha
-
   postgresql.buffercache.unused_buffers:
     description: Number of unused buffers in the shared buffer cache (requires pg_buffercache extension, PostgreSQL 9.6+)
     enabled: true
     gauge:
       value_type: int
-    attributes: [newrelicpostgresql.instance_name, database_name, schema_name, table_name]
-    unit: "{buffers}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    - database_name
+    - schema_name
+    - table_name
+    unit: '{buffers}'
     stability:
       level: alpha
-
   postgresql.buffercache.usage_count:
     description: Sum of usage counts for buffers in the shared buffer cache (requires pg_buffercache extension, PostgreSQL 9.6+)
     enabled: true
     gauge:
       value_type: int
-    attributes: [newrelicpostgresql.instance_name, database_name, schema_name, table_name]
-    unit: "{count}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    - database_name
+    - schema_name
+    - table_name
+    unit: '{count}'
     stability:
       level: alpha
-
   postgresql.buffercache.used_buffers:
     description: Number of used buffers in the shared buffer cache (requires pg_buffercache extension, PostgreSQL 9.6+)
     enabled: true
     gauge:
       value_type: int
-    attributes: [newrelicpostgresql.instance_name, database_name, schema_name, table_name]
-    unit: "{buffers}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    - database_name
+    - schema_name
+    - table_name
+    unit: '{buffers}'
     stability:
       level: alpha
-
   postgresql.checksums.enabled:
     description: Whether data checksums are enabled for this PostgreSQL cluster (PostgreSQL 12+)
     enabled: true
     gauge:
       value_type: int
-    attributes: [database_name, newrelicpostgresql.instance_name]
-    unit: "{status}"
+    attributes:
+    - database_name
+    - newrelicpostgresql.instance_name
+    unit: '{status}'
     stability:
       level: alpha
-
   postgresql.checksums.failures:
     description: Number of data page checksum failures detected (PostgreSQL 12+)
     enabled: true
@@ -738,51 +857,68 @@ metrics:
       aggregation_temporality: cumulative
       monotonic: true
       value_type: int
-    attributes: [database_name, newrelicpostgresql.instance_name]
-    unit: "{failures}"
+    attributes:
+    - database_name
+    - newrelicpostgresql.instance_name
+    unit: '{failures}'
     stability:
       level: alpha
-
   postgresql.cluster_vacuum.heap_blks_scanned:
     description: Number of heap blocks scanned during CLUSTER/VACUUM FULL operation (PostgreSQL 12+)
     enabled: true
     gauge:
       value_type: int
-    attributes: [command, database_name, newrelicpostgresql.instance_name, schema_name, table_name]
-    unit: "{blocks}"
+    attributes:
+    - command
+    - database_name
+    - newrelicpostgresql.instance_name
+    - schema_name
+    - table_name
+    unit: '{blocks}'
     stability:
       level: alpha
-
   postgresql.cluster_vacuum.heap_blks_total:
     description: Total number of heap blocks to be scanned during CLUSTER/VACUUM FULL (PostgreSQL 12+)
     enabled: true
     gauge:
       value_type: int
-    attributes: [command, database_name, newrelicpostgresql.instance_name, schema_name, table_name]
-    unit: "{blocks}"
+    attributes:
+    - command
+    - database_name
+    - newrelicpostgresql.instance_name
+    - schema_name
+    - table_name
+    unit: '{blocks}'
     stability:
       level: alpha
-
   postgresql.cluster_vacuum.heap_tuples_scanned:
     description: Number of heap tuples scanned during CLUSTER/VACUUM FULL operation (PostgreSQL 12+)
     enabled: true
     gauge:
       value_type: int
-    attributes: [command, database_name, newrelicpostgresql.instance_name, schema_name, table_name]
-    unit: "{tuples}"
+    attributes:
+    - command
+    - database_name
+    - newrelicpostgresql.instance_name
+    - schema_name
+    - table_name
+    unit: '{tuples}'
     stability:
       level: alpha
-
   postgresql.cluster_vacuum.heap_tuples_written:
     description: Number of heap tuples written during CLUSTER/VACUUM FULL operation (PostgreSQL 12+)
     enabled: true
     gauge:
       value_type: int
-    attributes: [command, database_name, newrelicpostgresql.instance_name, schema_name, table_name]
-    unit: "{tuples}"
+    attributes:
+    - command
+    - database_name
+    - newrelicpostgresql.instance_name
+    - schema_name
+    - table_name
+    unit: '{tuples}'
     stability:
       level: alpha
-
   postgresql.commits:
     description: Number of transactions that have been committed
     enabled: true
@@ -790,11 +926,12 @@ metrics:
       aggregation_temporality: cumulative
       monotonic: true
       value_type: int
-    attributes: [database_name, newrelicpostgresql.instance_name]
-    unit: "{transactions}"
+    attributes:
+    - database_name
+    - newrelicpostgresql.instance_name
+    unit: '{transactions}'
     stability:
       level: alpha
-
   postgresql.conflicts:
     description: Number of queries canceled due to conflicts with recovery
     enabled: true
@@ -802,11 +939,12 @@ metrics:
       aggregation_temporality: cumulative
       monotonic: true
       value_type: int
-    attributes: [database_name, newrelicpostgresql.instance_name]
-    unit: "{queries}"
+    attributes:
+    - database_name
+    - newrelicpostgresql.instance_name
+    unit: '{queries}'
     stability:
       level: alpha
-
   postgresql.conflicts.bufferpin:
     description: Queries canceled due to pinned buffers during recovery
     enabled: true
@@ -814,11 +952,12 @@ metrics:
       aggregation_temporality: cumulative
       monotonic: true
       value_type: int
-    attributes: [database_name, newrelicpostgresql.instance_name]
-    unit: "{queries}"
+    attributes:
+    - database_name
+    - newrelicpostgresql.instance_name
+    unit: '{queries}'
     stability:
       level: alpha
-
   postgresql.conflicts.deadlock:
     description: Queries canceled due to deadlocks during recovery
     enabled: true
@@ -826,11 +965,12 @@ metrics:
       aggregation_temporality: cumulative
       monotonic: true
       value_type: int
-    attributes: [database_name, newrelicpostgresql.instance_name]
-    unit: "{queries}"
+    attributes:
+    - database_name
+    - newrelicpostgresql.instance_name
+    unit: '{queries}'
     stability:
       level: alpha
-
   postgresql.conflicts.lock:
     description: Queries canceled due to lock timeouts during recovery
     enabled: true
@@ -838,11 +978,12 @@ metrics:
       aggregation_temporality: cumulative
       monotonic: true
       value_type: int
-    attributes: [database_name, newrelicpostgresql.instance_name]
-    unit: "{queries}"
+    attributes:
+    - database_name
+    - newrelicpostgresql.instance_name
+    unit: '{queries}'
     stability:
       level: alpha
-
   postgresql.conflicts.snapshot:
     description: Queries canceled due to old snapshots during recovery
     enabled: true
@@ -850,11 +991,12 @@ metrics:
       aggregation_temporality: cumulative
       monotonic: true
       value_type: int
-    attributes: [database_name, newrelicpostgresql.instance_name]
-    unit: "{queries}"
+    attributes:
+    - database_name
+    - newrelicpostgresql.instance_name
+    unit: '{queries}'
     stability:
       level: alpha
-
   postgresql.conflicts.tablespace:
     description: Queries canceled due to dropped tablespaces during recovery
     enabled: true
@@ -862,11 +1004,12 @@ metrics:
       aggregation_temporality: cumulative
       monotonic: true
       value_type: int
-    attributes: [database_name, newrelicpostgresql.instance_name]
-    unit: "{queries}"
+    attributes:
+    - database_name
+    - newrelicpostgresql.instance_name
+    unit: '{queries}'
     stability:
       level: alpha
-
   postgresql.connections:
     description: Number of active connections (backends) to the database
     enabled: true
@@ -874,161 +1017,199 @@ metrics:
       aggregation_temporality: cumulative
       monotonic: false
       value_type: int
-    attributes: [database_name, newrelicpostgresql.instance_name]
-    unit: "{connections}"
+    attributes:
+    - database_name
+    - newrelicpostgresql.instance_name
+    unit: '{connections}'
     stability:
       level: alpha
-
   postgresql.connections.active:
     description: Number of active connections to the database (state='active')
     enabled: true
     gauge:
       value_type: int
-    attributes: [database_name, newrelicpostgresql.instance_name, user_name, application_name, backend_type]
-    unit: "{connections}"
+    attributes:
+    - database_name
+    - newrelicpostgresql.instance_name
+    - user_name
+    - application_name
+    - backend_type
+    unit: '{connections}'
     stability:
       level: alpha
-
   postgresql.control.checkpoint_delay:
     description: Time elapsed since the last checkpoint in seconds (PostgreSQL 10+)
     enabled: true
     gauge:
       value_type: double
-    attributes: [newrelicpostgresql.instance_name]
-    unit: "s"
+    attributes:
+    - newrelicpostgresql.instance_name
+    unit: s
     stability:
       level: alpha
-
   postgresql.control.checkpoint_delay_bytes:
     description: WAL distance from the last checkpoint in bytes (PostgreSQL 10+)
     enabled: true
     gauge:
       value_type: int
-    attributes: [newrelicpostgresql.instance_name]
-    unit: "By"
+    attributes:
+    - newrelicpostgresql.instance_name
+    unit: By
     stability:
       level: alpha
-
   postgresql.control.redo_delay_bytes:
     description: WAL distance from the redo location in bytes (PostgreSQL 10+)
     enabled: true
     gauge:
       value_type: int
-    attributes: [newrelicpostgresql.instance_name]
-    unit: "By"
+    attributes:
+    - newrelicpostgresql.instance_name
+    unit: By
     stability:
       level: alpha
-
   postgresql.control.timeline_id:
     description: Current timeline ID (PostgreSQL 10+)
     enabled: true
     gauge:
       value_type: int
-    attributes: [newrelicpostgresql.instance_name]
-    unit: "{timeline}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    unit: '{timeline}'
     stability:
       level: alpha
-
   postgresql.create_index.blocks_done:
     description: Number of blocks processed during CREATE INDEX operation (PostgreSQL 12+)
     enabled: true
     gauge:
       value_type: int
-    attributes: [database_name, index_name, newrelicpostgresql.instance_name, schema_name, table_name]
-    unit: "{blocks}"
+    attributes:
+    - database_name
+    - index_name
+    - newrelicpostgresql.instance_name
+    - schema_name
+    - table_name
+    unit: '{blocks}'
     stability:
       level: alpha
-
   postgresql.create_index.blocks_total:
     description: Total number of blocks to be processed during CREATE INDEX (PostgreSQL 12+)
     enabled: true
     gauge:
       value_type: int
-    attributes: [database_name, index_name, newrelicpostgresql.instance_name, schema_name, table_name]
-    unit: "{blocks}"
+    attributes:
+    - database_name
+    - index_name
+    - newrelicpostgresql.instance_name
+    - schema_name
+    - table_name
+    unit: '{blocks}'
     stability:
       level: alpha
-
   postgresql.create_index.lockers_done:
     description: Number of lockers processed during CREATE INDEX operation (PostgreSQL 12+)
     enabled: true
     gauge:
       value_type: int
-    attributes: [database_name, index_name, newrelicpostgresql.instance_name, schema_name, table_name]
-    unit: "{lockers}"
+    attributes:
+    - database_name
+    - index_name
+    - newrelicpostgresql.instance_name
+    - schema_name
+    - table_name
+    unit: '{lockers}'
     stability:
       level: alpha
-
   postgresql.create_index.lockers_total:
     description: Total number of lockers to be processed during CREATE INDEX (PostgreSQL 12+)
     enabled: true
     gauge:
       value_type: int
-    attributes: [database_name, index_name, newrelicpostgresql.instance_name, schema_name, table_name]
-    unit: "{lockers}"
+    attributes:
+    - database_name
+    - index_name
+    - newrelicpostgresql.instance_name
+    - schema_name
+    - table_name
+    unit: '{lockers}'
     stability:
       level: alpha
-
   postgresql.create_index.partitions_done:
     description: Number of partitions processed during CREATE INDEX operation (PostgreSQL 12+)
     enabled: true
     gauge:
       value_type: int
-    attributes: [database_name, index_name, newrelicpostgresql.instance_name, schema_name, table_name]
-    unit: "{partitions}"
+    attributes:
+    - database_name
+    - index_name
+    - newrelicpostgresql.instance_name
+    - schema_name
+    - table_name
+    unit: '{partitions}'
     stability:
       level: alpha
-
   postgresql.create_index.partitions_total:
     description: Total number of partitions to be processed during CREATE INDEX (PostgreSQL 12+)
     enabled: true
     gauge:
       value_type: int
-    attributes: [database_name, index_name, newrelicpostgresql.instance_name, schema_name, table_name]
-    unit: "{partitions}"
+    attributes:
+    - database_name
+    - index_name
+    - newrelicpostgresql.instance_name
+    - schema_name
+    - table_name
+    unit: '{partitions}'
     stability:
       level: alpha
-
   postgresql.create_index.tuples_done:
     description: Number of tuples indexed during CREATE INDEX operation (PostgreSQL 12+)
     enabled: true
     gauge:
       value_type: int
-    attributes: [database_name, index_name, newrelicpostgresql.instance_name, schema_name, table_name]
-    unit: "{tuples}"
+    attributes:
+    - database_name
+    - index_name
+    - newrelicpostgresql.instance_name
+    - schema_name
+    - table_name
+    unit: '{tuples}'
     stability:
       level: alpha
-
   postgresql.create_index.tuples_total:
     description: Total number of tuples to be indexed during CREATE INDEX (PostgreSQL 12+)
     enabled: true
     gauge:
       value_type: int
-    attributes: [database_name, index_name, newrelicpostgresql.instance_name, schema_name, table_name]
-    unit: "{tuples}"
+    attributes:
+    - database_name
+    - index_name
+    - newrelicpostgresql.instance_name
+    - schema_name
+    - table_name
+    unit: '{tuples}'
     stability:
       level: alpha
-
   postgresql.database_size:
     description: Size of the database in bytes
     enabled: true
     gauge:
       value_type: int
-    attributes: [database_name, newrelicpostgresql.instance_name]
-    unit: "By"
+    attributes:
+    - database_name
+    - newrelicpostgresql.instance_name
+    unit: By
     stability:
       level: alpha
-
   postgresql.db.count:
     description: Number of databases that allow connections (PostgreSQL 9.6+)
     enabled: true
     gauge:
       value_type: int
-    attributes: [newrelicpostgresql.instance_name]
-    unit: "{databases}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    unit: '{databases}'
     stability:
       level: alpha
-
   postgresql.deadlocks:
     description: Number of deadlocks detected
     enabled: true
@@ -1036,11 +1217,12 @@ metrics:
       aggregation_temporality: cumulative
       monotonic: true
       value_type: int
-    attributes: [database_name, newrelicpostgresql.instance_name]
-    unit: "{deadlocks}"
+    attributes:
+    - database_name
+    - newrelicpostgresql.instance_name
+    unit: '{deadlocks}'
     stability:
       level: alpha
-
   postgresql.disk_read:
     description: Number of disk blocks read
     enabled: true
@@ -1048,11 +1230,12 @@ metrics:
       aggregation_temporality: cumulative
       monotonic: true
       value_type: int
-    attributes: [database_name, newrelicpostgresql.instance_name]
-    unit: "{blocks}"
+    attributes:
+    - database_name
+    - newrelicpostgresql.instance_name
+    unit: '{blocks}'
     stability:
       level: alpha
-
   postgresql.heap_blocks_hit:
     description: Number of heap blocks read from buffer cache for this table (PostgreSQL 9.6+)
     enabled: true
@@ -1060,11 +1243,13 @@ metrics:
       aggregation_temporality: cumulative
       monotonic: true
       value_type: int
-    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
-    unit: "{blocks}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    - schema_name
+    - table_name
+    unit: '{blocks}'
     stability:
       level: alpha
-
   postgresql.heap_blocks_read:
     description: Number of heap blocks read from disk for this table (PostgreSQL 9.6+)
     enabled: true
@@ -1072,11 +1257,13 @@ metrics:
       aggregation_temporality: cumulative
       monotonic: true
       value_type: int
-    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
-    unit: "{blocks}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    - schema_name
+    - table_name
+    unit: '{blocks}'
     stability:
       level: alpha
-
   postgresql.index_blocks_hit:
     description: Number of index blocks read from buffer cache for this table (PostgreSQL 9.6+)
     enabled: true
@@ -1084,11 +1271,13 @@ metrics:
       aggregation_temporality: cumulative
       monotonic: true
       value_type: int
-    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
-    unit: "{blocks}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    - schema_name
+    - table_name
+    unit: '{blocks}'
     stability:
       level: alpha
-
   postgresql.index_blocks_read:
     description: Number of index blocks read from disk for this table (PostgreSQL 9.6+)
     enabled: true
@@ -1096,11 +1285,13 @@ metrics:
       aggregation_temporality: cumulative
       monotonic: true
       value_type: int
-    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
-    unit: "{blocks}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    - schema_name
+    - table_name
+    unit: '{blocks}'
     stability:
       level: alpha
-
   postgresql.index_scans:
     description: Number of index scans initiated on this index (PostgreSQL 9.6+)
     enabled: true
@@ -1108,21 +1299,27 @@ metrics:
       aggregation_temporality: cumulative
       monotonic: true
       value_type: int
-    attributes: [newrelicpostgresql.instance_name, schema_name, table_name, index_name]
-    unit: "{scans}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    - schema_name
+    - table_name
+    - index_name
+    unit: '{scans}'
     stability:
       level: alpha
-
   postgresql.index_size:
     description: Size of this index in bytes (PostgreSQL 9.6+)
     enabled: true
     gauge:
       value_type: int
-    attributes: [newrelicpostgresql.instance_name, schema_name, table_name, index_name]
+    attributes:
+    - newrelicpostgresql.instance_name
+    - schema_name
+    - table_name
+    - index_name
     unit: By
     stability:
       level: alpha
-
   postgresql.index_tuples_fetched:
     description: Number of live table rows fetched by simple index scans using this index (PostgreSQL 9.6+)
     enabled: true
@@ -1130,11 +1327,14 @@ metrics:
       aggregation_temporality: cumulative
       monotonic: true
       value_type: int
-    attributes: [newrelicpostgresql.instance_name, schema_name, table_name, index_name]
-    unit: "{tuples}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    - schema_name
+    - table_name
+    - index_name
+    unit: '{tuples}'
     stability:
       level: alpha
-
   postgresql.index_tuples_read:
     description: Number of index entries returned by scans on this index (PostgreSQL 9.6+)
     enabled: true
@@ -1142,151 +1342,170 @@ metrics:
       aggregation_temporality: cumulative
       monotonic: true
       value_type: int
-    attributes: [newrelicpostgresql.instance_name, schema_name, table_name, index_name]
-    unit: "{tuples}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    - schema_name
+    - table_name
+    - index_name
+    unit: '{tuples}'
     stability:
       level: alpha
-
   postgresql.last_analyze_age:
     description: Seconds since last manual ANALYZE on this table (PostgreSQL 9.6+)
     enabled: true
     gauge:
       value_type: double
-    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
+    attributes:
+    - newrelicpostgresql.instance_name
+    - schema_name
+    - table_name
     unit: s
     stability:
       level: alpha
-
   postgresql.last_autoanalyze_age:
     description: Seconds since last autoanalyze on this table (PostgreSQL 9.6+)
     enabled: true
     gauge:
       value_type: double
-    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
+    attributes:
+    - newrelicpostgresql.instance_name
+    - schema_name
+    - table_name
     unit: s
     stability:
       level: alpha
-
   postgresql.last_autovacuum_age:
     description: Seconds since last autovacuum on this table (PostgreSQL 9.6+)
     enabled: true
     gauge:
       value_type: double
-    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
+    attributes:
+    - newrelicpostgresql.instance_name
+    - schema_name
+    - table_name
     unit: s
     stability:
       level: alpha
-
   postgresql.last_vacuum_age:
     description: Seconds since last manual VACUUM on this table (PostgreSQL 9.6+)
     enabled: true
     gauge:
       value_type: double
-    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
+    attributes:
+    - newrelicpostgresql.instance_name
+    - schema_name
+    - table_name
     unit: s
     stability:
       level: alpha
-
   postgresql.locks.access_exclusive:
     description: Number of AccessExclusiveLock locks held on the database (PostgreSQL 9.6+)
     enabled: true
     gauge:
       value_type: int
-    attributes: [newrelicpostgresql.instance_name, database_name]
-    unit: "{locks}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    - database_name
+    unit: '{locks}'
     stability:
       level: alpha
-
   postgresql.locks.access_share:
     description: Number of AccessShareLock locks held on the database (PostgreSQL 9.6+)
     enabled: true
     gauge:
       value_type: int
-    attributes: [newrelicpostgresql.instance_name, database_name]
-    unit: "{locks}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    - database_name
+    unit: '{locks}'
     stability:
       level: alpha
-
   postgresql.locks.exclusive:
     description: Number of ExclusiveLock locks held on the database (PostgreSQL 9.6+)
     enabled: true
     gauge:
       value_type: int
-    attributes: [newrelicpostgresql.instance_name, database_name]
-    unit: "{locks}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    - database_name
+    unit: '{locks}'
     stability:
       level: alpha
-
   postgresql.locks.row_exclusive:
     description: Number of RowExclusiveLock locks held on the database (PostgreSQL 9.6+)
     enabled: true
     gauge:
       value_type: int
-    attributes: [newrelicpostgresql.instance_name, database_name]
-    unit: "{locks}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    - database_name
+    unit: '{locks}'
     stability:
       level: alpha
-
   postgresql.locks.row_share:
     description: Number of RowShareLock locks held on the database (PostgreSQL 9.6+)
     enabled: true
     gauge:
       value_type: int
-    attributes: [newrelicpostgresql.instance_name, database_name]
-    unit: "{locks}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    - database_name
+    unit: '{locks}'
     stability:
       level: alpha
-
   postgresql.locks.share:
     description: Number of ShareLock locks held on the database (PostgreSQL 9.6+)
     enabled: true
     gauge:
       value_type: int
-    attributes: [newrelicpostgresql.instance_name, database_name]
-    unit: "{locks}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    - database_name
+    unit: '{locks}'
     stability:
       level: alpha
-
   postgresql.locks.share_row_exclusive:
     description: Number of ShareRowExclusiveLock locks held on the database (PostgreSQL 9.6+)
     enabled: true
     gauge:
       value_type: int
-    attributes: [newrelicpostgresql.instance_name, database_name]
-    unit: "{locks}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    - database_name
+    unit: '{locks}'
     stability:
       level: alpha
-
   postgresql.locks.share_update_exclusive:
     description: Number of ShareUpdateExclusiveLock locks held on the database (PostgreSQL 9.6+)
     enabled: true
     gauge:
       value_type: int
-    attributes: [newrelicpostgresql.instance_name, database_name]
-    unit: "{locks}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    - database_name
+    unit: '{locks}'
     stability:
       level: alpha
-
   postgresql.max_connections:
     description: Maximum number of concurrent connections allowed to the server (PostgreSQL 9.6+)
     enabled: true
     gauge:
       value_type: int
-    attributes: [newrelicpostgresql.instance_name]
-    unit: "{connections}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    unit: '{connections}'
     stability:
       level: alpha
-
   postgresql.percent_usage_connections:
     description: Percentage of max_connections currently in use (PostgreSQL 9.6+)
     enabled: true
     gauge:
       value_type: double
-    attributes: [newrelicpostgresql.instance_name]
-    unit: "%"
+    attributes:
+    - newrelicpostgresql.instance_name
+    unit: '%'
     stability:
       level: alpha
-
   postgresql.pg_stat_statements.dealloc:
     description: Number of times pg_stat_statements has deallocated least-used statements (requires pg_stat_statements extension, PostgreSQL 13+)
     enabled: true
@@ -1294,21 +1513,21 @@ metrics:
       aggregation_temporality: cumulative
       monotonic: true
       value_type: int
-    attributes: [newrelicpostgresql.instance_name]
-    unit: "{deallocations}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    unit: '{deallocations}'
     stability:
       level: alpha
-
   postgresql.recovery_prefetch.block_distance:
     description: Number of blocks between the current replay position and the prefetch position (PostgreSQL 15+)
     enabled: true
     gauge:
       value_type: int
-    attributes: [newrelicpostgresql.instance_name]
-    unit: "{blocks}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    unit: '{blocks}'
     stability:
       level: alpha
-
   postgresql.recovery_prefetch.hit:
     description: Number of prefetch requests that hit the buffer cache (PostgreSQL 15+)
     enabled: true
@@ -1316,21 +1535,21 @@ metrics:
       aggregation_temporality: cumulative
       monotonic: true
       value_type: int
-    attributes: [newrelicpostgresql.instance_name]
-    unit: "{requests}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    unit: '{requests}'
     stability:
       level: alpha
-
   postgresql.recovery_prefetch.io_depth:
     description: Number of I/O operations in progress (PostgreSQL 15+)
     enabled: true
     gauge:
       value_type: int
-    attributes: [newrelicpostgresql.instance_name]
-    unit: "{operations}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    unit: '{operations}'
     stability:
       level: alpha
-
   postgresql.recovery_prefetch.prefetch:
     description: Number of blocks prefetched during recovery (PostgreSQL 15+)
     enabled: true
@@ -1338,11 +1557,11 @@ metrics:
       aggregation_temporality: cumulative
       monotonic: true
       value_type: int
-    attributes: [newrelicpostgresql.instance_name]
-    unit: "{blocks}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    unit: '{blocks}'
     stability:
       level: alpha
-
   postgresql.recovery_prefetch.skip_fpw:
     description: Number of prefetch requests skipped because a full page write was found (PostgreSQL 15+)
     enabled: true
@@ -1350,11 +1569,11 @@ metrics:
       aggregation_temporality: cumulative
       monotonic: true
       value_type: int
-    attributes: [newrelicpostgresql.instance_name]
-    unit: "{requests}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    unit: '{requests}'
     stability:
       level: alpha
-
   postgresql.recovery_prefetch.skip_init:
     description: Number of prefetch requests skipped because the relation was being initialized (PostgreSQL 15+)
     enabled: true
@@ -1362,11 +1581,11 @@ metrics:
       aggregation_temporality: cumulative
       monotonic: true
       value_type: int
-    attributes: [newrelicpostgresql.instance_name]
-    unit: "{requests}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    unit: '{requests}'
     stability:
       level: alpha
-
   postgresql.recovery_prefetch.skip_new:
     description: Number of prefetch requests skipped because the relation did not exist yet (PostgreSQL 15+)
     enabled: true
@@ -1374,11 +1593,11 @@ metrics:
       aggregation_temporality: cumulative
       monotonic: true
       value_type: int
-    attributes: [newrelicpostgresql.instance_name]
-    unit: "{requests}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    unit: '{requests}'
     stability:
       level: alpha
-
   postgresql.recovery_prefetch.skip_rep:
     description: Number of prefetch requests skipped because they were already in progress (PostgreSQL 15+)
     enabled: true
@@ -1386,201 +1605,241 @@ metrics:
       aggregation_temporality: cumulative
       monotonic: true
       value_type: int
-    attributes: [newrelicpostgresql.instance_name]
-    unit: "{requests}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    unit: '{requests}'
     stability:
       level: alpha
-
   postgresql.recovery_prefetch.wal_distance:
     description: Distance in WAL bytes between the current replay position and the prefetch position (PostgreSQL 15+)
     enabled: true
     gauge:
       value_type: int
-    attributes: [newrelicpostgresql.instance_name]
-    unit: "By"
+    attributes:
+    - newrelicpostgresql.instance_name
+    unit: By
     stability:
       level: alpha
-
   postgresql.relation.all_visible:
     description: Number of pages marked all-visible in the visibility map (PostgreSQL 9.6+)
     enabled: true
     gauge:
       value_type: int
-    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
-    unit: "{pages}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    - schema_name
+    - table_name
+    unit: '{pages}'
     stability:
       level: alpha
-
   postgresql.relation.pages:
     description: Number of disk pages in the relation (PostgreSQL 9.6+)
     enabled: true
     gauge:
       value_type: int
-    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
-    unit: "{pages}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    - schema_name
+    - table_name
+    unit: '{pages}'
     stability:
       level: alpha
-
   postgresql.relation.tuples:
     description: Estimated number of live rows in the relation (PostgreSQL 9.6+)
     enabled: true
     gauge:
       value_type: double
-    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
-    unit: "{rows}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    - schema_name
+    - table_name
+    unit: '{rows}'
     stability:
       level: alpha
-
   postgresql.relation.xmin:
     description: Age of the oldest unfrozen transaction ID in the relation (PostgreSQL 9.6+)
     enabled: true
     gauge:
       value_type: int
-    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
-    unit: "{transactions}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    - schema_name
+    - table_name
+    unit: '{transactions}'
     stability:
       level: alpha
-
   postgresql.relation_size:
     description: Size of the table data (heap) in bytes (PostgreSQL 9.6+)
     enabled: true
     gauge:
       value_type: int
-    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
+    attributes:
+    - newrelicpostgresql.instance_name
+    - schema_name
+    - table_name
     unit: By
     stability:
       level: alpha
-
   postgresql.replication.backend_xmin_age:
     description: Age of the oldest transaction on the standby server that is holding back vacuum
     enabled: true
     gauge:
       value_type: int
-    attributes: [application_name, client_address, replication_state, sync_state]
-    unit: "{transactions}"
+    attributes:
+    - application_name
+    - client_address
+    - replication_state
+    - sync_state
+    unit: '{transactions}'
     stability:
       level: alpha
-
   postgresql.replication.flush_lsn_delay:
     description: Number of bytes of WAL flushed but not yet applied on standby
     enabled: true
     gauge:
       value_type: int
-    attributes: [application_name, client_address, replication_state, sync_state]
-    unit: "By"
+    attributes:
+    - application_name
+    - client_address
+    - replication_state
+    - sync_state
+    unit: By
     stability:
       level: alpha
-
   postgresql.replication.replay_lsn_delay:
     description: Number of bytes of WAL not yet replayed on standby (total replication lag in bytes)
     enabled: true
     gauge:
       value_type: int
-    attributes: [application_name, client_address, replication_state, sync_state]
-    unit: "By"
+    attributes:
+    - application_name
+    - client_address
+    - replication_state
+    - sync_state
+    unit: By
     stability:
       level: alpha
-
   postgresql.replication.sent_lsn_delay:
     description: Number of bytes of WAL sent but not yet written to disk on standby
     enabled: true
     gauge:
       value_type: int
-    attributes: [application_name, client_address, replication_state, sync_state]
-    unit: "By"
+    attributes:
+    - application_name
+    - client_address
+    - replication_state
+    - sync_state
+    unit: By
     stability:
       level: alpha
-
   postgresql.replication.wal_flush_lag:
     description: Time elapsed between WAL flush on primary and confirmation from standby (PostgreSQL 10+)
     enabled: true
     gauge:
       value_type: double
-    attributes: [application_name, client_address, replication_state, sync_state]
-    unit: "s"
+    attributes:
+    - application_name
+    - client_address
+    - replication_state
+    - sync_state
+    unit: s
     stability:
       level: alpha
-
   postgresql.replication.wal_replay_lag:
     description: Time elapsed between WAL replay on primary and confirmation from standby (PostgreSQL 10+)
     enabled: true
     gauge:
       value_type: double
-    attributes: [application_name, client_address, replication_state, sync_state]
-    unit: "s"
+    attributes:
+    - application_name
+    - client_address
+    - replication_state
+    - sync_state
+    unit: s
     stability:
       level: alpha
-
   postgresql.replication.wal_write_lag:
     description: Time elapsed between WAL write on primary and confirmation from standby (PostgreSQL 10+)
     enabled: true
     gauge:
       value_type: double
-    attributes: [application_name, client_address, replication_state, sync_state]
-    unit: "s"
+    attributes:
+    - application_name
+    - client_address
+    - replication_state
+    - sync_state
+    unit: s
     stability:
       level: alpha
-
   postgresql.replication.write_lsn_delay:
     description: Number of bytes of WAL written but not yet flushed on standby
     enabled: true
     gauge:
       value_type: int
-    attributes: [application_name, client_address, replication_state, sync_state]
-    unit: "By"
+    attributes:
+    - application_name
+    - client_address
+    - replication_state
+    - sync_state
+    unit: By
     stability:
       level: alpha
-
   postgresql.replication_delay:
     description: Time lag between primary and standby (standby-side metric, PostgreSQL 9.6+)
     enabled: true
     gauge:
       value_type: double
-    attributes: [newrelicpostgresql.instance_name]
-    unit: "s"
+    attributes:
+    - newrelicpostgresql.instance_name
+    unit: s
     stability:
       level: alpha
-
   postgresql.replication_delay_bytes:
     description: Byte lag between WAL received and replayed on standby (standby-side metric, PostgreSQL 9.6+)
     enabled: true
     gauge:
       value_type: int
-    attributes: [newrelicpostgresql.instance_name]
-    unit: "By"
+    attributes:
+    - newrelicpostgresql.instance_name
+    unit: By
     stability:
       level: alpha
-
   postgresql.replication_slot.catalog_xmin_age:
     description: Age of oldest transaction affecting system catalogs that this slot needs to keep (PostgreSQL 9.4+)
     enabled: true
     gauge:
       value_type: int
-    attributes: [slot_name, slot_type, plugin]
-    unit: "{transactions}"
+    attributes:
+    - slot_name
+    - slot_type
+    - plugin
+    unit: '{transactions}'
     stability:
       level: alpha
-
   postgresql.replication_slot.confirmed_flush_delay_bytes:
     description: Number of bytes between current WAL position and confirmed_flush_lsn (logical slots only, PostgreSQL 9.4+)
     enabled: true
     gauge:
       value_type: int
-    attributes: [slot_name, slot_type, plugin]
-    unit: "By"
+    attributes:
+    - slot_name
+    - slot_type
+    - plugin
+    unit: By
     stability:
       level: alpha
-
   postgresql.replication_slot.restart_delay_bytes:
     description: Number of bytes of WAL between current position and slot's restart_lsn (PostgreSQL 9.4+)
     enabled: true
     gauge:
       value_type: int
-    attributes: [slot_name, slot_type, plugin]
-    unit: "By"
+    attributes:
+    - slot_name
+    - slot_type
+    - plugin
+    unit: By
     stability:
       level: alpha
-
   postgresql.replication_slot.spill_bytes:
     description: Total amount of data spilled to disk for logical decoding (PostgreSQL 14+)
     enabled: true
@@ -1588,11 +1847,13 @@ metrics:
       aggregation_temporality: cumulative
       monotonic: true
       value_type: int
-    attributes: [slot_name, slot_type, state]
-    unit: "By"
+    attributes:
+    - slot_name
+    - slot_type
+    - state
+    unit: By
     stability:
       level: alpha
-
   postgresql.replication_slot.spill_count:
     description: Number of times transactions were spilled to disk during logical decoding (PostgreSQL 14+)
     enabled: true
@@ -1600,11 +1861,13 @@ metrics:
       aggregation_temporality: cumulative
       monotonic: true
       value_type: int
-    attributes: [slot_name, slot_type, state]
-    unit: "{spills}"
+    attributes:
+    - slot_name
+    - slot_type
+    - state
+    unit: '{spills}'
     stability:
       level: alpha
-
   postgresql.replication_slot.spill_txns:
     description: Number of transactions spilled to disk during logical decoding (PostgreSQL 14+)
     enabled: true
@@ -1612,11 +1875,13 @@ metrics:
       aggregation_temporality: cumulative
       monotonic: true
       value_type: int
-    attributes: [slot_name, slot_type, state]
-    unit: "{transactions}"
+    attributes:
+    - slot_name
+    - slot_type
+    - state
+    unit: '{transactions}'
     stability:
       level: alpha
-
   postgresql.replication_slot.stream_bytes:
     description: Total amount of data streamed for in-progress transactions during logical decoding (PostgreSQL 14+)
     enabled: true
@@ -1624,11 +1889,13 @@ metrics:
       aggregation_temporality: cumulative
       monotonic: true
       value_type: int
-    attributes: [slot_name, slot_type, state]
-    unit: "By"
+    attributes:
+    - slot_name
+    - slot_type
+    - state
+    unit: By
     stability:
       level: alpha
-
   postgresql.replication_slot.stream_count:
     description: Number of times in-progress transactions were streamed during logical decoding (PostgreSQL 14+)
     enabled: true
@@ -1636,11 +1903,13 @@ metrics:
       aggregation_temporality: cumulative
       monotonic: true
       value_type: int
-    attributes: [slot_name, slot_type, state]
-    unit: "{streams}"
+    attributes:
+    - slot_name
+    - slot_type
+    - state
+    unit: '{streams}'
     stability:
       level: alpha
-
   postgresql.replication_slot.stream_txns:
     description: Number of in-progress transactions streamed during logical decoding (PostgreSQL 14+)
     enabled: true
@@ -1648,11 +1917,13 @@ metrics:
       aggregation_temporality: cumulative
       monotonic: true
       value_type: int
-    attributes: [slot_name, slot_type, state]
-    unit: "{transactions}"
+    attributes:
+    - slot_name
+    - slot_type
+    - state
+    unit: '{transactions}'
     stability:
       level: alpha
-
   postgresql.replication_slot.total_bytes:
     description: Total amount of data decoded for transactions during logical decoding (PostgreSQL 14+)
     enabled: true
@@ -1660,11 +1931,13 @@ metrics:
       aggregation_temporality: cumulative
       monotonic: true
       value_type: int
-    attributes: [slot_name, slot_type, state]
-    unit: "By"
+    attributes:
+    - slot_name
+    - slot_type
+    - state
+    unit: By
     stability:
       level: alpha
-
   postgresql.replication_slot.total_txns:
     description: Total number of decoded transactions during logical decoding (PostgreSQL 14+)
     enabled: true
@@ -1672,21 +1945,25 @@ metrics:
       aggregation_temporality: cumulative
       monotonic: true
       value_type: int
-    attributes: [slot_name, slot_type, state]
-    unit: "{transactions}"
+    attributes:
+    - slot_name
+    - slot_type
+    - state
+    unit: '{transactions}'
     stability:
       level: alpha
-
   postgresql.replication_slot.xmin_age:
     description: Age of oldest transaction that this replication slot needs to keep (PostgreSQL 9.4+)
     enabled: true
     gauge:
       value_type: int
-    attributes: [slot_name, slot_type, plugin]
-    unit: "{transactions}"
+    attributes:
+    - slot_name
+    - slot_type
+    - plugin
+    unit: '{transactions}'
     stability:
       level: alpha
-
   postgresql.rollbacks:
     description: Number of transactions that have been rolled back
     enabled: true
@@ -1694,11 +1971,12 @@ metrics:
       aggregation_temporality: cumulative
       monotonic: true
       value_type: int
-    attributes: [database_name, newrelicpostgresql.instance_name]
-    unit: "{transactions}"
+    attributes:
+    - database_name
+    - newrelicpostgresql.instance_name
+    unit: '{transactions}'
     stability:
       level: alpha
-
   postgresql.rows_deleted:
     description: Number of rows deleted
     enabled: true
@@ -1706,11 +1984,12 @@ metrics:
       aggregation_temporality: cumulative
       monotonic: true
       value_type: int
-    attributes: [database_name, newrelicpostgresql.instance_name]
-    unit: "{rows}"
+    attributes:
+    - database_name
+    - newrelicpostgresql.instance_name
+    unit: '{rows}'
     stability:
       level: alpha
-
   postgresql.rows_fetched:
     description: Number of rows fetched by queries
     enabled: true
@@ -1718,11 +1997,12 @@ metrics:
       aggregation_temporality: cumulative
       monotonic: true
       value_type: int
-    attributes: [database_name, newrelicpostgresql.instance_name]
-    unit: "{rows}"
+    attributes:
+    - database_name
+    - newrelicpostgresql.instance_name
+    unit: '{rows}'
     stability:
       level: alpha
-
   postgresql.rows_inserted:
     description: Number of rows inserted
     enabled: true
@@ -1730,11 +2010,12 @@ metrics:
       aggregation_temporality: cumulative
       monotonic: true
       value_type: int
-    attributes: [database_name, newrelicpostgresql.instance_name]
-    unit: "{rows}"
+    attributes:
+    - database_name
+    - newrelicpostgresql.instance_name
+    unit: '{rows}'
     stability:
       level: alpha
-
   postgresql.rows_returned:
     description: Number of rows returned by queries
     enabled: true
@@ -1742,11 +2023,12 @@ metrics:
       aggregation_temporality: cumulative
       monotonic: true
       value_type: int
-    attributes: [database_name, newrelicpostgresql.instance_name]
-    unit: "{rows}"
+    attributes:
+    - database_name
+    - newrelicpostgresql.instance_name
+    unit: '{rows}'
     stability:
       level: alpha
-
   postgresql.rows_updated:
     description: Number of rows updated
     enabled: true
@@ -1754,21 +2036,22 @@ metrics:
       aggregation_temporality: cumulative
       monotonic: true
       value_type: int
-    attributes: [database_name, newrelicpostgresql.instance_name]
-    unit: "{rows}"
+    attributes:
+    - database_name
+    - newrelicpostgresql.instance_name
+    unit: '{rows}'
     stability:
       level: alpha
-
   postgresql.running:
     description: PostgreSQL server running status health check (PostgreSQL 9.6+)
     enabled: true
     gauge:
       value_type: int
-    attributes: [newrelicpostgresql.instance_name]
-    unit: "{status}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    unit: '{status}'
     stability:
       level: alpha
-
   postgresql.sessions.abandoned:
     description: Number of sessions abandoned due to client disconnection (PostgreSQL 14+)
     enabled: true
@@ -1776,21 +2059,23 @@ metrics:
       aggregation_temporality: cumulative
       monotonic: true
       value_type: int
-    attributes: [database_name, newrelicpostgresql.instance_name]
-    unit: "{sessions}"
+    attributes:
+    - database_name
+    - newrelicpostgresql.instance_name
+    unit: '{sessions}'
     stability:
       level: alpha
-
   postgresql.sessions.active_time:
     description: Time spent executing queries in this database (PostgreSQL 14+)
     enabled: true
     gauge:
       value_type: double
-    attributes: [database_name, newrelicpostgresql.instance_name]
-    unit: "ms"
+    attributes:
+    - database_name
+    - newrelicpostgresql.instance_name
+    unit: ms
     stability:
       level: alpha
-
   postgresql.sessions.count:
     description: Number of sessions established to this database (PostgreSQL 14+)
     enabled: true
@@ -1798,11 +2083,12 @@ metrics:
       aggregation_temporality: cumulative
       monotonic: true
       value_type: int
-    attributes: [database_name, newrelicpostgresql.instance_name]
-    unit: "{sessions}"
+    attributes:
+    - database_name
+    - newrelicpostgresql.instance_name
+    unit: '{sessions}'
     stability:
       level: alpha
-
   postgresql.sessions.fatal:
     description: Number of sessions terminated by fatal errors (PostgreSQL 14+)
     enabled: true
@@ -1810,21 +2096,23 @@ metrics:
       aggregation_temporality: cumulative
       monotonic: true
       value_type: int
-    attributes: [database_name, newrelicpostgresql.instance_name]
-    unit: "{sessions}"
+    attributes:
+    - database_name
+    - newrelicpostgresql.instance_name
+    unit: '{sessions}'
     stability:
       level: alpha
-
   postgresql.sessions.idle_in_transaction_time:
     description: Time spent idle in transactions in this database (PostgreSQL 14+)
     enabled: true
     gauge:
       value_type: double
-    attributes: [database_name, newrelicpostgresql.instance_name]
-    unit: "ms"
+    attributes:
+    - database_name
+    - newrelicpostgresql.instance_name
+    unit: ms
     stability:
       level: alpha
-
   postgresql.sessions.killed:
     description: Number of sessions terminated by operator intervention (PostgreSQL 14+)
     enabled: true
@@ -1832,21 +2120,259 @@ metrics:
       aggregation_temporality: cumulative
       monotonic: true
       value_type: int
-    attributes: [database_name, newrelicpostgresql.instance_name]
-    unit: "{sessions}"
+    attributes:
+    - database_name
+    - newrelicpostgresql.instance_name
+    unit: '{sessions}'
     stability:
       level: alpha
-
   postgresql.sessions.session_time:
     description: Time spent in sessions for this database (PostgreSQL 14+)
     enabled: true
     gauge:
       value_type: double
-    attributes: [database_name, newrelicpostgresql.instance_name]
-    unit: "ms"
+    attributes:
+    - database_name
+    - newrelicpostgresql.instance_name
+    unit: ms
     stability:
       level: alpha
-
+  postgresql.slow_queries.avg_buffer_hits:
+    description: Average number of buffer cache hits per execution
+    enabled: true
+    gauge:
+      value_type: double
+    attributes:
+    - newrelicpostgresql.instance_name
+    - database_name
+    - user_name
+    - query_id
+    - query_text
+    unit: '{blocks}'
+    stability:
+      level: alpha
+  postgresql.slow_queries.avg_cpu_time_ms:
+    description: Average CPU time (planning + execution) of the query in milliseconds
+    enabled: true
+    gauge:
+      value_type: double
+    attributes:
+    - newrelicpostgresql.instance_name
+    - database_name
+    - user_name
+    - query_id
+    - query_text
+    unit: ms
+    stability:
+      level: alpha
+  postgresql.slow_queries.avg_disk_reads:
+    description: Average number of disk blocks read per execution
+    enabled: true
+    gauge:
+      value_type: double
+    attributes:
+    - newrelicpostgresql.instance_name
+    - database_name
+    - user_name
+    - query_id
+    - query_text
+    unit: '{blocks}'
+    stability:
+      level: alpha
+  postgresql.slow_queries.avg_disk_writes:
+    description: Average number of disk blocks written per execution
+    enabled: true
+    gauge:
+      value_type: double
+    attributes:
+    - newrelicpostgresql.instance_name
+    - database_name
+    - user_name
+    - query_id
+    - query_text
+    unit: '{blocks}'
+    stability:
+      level: alpha
+  postgresql.slow_queries.avg_elapsed_time_ms:
+    description: Average execution time of the query in milliseconds
+    enabled: true
+    gauge:
+      value_type: double
+    attributes:
+    - newrelicpostgresql.instance_name
+    - database_name
+    - user_name
+    - query_id
+    - query_text
+    unit: ms
+    stability:
+      level: alpha
+  postgresql.slow_queries.avg_plan_time_ms:
+    description: Average planning time of the query in milliseconds (PostgreSQL 13+)
+    enabled: true
+    gauge:
+      value_type: double
+    attributes:
+    - newrelicpostgresql.instance_name
+    - database_name
+    - user_name
+    - query_id
+    - query_text
+    unit: ms
+    stability:
+      level: alpha
+  postgresql.slow_queries.avg_rows_returned:
+    description: Average number of rows returned per execution
+    enabled: true
+    gauge:
+      value_type: double
+    attributes:
+    - newrelicpostgresql.instance_name
+    - database_name
+    - user_name
+    - query_id
+    - query_text
+    unit: '{rows}'
+    stability:
+      level: alpha
+  postgresql.slow_queries.execution_count:
+    description: Number of times the query has been executed
+    enabled: true
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+    attributes:
+    - newrelicpostgresql.instance_name
+    - database_name
+    - user_name
+    - query_id
+    - query_text
+    unit: '{executions}'
+    stability:
+      level: alpha
+  postgresql.slow_queries.max_elapsed_time_ms:
+    description: Maximum execution time of the query in milliseconds
+    enabled: true
+    gauge:
+      value_type: double
+    attributes:
+    - newrelicpostgresql.instance_name
+    - database_name
+    - user_name
+    - query_id
+    - query_text
+    unit: ms
+    stability:
+      level: alpha
+  postgresql.slow_queries.min_elapsed_time_ms:
+    description: Minimum execution time of the query in milliseconds
+    enabled: true
+    gauge:
+      value_type: double
+    attributes:
+    - newrelicpostgresql.instance_name
+    - database_name
+    - user_name
+    - query_id
+    - query_text
+    unit: ms
+    stability:
+      level: alpha
+  postgresql.slow_queries.stddev_elapsed_time_ms:
+    description: Standard deviation of execution time of the query in milliseconds
+    enabled: true
+    gauge:
+      value_type: double
+    attributes:
+    - newrelicpostgresql.instance_name
+    - database_name
+    - user_name
+    - query_id
+    - query_text
+    unit: ms
+    stability:
+      level: alpha
+  postgresql.slow_queries.total_buffer_hits:
+    description: Total number of buffer cache hits
+    enabled: true
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+    attributes:
+    - newrelicpostgresql.instance_name
+    - database_name
+    - user_name
+    - query_id
+    - query_text
+    unit: '{blocks}'
+    stability:
+      level: alpha
+  postgresql.slow_queries.total_disk_reads:
+    description: Total number of disk blocks read
+    enabled: true
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+    attributes:
+    - newrelicpostgresql.instance_name
+    - database_name
+    - user_name
+    - query_id
+    - query_text
+    unit: '{blocks}'
+    stability:
+      level: alpha
+  postgresql.slow_queries.total_disk_writes:
+    description: Total number of disk blocks written
+    enabled: true
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+    attributes:
+    - newrelicpostgresql.instance_name
+    - database_name
+    - user_name
+    - query_id
+    - query_text
+    unit: '{blocks}'
+    stability:
+      level: alpha
+  postgresql.slow_queries.total_elapsed_time_ms:
+    description: Total execution time of the query in milliseconds
+    enabled: true
+    sum:
+      value_type: double
+      monotonic: true
+      aggregation_temporality: cumulative
+    attributes:
+    - newrelicpostgresql.instance_name
+    - database_name
+    - user_name
+    - query_id
+    - query_text
+    unit: ms
+    stability:
+      level: alpha
+  postgresql.slow_queries.total_rows:
+    description: Total number of rows returned
+    enabled: true
+    sum:
+      value_type: int
+      monotonic: true
+      aggregation_temporality: cumulative
+    attributes:
+    - newrelicpostgresql.instance_name
+    - database_name
+    - user_name
+    - query_id
+    - query_text
+    unit: '{rows}'
+    stability:
+      level: alpha
   postgresql.slru.blks_exists:
     description: Number of blocks checked for existence for this SLRU (PostgreSQL 13+)
     enabled: true
@@ -1854,11 +2380,12 @@ metrics:
       aggregation_temporality: cumulative
       monotonic: true
       value_type: int
-    attributes: [newrelicpostgresql.instance_name, slru_name]
-    unit: "{blocks}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    - slru_name
+    unit: '{blocks}'
     stability:
       level: alpha
-
   postgresql.slru.blks_hit:
     description: Number of times disk blocks were found already in the SLRU cache (PostgreSQL 13+)
     enabled: true
@@ -1866,11 +2393,12 @@ metrics:
       aggregation_temporality: cumulative
       monotonic: true
       value_type: int
-    attributes: [newrelicpostgresql.instance_name, slru_name]
-    unit: "{blocks}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    - slru_name
+    unit: '{blocks}'
     stability:
       level: alpha
-
   postgresql.slru.blks_read:
     description: Number of disk blocks read for this SLRU (PostgreSQL 13+)
     enabled: true
@@ -1878,11 +2406,12 @@ metrics:
       aggregation_temporality: cumulative
       monotonic: true
       value_type: int
-    attributes: [newrelicpostgresql.instance_name, slru_name]
-    unit: "{blocks}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    - slru_name
+    unit: '{blocks}'
     stability:
       level: alpha
-
   postgresql.slru.blks_written:
     description: Number of disk blocks written for this SLRU (PostgreSQL 13+)
     enabled: true
@@ -1890,11 +2419,12 @@ metrics:
       aggregation_temporality: cumulative
       monotonic: true
       value_type: int
-    attributes: [newrelicpostgresql.instance_name, slru_name]
-    unit: "{blocks}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    - slru_name
+    unit: '{blocks}'
     stability:
       level: alpha
-
   postgresql.slru.blks_zeroed:
     description: Number of blocks zeroed during initializations for this SLRU (PostgreSQL 13+)
     enabled: true
@@ -1902,11 +2432,12 @@ metrics:
       aggregation_temporality: cumulative
       monotonic: true
       value_type: int
-    attributes: [newrelicpostgresql.instance_name, slru_name]
-    unit: "{blocks}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    - slru_name
+    unit: '{blocks}'
     stability:
       level: alpha
-
   postgresql.slru.flushes:
     description: Number of flushes of dirty data for this SLRU (PostgreSQL 13+)
     enabled: true
@@ -1914,11 +2445,12 @@ metrics:
       aggregation_temporality: cumulative
       monotonic: true
       value_type: int
-    attributes: [newrelicpostgresql.instance_name, slru_name]
-    unit: "{flushes}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    - slru_name
+    unit: '{flushes}'
     stability:
       level: alpha
-
   postgresql.slru.truncates:
     description: Number of truncates for this SLRU (PostgreSQL 13+)
     enabled: true
@@ -1926,41 +2458,42 @@ metrics:
       aggregation_temporality: cumulative
       monotonic: true
       value_type: int
-    attributes: [newrelicpostgresql.instance_name, slru_name]
-    unit: "{truncates}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    - slru_name
+    unit: '{truncates}'
     stability:
       level: alpha
-
   postgresql.snapshot.xip_count:
     description: Number of in-progress transactions in the current snapshot (PostgreSQL 13+)
     enabled: true
     gauge:
       value_type: int
-    attributes: [newrelicpostgresql.instance_name]
-    unit: "{transactions}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    unit: '{transactions}'
     stability:
       level: alpha
-
   postgresql.snapshot.xmax:
     description: First as-yet-unassigned transaction ID in the current snapshot (PostgreSQL 13+)
     enabled: true
     gauge:
       value_type: int
-    attributes: [newrelicpostgresql.instance_name]
-    unit: "{xid}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    unit: '{xid}'
     stability:
       level: alpha
-
   postgresql.snapshot.xmin:
     description: Earliest transaction ID still active in the current snapshot (PostgreSQL 13+)
     enabled: true
     gauge:
       value_type: int
-    attributes: [newrelicpostgresql.instance_name]
-    unit: "{xid}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    unit: '{xid}'
     stability:
       level: alpha
-
   postgresql.subscription.apply_error:
     description: Number of errors encountered while applying logical replication changes (PostgreSQL 15+)
     enabled: true
@@ -1968,41 +2501,49 @@ metrics:
       aggregation_temporality: cumulative
       monotonic: true
       value_type: int
-    attributes: [subscription_name, state, newrelicpostgresql.instance_name]
-    unit: "{errors}"
+    attributes:
+    - subscription_name
+    - state
+    - newrelicpostgresql.instance_name
+    unit: '{errors}'
     stability:
       level: alpha
-
   postgresql.subscription.last_msg_receipt_age:
     description: Time elapsed since last message received from publisher in logical replication (PostgreSQL 15+)
     enabled: true
     gauge:
       value_type: double
-    attributes: [subscription_name, state, newrelicpostgresql.instance_name]
-    unit: "s"
+    attributes:
+    - subscription_name
+    - state
+    - newrelicpostgresql.instance_name
+    unit: s
     stability:
       level: alpha
-
   postgresql.subscription.last_msg_send_age:
     description: Time elapsed since last message sent from publisher in logical replication (PostgreSQL 15+)
     enabled: true
     gauge:
       value_type: double
-    attributes: [subscription_name, state, newrelicpostgresql.instance_name]
-    unit: "s"
+    attributes:
+    - subscription_name
+    - state
+    - newrelicpostgresql.instance_name
+    unit: s
     stability:
       level: alpha
-
   postgresql.subscription.latest_end_age:
     description: Time elapsed since latest WAL location reported to publisher in logical replication (PostgreSQL 15+)
     enabled: true
     gauge:
       value_type: double
-    attributes: [subscription_name, state, newrelicpostgresql.instance_name]
-    unit: "s"
+    attributes:
+    - subscription_name
+    - state
+    - newrelicpostgresql.instance_name
+    unit: s
     stability:
       level: alpha
-
   postgresql.subscription.sync_error:
     description: Number of errors encountered during initial sync in logical replication (PostgreSQL 15+)
     enabled: true
@@ -2010,21 +2551,25 @@ metrics:
       aggregation_temporality: cumulative
       monotonic: true
       value_type: int
-    attributes: [subscription_name, state, newrelicpostgresql.instance_name]
-    unit: "{errors}"
+    attributes:
+    - subscription_name
+    - state
+    - newrelicpostgresql.instance_name
+    unit: '{errors}'
     stability:
       level: alpha
-
   postgresql.table.dead_rows:
     description: Estimated number of dead rows in this table (PostgreSQL 9.6+)
     enabled: true
     gauge:
       value_type: int
-    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
-    unit: "{rows}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    - schema_name
+    - table_name
+    unit: '{rows}'
     stability:
       level: alpha
-
   postgresql.table.hot_updates:
     description: Number of rows HOT (Heap-Only Tuple) updated in this table (PostgreSQL 9.6+)
     enabled: true
@@ -2032,11 +2577,13 @@ metrics:
       aggregation_temporality: cumulative
       monotonic: true
       value_type: int
-    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
-    unit: "{operations}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    - schema_name
+    - table_name
+    unit: '{operations}'
     stability:
       level: alpha
-
   postgresql.table.index_scan_rows_fetched:
     description: Number of live rows fetched by index scans on this table (PostgreSQL 9.6+)
     enabled: true
@@ -2044,11 +2591,13 @@ metrics:
       aggregation_temporality: cumulative
       monotonic: true
       value_type: int
-    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
-    unit: "{rows}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    - schema_name
+    - table_name
+    unit: '{rows}'
     stability:
       level: alpha
-
   postgresql.table.index_scans:
     description: Number of index scans initiated on this table (PostgreSQL 9.6+)
     enabled: true
@@ -2056,41 +2605,49 @@ metrics:
       aggregation_temporality: cumulative
       monotonic: true
       value_type: int
-    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
-    unit: "{scans}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    - schema_name
+    - table_name
+    unit: '{scans}'
     stability:
       level: alpha
-
   postgresql.table.indexes_size:
     description: Total size of all indexes for this table in bytes (PostgreSQL 9.6+)
     enabled: true
     gauge:
       value_type: int
-    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
+    attributes:
+    - newrelicpostgresql.instance_name
+    - schema_name
+    - table_name
     unit: By
     stability:
       level: alpha
-
   postgresql.table.live_rows:
     description: Estimated number of live rows in this table (PostgreSQL 9.6+)
     enabled: true
     gauge:
       value_type: int
-    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
-    unit: "{rows}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    - schema_name
+    - table_name
+    unit: '{rows}'
     stability:
       level: alpha
-
   postgresql.table.modified_since_analyze:
     description: Estimated number of rows modified since last ANALYZE on this table (PostgreSQL 9.6+)
     enabled: true
     gauge:
       value_type: int
-    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
-    unit: "{rows}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    - schema_name
+    - table_name
+    unit: '{rows}'
     stability:
       level: alpha
-
   postgresql.table.rows_deleted:
     description: Number of rows deleted from this table (PostgreSQL 9.6+)
     enabled: true
@@ -2098,11 +2655,13 @@ metrics:
       aggregation_temporality: cumulative
       monotonic: true
       value_type: int
-    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
-    unit: "{rows}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    - schema_name
+    - table_name
+    unit: '{rows}'
     stability:
       level: alpha
-
   postgresql.table.rows_inserted:
     description: Number of rows inserted into this table (PostgreSQL 9.6+)
     enabled: true
@@ -2110,11 +2669,13 @@ metrics:
       aggregation_temporality: cumulative
       monotonic: true
       value_type: int
-    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
-    unit: "{rows}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    - schema_name
+    - table_name
+    unit: '{rows}'
     stability:
       level: alpha
-
   postgresql.table.rows_updated:
     description: Number of rows updated in this table (PostgreSQL 9.6+)
     enabled: true
@@ -2122,11 +2683,13 @@ metrics:
       aggregation_temporality: cumulative
       monotonic: true
       value_type: int
-    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
-    unit: "{rows}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    - schema_name
+    - table_name
+    unit: '{rows}'
     stability:
       level: alpha
-
   postgresql.table.sequential_scan_rows_fetched:
     description: Number of live rows fetched by sequential scans on this table (PostgreSQL 9.6+)
     enabled: true
@@ -2134,11 +2697,13 @@ metrics:
       aggregation_temporality: cumulative
       monotonic: true
       value_type: int
-    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
-    unit: "{rows}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    - schema_name
+    - table_name
+    unit: '{rows}'
     stability:
       level: alpha
-
   postgresql.table.sequential_scans:
     description: Number of sequential scans initiated on this table (PostgreSQL 9.6+)
     enabled: true
@@ -2146,21 +2711,25 @@ metrics:
       aggregation_temporality: cumulative
       monotonic: true
       value_type: int
-    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
-    unit: "{scans}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    - schema_name
+    - table_name
+    unit: '{scans}'
     stability:
       level: alpha
-
   postgresql.table.total_size:
     description: Total size of this table including indexes and TOAST in bytes (PostgreSQL 9.6+)
     enabled: true
     gauge:
       value_type: int
-    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
+    attributes:
+    - newrelicpostgresql.instance_name
+    - schema_name
+    - table_name
     unit: By
     stability:
       level: alpha
-
   postgresql.temp_bytes:
     description: Total amount of data written to temporary files
     enabled: true
@@ -2168,11 +2737,12 @@ metrics:
       aggregation_temporality: cumulative
       monotonic: true
       value_type: int
-    attributes: [database_name, newrelicpostgresql.instance_name]
-    unit: "By"
+    attributes:
+    - database_name
+    - newrelicpostgresql.instance_name
+    unit: By
     stability:
       level: alpha
-
   postgresql.temp_files:
     description: Number of temporary files created
     enabled: true
@@ -2180,11 +2750,12 @@ metrics:
       aggregation_temporality: cumulative
       monotonic: true
       value_type: int
-    attributes: [database_name, newrelicpostgresql.instance_name]
-    unit: "{files}"
+    attributes:
+    - database_name
+    - newrelicpostgresql.instance_name
+    unit: '{files}'
     stability:
       level: alpha
-
   postgresql.toast.autovacuumed:
     description: Number of times this TOAST table has been vacuumed by autovacuum (PostgreSQL 9.6+)
     enabled: true
@@ -2192,31 +2763,37 @@ metrics:
       aggregation_temporality: cumulative
       monotonic: true
       value_type: int
-    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
-    unit: "{operations}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    - schema_name
+    - table_name
+    unit: '{operations}'
     stability:
       level: alpha
-
   postgresql.toast.last_autovacuum_age:
     description: Seconds since last autovacuum on this TOAST table (PostgreSQL 9.6+)
     enabled: true
     gauge:
       value_type: double
-    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
+    attributes:
+    - newrelicpostgresql.instance_name
+    - schema_name
+    - table_name
     unit: s
     stability:
       level: alpha
-
   postgresql.toast.last_vacuum_age:
     description: Seconds since last manual VACUUM on this TOAST table (PostgreSQL 9.6+)
     enabled: true
     gauge:
       value_type: double
-    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
+    attributes:
+    - newrelicpostgresql.instance_name
+    - schema_name
+    - table_name
     unit: s
     stability:
       level: alpha
-
   postgresql.toast.vacuumed:
     description: Number of times this TOAST table has been manually vacuumed (PostgreSQL 9.6+)
     enabled: true
@@ -2224,11 +2801,13 @@ metrics:
       aggregation_temporality: cumulative
       monotonic: true
       value_type: int
-    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
-    unit: "{operations}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    - schema_name
+    - table_name
+    unit: '{operations}'
     stability:
       level: alpha
-
   postgresql.toast_blocks_hit:
     description: Number of TOAST blocks read from buffer cache for this table (PostgreSQL 9.6+)
     enabled: true
@@ -2236,11 +2815,13 @@ metrics:
       aggregation_temporality: cumulative
       monotonic: true
       value_type: int
-    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
-    unit: "{blocks}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    - schema_name
+    - table_name
+    unit: '{blocks}'
     stability:
       level: alpha
-
   postgresql.toast_blocks_read:
     description: Number of TOAST blocks read from disk for this table (PostgreSQL 9.6+)
     enabled: true
@@ -2248,11 +2829,13 @@ metrics:
       aggregation_temporality: cumulative
       monotonic: true
       value_type: int
-    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
-    unit: "{blocks}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    - schema_name
+    - table_name
+    unit: '{blocks}'
     stability:
       level: alpha
-
   postgresql.toast_index_blocks_hit:
     description: Number of TOAST index blocks read from buffer cache for this table (PostgreSQL 9.6+)
     enabled: true
@@ -2260,11 +2843,13 @@ metrics:
       aggregation_temporality: cumulative
       monotonic: true
       value_type: int
-    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
-    unit: "{blocks}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    - schema_name
+    - table_name
+    unit: '{blocks}'
     stability:
       level: alpha
-
   postgresql.toast_index_blocks_read:
     description: Number of TOAST index blocks read from disk for this table (PostgreSQL 9.6+)
     enabled: true
@@ -2272,111 +2857,141 @@ metrics:
       aggregation_temporality: cumulative
       monotonic: true
       value_type: int
-    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
-    unit: "{blocks}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    - schema_name
+    - table_name
+    unit: '{blocks}'
     stability:
       level: alpha
-
   postgresql.toast_size:
     description: Size of the TOAST data for this table in bytes (PostgreSQL 9.6+)
     enabled: true
     gauge:
       value_type: int
-    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
+    attributes:
+    - newrelicpostgresql.instance_name
+    - schema_name
+    - table_name
     unit: By
     stability:
       level: alpha
-
   postgresql.transactions.duration.max:
     description: Maximum transaction duration in seconds across all active backends (PostgreSQL 9.6+)
     enabled: true
     gauge:
       value_type: double
-    attributes: [newrelicpostgresql.instance_name, database_name, user_name, application_name, backend_type]
+    attributes:
+    - newrelicpostgresql.instance_name
+    - database_name
+    - user_name
+    - application_name
+    - backend_type
     unit: s
     stability:
       level: alpha
-
   postgresql.transactions.duration.sum:
     description: Sum of transaction durations in seconds across all active backends (PostgreSQL 9.6+)
     enabled: true
     gauge:
       value_type: double
-    attributes: [newrelicpostgresql.instance_name, database_name, user_name, application_name, backend_type]
+    attributes:
+    - newrelicpostgresql.instance_name
+    - database_name
+    - user_name
+    - application_name
+    - backend_type
     unit: s
     stability:
       level: alpha
-
   postgresql.uptime:
     description: PostgreSQL server uptime in seconds (PostgreSQL 9.6+)
     enabled: true
     gauge:
       value_type: double
-    attributes: [newrelicpostgresql.instance_name]
-    unit: "s"
+    attributes:
+    - newrelicpostgresql.instance_name
+    unit: s
     stability:
       level: alpha
-
   postgresql.vacuum.heap_blks_scanned:
     description: Number of heap blocks scanned during VACUUM operation (PostgreSQL 12+)
     enabled: true
     gauge:
       value_type: int
-    attributes: [database_name, newrelicpostgresql.instance_name, schema_name, table_name]
-    unit: "{blocks}"
+    attributes:
+    - database_name
+    - newrelicpostgresql.instance_name
+    - schema_name
+    - table_name
+    unit: '{blocks}'
     stability:
       level: alpha
-
   postgresql.vacuum.heap_blks_total:
     description: Total number of heap blocks to be scanned during VACUUM (PostgreSQL 12+)
     enabled: true
     gauge:
       value_type: int
-    attributes: [database_name, newrelicpostgresql.instance_name, schema_name, table_name]
-    unit: "{blocks}"
+    attributes:
+    - database_name
+    - newrelicpostgresql.instance_name
+    - schema_name
+    - table_name
+    unit: '{blocks}'
     stability:
       level: alpha
-
   postgresql.vacuum.heap_blks_vacuumed:
     description: Number of heap blocks vacuumed during VACUUM operation (PostgreSQL 12+)
     enabled: true
     gauge:
       value_type: int
-    attributes: [database_name, newrelicpostgresql.instance_name, schema_name, table_name]
-    unit: "{blocks}"
+    attributes:
+    - database_name
+    - newrelicpostgresql.instance_name
+    - schema_name
+    - table_name
+    unit: '{blocks}'
     stability:
       level: alpha
-
   postgresql.vacuum.index_vacuum_count:
     description: Number of completed index vacuum cycles during VACUUM operation (PostgreSQL 12+)
     enabled: true
     gauge:
       value_type: int
-    attributes: [database_name, newrelicpostgresql.instance_name, schema_name, table_name]
-    unit: "{cycles}"
+    attributes:
+    - database_name
+    - newrelicpostgresql.instance_name
+    - schema_name
+    - table_name
+    unit: '{cycles}'
     stability:
       level: alpha
-
   postgresql.vacuum.max_dead_tuples:
     description: Maximum number of dead tuples that can be stored before index vacuum is required (PostgreSQL 12+)
     enabled: true
     gauge:
       value_type: int
-    attributes: [database_name, newrelicpostgresql.instance_name, schema_name, table_name]
-    unit: "{tuples}"
+    attributes:
+    - database_name
+    - newrelicpostgresql.instance_name
+    - schema_name
+    - table_name
+    unit: '{tuples}'
     stability:
       level: alpha
-
   postgresql.vacuum.num_dead_tuples:
     description: Current number of dead tuples collected during VACUUM operation (PostgreSQL 12+)
     enabled: true
     gauge:
       value_type: int
-    attributes: [database_name, newrelicpostgresql.instance_name, schema_name, table_name]
-    unit: "{tuples}"
+    attributes:
+    - database_name
+    - newrelicpostgresql.instance_name
+    - schema_name
+    - table_name
+    unit: '{tuples}'
     stability:
       level: alpha
-
   postgresql.vacuumed:
     description: Number of times this table has been manually vacuumed (PostgreSQL 9.6+)
     enabled: true
@@ -2384,11 +2999,13 @@ metrics:
       aggregation_temporality: cumulative
       monotonic: true
       value_type: int
-    attributes: [newrelicpostgresql.instance_name, schema_name, table_name]
-    unit: "{operations}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    - schema_name
+    - table_name
+    unit: '{operations}'
     stability:
       level: alpha
-
   postgresql.wal.buffers_full:
     description: Number of times WAL data was written because WAL buffers became full (PostgreSQL 14+)
     enabled: true
@@ -2396,11 +3013,11 @@ metrics:
       aggregation_temporality: cumulative
       monotonic: true
       value_type: int
-    attributes: [newrelicpostgresql.instance_name]
-    unit: "{buffers}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    unit: '{buffers}'
     stability:
       level: alpha
-
   postgresql.wal.bytes:
     description: Total amount of WAL bytes generated (PostgreSQL 14+)
     enabled: true
@@ -2408,11 +3025,11 @@ metrics:
       aggregation_temporality: cumulative
       monotonic: true
       value_type: int
-    attributes: [newrelicpostgresql.instance_name]
-    unit: "By"
+    attributes:
+    - newrelicpostgresql.instance_name
+    unit: By
     stability:
       level: alpha
-
   postgresql.wal.fpi:
     description: Total number of WAL full page images generated (PostgreSQL 14+)
     enabled: true
@@ -2420,11 +3037,11 @@ metrics:
       aggregation_temporality: cumulative
       monotonic: true
       value_type: int
-    attributes: [newrelicpostgresql.instance_name]
-    unit: "{images}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    unit: '{images}'
     stability:
       level: alpha
-
   postgresql.wal.records:
     description: Total number of WAL records generated (PostgreSQL 14+)
     enabled: true
@@ -2432,11 +3049,11 @@ metrics:
       aggregation_temporality: cumulative
       monotonic: true
       value_type: int
-    attributes: [newrelicpostgresql.instance_name]
-    unit: "{records}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    unit: '{records}'
     stability:
       level: alpha
-
   postgresql.wal.sync:
     description: Number of times WAL files were synced to disk (PostgreSQL 14-17)
     enabled: true
@@ -2444,21 +3061,21 @@ metrics:
       aggregation_temporality: cumulative
       monotonic: true
       value_type: int
-    attributes: [newrelicpostgresql.instance_name]
-    unit: "{syncs}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    unit: '{syncs}'
     stability:
       level: alpha
-
   postgresql.wal.sync_time:
     description: Total time spent syncing WAL files to disk (PostgreSQL 14-17)
     enabled: true
     gauge:
       value_type: double
-    attributes: [newrelicpostgresql.instance_name]
-    unit: "ms"
+    attributes:
+    - newrelicpostgresql.instance_name
+    unit: ms
     stability:
       level: alpha
-
   postgresql.wal.write:
     description: Number of times WAL buffers were written to disk (PostgreSQL 14-17)
     enabled: true
@@ -2466,104 +3083,104 @@ metrics:
       aggregation_temporality: cumulative
       monotonic: true
       value_type: int
-    attributes: [newrelicpostgresql.instance_name]
-    unit: "{writes}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    unit: '{writes}'
     stability:
       level: alpha
-
   postgresql.wal.write_time:
     description: Total time spent writing WAL buffers to disk (PostgreSQL 14-17)
     enabled: true
     gauge:
       value_type: double
-    attributes: [newrelicpostgresql.instance_name]
-    unit: "ms"
+    attributes:
+    - newrelicpostgresql.instance_name
+    unit: ms
     stability:
       level: alpha
-
   postgresql.wal_files.age:
     description: Age of the oldest WAL file in seconds (PostgreSQL 10+)
     enabled: true
     gauge:
       value_type: double
-    attributes: [newrelicpostgresql.instance_name]
-    unit: "s"
+    attributes:
+    - newrelicpostgresql.instance_name
+    unit: s
     stability:
       level: alpha
-
   postgresql.wal_files.count:
     description: Total number of WAL files in the pg_wal directory (PostgreSQL 10+)
     enabled: true
     gauge:
       value_type: int
-    attributes: [newrelicpostgresql.instance_name]
-    unit: "{files}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    unit: '{files}'
     stability:
       level: alpha
-
   postgresql.wal_files.size:
     description: Total size of all WAL files in bytes (PostgreSQL 10+)
     enabled: true
     gauge:
       value_type: int
-    attributes: [newrelicpostgresql.instance_name]
-    unit: "By"
+    attributes:
+    - newrelicpostgresql.instance_name
+    unit: By
     stability:
       level: alpha
-
   postgresql.wal_receiver.connected:
     description: Whether WAL receiver is connected (1 if streaming, 0 otherwise, PostgreSQL 9.6+)
     enabled: true
     gauge:
       value_type: int
-    attributes: [newrelicpostgresql.instance_name]
-    unit: "{status}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    unit: '{status}'
     stability:
       level: alpha
-
   postgresql.wal_receiver.last_msg_receipt_age:
     description: Time elapsed since last message received by WAL receiver from primary (PostgreSQL 9.6+)
     enabled: true
     gauge:
       value_type: double
-    attributes: [newrelicpostgresql.instance_name]
-    unit: "s"
+    attributes:
+    - newrelicpostgresql.instance_name
+    unit: s
     stability:
       level: alpha
-
   postgresql.wal_receiver.last_msg_send_age:
     description: Time elapsed since last message sent from primary to WAL receiver (PostgreSQL 9.6+)
     enabled: true
     gauge:
       value_type: double
-    attributes: [newrelicpostgresql.instance_name]
-    unit: "s"
+    attributes:
+    - newrelicpostgresql.instance_name
+    unit: s
     stability:
       level: alpha
-
   postgresql.wal_receiver.latest_end_age:
     description: Time elapsed since last WAL location reported back to primary by WAL receiver (PostgreSQL 9.6+)
     enabled: true
     gauge:
       value_type: double
-    attributes: [newrelicpostgresql.instance_name]
-    unit: "s"
+    attributes:
+    - newrelicpostgresql.instance_name
+    unit: s
     stability:
       level: alpha
-
   postgresql.wal_receiver.received_timeline:
     description: Timeline number of last WAL file received and synced to disk by WAL receiver (PostgreSQL 9.6+)
     enabled: true
     gauge:
       value_type: int
-    attributes: [newrelicpostgresql.instance_name]
-    unit: "{timeline}"
+    attributes:
+    - newrelicpostgresql.instance_name
+    unit: '{timeline}'
     stability:
       level: alpha
-
 tests:
   config:
-    hostname: ""
-    port: ""
-    username: ""
-    database: ""
+    hostname: ''
+    port: ''
+    username: ''
+    database: ''
