@@ -139,9 +139,9 @@ func (s *QueryPerformanceScraper) processActiveRunningQueryMetricsWithPlan(resul
 		return nil
 	}
 
-	// Extract New Relic metadata and normalize SQL for cross-language correlation
+	// Get APM metadata from cache (populated by slow query scraper)
 	// This enables APM integration and query correlation across different language agents
-	var nrApmGuid, sqlHash, normalizedSQL string
+	var nrApmGuid, sqlHash string
 	var blockingNrApmGuid string
 
 	// Try to get APM metadata from cache first (populated by slow query scraper)
@@ -150,62 +150,18 @@ func (s *QueryPerformanceScraper) processActiveRunningQueryMetricsWithPlan(resul
 		if cachedMetadata, found := apmMetadataCache.Get(queryHashStr); found {
 			nrApmGuid = cachedMetadata.NrServiceGuid
 			sqlHash = cachedMetadata.NormalisedSqlHash
+
+			sessionIDStr := "unknown"
+			if result.CurrentSessionID != nil {
+				sessionIDStr = fmt.Sprintf("%d", *result.CurrentSessionID)
+			}
+
+			s.logger.Info("✅ ACTIVE QUERY: Using cached APM metadata from slow query",
+				zap.String("session_id", sessionIDStr),
+				zap.String("query_id", queryHashStr),
+				zap.String("cached_nr_service_guid", nrApmGuid),
+				zap.String("cached_normalised_sql_hash", sqlHash))
 		}
-	}
-
-	// Only extract from query text if not found in cache
-	if (nrApmGuid == "" || sqlHash == "") && result.QueryText != nil && *result.QueryText != "" {
-		// Log the first 500 characters of query text to check for comments
-		queryPreview := *result.QueryText
-		if len(queryPreview) > 500 {
-			queryPreview = queryPreview[:500] + "..."
-		}
-
-		hasNrGuidComment := strings.Contains(*result.QueryText, "nr_service_guid=")
-		hasNrServiceComment := strings.Contains(*result.QueryText, "nr_service=")
-
-		sessionIDStr := "unknown"
-		if result.CurrentSessionID != nil {
-			sessionIDStr = fmt.Sprintf("%d", *result.CurrentSessionID)
-		}
-
-		s.logger.Info("🔍 ACTIVE QUERY: Processing query text from dm_exec_requests",
-			zap.String("session_id", sessionIDStr),
-			zap.Int("query_text_length", len(*result.QueryText)),
-			zap.Bool("has_nr_guid_comment", hasNrGuidComment),
-			zap.Bool("has_nr_service_comment", hasNrServiceComment),
-			zap.String("query_text_preview", queryPreview))
-
-		// Log full query text at debug level
-		s.logger.Debug("ACTIVE QUERY: Full query text",
-			zap.String("session_id", sessionIDStr),
-			zap.String("full_query_text", *result.QueryText))
-
-		// Extract metadata from New Relic query comments (e.g., /* nr_apm_guid="ABC123", nr_service="order-service" */)
-		nrApmGuid, _ = helpers.ExtractNewRelicMetadata(*result.QueryText)
-
-		s.logger.Info("🏷️  ACTIVE QUERY: Extracted APM metadata from query text",
-			zap.String("session_id", sessionIDStr),
-			zap.String("extracted_nr_service_guid", nrApmGuid),
-			zap.Bool("extraction_successful", nrApmGuid != ""))
-
-		// Normalize SQL and generate MD5 hash for cross-language query correlation
-		normalizedSQL, sqlHash = helpers.NormalizeSqlAndHash(*result.QueryText)
-
-		s.logger.Info("🔐 ACTIVE QUERY: Normalized SQL and generated hash",
-			zap.String("session_id", sessionIDStr),
-			zap.String("normalized_sql_hash", sqlHash),
-			zap.Int("normalized_length", len(normalizedSQL)),
-			zap.String("normalized_sql_preview", func() string {
-				if len(normalizedSQL) > 200 {
-					return normalizedSQL[:200] + "..."
-				}
-				return normalizedSQL
-			}()))
-
-		// Replace QueryText with normalized version for privacy and consistency
-		// This removes literals while preserving query structure
-		result.QueryText = &normalizedSQL
 	}
 
 	// Populate model fields with extracted or cached metadata

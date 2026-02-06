@@ -18,6 +18,8 @@ WITH StatementDetails AS (
 		qs.creation_time,
 		qs.last_execution_time,
 		qs.execution_count,
+		-- Historical average metrics (reflecting all runs since caching)
+		(qs.total_elapsed_time / qs.execution_count) / 1000.0 AS avg_elapsed_time_ms,
 		-- Total elapsed time for precise delta calculation (avoids floating point precision loss)
 		qs.total_elapsed_time / 1000.0 AS total_elapsed_time_ms,
 		-- New metrics from dm_exec_query_stats (for historical and interval calculations)
@@ -57,6 +59,7 @@ SELECT
     CONVERT(VARCHAR(25), SWITCHOFFSET(CAST(s.creation_time AS DATETIMEOFFSET), '+00:00'), 127) + 'Z' AS creation_time,
     CONVERT(VARCHAR(25), SWITCHOFFSET(CAST(s.last_execution_time AS DATETIMEOFFSET), '+00:00'), 127) + 'Z' AS last_execution_timestamp,
     s.execution_count,
+    s.avg_elapsed_time_ms,
     s.total_elapsed_time_ms,
     s.total_worker_time_ms,
     s.total_rows,
@@ -138,11 +141,6 @@ SELECT TOP (@Limit)
 
     -- C. QUERY CORRELATION (Required for slow query correlation)
     r_wait.query_hash AS query_id,
-
-    -- C2. QUERY TEXT (Required for APM metadata extraction)
-    -- Use FULL query text to preserve NR metadata comments at the beginning
-    -- NOTE: Using st_wait.text instead of SUBSTRING to capture comments that precede the statement
-    st_wait.text AS query_text,
 
     -- D. WAIT DETAILS (Required by NRQL Query 1)
     r_wait.wait_type AS wait_type,
@@ -259,8 +257,7 @@ WHERE
     r_wait.session_id > 50
     AND r_wait.database_id > 4
     AND r_wait.wait_type IS NOT NULL
-    -- Include queries with query_hash OR blocked queries (blocking scenarios often lack query_hash during lock wait)
-    AND (r_wait.query_hash IS NOT NULL OR r_wait.blocking_session_id != 0)
+    AND r_wait.query_hash IS NOT NULL  -- Filter out queries without query_hash (PREEMPTIVE waits, system queries)
     AND r_wait.total_elapsed_time >= @ElapsedTimeThresholdMs  -- Filter by elapsed time threshold
     %s  -- Placeholder for additional query_hash IN filter (injected from Go code)
 ORDER BY

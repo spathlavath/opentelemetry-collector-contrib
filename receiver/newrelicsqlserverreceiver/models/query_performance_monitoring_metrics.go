@@ -136,9 +136,6 @@ type ActiveRunningQuery struct {
 	// C. QUERY CORRELATION (Required for slow query correlation)
 	QueryID *QueryID `db:"query_id" metric_name:"query_id" source_type:"attribute"`
 
-	// C2. QUERY TEXT (Required for APM metadata extraction)
-	QueryText *string `db:"query_text" metric_name:"query_text" source_type:"attribute"`
-
 	// D. WAIT DETAILS (Required by NRQL Query 1)
 	WaitType               *string  `db:"wait_type" metric_name:"wait_type" source_type:"attribute"`
 	WaitTimeS              *float64 `db:"wait_time_s" metric_name:"sqlserver.activequery.wait_time_seconds" source_type:"gauge"`
