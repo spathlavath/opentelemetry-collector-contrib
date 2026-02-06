@@ -217,7 +217,7 @@ all_set:
       enabled: true
     sqlserver.security.server_role_members_count:
       enabled: true
-    sqlserver.slowquery.historical_elapsed_time_ms:
+    sqlserver.slowquery.avg_elapsed_time_ms:
       enabled: true
     sqlserver.slowquery.historical_execution_count:
       enabled: true
@@ -566,7 +566,7 @@ none_set:
       enabled: false
     sqlserver.security.server_role_members_count:
       enabled: false
-    sqlserver.slowquery.historical_elapsed_time_ms:
+    sqlserver.slowquery.avg_elapsed_time_ms:
       enabled: false
     sqlserver.slowquery.historical_execution_count:
       enabled: false

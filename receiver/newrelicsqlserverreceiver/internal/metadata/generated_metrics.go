@@ -337,8 +337,8 @@ var MetricsInfo = metricsInfo{
 	SqlserverSecurityServerRoleMembersCount: metricInfo{
 		Name: "sqlserver.security.server_role_members_count",
 	},
-	SqlserverSlowqueryHistoricalElapsedTimeMs: metricInfo{
-		Name: "sqlserver.slowquery.historical_elapsed_time_ms",
+	SqlserverSlowqueryAvgElapsedTimeMs: metricInfo{
+		Name: "sqlserver.slowquery.avg_elapsed_time_ms",
 	},
 	SqlserverSlowqueryHistoricalExecutionCount: metricInfo{
 		Name: "sqlserver.slowquery.historical_execution_count",
@@ -628,7 +628,7 @@ type metricsInfo struct {
 	SqlserverPlanAvgElapsedTimeMs                             metricInfo
 	SqlserverSecurityServerPrincipalsCount                    metricInfo
 	SqlserverSecurityServerRoleMembersCount                   metricInfo
-	SqlserverSlowqueryHistoricalElapsedTimeMs                 metricInfo
+	SqlserverSlowqueryAvgElapsedTimeMs                        metricInfo
 	SqlserverSlowqueryHistoricalExecutionCount                metricInfo
 	SqlserverSlowqueryHistoricalLogicalReads                  metricInfo
 	SqlserverSlowqueryHistoricalPhysicalReads                 metricInfo
@@ -6258,29 +6258,29 @@ func newMetricSqlserverSecurityServerRoleMembersCount(cfg MetricConfig) metricSq
 	return m
 }
 
-type metricSqlserverSlowqueryHistoricalElapsedTimeMs struct {
+type metricSqlserverSlowqueryAvgElapsedTimeMs struct {
 	data     pmetric.Metric // data buffer for generated metric.
 	config   MetricConfig   // metric config provided by user.
 	capacity int            // max observed number of data points added to the metric.
 }
 
-// init fills sqlserver.slowquery.historical_elapsed_time_ms metric with initial data.
-func (m *metricSqlserverSlowqueryHistoricalElapsedTimeMs) init() {
-	m.data.SetName("sqlserver.slowquery.historical_elapsed_time_ms")
-	m.data.SetDescription("Historical total elapsed time in milliseconds (cumulative since plan cached)")
+// init fills sqlserver.slowquery.avg_elapsed_time_ms metric with initial data.
+func (m *metricSqlserverSlowqueryAvgElapsedTimeMs) init() {
+	m.data.SetName("sqlserver.slowquery.avg_elapsed_time_ms")
+	m.data.SetDescription("Average elapsed time per execution in milliseconds (historical average since plan cached)")
 	m.data.SetUnit("ms")
 	m.data.SetEmptyGauge()
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricSqlserverSlowqueryHistoricalElapsedTimeMs) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, queryIDAttributeValue string, databaseNameAttributeValue string, normalisedSQLHashAttributeValue string, nrServiceGUIDAttributeValue string) {
+func (m *metricSqlserverSlowqueryAvgElapsedTimeMs) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, queryIDAttributeValue string, databaseNameAttributeValue string, normalisedSQLHashAttributeValue string, nrServiceGUIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
 	dp := m.data.Gauge().DataPoints().AppendEmpty()
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
-	dp.SetIntValue(val)
+	dp.SetDoubleValue(val)
 	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
 	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
 	dp.Attributes().PutStr("normalised_sql_hash", normalisedSQLHashAttributeValue)
@@ -6288,14 +6288,14 @@ func (m *metricSqlserverSlowqueryHistoricalElapsedTimeMs) recordDataPoint(start 
 }
 
 // updateCapacity saves max length of data point slices that will be used for the slice capacity.
-func (m *metricSqlserverSlowqueryHistoricalElapsedTimeMs) updateCapacity() {
+func (m *metricSqlserverSlowqueryAvgElapsedTimeMs) updateCapacity() {
 	if m.data.Gauge().DataPoints().Len() > m.capacity {
 		m.capacity = m.data.Gauge().DataPoints().Len()
 	}
 }
 
 // emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
-func (m *metricSqlserverSlowqueryHistoricalElapsedTimeMs) emit(metrics pmetric.MetricSlice) {
+func (m *metricSqlserverSlowqueryAvgElapsedTimeMs) emit(metrics pmetric.MetricSlice) {
 	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
 		m.updateCapacity()
 		m.data.MoveTo(metrics.AppendEmpty())
@@ -6303,8 +6303,8 @@ func (m *metricSqlserverSlowqueryHistoricalElapsedTimeMs) emit(metrics pmetric.M
 	}
 }
 
-func newMetricSqlserverSlowqueryHistoricalElapsedTimeMs(cfg MetricConfig) metricSqlserverSlowqueryHistoricalElapsedTimeMs {
-	m := metricSqlserverSlowqueryHistoricalElapsedTimeMs{config: cfg}
+func newMetricSqlserverSlowqueryAvgElapsedTimeMs(cfg MetricConfig) metricSqlserverSlowqueryAvgElapsedTimeMs {
+	m := metricSqlserverSlowqueryAvgElapsedTimeMs{config: cfg}
 	if cfg.Enabled {
 		m.data = pmetric.NewMetric()
 		m.init()
@@ -9493,7 +9493,7 @@ type MetricsBuilder struct {
 	metricSqlserverPlanAvgElapsedTimeMs                             metricSqlserverPlanAvgElapsedTimeMs
 	metricSqlserverSecurityServerPrincipalsCount                    metricSqlserverSecurityServerPrincipalsCount
 	metricSqlserverSecurityServerRoleMembersCount                   metricSqlserverSecurityServerRoleMembersCount
-	metricSqlserverSlowqueryHistoricalElapsedTimeMs                 metricSqlserverSlowqueryHistoricalElapsedTimeMs
+	metricSqlserverSlowqueryAvgElapsedTimeMs                        metricSqlserverSlowqueryAvgElapsedTimeMs
 	metricSqlserverSlowqueryHistoricalExecutionCount                metricSqlserverSlowqueryHistoricalExecutionCount
 	metricSqlserverSlowqueryHistoricalLogicalReads                  metricSqlserverSlowqueryHistoricalLogicalReads
 	metricSqlserverSlowqueryHistoricalPhysicalReads                 metricSqlserverSlowqueryHistoricalPhysicalReads
@@ -9686,7 +9686,7 @@ func NewMetricsBuilder(mbc MetricsBuilderConfig, settings receiver.Settings, opt
 		metricSqlserverPlanAvgElapsedTimeMs:                             newMetricSqlserverPlanAvgElapsedTimeMs(mbc.Metrics.SqlserverPlanAvgElapsedTimeMs),
 		metricSqlserverSecurityServerPrincipalsCount:                    newMetricSqlserverSecurityServerPrincipalsCount(mbc.Metrics.SqlserverSecurityServerPrincipalsCount),
 		metricSqlserverSecurityServerRoleMembersCount:                   newMetricSqlserverSecurityServerRoleMembersCount(mbc.Metrics.SqlserverSecurityServerRoleMembersCount),
-		metricSqlserverSlowqueryHistoricalElapsedTimeMs:                 newMetricSqlserverSlowqueryHistoricalElapsedTimeMs(mbc.Metrics.SqlserverSlowqueryHistoricalElapsedTimeMs),
+		metricSqlserverSlowqueryAvgElapsedTimeMs:                        newMetricSqlserverSlowqueryAvgElapsedTimeMs(mbc.Metrics.SqlserverSlowqueryAvgElapsedTimeMs),
 		metricSqlserverSlowqueryHistoricalExecutionCount:                newMetricSqlserverSlowqueryHistoricalExecutionCount(mbc.Metrics.SqlserverSlowqueryHistoricalExecutionCount),
 		metricSqlserverSlowqueryHistoricalLogicalReads:                  newMetricSqlserverSlowqueryHistoricalLogicalReads(mbc.Metrics.SqlserverSlowqueryHistoricalLogicalReads),
 		metricSqlserverSlowqueryHistoricalPhysicalReads:                 newMetricSqlserverSlowqueryHistoricalPhysicalReads(mbc.Metrics.SqlserverSlowqueryHistoricalPhysicalReads),
@@ -9956,7 +9956,7 @@ func (mb *MetricsBuilder) EmitForResource(options ...ResourceMetricsOption) {
 	mb.metricSqlserverPlanAvgElapsedTimeMs.emit(ils.Metrics())
 	mb.metricSqlserverSecurityServerPrincipalsCount.emit(ils.Metrics())
 	mb.metricSqlserverSecurityServerRoleMembersCount.emit(ils.Metrics())
-	mb.metricSqlserverSlowqueryHistoricalElapsedTimeMs.emit(ils.Metrics())
+	mb.metricSqlserverSlowqueryAvgElapsedTimeMs.emit(ils.Metrics())
 	mb.metricSqlserverSlowqueryHistoricalExecutionCount.emit(ils.Metrics())
 	mb.metricSqlserverSlowqueryHistoricalLogicalReads.emit(ils.Metrics())
 	mb.metricSqlserverSlowqueryHistoricalPhysicalReads.emit(ils.Metrics())
@@ -10587,9 +10587,9 @@ func (mb *MetricsBuilder) RecordSqlserverSecurityServerRoleMembersCountDataPoint
 	mb.metricSqlserverSecurityServerRoleMembersCount.recordDataPoint(mb.startTime, ts, val, metricTypeAttributeValue)
 }
 
-// RecordSqlserverSlowqueryHistoricalElapsedTimeMsDataPoint adds a data point to sqlserver.slowquery.historical_elapsed_time_ms metric.
-func (mb *MetricsBuilder) RecordSqlserverSlowqueryHistoricalElapsedTimeMsDataPoint(ts pcommon.Timestamp, val int64, queryIDAttributeValue string, databaseNameAttributeValue string, normalisedSQLHashAttributeValue string, nrServiceGUIDAttributeValue string) {
-	mb.metricSqlserverSlowqueryHistoricalElapsedTimeMs.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, databaseNameAttributeValue, normalisedSQLHashAttributeValue, nrServiceGUIDAttributeValue)
+// RecordSqlserverSlowqueryAvgElapsedTimeMsDataPoint adds a data point to sqlserver.slowquery.avg_elapsed_time_ms metric.
+func (mb *MetricsBuilder) RecordSqlserverSlowqueryAvgElapsedTimeMsDataPoint(ts pcommon.Timestamp, val float64, queryIDAttributeValue string, databaseNameAttributeValue string, normalisedSQLHashAttributeValue string, nrServiceGUIDAttributeValue string) {
+	mb.metricSqlserverSlowqueryAvgElapsedTimeMs.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, databaseNameAttributeValue, normalisedSQLHashAttributeValue, nrServiceGUIDAttributeValue)
 }
 
 // RecordSqlserverSlowqueryHistoricalExecutionCountDataPoint adds a data point to sqlserver.slowquery.historical_execution_count metric.

@@ -1448,13 +1448,13 @@ Total number of server role members
 | ---- | ----------- | ------ | -------- |
 | metric.type | Metric aggregation type | Any Str | Recommended |
 
-### sqlserver.slowquery.historical_elapsed_time_ms
+### sqlserver.slowquery.avg_elapsed_time_ms
 
-Historical total elapsed time in milliseconds (cumulative since plan cached)
+Average elapsed time per execution in milliseconds (historical average since plan cached)
 
 | Unit | Metric Type | Value Type | Stability |
 | ---- | ----------- | ---------- | --------- |
-| ms | Gauge | Int | Alpha |
+| ms | Gauge | Double | Alpha |
 
 #### Attributes
 

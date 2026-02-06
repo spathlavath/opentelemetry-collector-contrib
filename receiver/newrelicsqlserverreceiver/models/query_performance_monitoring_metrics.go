@@ -12,11 +12,9 @@ type SlowQuery struct {
 	CreationTime           *string  `db:"creation_time" metric_name:"creation_time" source_type:"attribute"`
 	LastExecutionTimestamp *string  `db:"last_execution_timestamp" metric_name:"last_execution_timestamp" source_type:"attribute"`
 	ExecutionCount         *int64   `db:"execution_count" metric_name:"execution_count" source_type:"gauge"`
+	AvgElapsedTimeMS       *float64 `db:"avg_elapsed_time_ms" metric_name:"sqlserver.slowquery.avg_elapsed_time_ms" source_type:"gauge"`
 	TotalElapsedTimeMS     *float64 `db:"total_elapsed_time_ms"` // Used for precise delta calculation only
 	CollectionTimestamp    *string  `db:"collection_timestamp" metric_name:"collection_timestamp" source_type:"attribute"`
-
-	// Historical metric for elapsed time (cumulative since plan cached)
-	HistoricalElapsedTimeMS *int64 `db:"-" metric_name:"sqlserver.slowquery.historical_elapsed_time_ms" source_type:"gauge"`
 
 	// Historical metrics from dm_exec_query_stats (cumulative since plan cached)
 	TotalWorkerTimeMS  *float64 `db:"total_worker_time_ms"` // Used for delta calculation (in milliseconds)

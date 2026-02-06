@@ -1212,14 +1212,14 @@ metrics:
       value_type: int
     attributes: [metric.type]
 
-  sqlserver.slowquery.historical_elapsed_time_ms:
+  sqlserver.slowquery.avg_elapsed_time_ms:
     enabled: true
     stability:
       level: alpha
-    description: Historical total elapsed time in milliseconds (cumulative since plan cached)
+    description: Average elapsed time per execution in milliseconds (historical average since plan cached)
     unit: ms
     gauge:
-      value_type: int
+      value_type: double
     attributes: [query_id, database_name, normalised_sql_hash, nr_service_guid]
 
   sqlserver.slowquery.historical_execution_count:

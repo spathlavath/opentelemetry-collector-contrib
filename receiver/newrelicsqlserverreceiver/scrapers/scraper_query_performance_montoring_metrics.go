@@ -146,12 +146,6 @@ func (s *QueryPerformanceScraper) ScrapeSlowQueryMetrics(ctx context.Context, in
 			rawQuery.IntervalWaitTimeMS = &metrics.IntervalWaitTimeMs
 			rawQuery.IntervalAvgWaitTimeMS = &metrics.IntervalAvgWaitTimeMs
 
-			// Populate historical elapsed time (total elapsed time as int64 milliseconds)
-			if rawQuery.TotalElapsedTimeMS != nil {
-				historicalElapsedMs := int64(*rawQuery.TotalElapsedTimeMS)
-				rawQuery.HistoricalElapsedTimeMS = &historicalElapsedMs
-			}
-
 			// Calculate and populate historical wait time (total_elapsed - total_worker)
 			// Note: Both are float64 in milliseconds, convert result to int64
 			if rawQuery.TotalElapsedTimeMS != nil && rawQuery.TotalWorkerTimeMS != nil {
@@ -563,10 +557,10 @@ func (s *QueryPerformanceScraper) processSlowQueryMetrics(result models.SlowQuer
 		"SqlServerSlowQueryDetails",
 	)
 
-	if result.HistoricalElapsedTimeMS != nil {
-		s.mb.RecordSqlserverSlowqueryHistoricalElapsedTimeMsDataPoint(
+	if result.AvgElapsedTimeMS != nil {
+		s.mb.RecordSqlserverSlowqueryAvgElapsedTimeMsDataPoint(
 			timestamp,
-			*result.HistoricalElapsedTimeMS,
+			*result.AvgElapsedTimeMS,
 			queryID,
 			databaseName,
 			normalizedSqlHash,
