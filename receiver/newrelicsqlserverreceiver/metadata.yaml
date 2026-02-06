@@ -56,7 +56,7 @@ metrics:
         login_name,
         host_name,
         query_id,
-        normalised_sql_hash,
+        normalized_sql_hash,
         nr_service_guid,
         wait_type,
         wait_type_description,
@@ -75,7 +75,7 @@ metrics:
         blocking_login_name,
         blocking_query_hash,
         blocking_nr_service_guid,
-        blocking_normalised_sql_hash,
+        blocking_normalized_sql_hash,
       ]
 
   sqlserver.blocking_query.details:
@@ -93,6 +93,8 @@ metrics:
         request_start_time,
         blocking_session_id,
         blocking_query_text,
+        blocking_nr_service_guid,
+        blocking_normalized_sql_hash,
         newrelic.event.type,
       ]
 
@@ -1218,7 +1220,7 @@ metrics:
     unit: ms
     gauge:
       value_type: int
-    attributes: [query_id, database_name, normalised_sql_hash, nr_service_guid]
+    attributes: [query_id, database_name, normalized_sql_hash, nr_service_guid]
 
   sqlserver.slowquery.historical_execution_count:
     enabled: true
@@ -1228,7 +1230,7 @@ metrics:
     unit: "{executions}"
     gauge:
       value_type: int
-    attributes: [query_id, database_name, normalised_sql_hash, nr_service_guid]
+    attributes: [query_id, database_name, normalized_sql_hash, nr_service_guid]
 
   sqlserver.slowquery.historical_logical_reads:
     enabled: true
@@ -1238,7 +1240,7 @@ metrics:
     unit: "{reads}"
     gauge:
       value_type: int
-    attributes: [query_id, database_name, normalised_sql_hash, nr_service_guid]
+    attributes: [query_id, database_name, normalized_sql_hash, nr_service_guid]
 
   sqlserver.slowquery.historical_physical_reads:
     enabled: true
@@ -1248,7 +1250,7 @@ metrics:
     unit: "{reads}"
     gauge:
       value_type: int
-    attributes: [query_id, database_name, normalised_sql_hash, nr_service_guid]
+    attributes: [query_id, database_name, normalized_sql_hash, nr_service_guid]
 
   sqlserver.slowquery.historical_rows:
     enabled: true
@@ -1258,7 +1260,7 @@ metrics:
     unit: "{rows}"
     gauge:
       value_type: int
-    attributes: [query_id, database_name, normalised_sql_hash, nr_service_guid]
+    attributes: [query_id, database_name, normalized_sql_hash, nr_service_guid]
 
   sqlserver.slowquery.historical_wait_time_ms:
     enabled: true
@@ -1268,7 +1270,7 @@ metrics:
     unit: ms
     gauge:
       value_type: int
-    attributes: [query_id, database_name, normalised_sql_hash, nr_service_guid]
+    attributes: [query_id, database_name, normalized_sql_hash, nr_service_guid]
 
   sqlserver.slowquery.historical_worker_time_ms:
     enabled: true
@@ -1278,7 +1280,7 @@ metrics:
     unit: ms
     gauge:
       value_type: int
-    attributes: [query_id, database_name, normalised_sql_hash, nr_service_guid]
+    attributes: [query_id, database_name, normalized_sql_hash, nr_service_guid]
 
   sqlserver.slowquery.interval_avg_elapsed_time_ms:
     enabled: true
@@ -1288,7 +1290,7 @@ metrics:
     unit: ms
     gauge:
       value_type: double
-    attributes: [query_id, database_name, normalised_sql_hash, nr_service_guid]
+    attributes: [query_id, database_name, normalized_sql_hash, nr_service_guid]
 
   sqlserver.slowquery.interval_avg_logical_reads:
     enabled: true
@@ -1298,7 +1300,7 @@ metrics:
     unit: "{reads}"
     gauge:
       value_type: double
-    attributes: [query_id, database_name, normalised_sql_hash, nr_service_guid]
+    attributes: [query_id, database_name, normalized_sql_hash, nr_service_guid]
 
   sqlserver.slowquery.interval_avg_physical_reads:
     enabled: true
@@ -1308,7 +1310,7 @@ metrics:
     unit: "{reads}"
     gauge:
       value_type: double
-    attributes: [query_id, database_name, normalised_sql_hash, nr_service_guid]
+    attributes: [query_id, database_name, normalized_sql_hash, nr_service_guid]
 
   sqlserver.slowquery.interval_avg_rows:
     enabled: true
@@ -1318,7 +1320,7 @@ metrics:
     unit: "{rows}"
     gauge:
       value_type: double
-    attributes: [query_id, database_name, normalised_sql_hash, nr_service_guid]
+    attributes: [query_id, database_name, normalized_sql_hash, nr_service_guid]
 
   sqlserver.slowquery.interval_avg_wait_time_ms:
     enabled: true
@@ -1328,7 +1330,7 @@ metrics:
     unit: ms
     gauge:
       value_type: double
-    attributes: [query_id, database_name, normalised_sql_hash, nr_service_guid]
+    attributes: [query_id, database_name, normalized_sql_hash, nr_service_guid]
 
   sqlserver.slowquery.interval_avg_worker_time_ms:
     enabled: true
@@ -1338,7 +1340,7 @@ metrics:
     unit: ms
     gauge:
       value_type: double
-    attributes: [query_id, database_name, normalised_sql_hash, nr_service_guid]
+    attributes: [query_id, database_name, normalized_sql_hash, nr_service_guid]
 
   sqlserver.slowquery.interval_elapsed_time_ms:
     enabled: true
@@ -1348,7 +1350,7 @@ metrics:
     unit: ms
     gauge:
       value_type: int
-    attributes: [query_id, database_name, normalised_sql_hash, nr_service_guid]
+    attributes: [query_id, database_name, normalized_sql_hash, nr_service_guid]
 
   sqlserver.slowquery.interval_execution_count:
     enabled: true
@@ -1358,7 +1360,7 @@ metrics:
     unit: "{executions}"
     gauge:
       value_type: int
-    attributes: [query_id, database_name, normalised_sql_hash, nr_service_guid]
+    attributes: [query_id, database_name, normalized_sql_hash, nr_service_guid]
 
   sqlserver.slowquery.interval_logical_reads:
     enabled: true
@@ -1368,7 +1370,7 @@ metrics:
     unit: "{reads}"
     gauge:
       value_type: int
-    attributes: [query_id, database_name, normalised_sql_hash, nr_service_guid]
+    attributes: [query_id, database_name, normalized_sql_hash, nr_service_guid]
 
   sqlserver.slowquery.interval_physical_reads:
     enabled: true
@@ -1378,7 +1380,7 @@ metrics:
     unit: "{reads}"
     gauge:
       value_type: int
-    attributes: [query_id, database_name, normalised_sql_hash, nr_service_guid]
+    attributes: [query_id, database_name, normalized_sql_hash, nr_service_guid]
 
   sqlserver.slowquery.interval_rows:
     enabled: true
@@ -1388,7 +1390,7 @@ metrics:
     unit: "{rows}"
     gauge:
       value_type: int
-    attributes: [query_id, database_name, normalised_sql_hash, nr_service_guid]
+    attributes: [query_id, database_name, normalized_sql_hash, nr_service_guid]
 
   sqlserver.slowquery.interval_wait_time_ms:
     enabled: true
@@ -1398,7 +1400,7 @@ metrics:
     unit: ms
     gauge:
       value_type: int
-    attributes: [query_id, database_name, normalised_sql_hash, nr_service_guid]
+    attributes: [query_id, database_name, normalized_sql_hash, nr_service_guid]
 
   sqlserver.slowquery.interval_worker_time_ms:
     enabled: true
@@ -1408,7 +1410,7 @@ metrics:
     unit: ms
     gauge:
       value_type: int
-    attributes: [query_id, database_name, normalised_sql_hash, nr_service_guid]
+    attributes: [query_id, database_name, normalized_sql_hash, nr_service_guid]
 
   sqlserver.slowquery.query_details:
     enabled: true
@@ -1426,7 +1428,7 @@ metrics:
         query_text,
         collection_timestamp,
         last_execution_timestamp,
-        normalised_sql_hash,
+        normalized_sql_hash,
         nr_service_guid,
         newrelic.event.type,
       ]
@@ -1816,7 +1818,7 @@ attributes:
   blocking_login_name:
     description: Login name of the blocking session
     type: string
-  blocking_normalised_sql_hash:
+  blocking_normalized_sql_hash:
     description: MD5 hash of normalized blocking SQL for cross-language query correlation
     type: string
   blocking_nr_service_guid:
@@ -1824,6 +1826,9 @@ attributes:
     type: string
   blocking_query_hash:
     description: Query hash of the blocking session for correlation
+    type: string
+  blocking_query_text:
+    description: SQL query text of the blocking query (anonymized)
     type: string
   blocking_session_id:
     description: Session ID that is blocking this request
@@ -1920,7 +1925,7 @@ attributes:
   node_id:
     description: Execution plan node identifier
     type: int
-  normalised_sql_hash:
+  normalized_sql_hash:
     description: MD5 hash of normalized SQL for cross-language query correlation
     type: string
   nr_service_guid:

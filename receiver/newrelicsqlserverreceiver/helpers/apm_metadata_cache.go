@@ -12,7 +12,7 @@ import (
 // APMMetadata stores APM correlation metadata extracted from active query comments
 type APMMetadata struct {
 	NrServiceGuid     string // New Relic APM service GUID
-	NormalisedSqlHash string // MD5 hash of normalized SQL
+	NormalizedSqlHash string // MD5 hash of normalized SQL
 }
 
 // APMMetadataCache provides thread-safe caching of APM metadata keyed by query_hash.
@@ -48,14 +48,14 @@ func NewAPMMetadataCache(logger *zap.Logger) *APMMetadataCache {
 
 // Set stores APM metadata for a query_hash (thread-safe)
 // If the entry already exists, it updates the metadata with latest values
-func (c *APMMetadataCache) Set(queryHash, nrServiceGuid, normalisedSqlHash string) {
+func (c *APMMetadataCache) Set(queryHash, nrServiceGuid, normalizedSqlHash string) {
 	if queryHash == "" {
 		c.logger.Debug("❌ CACHE SET: Empty query_hash, skipping")
 		return
 	}
 
 	// Only cache if we have at least one piece of APM metadata
-	if nrServiceGuid == "" && normalisedSqlHash == "" {
+	if nrServiceGuid == "" && normalizedSqlHash == "" {
 		c.logger.Debug("❌ CACHE SET: No APM metadata to cache",
 			zap.String("query_hash", queryHash))
 		return
@@ -69,7 +69,7 @@ func (c *APMMetadataCache) Set(queryHash, nrServiceGuid, normalisedSqlHash strin
 
 	metadata := &APMMetadata{
 		NrServiceGuid:     nrServiceGuid,
-		NormalisedSqlHash: normalisedSqlHash,
+		NormalizedSqlHash: normalizedSqlHash,
 	}
 
 	c.cache[queryHash] = metadata
@@ -78,12 +78,12 @@ func (c *APMMetadataCache) Set(queryHash, nrServiceGuid, normalisedSqlHash strin
 		c.logger.Info("🔄 CACHE SET: Updated existing entry",
 			zap.String("query_hash", queryHash),
 			zap.String("nr_service_guid", nrServiceGuid),
-			zap.String("normalised_sql_hash", normalisedSqlHash))
+			zap.String("normalized_sql_hash", normalizedSqlHash))
 	} else {
 		c.logger.Info("✅ CACHE SET: Added new entry",
 			zap.String("query_hash", queryHash),
 			zap.String("nr_service_guid", nrServiceGuid),
-			zap.String("normalised_sql_hash", normalisedSqlHash),
+			zap.String("normalized_sql_hash", normalizedSqlHash),
 			zap.Int("total_cache_entries", len(c.cache)))
 	}
 }
@@ -110,7 +110,7 @@ func (c *APMMetadataCache) Get(queryHash string) (*APMMetadata, bool) {
 	c.logger.Info("✅ CACHE GET: Retrieved metadata from cache",
 		zap.String("query_hash", queryHash),
 		zap.String("nr_service_guid", metadata.NrServiceGuid),
-		zap.String("normalised_sql_hash", metadata.NormalisedSqlHash))
+		zap.String("normalized_sql_hash", metadata.NormalizedSqlHash))
 
 	return metadata, true
 }
@@ -149,13 +149,13 @@ func (c *APMMetadataCache) GetCacheStats() map[string]interface{} {
 		if metadata.NrServiceGuid != "" {
 			withGuid++
 		}
-		if metadata.NormalisedSqlHash != "" {
+		if metadata.NormalizedSqlHash != "" {
 			withHash++
 		}
 	}
 
 	stats["with_nr_service_guid"] = withGuid
-	stats["with_normalised_hash"] = withHash
+	stats["with_normalized_hash"] = withHash
 
 	return stats
 }

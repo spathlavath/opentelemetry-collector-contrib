@@ -16,17 +16,17 @@ func TestAPMMetadataCache_SetAndGet(t *testing.T) {
 
 	queryHash := "0x1234567890abcdef"
 	nrApmGuid := "MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI5MjMzNDQwNw"
-	normalisedHash := "abc123def456"
+	normalizedHash := "abc123def456"
 
 	// Set metadata
-	cache.Set(queryHash, nrApmGuid, normalisedHash)
+	cache.Set(queryHash, nrApmGuid, normalizedHash)
 
 	// Get metadata
 	metadata, found := cache.Get(queryHash)
 	assert.True(t, found, "Metadata should be found")
 	assert.NotNil(t, metadata, "Metadata should not be nil")
 	assert.Equal(t, nrApmGuid, metadata.NrServiceGuid)
-	assert.Equal(t, normalisedHash, metadata.NormalisedSqlHash)
+	assert.Equal(t, normalizedHash, metadata.NormalizedSqlHash)
 }
 
 func TestAPMMetadataCache_GetNonExistent(t *testing.T) {
@@ -74,21 +74,21 @@ func TestAPMMetadataCache_SetPartialMetadata(t *testing.T) {
 	metadata, found := cache.Get(queryHash)
 	assert.True(t, found)
 	assert.Equal(t, "guid123", metadata.NrServiceGuid)
-	assert.Equal(t, "", metadata.NormalisedSqlHash)
+	assert.Equal(t, "", metadata.NormalizedSqlHash)
 
 	// Update with only hash
 	cache.Set(queryHash, "", "hash456")
 	metadata, found = cache.Get(queryHash)
 	assert.True(t, found)
 	assert.Equal(t, "", metadata.NrServiceGuid) // Overwritten with empty
-	assert.Equal(t, "hash456", metadata.NormalisedSqlHash)
+	assert.Equal(t, "hash456", metadata.NormalizedSqlHash)
 
 	// Set with all fields
 	cache.Set(queryHash, "guid456", "hash789")
 	metadata, found = cache.Get(queryHash)
 	assert.True(t, found)
 	assert.Equal(t, "guid456", metadata.NrServiceGuid)
-	assert.Equal(t, "hash789", metadata.NormalisedSqlHash)
+	assert.Equal(t, "hash789", metadata.NormalizedSqlHash)
 }
 
 func TestAPMMetadataCache_Clear(t *testing.T) {
@@ -122,7 +122,7 @@ func TestAPMMetadataCache_GetCacheStats(t *testing.T) {
 	stats := cache.GetCacheStats()
 	assert.Equal(t, 0, stats["total_entries"])
 	assert.Equal(t, 0, stats["with_nr_service_guid"])
-	assert.Equal(t, 0, stats["with_normalised_hash"])
+	assert.Equal(t, 0, stats["with_normalized_hash"])
 
 	// Add entries with different metadata combinations
 	cache.Set("0x1", "guid1", "hash1") // Both fields
@@ -133,7 +133,7 @@ func TestAPMMetadataCache_GetCacheStats(t *testing.T) {
 	stats = cache.GetCacheStats()
 	assert.Equal(t, 4, stats["total_entries"])
 	assert.Equal(t, 3, stats["with_nr_service_guid"]) // 0x1, 0x2, 0x4
-	assert.Equal(t, 3, stats["with_normalised_hash"]) // 0x1, 0x3, 0x4
+	assert.Equal(t, 3, stats["with_normalized_hash"]) // 0x1, 0x3, 0x4
 }
 
 func TestAPMMetadataCache_ConcurrentAccess(t *testing.T) {

@@ -454,7 +454,7 @@ func (s *QueryPerformanceScraper) processSlowQueryMetrics(result models.SlowQuer
 			result.NrServiceGuid = &nrApmGuid
 		}
 		if sqlHash != "" {
-			result.NormalisedSqlHash = &sqlHash
+			result.NormalizedSqlHash = &sqlHash
 		}
 
 		// If no APM metadata found in query text (typical for cached plans),
@@ -469,16 +469,16 @@ func (s *QueryPerformanceScraper) processSlowQueryMetrics(result models.SlowQuer
 				s.logger.Info("✅ SLOW QUERY: Enriching with cached APM metadata",
 					zap.String("query_id", queryID),
 					zap.String("cached_nr_service_guid", cachedMetadata.NrServiceGuid),
-					zap.String("cached_normalised_sql_hash", cachedMetadata.NormalisedSqlHash))
+					zap.String("cached_normalized_sql_hash", cachedMetadata.NormalizedSqlHash))
 
 				// Use cached values if not already present
 				if nrApmGuid == "" && cachedMetadata.NrServiceGuid != "" {
 					nrApmGuid = cachedMetadata.NrServiceGuid
 					result.NrServiceGuid = &cachedMetadata.NrServiceGuid
 				}
-				if sqlHash == "" && cachedMetadata.NormalisedSqlHash != "" {
-					sqlHash = cachedMetadata.NormalisedSqlHash
-					result.NormalisedSqlHash = &cachedMetadata.NormalisedSqlHash
+				if sqlHash == "" && cachedMetadata.NormalizedSqlHash != "" {
+					sqlHash = cachedMetadata.NormalizedSqlHash
+					result.NormalizedSqlHash = &cachedMetadata.NormalizedSqlHash
 				}
 			} else {
 				s.logger.Warn("⚠️  SLOW QUERY: No cached APM metadata found",
@@ -517,9 +517,9 @@ func (s *QueryPerformanceScraper) processSlowQueryMetrics(result models.SlowQuer
 		lastExecutionTimestamp = *result.LastExecutionTimestamp
 	}
 
-	normalisedSqlHash := ""
-	if result.NormalisedSqlHash != nil {
-		normalisedSqlHash = *result.NormalisedSqlHash
+	normalizedSqlHash := ""
+	if result.NormalizedSqlHash != nil {
+		normalizedSqlHash = *result.NormalizedSqlHash
 	}
 
 	nrServiceGuid := ""
@@ -532,9 +532,9 @@ func (s *QueryPerformanceScraper) processSlowQueryMetrics(result models.SlowQuer
 	s.logger.Info("📤 SLOW QUERY: Emitting event with final metadata",
 		zap.String("query_id", queryID),
 		zap.String("database_name", databaseName),
-		zap.String("normalised_sql_hash", normalisedSqlHash),
+		zap.String("normalized_sql_hash", normalizedSqlHash),
 		zap.String("nr_service_guid", nrServiceGuid),
-		zap.Bool("has_apm_correlation", nrServiceGuid != "" && normalisedSqlHash != ""),
+		zap.Bool("has_apm_correlation", nrServiceGuid != "" && normalizedSqlHash != ""),
 		zap.String("event_type", "SqlServerSlowQueryDetails"))
 
 	s.mb.RecordSqlserverSlowqueryQueryDetailsDataPoint(
@@ -546,7 +546,7 @@ func (s *QueryPerformanceScraper) processSlowQueryMetrics(result models.SlowQuer
 		queryText,
 		collectionTimestamp,
 		lastExecutionTimestamp,
-		normalisedSqlHash,
+		normalizedSqlHash,
 		nrServiceGuid,
 		"SqlServerSlowQueryDetails",
 	)
@@ -557,7 +557,7 @@ func (s *QueryPerformanceScraper) processSlowQueryMetrics(result models.SlowQuer
 			*result.HistoricalElapsedTimeMS,
 			queryID,
 			databaseName,
-			normalisedSqlHash,
+			normalizedSqlHash,
 			nrServiceGuid,
 		)
 	}
@@ -568,7 +568,7 @@ func (s *QueryPerformanceScraper) processSlowQueryMetrics(result models.SlowQuer
 			*result.IntervalElapsedTimeMS,
 			queryID,
 			databaseName,
-			normalisedSqlHash,
+			normalizedSqlHash,
 			nrServiceGuid,
 		)
 	}
@@ -579,7 +579,7 @@ func (s *QueryPerformanceScraper) processSlowQueryMetrics(result models.SlowQuer
 			*result.IntervalAvgElapsedTimeMS,
 			queryID,
 			databaseName,
-			normalisedSqlHash,
+			normalizedSqlHash,
 			nrServiceGuid,
 		)
 	}
@@ -590,7 +590,7 @@ func (s *QueryPerformanceScraper) processSlowQueryMetrics(result models.SlowQuer
 			*result.ExecutionCount,
 			queryID,
 			databaseName,
-			normalisedSqlHash,
+			normalizedSqlHash,
 			nrServiceGuid,
 		)
 	}
@@ -601,7 +601,7 @@ func (s *QueryPerformanceScraper) processSlowQueryMetrics(result models.SlowQuer
 			*result.IntervalExecutionCount,
 			queryID,
 			databaseName,
-			normalisedSqlHash,
+			normalizedSqlHash,
 			nrServiceGuid,
 		)
 	}
@@ -614,7 +614,7 @@ func (s *QueryPerformanceScraper) processSlowQueryMetrics(result models.SlowQuer
 			int64(*result.TotalWorkerTimeMS),
 			queryID,
 			databaseName,
-			normalisedSqlHash,
+			normalizedSqlHash,
 			nrServiceGuid,
 		)
 	}
@@ -625,7 +625,7 @@ func (s *QueryPerformanceScraper) processSlowQueryMetrics(result models.SlowQuer
 			*result.TotalRows,
 			queryID,
 			databaseName,
-			normalisedSqlHash,
+			normalizedSqlHash,
 			nrServiceGuid,
 		)
 	}
@@ -636,7 +636,7 @@ func (s *QueryPerformanceScraper) processSlowQueryMetrics(result models.SlowQuer
 			*result.TotalLogicalReads,
 			queryID,
 			databaseName,
-			normalisedSqlHash,
+			normalizedSqlHash,
 			nrServiceGuid,
 		)
 	}
@@ -647,7 +647,7 @@ func (s *QueryPerformanceScraper) processSlowQueryMetrics(result models.SlowQuer
 			*result.TotalPhysicalReads,
 			queryID,
 			databaseName,
-			normalisedSqlHash,
+			normalizedSqlHash,
 			nrServiceGuid,
 		)
 	}
@@ -658,7 +658,7 @@ func (s *QueryPerformanceScraper) processSlowQueryMetrics(result models.SlowQuer
 			*result.TotalWaitTimeMS,
 			queryID,
 			databaseName,
-			normalisedSqlHash,
+			normalizedSqlHash,
 			nrServiceGuid,
 		)
 	}
@@ -670,7 +670,7 @@ func (s *QueryPerformanceScraper) processSlowQueryMetrics(result models.SlowQuer
 			*result.IntervalWorkerTimeMS,
 			queryID,
 			databaseName,
-			normalisedSqlHash,
+			normalizedSqlHash,
 			nrServiceGuid,
 		)
 	}
@@ -681,7 +681,7 @@ func (s *QueryPerformanceScraper) processSlowQueryMetrics(result models.SlowQuer
 			*result.IntervalAvgWorkerTimeMS,
 			queryID,
 			databaseName,
-			normalisedSqlHash,
+			normalizedSqlHash,
 			nrServiceGuid,
 		)
 	}
@@ -692,7 +692,7 @@ func (s *QueryPerformanceScraper) processSlowQueryMetrics(result models.SlowQuer
 			*result.IntervalRows,
 			queryID,
 			databaseName,
-			normalisedSqlHash,
+			normalizedSqlHash,
 			nrServiceGuid,
 		)
 	}
@@ -703,7 +703,7 @@ func (s *QueryPerformanceScraper) processSlowQueryMetrics(result models.SlowQuer
 			*result.IntervalAvgRows,
 			queryID,
 			databaseName,
-			normalisedSqlHash,
+			normalizedSqlHash,
 			nrServiceGuid,
 		)
 	}
@@ -714,7 +714,7 @@ func (s *QueryPerformanceScraper) processSlowQueryMetrics(result models.SlowQuer
 			*result.IntervalLogicalReads,
 			queryID,
 			databaseName,
-			normalisedSqlHash,
+			normalizedSqlHash,
 			nrServiceGuid,
 		)
 	}
@@ -725,7 +725,7 @@ func (s *QueryPerformanceScraper) processSlowQueryMetrics(result models.SlowQuer
 			*result.IntervalAvgLogicalReads,
 			queryID,
 			databaseName,
-			normalisedSqlHash,
+			normalizedSqlHash,
 			nrServiceGuid,
 		)
 	}
@@ -736,7 +736,7 @@ func (s *QueryPerformanceScraper) processSlowQueryMetrics(result models.SlowQuer
 			*result.IntervalPhysicalReads,
 			queryID,
 			databaseName,
-			normalisedSqlHash,
+			normalizedSqlHash,
 			nrServiceGuid,
 		)
 	}
@@ -747,7 +747,7 @@ func (s *QueryPerformanceScraper) processSlowQueryMetrics(result models.SlowQuer
 			*result.IntervalAvgPhysicalReads,
 			queryID,
 			databaseName,
-			normalisedSqlHash,
+			normalizedSqlHash,
 			nrServiceGuid,
 		)
 	}
@@ -758,7 +758,7 @@ func (s *QueryPerformanceScraper) processSlowQueryMetrics(result models.SlowQuer
 			*result.IntervalWaitTimeMS,
 			queryID,
 			databaseName,
-			normalisedSqlHash,
+			normalizedSqlHash,
 			nrServiceGuid,
 		)
 	}
@@ -769,7 +769,7 @@ func (s *QueryPerformanceScraper) processSlowQueryMetrics(result models.SlowQuer
 			*result.IntervalAvgWaitTimeMS,
 			queryID,
 			databaseName,
-			normalisedSqlHash,
+			normalizedSqlHash,
 			nrServiceGuid,
 		)
 	}

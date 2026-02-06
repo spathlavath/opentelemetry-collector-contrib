@@ -38,7 +38,7 @@ Wait time for currently executing query
 | login_name | SQL Server login name | Any Str | Recommended |
 | host_name | Client host name | Any Str | Recommended |
 | query_id | Unique identifier for the SQL query | Any Str | Recommended |
-| normalised_sql_hash | MD5 hash of normalized SQL for cross-language query correlation | Any Str | Recommended |
+| normalized_sql_hash | MD5 hash of normalized SQL for cross-language query correlation | Any Str | Recommended |
 | nr_service_guid | New Relic APM service GUID extracted from query comments for APM-DB correlation | Any Str | Recommended |
 | wait_type | Type of wait (e.g., PAGEIOLATCH_SH, LCK_M_S) | Any Str | Recommended |
 | wait_type_description | Human-readable description of the wait type | Any Str | Recommended |
@@ -57,7 +57,7 @@ Wait time for currently executing query
 | blocking_login_name | Login name of the blocking session | Any Str | Recommended |
 | blocking_query_hash | Query hash of the blocking session for correlation | Any Str | Recommended |
 | blocking_nr_service_guid | New Relic APM service GUID extracted from blocking query comments for APM-DB correlation | Any Str | Recommended |
-| blocking_normalised_sql_hash | MD5 hash of normalized blocking SQL for cross-language query correlation | Any Str | Recommended |
+| blocking_normalized_sql_hash | MD5 hash of normalized blocking SQL for cross-language query correlation | Any Str | Recommended |
 
 ### sqlserver.blocking_query.details
 
@@ -75,7 +75,9 @@ Blocking query details for correlation with active queries (emitted as custom ev
 | request_id | SQL Server request identifier | Any Int | Recommended |
 | request_start_time | Timestamp when the request started | Any Str | Recommended |
 | blocking_session_id | Session ID that is blocking this request | Any Int | Recommended |
-| blocking_query_text | SQL query text of the blocking session | Any Str | Recommended |
+| blocking_query_text | SQL query text of the blocking query (anonymized) | Any Str | Recommended |
+| blocking_nr_service_guid | New Relic APM service GUID extracted from blocking query comments for APM-DB correlation | Any Str | Recommended |
+| blocking_normalized_sql_hash | MD5 hash of normalized blocking SQL for cross-language query correlation | Any Str | Recommended |
 | newrelic.event.type | Event type for New Relic integration | Any Str | Recommended |
 
 ### sqlserver.buffer.cache_hit_ratio
@@ -1460,7 +1462,7 @@ Historical total elapsed time in milliseconds (cumulative since plan cached)
 | ---- | ----------- | ------ | -------- |
 | query_id | Unique identifier for the SQL query | Any Str | Recommended |
 | database_name | Name of the database | Any Str | Recommended |
-| normalised_sql_hash | MD5 hash of normalized SQL for cross-language query correlation | Any Str | Recommended |
+| normalized_sql_hash | MD5 hash of normalized SQL for cross-language query correlation | Any Str | Recommended |
 | nr_service_guid | New Relic APM service GUID extracted from query comments for APM-DB correlation | Any Str | Recommended |
 
 ### sqlserver.slowquery.historical_execution_count
@@ -1477,7 +1479,7 @@ Historical execution count (cumulative since plan cached)
 | ---- | ----------- | ------ | -------- |
 | query_id | Unique identifier for the SQL query | Any Str | Recommended |
 | database_name | Name of the database | Any Str | Recommended |
-| normalised_sql_hash | MD5 hash of normalized SQL for cross-language query correlation | Any Str | Recommended |
+| normalized_sql_hash | MD5 hash of normalized SQL for cross-language query correlation | Any Str | Recommended |
 | nr_service_guid | New Relic APM service GUID extracted from query comments for APM-DB correlation | Any Str | Recommended |
 
 ### sqlserver.slowquery.historical_logical_reads
@@ -1494,7 +1496,7 @@ Historical total logical reads (cumulative since plan cached)
 | ---- | ----------- | ------ | -------- |
 | query_id | Unique identifier for the SQL query | Any Str | Recommended |
 | database_name | Name of the database | Any Str | Recommended |
-| normalised_sql_hash | MD5 hash of normalized SQL for cross-language query correlation | Any Str | Recommended |
+| normalized_sql_hash | MD5 hash of normalized SQL for cross-language query correlation | Any Str | Recommended |
 | nr_service_guid | New Relic APM service GUID extracted from query comments for APM-DB correlation | Any Str | Recommended |
 
 ### sqlserver.slowquery.historical_physical_reads
@@ -1511,7 +1513,7 @@ Historical total physical reads (cumulative since plan cached)
 | ---- | ----------- | ------ | -------- |
 | query_id | Unique identifier for the SQL query | Any Str | Recommended |
 | database_name | Name of the database | Any Str | Recommended |
-| normalised_sql_hash | MD5 hash of normalized SQL for cross-language query correlation | Any Str | Recommended |
+| normalized_sql_hash | MD5 hash of normalized SQL for cross-language query correlation | Any Str | Recommended |
 | nr_service_guid | New Relic APM service GUID extracted from query comments for APM-DB correlation | Any Str | Recommended |
 
 ### sqlserver.slowquery.historical_rows
@@ -1528,7 +1530,7 @@ Historical total rows returned (cumulative since plan cached)
 | ---- | ----------- | ------ | -------- |
 | query_id | Unique identifier for the SQL query | Any Str | Recommended |
 | database_name | Name of the database | Any Str | Recommended |
-| normalised_sql_hash | MD5 hash of normalized SQL for cross-language query correlation | Any Str | Recommended |
+| normalized_sql_hash | MD5 hash of normalized SQL for cross-language query correlation | Any Str | Recommended |
 | nr_service_guid | New Relic APM service GUID extracted from query comments for APM-DB correlation | Any Str | Recommended |
 
 ### sqlserver.slowquery.historical_wait_time_ms
@@ -1545,7 +1547,7 @@ Historical total wait time in milliseconds (elapsed_time - worker_time, cumulati
 | ---- | ----------- | ------ | -------- |
 | query_id | Unique identifier for the SQL query | Any Str | Recommended |
 | database_name | Name of the database | Any Str | Recommended |
-| normalised_sql_hash | MD5 hash of normalized SQL for cross-language query correlation | Any Str | Recommended |
+| normalized_sql_hash | MD5 hash of normalized SQL for cross-language query correlation | Any Str | Recommended |
 | nr_service_guid | New Relic APM service GUID extracted from query comments for APM-DB correlation | Any Str | Recommended |
 
 ### sqlserver.slowquery.historical_worker_time_ms
@@ -1562,7 +1564,7 @@ Historical total worker (CPU) time in milliseconds (cumulative since plan cached
 | ---- | ----------- | ------ | -------- |
 | query_id | Unique identifier for the SQL query | Any Str | Recommended |
 | database_name | Name of the database | Any Str | Recommended |
-| normalised_sql_hash | MD5 hash of normalized SQL for cross-language query correlation | Any Str | Recommended |
+| normalized_sql_hash | MD5 hash of normalized SQL for cross-language query correlation | Any Str | Recommended |
 | nr_service_guid | New Relic APM service GUID extracted from query comments for APM-DB correlation | Any Str | Recommended |
 
 ### sqlserver.slowquery.interval_avg_elapsed_time_ms
@@ -1579,7 +1581,7 @@ Interval average elapsed time in milliseconds (delta for this collection interva
 | ---- | ----------- | ------ | -------- |
 | query_id | Unique identifier for the SQL query | Any Str | Recommended |
 | database_name | Name of the database | Any Str | Recommended |
-| normalised_sql_hash | MD5 hash of normalized SQL for cross-language query correlation | Any Str | Recommended |
+| normalized_sql_hash | MD5 hash of normalized SQL for cross-language query correlation | Any Str | Recommended |
 | nr_service_guid | New Relic APM service GUID extracted from query comments for APM-DB correlation | Any Str | Recommended |
 
 ### sqlserver.slowquery.interval_avg_logical_reads
@@ -1596,7 +1598,7 @@ Interval average logical reads per execution
 | ---- | ----------- | ------ | -------- |
 | query_id | Unique identifier for the SQL query | Any Str | Recommended |
 | database_name | Name of the database | Any Str | Recommended |
-| normalised_sql_hash | MD5 hash of normalized SQL for cross-language query correlation | Any Str | Recommended |
+| normalized_sql_hash | MD5 hash of normalized SQL for cross-language query correlation | Any Str | Recommended |
 | nr_service_guid | New Relic APM service GUID extracted from query comments for APM-DB correlation | Any Str | Recommended |
 
 ### sqlserver.slowquery.interval_avg_physical_reads
@@ -1613,7 +1615,7 @@ Interval average physical reads per execution
 | ---- | ----------- | ------ | -------- |
 | query_id | Unique identifier for the SQL query | Any Str | Recommended |
 | database_name | Name of the database | Any Str | Recommended |
-| normalised_sql_hash | MD5 hash of normalized SQL for cross-language query correlation | Any Str | Recommended |
+| normalized_sql_hash | MD5 hash of normalized SQL for cross-language query correlation | Any Str | Recommended |
 | nr_service_guid | New Relic APM service GUID extracted from query comments for APM-DB correlation | Any Str | Recommended |
 
 ### sqlserver.slowquery.interval_avg_rows
@@ -1630,7 +1632,7 @@ Interval average rows returned per execution
 | ---- | ----------- | ------ | -------- |
 | query_id | Unique identifier for the SQL query | Any Str | Recommended |
 | database_name | Name of the database | Any Str | Recommended |
-| normalised_sql_hash | MD5 hash of normalized SQL for cross-language query correlation | Any Str | Recommended |
+| normalized_sql_hash | MD5 hash of normalized SQL for cross-language query correlation | Any Str | Recommended |
 | nr_service_guid | New Relic APM service GUID extracted from query comments for APM-DB correlation | Any Str | Recommended |
 
 ### sqlserver.slowquery.interval_avg_wait_time_ms
@@ -1647,7 +1649,7 @@ Interval average wait time per execution in milliseconds
 | ---- | ----------- | ------ | -------- |
 | query_id | Unique identifier for the SQL query | Any Str | Recommended |
 | database_name | Name of the database | Any Str | Recommended |
-| normalised_sql_hash | MD5 hash of normalized SQL for cross-language query correlation | Any Str | Recommended |
+| normalized_sql_hash | MD5 hash of normalized SQL for cross-language query correlation | Any Str | Recommended |
 | nr_service_guid | New Relic APM service GUID extracted from query comments for APM-DB correlation | Any Str | Recommended |
 
 ### sqlserver.slowquery.interval_avg_worker_time_ms
@@ -1664,7 +1666,7 @@ Interval average worker (CPU) time per execution in milliseconds
 | ---- | ----------- | ------ | -------- |
 | query_id | Unique identifier for the SQL query | Any Str | Recommended |
 | database_name | Name of the database | Any Str | Recommended |
-| normalised_sql_hash | MD5 hash of normalized SQL for cross-language query correlation | Any Str | Recommended |
+| normalized_sql_hash | MD5 hash of normalized SQL for cross-language query correlation | Any Str | Recommended |
 | nr_service_guid | New Relic APM service GUID extracted from query comments for APM-DB correlation | Any Str | Recommended |
 
 ### sqlserver.slowquery.interval_elapsed_time_ms
@@ -1681,7 +1683,7 @@ Interval total elapsed time in milliseconds (delta for this collection interval)
 | ---- | ----------- | ------ | -------- |
 | query_id | Unique identifier for the SQL query | Any Str | Recommended |
 | database_name | Name of the database | Any Str | Recommended |
-| normalised_sql_hash | MD5 hash of normalized SQL for cross-language query correlation | Any Str | Recommended |
+| normalized_sql_hash | MD5 hash of normalized SQL for cross-language query correlation | Any Str | Recommended |
 | nr_service_guid | New Relic APM service GUID extracted from query comments for APM-DB correlation | Any Str | Recommended |
 
 ### sqlserver.slowquery.interval_execution_count
@@ -1698,7 +1700,7 @@ Interval execution count (delta for this collection interval)
 | ---- | ----------- | ------ | -------- |
 | query_id | Unique identifier for the SQL query | Any Str | Recommended |
 | database_name | Name of the database | Any Str | Recommended |
-| normalised_sql_hash | MD5 hash of normalized SQL for cross-language query correlation | Any Str | Recommended |
+| normalized_sql_hash | MD5 hash of normalized SQL for cross-language query correlation | Any Str | Recommended |
 | nr_service_guid | New Relic APM service GUID extracted from query comments for APM-DB correlation | Any Str | Recommended |
 
 ### sqlserver.slowquery.interval_logical_reads
@@ -1715,7 +1717,7 @@ Interval logical reads (delta for this collection interval)
 | ---- | ----------- | ------ | -------- |
 | query_id | Unique identifier for the SQL query | Any Str | Recommended |
 | database_name | Name of the database | Any Str | Recommended |
-| normalised_sql_hash | MD5 hash of normalized SQL for cross-language query correlation | Any Str | Recommended |
+| normalized_sql_hash | MD5 hash of normalized SQL for cross-language query correlation | Any Str | Recommended |
 | nr_service_guid | New Relic APM service GUID extracted from query comments for APM-DB correlation | Any Str | Recommended |
 
 ### sqlserver.slowquery.interval_physical_reads
@@ -1732,7 +1734,7 @@ Interval physical reads (delta for this collection interval)
 | ---- | ----------- | ------ | -------- |
 | query_id | Unique identifier for the SQL query | Any Str | Recommended |
 | database_name | Name of the database | Any Str | Recommended |
-| normalised_sql_hash | MD5 hash of normalized SQL for cross-language query correlation | Any Str | Recommended |
+| normalized_sql_hash | MD5 hash of normalized SQL for cross-language query correlation | Any Str | Recommended |
 | nr_service_guid | New Relic APM service GUID extracted from query comments for APM-DB correlation | Any Str | Recommended |
 
 ### sqlserver.slowquery.interval_rows
@@ -1749,7 +1751,7 @@ Interval rows returned (delta for this collection interval)
 | ---- | ----------- | ------ | -------- |
 | query_id | Unique identifier for the SQL query | Any Str | Recommended |
 | database_name | Name of the database | Any Str | Recommended |
-| normalised_sql_hash | MD5 hash of normalized SQL for cross-language query correlation | Any Str | Recommended |
+| normalized_sql_hash | MD5 hash of normalized SQL for cross-language query correlation | Any Str | Recommended |
 | nr_service_guid | New Relic APM service GUID extracted from query comments for APM-DB correlation | Any Str | Recommended |
 
 ### sqlserver.slowquery.interval_wait_time_ms
@@ -1766,7 +1768,7 @@ Interval wait time in milliseconds (delta for this collection interval)
 | ---- | ----------- | ------ | -------- |
 | query_id | Unique identifier for the SQL query | Any Str | Recommended |
 | database_name | Name of the database | Any Str | Recommended |
-| normalised_sql_hash | MD5 hash of normalized SQL for cross-language query correlation | Any Str | Recommended |
+| normalized_sql_hash | MD5 hash of normalized SQL for cross-language query correlation | Any Str | Recommended |
 | nr_service_guid | New Relic APM service GUID extracted from query comments for APM-DB correlation | Any Str | Recommended |
 
 ### sqlserver.slowquery.interval_worker_time_ms
@@ -1783,7 +1785,7 @@ Interval worker (CPU) time in milliseconds (delta for this collection interval)
 | ---- | ----------- | ------ | -------- |
 | query_id | Unique identifier for the SQL query | Any Str | Recommended |
 | database_name | Name of the database | Any Str | Recommended |
-| normalised_sql_hash | MD5 hash of normalized SQL for cross-language query correlation | Any Str | Recommended |
+| normalized_sql_hash | MD5 hash of normalized SQL for cross-language query correlation | Any Str | Recommended |
 | nr_service_guid | New Relic APM service GUID extracted from query comments for APM-DB correlation | Any Str | Recommended |
 
 ### sqlserver.slowquery.query_details
@@ -1804,7 +1806,7 @@ Query details including text and timestamps for slow queries
 | query_text | SQL query text (anonymized) | Any Str | Recommended |
 | collection_timestamp | Timestamp when the metric was collected | Any Str | Recommended |
 | last_execution_timestamp | Timestamp of the last execution of this query | Any Str | Recommended |
-| normalised_sql_hash | MD5 hash of normalized SQL for cross-language query correlation | Any Str | Recommended |
+| normalized_sql_hash | MD5 hash of normalized SQL for cross-language query correlation | Any Str | Recommended |
 | nr_service_guid | New Relic APM service GUID extracted from query comments for APM-DB correlation | Any Str | Recommended |
 | newrelic.event.type | Event type for New Relic integration | Any Str | Recommended |
 
