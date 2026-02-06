@@ -30,7 +30,12 @@ func GetSlowQueriesSQL(intervalSeconds int) string {
 			au.username AS user_name,
 			sa.executions AS execution_count,
 			sa.sql_fulltext AS query_text,
-			sa.last_active_time AS last_active_time_ms,
+			-- UTC Standardized Timestamp
+			TO_CHAR(
+				FROM_TZ(CAST(sa.last_active_time AS TIMESTAMP), SESSIONTIMEZONE) 
+				AT TIME ZONE 'UTC', 
+				'YYYY-MM-DD"T"HH24:MI:SS"Z"'
+			) AS last_active_timestamp,
 			sa.elapsed_time / 1000 AS total_elapsed_time_ms,
 			sa.cpu_time / 1000 AS total_cpu_time_ms,
 			sa.disk_reads AS total_disk_reads,
