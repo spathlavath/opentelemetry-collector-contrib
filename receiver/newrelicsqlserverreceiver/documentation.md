@@ -59,6 +59,25 @@ Wait time for currently executing query
 | blocking_nr_service_guid | New Relic APM service GUID extracted from blocking query comments for APM-DB correlation | Any Str | Recommended |
 | blocking_normalised_sql_hash | MD5 hash of normalized blocking SQL for cross-language query correlation | Any Str | Recommended |
 
+### sqlserver.blocking_query.details
+
+Blocking query details for correlation with active queries (emitted as custom events)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| session_id | SQL Server session identifier | Any Int | Recommended |
+| request_id | SQL Server request identifier | Any Int | Recommended |
+| request_start_time | Timestamp when the request started | Any Str | Recommended |
+| blocking_session_id | Session ID that is blocking this request | Any Int | Recommended |
+| blocking_query_text | SQL query text of the blocking session | Any Str | Recommended |
+| newrelic.event.type | Event type for New Relic integration | Any Str | Recommended |
+
 ### sqlserver.buffer.cache_hit_ratio
 
 Buffer cache hit ratio percentage

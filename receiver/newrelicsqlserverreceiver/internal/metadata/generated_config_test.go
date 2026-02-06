@@ -29,6 +29,7 @@ func TestMetricsBuilderConfig(t *testing.T) {
 				Metrics: MetricsConfig{
 					SqlserverAccessPageSplitsPerSec:                           MetricConfig{Enabled: true},
 					SqlserverActivequeryWaitTimeSeconds:                       MetricConfig{Enabled: true},
+					SqlserverBlockingQueryDetails:                             MetricConfig{Enabled: true},
 					SqlserverBufferCacheHitRatio:                              MetricConfig{Enabled: true},
 					SqlserverBufferCheckpointPagesPerSec:                      MetricConfig{Enabled: true},
 					SqlserverBufferPageLifeExpectancy:                         MetricConfig{Enabled: true},
@@ -210,6 +211,7 @@ func TestMetricsBuilderConfig(t *testing.T) {
 				Metrics: MetricsConfig{
 					SqlserverAccessPageSplitsPerSec:                           MetricConfig{Enabled: false},
 					SqlserverActivequeryWaitTimeSeconds:                       MetricConfig{Enabled: false},
+					SqlserverBlockingQueryDetails:                             MetricConfig{Enabled: false},
 					SqlserverBufferCacheHitRatio:                              MetricConfig{Enabled: false},
 					SqlserverBufferCheckpointPagesPerSec:                      MetricConfig{Enabled: false},
 					SqlserverBufferPageLifeExpectancy:                         MetricConfig{Enabled: false},

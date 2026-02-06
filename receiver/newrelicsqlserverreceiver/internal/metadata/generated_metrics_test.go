@@ -78,6 +78,10 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
+			mb.RecordSqlserverBlockingQueryDetailsDataPoint(ts, 1, 10, 10, "request_start_time-val", 19, "blocking_query_text-val", "newrelic.event.type-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
 			mb.RecordSqlserverBufferCacheHitRatioDataPoint(ts, 1)
 
 			defaultMetricsCount++

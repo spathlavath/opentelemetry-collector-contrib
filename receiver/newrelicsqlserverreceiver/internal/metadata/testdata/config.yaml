@@ -5,6 +5,8 @@ all_set:
       enabled: true
     sqlserver.activequery.wait_time_seconds:
       enabled: true
+    sqlserver.blocking_query.details:
+      enabled: true
     sqlserver.buffer.cache_hit_ratio:
       enabled: true
     sqlserver.buffer.checkpoint_pages_per_sec:
@@ -351,6 +353,8 @@ none_set:
     sqlserver.access.page_splits_per_sec:
       enabled: false
     sqlserver.activequery.wait_time_seconds:
+      enabled: false
+    sqlserver.blocking_query.details:
       enabled: false
     sqlserver.buffer.cache_hit_ratio:
       enabled: false

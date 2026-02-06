@@ -241,13 +241,9 @@ func (s *QueryPerformanceScraper) ScrapeActiveQueryPlanStatistics(ctx context.Co
 
 		// Check execution plan cache - skip fetching/parsing if already sent recently
 		if s.executionPlanCache != nil {
-			queryHash := ""
-			if planData.QueryHash != nil {
-				queryHash = planData.QueryHash.String()
-			}
 			planHandle := planData.PlanHandle.String()
 
-			if !s.executionPlanCache.ShouldEmit(queryHash, planHandle) {
+			if !s.executionPlanCache.ShouldEmit(planHandle) {
 				// ShouldEmit already logged the cache hit, just skip
 				skippedPlanFetch++
 				continue // Skip DB fetch, parsing, and emission for this plan
@@ -294,8 +290,7 @@ func (s *QueryPerformanceScraper) ScrapeActiveQueryPlanStatistics(ctx context.Co
 		zap.Int("active_query_count", len(activeQueries)),
 		zap.Int("plan_stats_emitted", totalStatsEmitted),
 		zap.Int("execution_plans_emitted", totalExecutionPlansEmitted),
-		zap.Int("skipped_no_slow_query_match", skippedNoSlowQueryMatch),
-		zap.Int("skipped_plan_fetch", skippedPlanFetch))
+		zap.Int("skipped_no_slow_query_match", skippedNoSlowQueryMatch))
 
 	return nil
 }

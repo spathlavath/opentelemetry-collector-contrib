@@ -78,6 +78,24 @@ metrics:
         blocking_normalised_sql_hash,
       ]
 
+  sqlserver.blocking_query.details:
+    enabled: true
+    stability:
+      level: alpha
+    description: Blocking query details for correlation with active queries (emitted as custom events)
+    unit: "1"
+    gauge:
+      value_type: int
+    attributes:
+      [
+        session_id,
+        request_id,
+        request_start_time,
+        blocking_session_id,
+        blocking_query_text,
+        newrelic.event.type,
+      ]
+
   sqlserver.buffer.cache_hit_ratio:
     enabled: true
     stability:

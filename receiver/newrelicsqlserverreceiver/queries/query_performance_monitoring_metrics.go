@@ -191,14 +191,26 @@ SELECT TOP (@Limit)
     -- G. PLAN HANDLE (Required for execution plan retrieval)
     r_wait.plan_handle AS plan_handle,
 
-    -- H. BLOCKING DETAILS (Required by NRQL Query 1)
+    -- H. QUERY TEXT - Active Running Query
+    SUBSTRING(
+        st_wait.text,
+        (r_wait.statement_start_offset / 2) + 1,
+        (
+            CASE
+                WHEN r_wait.statement_end_offset = -1 THEN DATALENGTH(st_wait.text)
+                ELSE r_wait.statement_end_offset
+            END - r_wait.statement_start_offset
+        ) / 2
+    ) AS query_statement_text,
+
+    -- I. BLOCKING DETAILS (Required by NRQL Query 1)
     CASE
         WHEN r_wait.blocking_session_id = 0 THEN NULL
         ELSE r_wait.blocking_session_id
     END AS blocking_session_id,
     ISNULL(s_blocker.login_name, 'N/A') AS blocker_login_name,
 
-    -- H2. BLOCKING QUERY TEXT (Required by NRQL Query 1)
+    -- I2. BLOCKING QUERY TEXT (Required by NRQL Query 1)
     CASE
         WHEN r_wait.blocking_session_id = 0 THEN 'N/A'
         WHEN r_blocker.command IS NULL AND ib_blocker.event_info IS NOT NULL THEN ib_blocker.event_info
@@ -206,14 +218,14 @@ SELECT TOP (@Limit)
         ELSE 'N/A'
     END AS blocking_query_statement_text,
 
-    -- H3. BLOCKING QUERY HASH (Required by NRQL Query 1)
+    -- I3. BLOCKING QUERY HASH (Required by NRQL Query 1)
     r_blocker.query_hash AS blocking_query_hash
 
 FROM
     sys.dm_exec_requests AS r_wait
 INNER JOIN
     sys.dm_exec_sessions AS s_wait ON s_wait.session_id = r_wait.session_id
-OUTER APPLY
+CROSS APPLY
     sys.dm_exec_sql_text(r_wait.sql_handle) AS st_wait
 LEFT JOIN
     sys.dm_exec_requests AS r_blocker ON r_wait.blocking_session_id = r_blocker.session_id

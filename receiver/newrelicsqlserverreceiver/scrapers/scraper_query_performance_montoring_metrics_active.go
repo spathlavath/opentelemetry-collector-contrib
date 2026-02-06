@@ -315,6 +315,7 @@ func (s *QueryPerformanceScraper) processActiveRunningQueryMetricsWithPlan(resul
 
 	timestamp := pcommon.NewTimestampFromTime(time.Now())
 
+<<<<<<< HEAD
 	// Define getter functions for all attributes based on the actual ActiveRunningQuery model
 	// Only including fields that exist in the simplified ActiveRunningQuery struct
 	getSessionID := func() int64 {
@@ -322,6 +323,101 @@ func (s *QueryPerformanceScraper) processActiveRunningQueryMetricsWithPlan(resul
 			return *result.CurrentSessionID
 		}
 		return 0
+=======
+	// Extract attribute values
+	var sessionID int64
+	if result.CurrentSessionID != nil {
+		sessionID = *result.CurrentSessionID
+	}
+
+	var requestID int64
+	if result.RequestID != nil {
+		requestID = *result.RequestID
+	}
+
+	var databaseName string
+	if result.DatabaseName != nil {
+		databaseName = *result.DatabaseName
+	}
+
+	var loginName string
+	if result.LoginName != nil {
+		loginName = *result.LoginName
+	}
+
+	var hostName string
+	if result.HostName != nil {
+		hostName = *result.HostName
+	}
+
+	var waitType string
+	if result.WaitType != nil {
+		waitType = *result.WaitType
+	}
+
+	var waitResource string
+	if result.WaitResource != nil {
+		waitResource = *result.WaitResource
+	}
+
+	var waitResourceObjectName string
+	if result.WaitResourceObjectName != nil {
+		waitResourceObjectName = *result.WaitResourceObjectName
+	}
+
+	var lastWaitType string
+	if result.LastWaitType != nil {
+		lastWaitType = *result.LastWaitType
+	}
+
+	var requestStartTime string
+	if result.RequestStartTime != nil {
+		requestStartTime = *result.RequestStartTime
+	}
+
+	var collectionTimestamp string
+	if result.CollectionTimestamp != nil {
+		collectionTimestamp = *result.CollectionTimestamp
+	}
+
+	var transactionID int64
+	if result.TransactionID != nil {
+		transactionID = *result.TransactionID
+	}
+
+	var openTransactionCount int64
+	if result.OpenTransactionCount != nil {
+		openTransactionCount = *result.OpenTransactionCount
+	}
+
+	var blockingSessionID int64
+	if result.BlockingSessionID != nil {
+		blockingSessionID = *result.BlockingSessionID
+	}
+
+	var blockingLoginName string
+	if result.BlockerLoginName != nil {
+		blockingLoginName = *result.BlockerLoginName
+	}
+
+	var blockingQueryHash string
+	if result.BlockingQueryHash != nil && !result.BlockingQueryHash.IsEmpty() {
+		blockingQueryHash = result.BlockingQueryHash.String()
+	}
+
+
+	// Extract query statement text (for logging/debugging, not sent as attribute)
+	var queryStatementText string
+	if result.QueryStatementText != nil {
+		// Anonymize the query text (no truncation - keep full text)
+		queryStatementText = helpers.AnonymizeQueryText(*result.QueryStatementText)
+
+		// Log the query text for debugging purposes
+		s.logger.Debug("Active query statement text extracted",
+			zap.Any("session_id", result.CurrentSessionID),
+			zap.String("query_statement_text", queryStatementText),
+			zap.Int("text_length", len(queryStatementText)))
+>>>>>>> otel-newrelic-custom-receivers
 	}
 	getRequestID := func() int64 {
 		if result.RequestID != nil {
@@ -591,3 +687,82 @@ func (s *QueryPerformanceScraper) fetchExecutionPlanXML(ctx context.Context, pla
 
 // REMOVED: Legacy execution plan functions (fetchTop5PlanHandlesForActiveQuery, emitAggregatedExecutionPlanAsMetrics)
 // Replaced by ScrapeSlowQueryExecutionPlans in scraper_query_performance_montoring_metrics.go
+
+// EmitBlockingQueriesAsCustomEvents extracts unique blocking queries from active queries
+// and emits them as metrics (which get converted to custom events/logs via metricsaslogs connector)
+// Uses composite key: session_id + request_id + request_start_time + blocking_session_id
+func (s *QueryPerformanceScraper) EmitBlockingQueriesAsCustomEvents(activeQueries []models.ActiveRunningQuery) error {
+	// Build a map of unique blocking events
+	// Key: session_id|request_id|request_start_time|blocking_session_id
+	blockingEventsMap := make(map[string]models.BlockingQueryEvent)
+
+	for _, activeQuery := range activeQueries {
+		// Skip if no blocking session
+		if activeQuery.BlockingSessionID == nil || *activeQuery.BlockingSessionID == 0 {
+			continue
+		}
+
+		// Skip if blocking query text is N/A or empty
+		if activeQuery.BlockingQueryStatementText == nil ||
+			*activeQuery.BlockingQueryStatementText == "" ||
+			*activeQuery.BlockingQueryStatementText == "N/A" {
+			continue
+		}
+
+		// Skip if required victim identifiers are missing
+		if activeQuery.CurrentSessionID == nil ||
+			activeQuery.RequestID == nil ||
+			activeQuery.RequestStartTime == nil {
+			continue
+		}
+
+		// Build composite key for deduplication
+		key := fmt.Sprintf("%d|%d|%s|%d",
+			*activeQuery.CurrentSessionID,
+			*activeQuery.RequestID,
+			*activeQuery.RequestStartTime,
+			*activeQuery.BlockingSessionID)
+
+		// Only add if not already in map (deduplicate)
+		if _, exists := blockingEventsMap[key]; !exists {
+			blockingEventsMap[key] = models.BlockingQueryEvent{
+				SessionID:         *activeQuery.CurrentSessionID,
+				RequestID:         *activeQuery.RequestID,
+				RequestStartTime:  *activeQuery.RequestStartTime,
+				BlockingSessionID: *activeQuery.BlockingSessionID,
+				BlockingQueryText: *activeQuery.BlockingQueryStatementText, // Full text, no truncation
+			}
+		}
+	}
+
+	s.logger.Info("Extracted unique blocking query events from active queries",
+		zap.Int("total_active_queries", len(activeQueries)),
+		zap.Int("unique_blocking_events", len(blockingEventsMap)))
+
+	// Emit metrics for each unique blocking event
+	// These will be converted to logs/custom events via the metricsaslogs connector
+	timestamp := pcommon.NewTimestampFromTime(time.Now())
+	emittedCount := 0
+
+	for _, event := range blockingEventsMap {
+		// Anonymize the blocking query text before emission
+		anonymizedText := helpers.AnonymizeQueryText(event.BlockingQueryText)
+
+		s.mb.RecordSqlserverBlockingQueryDetailsDataPoint(
+			timestamp,
+			1, // Value is always 1 for dimensional metrics
+			event.SessionID,
+			event.RequestID,
+			event.RequestStartTime,
+			event.BlockingSessionID,
+			anonymizedText,
+			"SqlServerSlowQueryDetails", // event.name for New Relic custom events
+		)
+		emittedCount++
+	}
+
+	s.logger.Info("Emitted blocking query events as metrics",
+		zap.Int("emitted_count", emittedCount))
+
+	return nil
+}
