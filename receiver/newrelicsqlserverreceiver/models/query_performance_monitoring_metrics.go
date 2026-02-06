@@ -4,7 +4,6 @@
 package models
 
 // SlowQuery represents slow query performance data collected from SQL Server
-// This struct provides compatibility with the existing data structure format
 type SlowQuery struct {
 	QueryID                *QueryID `db:"query_id" metric_name:"query_id" source_type:"attribute"`
 	PlanHandle             *QueryID `db:"plan_handle" metric_name:"plan_handle" source_type:"attribute"`
@@ -23,32 +22,7 @@ type SlowQuery struct {
 	IntervalExecutionCount   *int64   `db:"-" metric_name:"sqlserver.slowquery.interval_execution_count" source_type:"gauge"`
 }
 
-// WaitTimeAnalysis represents wait time analysis data for SQL Server queries
-type WaitTimeAnalysis struct {
-	QueryID             *QueryID `db:"query_id" metric_name:"query_id" source_type:"attribute"`
-	DatabaseName        *string  `db:"database_name" metric_name:"database_name" source_type:"attribute"`
-	QueryText           *string  `db:"query_text" metric_name:"query_text" source_type:"attribute"`
-	WaitCategory        *string  `db:"wait_category" metric_name:"wait_category" source_type:"attribute"`
-	TotalWaitTimeMs     *float64 `db:"total_wait_time_ms" metric_name:"total_wait_time_ms" source_type:"gauge"`
-	AvgWaitTimeMs       *float64 `db:"avg_wait_time_ms" metric_name:"avg_wait_time_ms" source_type:"gauge"`
-	WaitEventCount      *int64   `db:"wait_event_count" metric_name:"wait_event_count" source_type:"gauge"`
-	LastExecutionTime   *string  `db:"last_execution_time" metric_name:"last_execution_time" source_type:"attribute"`
-	CollectionTimestamp *string  `db:"collection_timestamp" metric_name:"collection_timestamp" source_type:"attribute"`
-}
 
-// QueryExecutionPlan represents detailed execution plan analysis data for SQL Server queries
-// This model is used for drill-down analysis from slow query detection to specific execution plans
-type QueryExecutionPlan struct {
-	QueryID           *QueryID `db:"query_id" metric_name:"query_id" source_type:"attribute"`
-	PlanHandle        *QueryID `db:"plan_handle" metric_name:"plan_handle" source_type:"attribute"`
-	QueryPlanID       *QueryID `db:"query_plan_id" metric_name:"query_plan_id" source_type:"attribute"`
-	SQLText           *string  `db:"sql_text" metric_name:"sql_text" source_type:"attribute"`
-	TotalCPUMs        *float64 `db:"total_cpu_ms" metric_name:"total_cpu_ms" source_type:"gauge"`
-	TotalElapsedMs    *float64 `db:"total_elapsed_ms" metric_name:"total_elapsed_ms" source_type:"gauge"`
-	CreationTime      *string  `db:"creation_time" metric_name:"creation_time" source_type:"attribute"`
-	LastExecutionTime *string  `db:"last_execution_time" metric_name:"last_execution_time" source_type:"attribute"`
-	ExecutionPlanXML  *string  `db:"execution_plan_xml" metric_name:"execution_plan_xml" source_type:"attribute"`
-}
 
 // ExecutionPlanNode represents a parsed execution plan node with detailed operator information
 // This model contains the parsed data structure from XML execution plans for New Relic logging
@@ -169,28 +143,6 @@ type BlockingQueryEvent struct {
 	BlockingQueryText string // Full SQL text of blocking query (no truncation)
 }
 
-// LockedObject represents detailed information about database objects locked by a session
-// This model resolves lock resources to actual table/object names for troubleshooting lock contention
-type LockedObject struct {
-	// Session and Database Context
-	SessionID    *int64  `db:"session_id" metric_name:"session_id" source_type:"attribute"`
-	DatabaseName *string `db:"database_name" metric_name:"database_name" source_type:"attribute"`
-
-	// Object Identification
-	SchemaName       *string `db:"schema_name" metric_name:"schema_name" source_type:"attribute"`
-	LockedObjectName *string `db:"locked_object_name" metric_name:"locked_object_name" source_type:"attribute"`
-
-	// Lock Details
-	ResourceType        *string `db:"resource_type" metric_name:"resource_type" source_type:"attribute"`
-	LockGranularity     *string `db:"lock_granularity" metric_name:"lock_granularity" source_type:"attribute"`
-	LockMode            *string `db:"lock_mode" metric_name:"lock_mode" source_type:"attribute"`
-	LockStatus          *string `db:"lock_status" metric_name:"lock_status" source_type:"attribute"`
-	LockRequestType     *string `db:"lock_request_type" metric_name:"lock_request_type" source_type:"attribute"`
-	ResourceDescription *string `db:"resource_description" metric_name:"resource_description" source_type:"attribute"`
-
-	// Metadata
-	CollectionTimestamp *string `db:"collection_timestamp" metric_name:"collection_timestamp" source_type:"attribute"`
-}
 
 // SlowQueryPlanData represents lightweight plan data extracted from slow queries
 // Used for in-memory correlation with active queries (NO database query needed)
