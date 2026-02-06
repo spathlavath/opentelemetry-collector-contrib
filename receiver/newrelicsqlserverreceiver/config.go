@@ -78,6 +78,19 @@ type Config struct {
 
 	// Database buffer metrics configuration
 	EnableDatabaseBufferMetrics bool `mapstructure:"enable_database_buffer_metrics"` // Enable/disable database buffer pool metrics collection
+
+	// Metric Category Toggles - Enable/disable entire categories of metrics
+	EnableInstanceMetrics               bool `mapstructure:"enable_instance_metrics"`                // Enable/disable instance-level metrics (memory, processes, buffer pool, disk)
+	EnableDatabaseMetrics               bool `mapstructure:"enable_database_metrics"`                // Enable/disable database-level metrics (size, IO, transaction logs, page files)
+	EnableUserConnectionMetrics         bool `mapstructure:"enable_user_connection_metrics"`         // Enable/disable user connection and authentication metrics
+	EnableWaitTimeMetrics               bool `mapstructure:"enable_wait_time_metrics"`               // Enable/disable wait statistics metrics
+	EnableFailoverClusterMetrics        bool `mapstructure:"enable_failover_cluster_metrics"`        // Enable/disable Always On Availability Group metrics
+	EnableDatabasePrincipalsMetrics     bool `mapstructure:"enable_database_principals_metrics"`     // Enable/disable database security and principal metrics
+	EnableDatabaseRoleMembershipMetrics bool `mapstructure:"enable_database_role_membership_metrics"` // Enable/disable database role and membership metrics
+	EnableSecurityMetrics               bool `mapstructure:"enable_security_metrics"`                // Enable/disable server-level security metrics
+	EnableLockMetrics                   bool `mapstructure:"enable_lock_metrics"`                    // Enable/disable lock analysis metrics
+	EnableThreadPoolMetrics             bool `mapstructure:"enable_thread_pool_metrics"`             // Enable/disable thread pool health monitoring metrics
+	EnableTempDBMetrics                 bool `mapstructure:"enable_tempdb_metrics"`                  // Enable/disable TempDB contention monitoring metrics
 }
 
 // DefaultConfig returns a Config struct with default values
@@ -122,6 +135,19 @@ func DefaultConfig() component.Config {
 
 		// Default database buffer metrics settings
 		EnableDatabaseBufferMetrics: true, // Enabled by default
+
+		// Default metric category toggle settings - all enabled by default for backward compatibility
+		EnableInstanceMetrics:               true, // Enabled by default
+		EnableDatabaseMetrics:               true, // Enabled by default
+		EnableUserConnectionMetrics:         true, // Enabled by default
+		EnableWaitTimeMetrics:               true, // Enabled by default
+		EnableFailoverClusterMetrics:        true, // Enabled by default
+		EnableDatabasePrincipalsMetrics:     true, // Enabled by default
+		EnableDatabaseRoleMembershipMetrics: true, // Enabled by default
+		EnableSecurityMetrics:               true, // Enabled by default
+		EnableLockMetrics:                   true, // Enabled by default
+		EnableThreadPoolMetrics:             true, // Enabled by default
+		EnableTempDBMetrics:                 true, // Enabled by default
 	}
 
 	// Set default collection interval to 15 seconds
