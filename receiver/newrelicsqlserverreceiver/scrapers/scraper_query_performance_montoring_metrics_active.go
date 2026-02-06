@@ -43,7 +43,10 @@ func (s *QueryPerformanceScraper) ScrapeActiveRunningQueriesMetrics(ctx context.
 	}
 
 	// Build query with slow query correlation filter
-	queryIDFilter := "AND r_wait.query_hash IN (" + strings.Join(slowQueryIDs, ",") + ")"
+	queryIDFilter := ""
+	if len(slowQueryIDs) > 0 {
+		queryIDFilter = "AND r_wait.query_hash IN (" + strings.Join(slowQueryIDs, ",") + ")"
+	}
 	query := fmt.Sprintf(queries.ActiveRunningQueriesQuery, dbFilter, limit, elapsedTimeThreshold, queryIDFilter)
 
 	s.logger.Debug("Executing active running queries fetch",
@@ -65,7 +68,7 @@ func (s *QueryPerformanceScraper) ScrapeActiveRunningQueriesMetrics(ctx context.
 
 // EmitActiveRunningQueriesMetrics emits metrics for active running queries
 // This processes the active queries and emits metrics (no execution plans)
-func (s *QueryPerformanceScraper) EmitActiveRunningQueriesMetrics(ctx context.Context, activeQueries []models.ActiveRunningQuery, slowQueryPlanDataMap map[string]models.SlowQueryPlanData) error {
+func (s *QueryPerformanceScraper) EmitActiveRunningQueriesMetrics(ctx context.Context, activeQueries []models.ActiveRunningQuery, slowQueryPlanDataMap map[string]models.SlowQueryPlanData, apmMetadataCache *helpers.APMMetadataCache) error {
 	if len(activeQueries) == 0 {
 		s.logger.Info("No active queries to emit metrics for")
 		return nil
@@ -112,7 +115,7 @@ func (s *QueryPerformanceScraper) EmitActiveRunningQueriesMetrics(ctx context.Co
 		processedCount++
 
 		// Emit metrics for this active query (no execution plan XML) using slow query plan_handle
-		if err := s.processActiveRunningQueryMetricsWithPlan(result, i, "", slowQueryPlanHandle); err != nil {
+		if err := s.processActiveRunningQueryMetricsWithPlan(result, i, "", slowQueryPlanHandle, apmMetadataCache); err != nil {
 			s.logger.Error("Failed to emit active running query metrics", zap.Error(err), zap.Int("index", i))
 		}
 	}
@@ -128,176 +131,204 @@ func (s *QueryPerformanceScraper) EmitActiveRunningQueriesMetrics(ctx context.Co
 
 // processActiveRunningQueryMetricsWithPlan emits metrics for a single active running query
 // Uses slow query plan_handle for consistency across all metrics and logs
-func (s *QueryPerformanceScraper) processActiveRunningQueryMetricsWithPlan(result models.ActiveRunningQuery, index int, executionPlanXML string, slowQueryPlanHandle *models.QueryID) error {
+func (s *QueryPerformanceScraper) processActiveRunningQueryMetricsWithPlan(result models.ActiveRunningQuery, index int, executionPlanXML string, slowQueryPlanHandle *models.QueryID, apmMetadataCache *helpers.APMMetadataCache) error {
 	if result.CurrentSessionID == nil {
 		s.logger.Debug("Skipping active running query with nil session ID", zap.Int("index", index))
 		return nil
 	}
 
+	// Get APM metadata from cache (populated by slow query scraper)
+	// This enables APM integration and query correlation across different language agents
+	var nrApmGuid, sqlHash string
+	var blockingNrApmGuid string
+
+	// Try to get APM metadata from cache first (populated by slow query scraper)
+	if result.QueryID != nil && !result.QueryID.IsEmpty() && apmMetadataCache != nil {
+		queryHashStr := result.QueryID.String()
+		if cachedMetadata, found := apmMetadataCache.Get(queryHashStr); found {
+			nrApmGuid = cachedMetadata.NrServiceGuid
+			sqlHash = cachedMetadata.NormalisedSqlHash
+
+			sessionIDStr := "unknown"
+			if result.CurrentSessionID != nil {
+				sessionIDStr = fmt.Sprintf("%d", *result.CurrentSessionID)
+			}
+
+			s.logger.Info("✅ ACTIVE QUERY: Using cached APM metadata from slow query",
+				zap.String("session_id", sessionIDStr),
+				zap.String("query_id", queryHashStr),
+				zap.String("cached_nr_service_guid", nrApmGuid),
+				zap.String("cached_normalised_sql_hash", sqlHash))
+		}
+	}
+
+	// Populate model fields with extracted or cached metadata
+	if nrApmGuid != "" {
+		result.NrServiceGuid = &nrApmGuid
+	}
+	if sqlHash != "" {
+		result.NormalisedSqlHash = &sqlHash
+	}
+
+	// Extract New Relic metadata from BLOCKING query text (blocker's query)
+	// This enables APM correlation for the blocker session as well
+	if result.BlockingQueryStatementText != nil && *result.BlockingQueryStatementText != "" {
+		sessionIDStr := "unknown"
+		if result.CurrentSessionID != nil {
+			sessionIDStr = fmt.Sprintf("%d", *result.CurrentSessionID)
+		}
+		blockerSessionIDStr := "unknown"
+		if result.BlockingSessionID != nil {
+			blockerSessionIDStr = fmt.Sprintf("%d", *result.BlockingSessionID)
+		}
+
+		s.logger.Info("🔍 BLOCKING QUERY: Processing blocker query text",
+			zap.String("victim_session_id", sessionIDStr),
+			zap.String("blocker_session_id", blockerSessionIDStr),
+			zap.Int("blocking_query_text_length", len(*result.BlockingQueryStatementText)))
+
+		// Extract metadata from blocker's query comments
+		blockingNrApmGuid, _ = helpers.ExtractNewRelicMetadata(*result.BlockingQueryStatementText)
+
+		// Normalize and hash the blocking query for cross-language correlation
+		blockingNormalizedSQL := helpers.AnonymizeQueryText(*result.BlockingQueryStatementText)
+		blockingSqlHash := helpers.GenerateMD5Hash(blockingNormalizedSQL)
+
+		// Store blocking query metadata in model
+		if blockingNrApmGuid != "" {
+			result.BlockingNrServiceGuid = &blockingNrApmGuid
+		}
+		if blockingSqlHash != "" {
+			result.BlockingNormalisedSqlHash = &blockingSqlHash
+		}
+
+		s.logger.Info("🏷️  BLOCKING QUERY: Extracted and normalized blocker metadata",
+			zap.String("victim_session_id", sessionIDStr),
+			zap.String("blocker_session_id", blockerSessionIDStr),
+			zap.String("blocking_nr_service_guid", blockingNrApmGuid),
+			zap.String("blocking_normalised_sql_hash", blockingSqlHash),
+			zap.Bool("has_blocking_guid", blockingNrApmGuid != ""),
+			zap.Bool("has_blocking_hash", blockingSqlHash != ""))
+
+		// Cache blocking query metadata for future correlation
+		if result.BlockingQueryHash != nil && !result.BlockingQueryHash.IsEmpty() && (blockingNrApmGuid != "" || blockingSqlHash != "") && apmMetadataCache != nil {
+			blockingQueryHashStr := result.BlockingQueryHash.String()
+			apmMetadataCache.Set(blockingQueryHashStr, blockingNrApmGuid, blockingSqlHash)
+
+			s.logger.Info("💾 BLOCKING QUERY: Cached blocker APM metadata",
+				zap.String("blocking_query_hash", blockingQueryHashStr),
+				zap.String("blocking_nr_service_guid", blockingNrApmGuid),
+				zap.String("blocking_normalised_sql_hash", blockingSqlHash))
+		}
+	}
+
+	// Cache APM metadata for slow query enrichment (in same scrape) and future active query enrichment
+	// This allows both slow queries (from plan cache) and other active queries in this scrape
+	// to be enriched with APM correlation data
+	if result.QueryID != nil && !result.QueryID.IsEmpty() && (nrApmGuid != "" || sqlHash != "") && apmMetadataCache != nil {
+		queryHashStr := result.QueryID.String()
+		apmMetadataCache.Set(queryHashStr, nrApmGuid, sqlHash)
+
+		sessionIDStr := "unknown"
+		if result.CurrentSessionID != nil {
+			sessionIDStr = fmt.Sprintf("%d", *result.CurrentSessionID)
+		}
+
+		s.logger.Info("💾 ACTIVE QUERY: Cached APM metadata for slow query enrichment",
+			zap.String("session_id", sessionIDStr),
+			zap.String("query_hash", queryHashStr),
+			zap.String("nr_service_guid", nrApmGuid),
+			zap.String("normalized_sql_hash", sqlHash))
+	}
+
 	timestamp := pcommon.NewTimestampFromTime(time.Now())
 
-	// Extract attribute values
-	var sessionID int64
-	if result.CurrentSessionID != nil {
-		sessionID = *result.CurrentSessionID
+	// Helper functions for safe string extraction
+	stringValue := func(s *string) string {
+		if s != nil {
+			return *s
+		}
+		return ""
+	}
+	int64Value := func(i *int64) int64 {
+		if i != nil {
+			return *i
+		}
+		return 0
+	}
+	queryIDValue := func(qid *models.QueryID) string {
+		if qid != nil && !qid.IsEmpty() {
+			return qid.String()
+		}
+		return ""
 	}
 
-	var requestID int64
-	if result.RequestID != nil {
-		requestID = *result.RequestID
-	}
+	// Extract values
+	sessionID := int64Value(result.CurrentSessionID)
+	requestID := int64Value(result.RequestID)
+	databaseName := stringValue(result.DatabaseName)
+	loginName := stringValue(result.LoginName)
+	hostName := stringValue(result.HostName)
+	queryID := queryIDValue(result.QueryID)
+	normalisedSqlHash := stringValue(result.NormalisedSqlHash)
+	nrServiceGuidVal := stringValue(result.NrServiceGuid)
+	waitType := stringValue(result.WaitType)
+	waitResource := stringValue(result.WaitResource)
+	waitResourceObjectName := stringValue(result.WaitResourceObjectName)
+	lastWaitType := stringValue(result.LastWaitType)
+	requestStartTime := stringValue(result.RequestStartTime)
+	collectionTimestamp := stringValue(result.CollectionTimestamp)
+	transactionID := int64Value(result.TransactionID)
+	openTransactionCount := int64Value(result.OpenTransactionCount)
+	blockingSessionID := int64Value(result.BlockingSessionID)
+	blockingLoginName := stringValue(result.BlockerLoginName)
+	blockingQueryHash := queryIDValue(result.BlockingQueryHash)
+	blockingNrServiceGuid := stringValue(result.BlockingNrServiceGuid)
+	blockingNormalisedSqlHash := stringValue(result.BlockingNormalisedSqlHash)
 
-	var databaseName string
-	if result.DatabaseName != nil {
-		databaseName = *result.DatabaseName
-	}
-
-	var loginName string
-	if result.LoginName != nil {
-		loginName = *result.LoginName
-	}
-
-	var hostName string
-	if result.HostName != nil {
-		hostName = *result.HostName
-	}
-
-	var waitType string
-	if result.WaitType != nil {
-		waitType = *result.WaitType
-	}
-
-	var waitResource string
-	if result.WaitResource != nil {
-		waitResource = *result.WaitResource
-	}
-
-	var waitResourceObjectName string
-	if result.WaitResourceObjectName != nil {
-		waitResourceObjectName = *result.WaitResourceObjectName
-	}
-
-	var lastWaitType string
-	if result.LastWaitType != nil {
-		lastWaitType = *result.LastWaitType
-	}
-
-	var requestStartTime string
-	if result.RequestStartTime != nil {
-		requestStartTime = *result.RequestStartTime
-	}
-
-	var collectionTimestamp string
-	if result.CollectionTimestamp != nil {
-		collectionTimestamp = *result.CollectionTimestamp
-	}
-
-	var transactionID int64
-	if result.TransactionID != nil {
-		transactionID = *result.TransactionID
-	}
-
-	var openTransactionCount int64
-	if result.OpenTransactionCount != nil {
-		openTransactionCount = *result.OpenTransactionCount
-	}
-
-	var blockingSessionID int64
-	if result.BlockingSessionID != nil {
-		blockingSessionID = *result.BlockingSessionID
-	}
-
-	var blockingLoginName string
-	if result.BlockerLoginName != nil {
-		blockingLoginName = *result.BlockerLoginName
-	}
-
-	var blockingQueryHash string
-	if result.BlockingQueryHash != nil && !result.BlockingQueryHash.IsEmpty() {
-		blockingQueryHash = result.BlockingQueryHash.String()
-	}
-
-	// Extract APM metadata attributes (populated from model if available)
-	var normalisedSqlHash string
-	if result.NormalisedSqlHash != nil {
-		normalisedSqlHash = *result.NormalisedSqlHash
-	}
-
-	var nrServiceGuid string
-	if result.NrServiceGuid != nil {
-		nrServiceGuid = *result.NrServiceGuid
-	}
-
-	var blockingNrServiceGuid string
-	if result.BlockingNrServiceGuid != nil {
-		blockingNrServiceGuid = *result.BlockingNrServiceGuid
-	}
-
-	var blockingNormalisedSqlHash string
-	if result.BlockingNormalisedSqlHash != nil {
-		blockingNormalisedSqlHash = *result.BlockingNormalisedSqlHash
-	}
-
-	// Extract query statement text (for logging/debugging, not sent as attribute)
-	var queryStatementText string
-	if result.QueryStatementText != nil {
-		// Anonymize the query text (no truncation - keep full text)
-		queryStatementText = helpers.AnonymizeQueryText(*result.QueryStatementText)
-
-		// Log the query text for debugging purposes
-		s.logger.Debug("Active query statement text extracted",
-			zap.Any("session_id", result.CurrentSessionID),
-			zap.String("query_statement_text", queryStatementText),
-			zap.Int("text_length", len(queryStatementText)))
-	}
-
-	var queryID string
-	if result.QueryID != nil && !result.QueryID.IsEmpty() {
-		queryID = result.QueryID.String()
-	}
-
-	var planHandle string
+	// Use slow query plan_handle for consistency
+	planHandle := ""
 	if slowQueryPlanHandle != nil && !slowQueryPlanHandle.IsEmpty() {
 		planHandle = slowQueryPlanHandle.String()
 	}
 
-	// Computed wait type attributes
-	waitTypeForDescription := waitType
-	if waitTypeForDescription == "" {
-		waitTypeForDescription = "N/A"
+	// Decode wait types
+	waitTypeForDecoding := waitType
+	if waitTypeForDecoding == "" {
+		waitTypeForDecoding = "N/A"
 	}
-	waitTypeDescription := helpers.DecodeWaitType(waitTypeForDescription)
+	waitTypeDescription := helpers.DecodeWaitType(waitTypeForDecoding)
 	if waitTypeDescription == "" {
-		waitTypeDescription = waitTypeForDescription
+		waitTypeDescription = waitTypeForDecoding
 	}
-
-	waitTypeForCategory := waitType
-	if waitTypeForCategory == "" {
-		waitTypeForCategory = "N/A"
-	}
-	waitTypeCategory := helpers.GetWaitTypeCategory(waitTypeForCategory)
+	waitTypeCategory := helpers.GetWaitTypeCategory(waitTypeForDecoding)
 	if waitTypeCategory == "" {
 		waitTypeCategory = "Other"
 	}
 
-	var lastWaitTypeDescription string
-	if result.LastWaitType != nil {
-		lastWaitTypeDescription = helpers.DecodeWaitType(*result.LastWaitType)
-	}
-
-	// Decode wait resource type (ignore description)
-	var waitResourceType string
+	// Decode wait resource
+	waitResourceType := ""
 	if result.WaitResource != nil {
 		waitResourceType, _ = helpers.DecodeWaitResource(*result.WaitResource)
 	}
 
+	// Decode last wait type
+	lastWaitTypeDescription := ""
+	if result.LastWaitType != nil {
+		lastWaitTypeDescription = helpers.DecodeWaitType(*result.LastWaitType)
+	}
+
 	// Active query wait time
 	if result.WaitTimeS != nil && *result.WaitTimeS > 0 {
-		s.logger.Info("✅ EMITTING METRIC: sqlserver.activequery.wait_time_seconds",
+		s.logger.Info("📤 ACTIVE QUERY: Emitting metric with final metadata",
 			zap.Any("session_id", result.CurrentSessionID),
-			zap.Float64("value", *result.WaitTimeS),
+			zap.Float64("wait_time_seconds", *result.WaitTimeS),
 			zap.Any("wait_type", result.WaitType),
-			zap.Any("database_name", result.DatabaseName))
+			zap.Any("database_name", result.DatabaseName),
+			zap.String("nr_service_guid", nrServiceGuidVal),
+			zap.String("normalized_sql_hash", normalisedSqlHash),
+			zap.Bool("has_apm_correlation", nrServiceGuidVal != "" && normalisedSqlHash != ""),
+			zap.String("metric_name", "sqlserver.activequery.wait_time_seconds"))
 
 		s.mb.RecordSqlserverActivequeryWaitTimeSecondsDataPoint(
 			timestamp,
@@ -309,7 +340,7 @@ func (s *QueryPerformanceScraper) processActiveRunningQueryMetricsWithPlan(resul
 			hostName,
 			queryID,
 			normalisedSqlHash,
-			nrServiceGuid,
+			nrServiceGuidVal,
 			waitType,
 			waitTypeDescription,
 			waitTypeCategory,
@@ -430,12 +461,24 @@ func (s *QueryPerformanceScraper) EmitBlockingQueriesAsCustomEvents(activeQuerie
 
 		// Only add if not already in map (deduplicate)
 		if _, exists := blockingEventsMap[key]; !exists {
+			// Extract APM metadata fields (use empty string if nil)
+			blockingNrServiceGuid := ""
+			if activeQuery.BlockingNrServiceGuid != nil {
+				blockingNrServiceGuid = *activeQuery.BlockingNrServiceGuid
+			}
+			blockingNormalisedSqlHash := ""
+			if activeQuery.BlockingNormalisedSqlHash != nil {
+				blockingNormalisedSqlHash = *activeQuery.BlockingNormalisedSqlHash
+			}
+
 			blockingEventsMap[key] = models.BlockingQueryEvent{
-				SessionID:         *activeQuery.CurrentSessionID,
-				RequestID:         *activeQuery.RequestID,
-				RequestStartTime:  *activeQuery.RequestStartTime,
-				BlockingSessionID: *activeQuery.BlockingSessionID,
-				BlockingQueryText: *activeQuery.BlockingQueryStatementText, // Full text, no truncation
+				SessionID:                 *activeQuery.CurrentSessionID,
+				RequestID:                 *activeQuery.RequestID,
+				RequestStartTime:          *activeQuery.RequestStartTime,
+				BlockingSessionID:         *activeQuery.BlockingSessionID,
+				BlockingQueryText:         *activeQuery.BlockingQueryStatementText, // Full text, no truncation
+				BlockingNrServiceGuid:     blockingNrServiceGuid,                   // APM service GUID from blocking query
+				BlockingNormalisedSqlHash: blockingNormalisedSqlHash,               // Normalized SQL hash from blocking query
 			}
 		}
 	}
@@ -453,18 +496,6 @@ func (s *QueryPerformanceScraper) EmitBlockingQueriesAsCustomEvents(activeQuerie
 		// Anonymize the blocking query text before emission
 		anonymizedText := helpers.AnonymizeQueryText(event.BlockingQueryText)
 
-		// Extract APM metadata from blocking query text
-		var blockingNrServiceGuid string
-		var blockingNormalisedSqlHash string
-		if event.BlockingQueryText != "" {
-			// Extract nr_service_guid from query comments
-			blockingNrServiceGuid, _ = helpers.ExtractNewRelicMetadata(event.BlockingQueryText)
-
-			// Generate normalized SQL hash
-			normalizedSQL := helpers.AnonymizeQueryText(event.BlockingQueryText)
-			blockingNormalisedSqlHash = helpers.GenerateMD5Hash(normalizedSQL)
-		}
-
 		s.mb.RecordSqlserverBlockingQueryDetailsDataPoint(
 			timestamp,
 			1, // Value is always 1 for dimensional metrics
@@ -473,9 +504,9 @@ func (s *QueryPerformanceScraper) EmitBlockingQueriesAsCustomEvents(activeQuerie
 			event.RequestStartTime,
 			event.BlockingSessionID,
 			anonymizedText,
-			blockingNrServiceGuid,
-			blockingNormalisedSqlHash,
-			"SqlServerSlowQueryDetails", // event.name for New Relic custom events
+			event.BlockingNrServiceGuid,     // APM service GUID for correlation
+			event.BlockingNormalisedSqlHash, // Normalized SQL hash for cross-language correlation
+			"SqlServerSlowQueryDetails",     // event.name for New Relic custom events
 		)
 		emittedCount++
 	}
