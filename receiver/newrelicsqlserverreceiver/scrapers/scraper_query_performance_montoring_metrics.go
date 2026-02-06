@@ -457,8 +457,20 @@ func (s *QueryPerformanceScraper) processSlowQueryMetrics(result models.SlowQuer
 			result.NormalisedSqlHash = &sqlHash
 		}
 
+		// Cache APM metadata for active query enrichment (in same scrape)
+		// This allows active queries to skip extraction and use pre-computed metadata
+		if result.QueryID != nil && !result.QueryID.IsEmpty() && (nrApmGuid != "" || sqlHash != "") && apmMetadataCache != nil {
+			queryHashStr := result.QueryID.String()
+			apmMetadataCache.Set(queryHashStr, nrApmGuid, sqlHash)
+
+			s.logger.Info("💾 SLOW QUERY: Cached APM metadata for active query enrichment",
+				zap.String("query_id", queryHashStr),
+				zap.String("cached_nr_service_guid", nrApmGuid),
+				zap.String("cached_normalised_sql_hash", sqlHash))
+		}
+
 		// If no APM metadata found in query text (typical for cached plans),
-		// try to retrieve from APM metadata cache (populated by active queries in same scrape)
+		// try to retrieve from APM metadata cache (populated by earlier slow queries in same scrape)
 		if (nrApmGuid == "" || sqlHash == "") && queryID != "" && apmMetadataCache != nil {
 			s.logger.Info("💾 SLOW QUERY: Checking cache for missing metadata",
 				zap.String("query_id", queryID),

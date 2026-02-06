@@ -144,7 +144,17 @@ func (s *QueryPerformanceScraper) processActiveRunningQueryMetricsWithPlan(resul
 	var nrApmGuid, sqlHash, normalizedSQL string
 	var blockingNrApmGuid string
 
-	if result.QueryText != nil && *result.QueryText != "" {
+	// Try to get APM metadata from cache first (populated by slow query scraper)
+	if result.QueryID != nil && !result.QueryID.IsEmpty() && apmMetadataCache != nil {
+		queryHashStr := result.QueryID.String()
+		if cachedMetadata, found := apmMetadataCache.Get(queryHashStr); found {
+			nrApmGuid = cachedMetadata.NrServiceGuid
+			sqlHash = cachedMetadata.NormalisedSqlHash
+		}
+	}
+
+	// Only extract from query text if not found in cache
+	if (nrApmGuid == "" || sqlHash == "") && result.QueryText != nil && *result.QueryText != "" {
 		// Log the first 500 characters of query text to check for comments
 		queryPreview := *result.QueryText
 		if len(queryPreview) > 500 {
@@ -196,42 +206,6 @@ func (s *QueryPerformanceScraper) processActiveRunningQueryMetricsWithPlan(resul
 		// Replace QueryText with normalized version for privacy and consistency
 		// This removes literals while preserving query structure
 		result.QueryText = &normalizedSQL
-	}
-
-	// Try to enrich from cache if metadata not found in query text
-	// This handles cases where:
-	// 1. Query text is missing NR comments (e.g., historical queries from plan cache)
-	// 2. Active query captured before APM agent injected comments
-	// 3. Another execution of same query had metadata earlier in this scrape
-	if (nrApmGuid == "" || sqlHash == "") && result.QueryID != nil && !result.QueryID.IsEmpty() && apmMetadataCache != nil {
-		queryHashStr := result.QueryID.String()
-
-		sessionIDStr := "unknown"
-		if result.CurrentSessionID != nil {
-			sessionIDStr = fmt.Sprintf("%d", *result.CurrentSessionID)
-		}
-
-		s.logger.Info("💾 ACTIVE QUERY: Checking cache for missing metadata",
-			zap.String("session_id", sessionIDStr),
-			zap.String("query_hash", queryHashStr),
-			zap.Bool("missing_nr_service_guid", nrApmGuid == ""),
-			zap.Bool("missing_sql_hash", sqlHash == ""))
-
-		if cachedMetadata, found := apmMetadataCache.Get(queryHashStr); found {
-			s.logger.Info("✅ ACTIVE QUERY: Enriching with cached APM metadata",
-				zap.String("session_id", sessionIDStr),
-				zap.String("query_hash", queryHashStr),
-				zap.String("cached_nr_service_guid", cachedMetadata.NrServiceGuid),
-				zap.String("cached_normalized_sql_hash", cachedMetadata.NormalisedSqlHash))
-
-			// Use cached values if current extraction didn't find them
-			if nrApmGuid == "" && cachedMetadata.NrServiceGuid != "" {
-				nrApmGuid = cachedMetadata.NrServiceGuid
-			}
-			if sqlHash == "" && cachedMetadata.NormalisedSqlHash != "" {
-				sqlHash = cachedMetadata.NormalisedSqlHash
-			}
-		}
 	}
 
 	// Populate model fields with extracted or cached metadata
