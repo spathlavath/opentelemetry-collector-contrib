@@ -16,39 +16,39 @@ func TestGetWaitTypeCategoryDetailed(t *testing.T) {
 		{
 			name:             "LCK_M_S lock",
 			waitType:         "LCK_M_S",
-			expectedCategory: "Lock",
+			expectedCategory: "Locking",
 		},
 		{
 			name:             "LCK_M_X lock",
 			waitType:         "LCK_M_X",
-			expectedCategory: "Lock",
+			expectedCategory: "Locking",
 		},
 		{
 			name:             "LCK_M_U lock",
 			waitType:         "LCK_M_U",
-			expectedCategory: "Lock",
+			expectedCategory: "Locking",
 		},
 
 		// I/O waits
 		{
 			name:             "PAGEIOLATCH_SH",
 			waitType:         "PAGEIOLATCH_SH",
-			expectedCategory: "I/O",
+			expectedCategory: "Disk I/O",
 		},
 		{
 			name:             "PAGEIOLATCH_EX",
 			waitType:         "PAGEIOLATCH_EX",
-			expectedCategory: "I/O",
+			expectedCategory: "Disk I/O",
 		},
 		{
 			name:             "WRITELOG",
 			waitType:         "WRITELOG",
-			expectedCategory: "I/O",
+			expectedCategory: "Disk I/O",
 		},
 		{
 			name:             "ASYNC_IO_COMPLETION",
 			waitType:         "ASYNC_IO_COMPLETION",
-			expectedCategory: "I/O",
+			expectedCategory: "Disk I/O",
 		},
 
 		// Latch waits
@@ -134,7 +134,7 @@ func TestGetWaitTypeCategoryComprehensive(t *testing.T) {
 
 		for _, waitType := range lockWaitTypes {
 			category := GetWaitTypeCategory(waitType)
-			assert.Equal(t, "Lock", category, "Wait type %s should be categorized as Lock", waitType)
+			assert.Equal(t, "Locking", category, "Wait type %s should be categorized as Lock", waitType)
 		}
 	})
 
@@ -147,7 +147,7 @@ func TestGetWaitTypeCategoryComprehensive(t *testing.T) {
 
 		for _, waitType := range ioWaitTypes {
 			category := GetWaitTypeCategory(waitType)
-			assert.Equal(t, "I/O", category, "Wait type %s should be categorized as I/O", waitType)
+			assert.Equal(t, "Disk I/O", category, "Wait type %s should be categorized as I/O", waitType)
 		}
 	})
 

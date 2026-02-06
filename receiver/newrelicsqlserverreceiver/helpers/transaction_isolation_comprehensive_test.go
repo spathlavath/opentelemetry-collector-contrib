@@ -15,27 +15,27 @@ func TestGetIsolationLevelDescriptionComprehensive(t *testing.T) {
 		{
 			name:                "READ UNCOMMITTED",
 			isolationLevel:      1,
-			expectedDescription: "READ UNCOMMITTED",
+			expectedDescription: "READ UNCOMMITTED - Can read uncommitted data (dirty reads), lowest isolation level",
 		},
 		{
 			name:                "READ COMMITTED",
 			isolationLevel:      2,
-			expectedDescription: "READ COMMITTED",
+			expectedDescription: "READ COMMITTED - Default isolation level, prevents dirty reads but allows non-repeatable reads",
 		},
 		{
 			name:                "REPEATABLE READ",
 			isolationLevel:      3,
-			expectedDescription: "REPEATABLE READ",
+			expectedDescription: "REPEATABLE READ - Prevents dirty and non-repeatable reads but allows phantom reads",
 		},
 		{
 			name:                "SERIALIZABLE",
 			isolationLevel:      4,
-			expectedDescription: "SERIALIZABLE",
+			expectedDescription: "SERIALIZABLE - Highest isolation level, complete isolation but lowest concurrency",
 		},
 		{
 			name:                "SNAPSHOT",
 			isolationLevel:      5,
-			expectedDescription: "SNAPSHOT",
+			expectedDescription: "SNAPSHOT - Uses row versioning for consistency without blocking",
 		},
 		{
 			name:                "Unknown level",

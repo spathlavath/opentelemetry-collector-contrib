@@ -27,8 +27,6 @@ func TestDefaultConfig(t *testing.T) {
 	assert.Equal(t, 0, cfg.QueryMonitoringResponseTimeThreshold)
 	assert.Equal(t, 20, cfg.QueryMonitoringCountThreshold)
 	assert.Equal(t, 15, cfg.QueryMonitoringFetchInterval)
-	assert.Equal(t, 4094, cfg.QueryMonitoringTextTruncateLimit)
-	assert.Equal(t, true, cfg.EnableActiveRunningQueries)
 	assert.Equal(t, 0, cfg.ActiveRunningQueriesElapsedTimeThreshold)
 	assert.Equal(t, false, cfg.EnableSlowQuerySmoothing)
 	assert.Equal(t, 0.3, cfg.SlowQuerySmoothingFactor)
@@ -154,7 +152,6 @@ func TestConfigValidate(t *testing.T) {
 				EnableQueryMonitoring:                true,
 				QueryMonitoringResponseTimeThreshold: -1,
 				QueryMonitoringCountThreshold:        20,
-				QueryMonitoringTextTruncateLimit:     4094,
 			},
 			wantErr: true,
 			errMsg:  "query_monitoring_response_time_threshold must be >= 0",
@@ -169,25 +166,9 @@ func TestConfigValidate(t *testing.T) {
 				EnableQueryMonitoring:                true,
 				QueryMonitoringResponseTimeThreshold: 0,
 				QueryMonitoringCountThreshold:        0,
-				QueryMonitoringTextTruncateLimit:     4094,
 			},
 			wantErr: true,
 			errMsg:  "query_monitoring_count_threshold must be positive",
-		},
-		{
-			name: "query monitoring enabled with zero text truncate limit",
-			config: &Config{
-				Hostname:                             "localhost",
-				Port:                                 "1433",
-				MaxConcurrentWorkers:                 5,
-				Timeout:                              30 * time.Second,
-				EnableQueryMonitoring:                true,
-				QueryMonitoringResponseTimeThreshold: 0,
-				QueryMonitoringCountThreshold:        20,
-				QueryMonitoringTextTruncateLimit:     0,
-			},
-			wantErr: true,
-			errMsg:  "query_monitoring_text_truncate_limit must be positive",
 		},
 		{
 			name: "SSL enabled without trust and without certificate",
@@ -719,8 +700,6 @@ func TestConfigStructTags(t *testing.T) {
 	assert.Equal(t, 100, cfg.QueryMonitoringResponseTimeThreshold)
 	assert.Equal(t, 50, cfg.QueryMonitoringCountThreshold)
 	assert.Equal(t, 30, cfg.QueryMonitoringFetchInterval)
-	assert.Equal(t, 2048, cfg.QueryMonitoringTextTruncateLimit)
-	assert.Equal(t, true, cfg.EnableActiveRunningQueries)
 	assert.Equal(t, 1000, cfg.ActiveRunningQueriesElapsedTimeThreshold)
 	assert.Equal(t, true, cfg.EnableSlowQuerySmoothing)
 	assert.Equal(t, 0.5, cfg.SlowQuerySmoothingFactor)
