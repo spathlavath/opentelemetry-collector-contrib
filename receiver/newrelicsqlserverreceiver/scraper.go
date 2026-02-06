@@ -492,8 +492,8 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 		s.logger.Info("Active queries fetched, emitting metrics",
 			zap.Int("active_query_count", len(activeQueries)))
 
-		// Step 2: Emit metrics for active queries (using lightweight plan data from memory and APM metadata cache)
-		if err := s.queryPerformanceScraper.EmitActiveRunningQueriesMetrics(scrapeCtx, activeQueries, slowQueryPlanDataMap, apmMetadataCache); err != nil {
+		// Step 2: Emit metrics for active queries (using lightweight plan data from memory)
+		if err := s.queryPerformanceScraper.EmitActiveRunningQueriesMetrics(scrapeCtx, activeQueries, slowQueryPlanDataMap); err != nil {
 			s.logger.Warn("Failed to emit active running queries metrics",
 				zap.Error(err))
 		} else {
