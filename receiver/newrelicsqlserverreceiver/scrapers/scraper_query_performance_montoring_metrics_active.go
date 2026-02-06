@@ -20,12 +20,10 @@ import (
 // ScrapeActiveRunningQueriesMetrics fetches active running queries from SQL Server
 // Returns the list of active queries for further processing (metrics emission and execution plan fetching)
 func (s *QueryPerformanceScraper) ScrapeActiveRunningQueriesMetrics(ctx context.Context, limit, elapsedTimeThreshold int, slowQueryIDs []string) ([]models.ActiveRunningQuery, error) {
-	// Log whether we have slow query IDs for correlation (but continue scraping regardless)
+	// Skip active query scraping if no slow queries found (nothing to correlate)
 	if len(slowQueryIDs) == 0 {
-		s.logger.Info("No slow queries found, active queries will be scraped without plan data correlation")
-	} else {
-		s.logger.Info("Scraping active queries with slow query correlation",
-			zap.Int("slow_query_count", len(slowQueryIDs)))
+		s.logger.Info("No slow queries found, skipping active query scraping (nothing to correlate)")
+		return nil, nil
 	}
 
 	// Build database filter for KEY/OBJECT lock resolution from monitored_databases
