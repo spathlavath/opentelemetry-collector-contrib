@@ -663,8 +663,6 @@ func TestConfigStructTags(t *testing.T) {
 		"query_monitoring_response_time_threshold":      100,
 		"query_monitoring_count_threshold":              50,
 		"query_monitoring_fetch_interval":               30,
-		"query_monitoring_text_truncate_limit":          2048,
-		"enable_active_running_queries":                 true,
 		"active_running_queries_elapsed_time_threshold": 1000,
 		"enable_slow_query_smoothing":                   true,
 		"slow_query_smoothing_factor":                   0.5,
