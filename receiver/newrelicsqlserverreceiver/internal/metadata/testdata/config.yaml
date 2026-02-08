@@ -213,13 +213,47 @@ all_set:
       enabled: true
     sqlserver.security.server_role_members_count:
       enabled: true
+    sqlserver.slowquery.avg_elapsed_time_ms:
+      enabled: true
     sqlserver.slowquery.historical_avg_elapsed_time_ms:
       enabled: true
     sqlserver.slowquery.historical_execution_count:
       enabled: true
+    sqlserver.slowquery.historical_logical_reads:
+      enabled: true
+    sqlserver.slowquery.historical_physical_reads:
+      enabled: true
+    sqlserver.slowquery.historical_rows:
+      enabled: true
+    sqlserver.slowquery.historical_wait_time_ms:
+      enabled: true
+    sqlserver.slowquery.historical_worker_time_ms:
+      enabled: true
     sqlserver.slowquery.interval_avg_elapsed_time_ms:
       enabled: true
+    sqlserver.slowquery.interval_avg_logical_reads:
+      enabled: true
+    sqlserver.slowquery.interval_avg_physical_reads:
+      enabled: true
+    sqlserver.slowquery.interval_avg_rows:
+      enabled: true
+    sqlserver.slowquery.interval_avg_wait_time_ms:
+      enabled: true
+    sqlserver.slowquery.interval_avg_worker_time_ms:
+      enabled: true
+    sqlserver.slowquery.interval_elapsed_time_ms:
+      enabled: true
     sqlserver.slowquery.interval_execution_count:
+      enabled: true
+    sqlserver.slowquery.interval_logical_reads:
+      enabled: true
+    sqlserver.slowquery.interval_physical_reads:
+      enabled: true
+    sqlserver.slowquery.interval_rows:
+      enabled: true
+    sqlserver.slowquery.interval_wait_time_ms:
+      enabled: true
+    sqlserver.slowquery.interval_worker_time_ms:
       enabled: true
     sqlserver.slowquery.query_details:
       enabled: true
@@ -526,13 +560,47 @@ none_set:
       enabled: false
     sqlserver.security.server_role_members_count:
       enabled: false
+    sqlserver.slowquery.avg_elapsed_time_ms:
+      enabled: false
     sqlserver.slowquery.historical_avg_elapsed_time_ms:
       enabled: false
     sqlserver.slowquery.historical_execution_count:
       enabled: false
+    sqlserver.slowquery.historical_logical_reads:
+      enabled: false
+    sqlserver.slowquery.historical_physical_reads:
+      enabled: false
+    sqlserver.slowquery.historical_rows:
+      enabled: false
+    sqlserver.slowquery.historical_wait_time_ms:
+      enabled: false
+    sqlserver.slowquery.historical_worker_time_ms:
+      enabled: false
     sqlserver.slowquery.interval_avg_elapsed_time_ms:
       enabled: false
+    sqlserver.slowquery.interval_avg_logical_reads:
+      enabled: false
+    sqlserver.slowquery.interval_avg_physical_reads:
+      enabled: false
+    sqlserver.slowquery.interval_avg_rows:
+      enabled: false
+    sqlserver.slowquery.interval_avg_wait_time_ms:
+      enabled: false
+    sqlserver.slowquery.interval_avg_worker_time_ms:
+      enabled: false
+    sqlserver.slowquery.interval_elapsed_time_ms:
+      enabled: false
     sqlserver.slowquery.interval_execution_count:
+      enabled: false
+    sqlserver.slowquery.interval_logical_reads:
+      enabled: false
+    sqlserver.slowquery.interval_physical_reads:
+      enabled: false
+    sqlserver.slowquery.interval_rows:
+      enabled: false
+    sqlserver.slowquery.interval_wait_time_ms:
+      enabled: false
+    sqlserver.slowquery.interval_worker_time_ms:
       enabled: false
     sqlserver.slowquery.query_details:
       enabled: false

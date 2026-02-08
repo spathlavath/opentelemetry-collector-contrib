@@ -74,11 +74,11 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordSqlserverActivequeryWaitTimeSecondsDataPoint(ts, 1, 10, 10, "database_name-val", "login_name-val", "host_name-val", "query_id-val", "wait_type-val", "wait_type_description-val", "wait_type_category-val", "wait_resource-val", "wait_resource_type-val", "wait_resource_object_name-val", "last_wait_type-val", "last_wait_type_description-val", "request_start_time-val", "collection_timestamp-val", 14, 22, "plan_handle-val", 19, "blocking_login_name-val", "blocking_query_hash-val")
+			mb.RecordSqlserverActivequeryWaitTimeSecondsDataPoint(ts, 1, 10, 10, "database_name-val", "login_name-val", "host_name-val", "query_id-val", "normalised_sql_hash-val", "nr_service_guid-val", "wait_type-val", "wait_type_description-val", "wait_type_category-val", "wait_resource-val", "wait_resource_type-val", "wait_resource_object_name-val", "last_wait_type-val", "last_wait_type_description-val", "request_start_time-val", "collection_timestamp-val", 14, 22, "plan_handle-val", 19, "blocking_login_name-val", "blocking_query_hash-val", "blocking_nr_service_guid-val", "blocking_normalised_sql_hash-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordSqlserverBlockingQueryDetailsDataPoint(ts, 1, 10, 10, "request_start_time-val", 19, "blocking_query_text-val", "newrelic.event.type-val")
+			mb.RecordSqlserverBlockingQueryDetailsDataPoint(ts, 1, 10, 10, "request_start_time-val", 19, "blocking_query_text-val", "blocking_nr_service_guid-val", "blocking_normalised_sql_hash-val", "newrelic.event.type-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
@@ -246,7 +246,7 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordSqlserverExecutionPlanDataPoint(ts, 1, "query_id-val", "plan_handle-val", 7, 14, "physical_op-val", "logical_op-val", "input_type-val", "schema_name-val", "table_name-val", "index_name-val", "referenced_columns-val", 13.100000, 11.100000, 12.100000, 12.100000, 18.100000, 23.100000, "estimated_execution_mode-val", 17, true, false, 17.100000, 18.100000, 19, 20, 15, "request_start_time-val", "last_execution_time-val", "newrelic.event.type-val")
+			mb.RecordSqlserverExecutionPlanDataPoint(ts, 1, "query_id-val", "plan_handle-val", 7, 14, "physical_op-val", "logical_op-val", "input_type-val", "schema_name-val", "table_name-val", "index_name-val", "referenced_columns-val", 13.100000, 11.100000, 12.100000, 12.100000, 18.100000, 23.100000, "estimated_execution_mode-val", 17, true, false, 17.100000, 18.100000, 19, 15, "request_start_time-val", "last_execution_time-val", "newrelic.event.type-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
@@ -494,23 +494,91 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
+			mb.RecordSqlserverSlowqueryAvgElapsedTimeMsDataPoint(ts, 1, "query_id-val", "database_name-val", "normalised_sql_hash-val", "nr_service_guid-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
 			mb.RecordSqlserverSlowqueryHistoricalAvgElapsedTimeMsDataPoint(ts, 1, "query_id-val", "database_name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordSqlserverSlowqueryHistoricalExecutionCountDataPoint(ts, 1, "query_id-val", "database_name-val")
+			mb.RecordSqlserverSlowqueryHistoricalExecutionCountDataPoint(ts, 1, "query_id-val", "database_name-val", "normalised_sql_hash-val", "nr_service_guid-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordSqlserverSlowqueryIntervalAvgElapsedTimeMsDataPoint(ts, 1, "query_id-val", "database_name-val")
+			mb.RecordSqlserverSlowqueryHistoricalLogicalReadsDataPoint(ts, 1, "query_id-val", "database_name-val", "normalised_sql_hash-val", "nr_service_guid-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordSqlserverSlowqueryIntervalExecutionCountDataPoint(ts, 1, "query_id-val", "database_name-val")
+			mb.RecordSqlserverSlowqueryHistoricalPhysicalReadsDataPoint(ts, 1, "query_id-val", "database_name-val", "normalised_sql_hash-val", "nr_service_guid-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordSqlserverSlowqueryQueryDetailsDataPoint(ts, 1, "query_id-val", "database_name-val", "plan_handle-val", "query_text-val", "collection_timestamp-val", "last_execution_timestamp-val", "newrelic.event.type-val")
+			mb.RecordSqlserverSlowqueryHistoricalRowsDataPoint(ts, 1, "query_id-val", "database_name-val", "normalised_sql_hash-val", "nr_service_guid-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordSqlserverSlowqueryHistoricalWaitTimeMsDataPoint(ts, 1, "query_id-val", "database_name-val", "normalised_sql_hash-val", "nr_service_guid-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordSqlserverSlowqueryHistoricalWorkerTimeMsDataPoint(ts, 1, "query_id-val", "database_name-val", "normalised_sql_hash-val", "nr_service_guid-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordSqlserverSlowqueryIntervalAvgElapsedTimeMsDataPoint(ts, 1, "query_id-val", "database_name-val", "normalised_sql_hash-val", "nr_service_guid-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordSqlserverSlowqueryIntervalAvgLogicalReadsDataPoint(ts, 1, "query_id-val", "database_name-val", "normalised_sql_hash-val", "nr_service_guid-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordSqlserverSlowqueryIntervalAvgPhysicalReadsDataPoint(ts, 1, "query_id-val", "database_name-val", "normalised_sql_hash-val", "nr_service_guid-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordSqlserverSlowqueryIntervalAvgRowsDataPoint(ts, 1, "query_id-val", "database_name-val", "normalised_sql_hash-val", "nr_service_guid-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordSqlserverSlowqueryIntervalAvgWaitTimeMsDataPoint(ts, 1, "query_id-val", "database_name-val", "normalised_sql_hash-val", "nr_service_guid-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordSqlserverSlowqueryIntervalAvgWorkerTimeMsDataPoint(ts, 1, "query_id-val", "database_name-val", "normalised_sql_hash-val", "nr_service_guid-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordSqlserverSlowqueryIntervalElapsedTimeMsDataPoint(ts, 1, "query_id-val", "database_name-val", "normalised_sql_hash-val", "nr_service_guid-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordSqlserverSlowqueryIntervalExecutionCountDataPoint(ts, 1, "query_id-val", "database_name-val", "normalised_sql_hash-val", "nr_service_guid-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordSqlserverSlowqueryIntervalLogicalReadsDataPoint(ts, 1, "query_id-val", "database_name-val", "normalised_sql_hash-val", "nr_service_guid-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordSqlserverSlowqueryIntervalPhysicalReadsDataPoint(ts, 1, "query_id-val", "database_name-val", "normalised_sql_hash-val", "nr_service_guid-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordSqlserverSlowqueryIntervalRowsDataPoint(ts, 1, "query_id-val", "database_name-val", "normalised_sql_hash-val", "nr_service_guid-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordSqlserverSlowqueryIntervalWaitTimeMsDataPoint(ts, 1, "query_id-val", "database_name-val", "normalised_sql_hash-val", "nr_service_guid-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordSqlserverSlowqueryIntervalWorkerTimeMsDataPoint(ts, 1, "query_id-val", "database_name-val", "normalised_sql_hash-val", "nr_service_guid-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordSqlserverSlowqueryQueryDetailsDataPoint(ts, 1, "query_id-val", "database_name-val", "plan_handle-val", "query_text-val", "collection_timestamp-val", "last_execution_timestamp-val", "normalised_sql_hash-val", "nr_service_guid-val", "newrelic.event.type-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
@@ -738,6 +806,12 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("query_id")
 					assert.True(t, ok)
 					assert.Equal(t, "query_id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("normalised_sql_hash")
+					assert.True(t, ok)
+					assert.Equal(t, "normalised_sql_hash-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("nr_service_guid")
+					assert.True(t, ok)
+					assert.Equal(t, "nr_service_guid-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("wait_type")
 					assert.True(t, ok)
 					assert.Equal(t, "wait_type-val", attrVal.Str())
@@ -786,6 +860,12 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("blocking_query_hash")
 					assert.True(t, ok)
 					assert.Equal(t, "blocking_query_hash-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("blocking_nr_service_guid")
+					assert.True(t, ok)
+					assert.Equal(t, "blocking_nr_service_guid-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("blocking_normalised_sql_hash")
+					assert.True(t, ok)
+					assert.Equal(t, "blocking_normalised_sql_hash-val", attrVal.Str())
 				case "sqlserver.blocking_query.details":
 					assert.False(t, validatedMetrics["sqlserver.blocking_query.details"], "Found a duplicate in the metrics slice: sqlserver.blocking_query.details")
 					validatedMetrics["sqlserver.blocking_query.details"] = true
@@ -813,6 +893,12 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("blocking_query_text")
 					assert.True(t, ok)
 					assert.Equal(t, "blocking_query_text-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("blocking_nr_service_guid")
+					assert.True(t, ok)
+					assert.Equal(t, "blocking_nr_service_guid-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("blocking_normalised_sql_hash")
+					assert.True(t, ok)
+					assert.Equal(t, "blocking_normalised_sql_hash-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("newrelic.event.type")
 					assert.True(t, ok)
 					assert.Equal(t, "newrelic.event.type-val", attrVal.Str())
@@ -1614,9 +1700,6 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("total_logical_reads")
 					assert.True(t, ok)
 					assert.EqualValues(t, 19, attrVal.Int())
-					attrVal, ok = dp.Attributes().Get("total_logical_writes")
-					assert.True(t, ok)
-					assert.EqualValues(t, 20, attrVal.Int())
 					attrVal, ok = dp.Attributes().Get("execution_count")
 					assert.True(t, ok)
 					assert.EqualValues(t, 15, attrVal.Int())
@@ -2508,6 +2591,30 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok := dp.Attributes().Get("metric.type")
 					assert.True(t, ok)
 					assert.Equal(t, "metric.type-val", attrVal.Str())
+				case "sqlserver.slowquery.avg_elapsed_time_ms":
+					assert.False(t, validatedMetrics["sqlserver.slowquery.avg_elapsed_time_ms"], "Found a duplicate in the metrics slice: sqlserver.slowquery.avg_elapsed_time_ms")
+					validatedMetrics["sqlserver.slowquery.avg_elapsed_time_ms"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Average elapsed time per execution in milliseconds (cumulative since plan cached)", ms.At(i).Description())
+					assert.Equal(t, "ms", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
+					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
+					attrVal, ok := dp.Attributes().Get("query_id")
+					assert.True(t, ok)
+					assert.Equal(t, "query_id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("normalised_sql_hash")
+					assert.True(t, ok)
+					assert.Equal(t, "normalised_sql_hash-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("nr_service_guid")
+					assert.True(t, ok)
+					assert.Equal(t, "nr_service_guid-val", attrVal.Str())
 				case "sqlserver.slowquery.historical_avg_elapsed_time_ms":
 					assert.False(t, validatedMetrics["sqlserver.slowquery.historical_avg_elapsed_time_ms"], "Found a duplicate in the metrics slice: sqlserver.slowquery.historical_avg_elapsed_time_ms")
 					validatedMetrics["sqlserver.slowquery.historical_avg_elapsed_time_ms"] = true
@@ -2544,6 +2651,132 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("database_name")
 					assert.True(t, ok)
 					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("normalised_sql_hash")
+					assert.True(t, ok)
+					assert.Equal(t, "normalised_sql_hash-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("nr_service_guid")
+					assert.True(t, ok)
+					assert.Equal(t, "nr_service_guid-val", attrVal.Str())
+				case "sqlserver.slowquery.historical_logical_reads":
+					assert.False(t, validatedMetrics["sqlserver.slowquery.historical_logical_reads"], "Found a duplicate in the metrics slice: sqlserver.slowquery.historical_logical_reads")
+					validatedMetrics["sqlserver.slowquery.historical_logical_reads"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Historical total logical reads (cumulative since plan cached)", ms.At(i).Description())
+					assert.Equal(t, "{reads}", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("query_id")
+					assert.True(t, ok)
+					assert.Equal(t, "query_id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("normalised_sql_hash")
+					assert.True(t, ok)
+					assert.Equal(t, "normalised_sql_hash-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("nr_service_guid")
+					assert.True(t, ok)
+					assert.Equal(t, "nr_service_guid-val", attrVal.Str())
+				case "sqlserver.slowquery.historical_physical_reads":
+					assert.False(t, validatedMetrics["sqlserver.slowquery.historical_physical_reads"], "Found a duplicate in the metrics slice: sqlserver.slowquery.historical_physical_reads")
+					validatedMetrics["sqlserver.slowquery.historical_physical_reads"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Historical total physical reads (cumulative since plan cached)", ms.At(i).Description())
+					assert.Equal(t, "{reads}", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("query_id")
+					assert.True(t, ok)
+					assert.Equal(t, "query_id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("normalised_sql_hash")
+					assert.True(t, ok)
+					assert.Equal(t, "normalised_sql_hash-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("nr_service_guid")
+					assert.True(t, ok)
+					assert.Equal(t, "nr_service_guid-val", attrVal.Str())
+				case "sqlserver.slowquery.historical_rows":
+					assert.False(t, validatedMetrics["sqlserver.slowquery.historical_rows"], "Found a duplicate in the metrics slice: sqlserver.slowquery.historical_rows")
+					validatedMetrics["sqlserver.slowquery.historical_rows"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Historical total rows returned (cumulative since plan cached)", ms.At(i).Description())
+					assert.Equal(t, "{rows}", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("query_id")
+					assert.True(t, ok)
+					assert.Equal(t, "query_id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("normalised_sql_hash")
+					assert.True(t, ok)
+					assert.Equal(t, "normalised_sql_hash-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("nr_service_guid")
+					assert.True(t, ok)
+					assert.Equal(t, "nr_service_guid-val", attrVal.Str())
+				case "sqlserver.slowquery.historical_wait_time_ms":
+					assert.False(t, validatedMetrics["sqlserver.slowquery.historical_wait_time_ms"], "Found a duplicate in the metrics slice: sqlserver.slowquery.historical_wait_time_ms")
+					validatedMetrics["sqlserver.slowquery.historical_wait_time_ms"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Historical total wait time in milliseconds (elapsed_time - worker_time, cumulative since plan cached)", ms.At(i).Description())
+					assert.Equal(t, "ms", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("query_id")
+					assert.True(t, ok)
+					assert.Equal(t, "query_id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("normalised_sql_hash")
+					assert.True(t, ok)
+					assert.Equal(t, "normalised_sql_hash-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("nr_service_guid")
+					assert.True(t, ok)
+					assert.Equal(t, "nr_service_guid-val", attrVal.Str())
+				case "sqlserver.slowquery.historical_worker_time_ms":
+					assert.False(t, validatedMetrics["sqlserver.slowquery.historical_worker_time_ms"], "Found a duplicate in the metrics slice: sqlserver.slowquery.historical_worker_time_ms")
+					validatedMetrics["sqlserver.slowquery.historical_worker_time_ms"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Historical total worker (CPU) time in milliseconds (cumulative since plan cached)", ms.At(i).Description())
+					assert.Equal(t, "ms", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("query_id")
+					assert.True(t, ok)
+					assert.Equal(t, "query_id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("normalised_sql_hash")
+					assert.True(t, ok)
+					assert.Equal(t, "normalised_sql_hash-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("nr_service_guid")
+					assert.True(t, ok)
+					assert.Equal(t, "nr_service_guid-val", attrVal.Str())
 				case "sqlserver.slowquery.interval_avg_elapsed_time_ms":
 					assert.False(t, validatedMetrics["sqlserver.slowquery.interval_avg_elapsed_time_ms"], "Found a duplicate in the metrics slice: sqlserver.slowquery.interval_avg_elapsed_time_ms")
 					validatedMetrics["sqlserver.slowquery.interval_avg_elapsed_time_ms"] = true
@@ -2562,6 +2795,156 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("database_name")
 					assert.True(t, ok)
 					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("normalised_sql_hash")
+					assert.True(t, ok)
+					assert.Equal(t, "normalised_sql_hash-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("nr_service_guid")
+					assert.True(t, ok)
+					assert.Equal(t, "nr_service_guid-val", attrVal.Str())
+				case "sqlserver.slowquery.interval_avg_logical_reads":
+					assert.False(t, validatedMetrics["sqlserver.slowquery.interval_avg_logical_reads"], "Found a duplicate in the metrics slice: sqlserver.slowquery.interval_avg_logical_reads")
+					validatedMetrics["sqlserver.slowquery.interval_avg_logical_reads"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Interval average logical reads per execution", ms.At(i).Description())
+					assert.Equal(t, "{reads}", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
+					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
+					attrVal, ok := dp.Attributes().Get("query_id")
+					assert.True(t, ok)
+					assert.Equal(t, "query_id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("normalised_sql_hash")
+					assert.True(t, ok)
+					assert.Equal(t, "normalised_sql_hash-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("nr_service_guid")
+					assert.True(t, ok)
+					assert.Equal(t, "nr_service_guid-val", attrVal.Str())
+				case "sqlserver.slowquery.interval_avg_physical_reads":
+					assert.False(t, validatedMetrics["sqlserver.slowquery.interval_avg_physical_reads"], "Found a duplicate in the metrics slice: sqlserver.slowquery.interval_avg_physical_reads")
+					validatedMetrics["sqlserver.slowquery.interval_avg_physical_reads"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Interval average physical reads per execution", ms.At(i).Description())
+					assert.Equal(t, "{reads}", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
+					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
+					attrVal, ok := dp.Attributes().Get("query_id")
+					assert.True(t, ok)
+					assert.Equal(t, "query_id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("normalised_sql_hash")
+					assert.True(t, ok)
+					assert.Equal(t, "normalised_sql_hash-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("nr_service_guid")
+					assert.True(t, ok)
+					assert.Equal(t, "nr_service_guid-val", attrVal.Str())
+				case "sqlserver.slowquery.interval_avg_rows":
+					assert.False(t, validatedMetrics["sqlserver.slowquery.interval_avg_rows"], "Found a duplicate in the metrics slice: sqlserver.slowquery.interval_avg_rows")
+					validatedMetrics["sqlserver.slowquery.interval_avg_rows"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Interval average rows returned per execution", ms.At(i).Description())
+					assert.Equal(t, "{rows}", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
+					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
+					attrVal, ok := dp.Attributes().Get("query_id")
+					assert.True(t, ok)
+					assert.Equal(t, "query_id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("normalised_sql_hash")
+					assert.True(t, ok)
+					assert.Equal(t, "normalised_sql_hash-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("nr_service_guid")
+					assert.True(t, ok)
+					assert.Equal(t, "nr_service_guid-val", attrVal.Str())
+				case "sqlserver.slowquery.interval_avg_wait_time_ms":
+					assert.False(t, validatedMetrics["sqlserver.slowquery.interval_avg_wait_time_ms"], "Found a duplicate in the metrics slice: sqlserver.slowquery.interval_avg_wait_time_ms")
+					validatedMetrics["sqlserver.slowquery.interval_avg_wait_time_ms"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Interval average wait time per execution in milliseconds", ms.At(i).Description())
+					assert.Equal(t, "ms", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
+					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
+					attrVal, ok := dp.Attributes().Get("query_id")
+					assert.True(t, ok)
+					assert.Equal(t, "query_id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("normalised_sql_hash")
+					assert.True(t, ok)
+					assert.Equal(t, "normalised_sql_hash-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("nr_service_guid")
+					assert.True(t, ok)
+					assert.Equal(t, "nr_service_guid-val", attrVal.Str())
+				case "sqlserver.slowquery.interval_avg_worker_time_ms":
+					assert.False(t, validatedMetrics["sqlserver.slowquery.interval_avg_worker_time_ms"], "Found a duplicate in the metrics slice: sqlserver.slowquery.interval_avg_worker_time_ms")
+					validatedMetrics["sqlserver.slowquery.interval_avg_worker_time_ms"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Interval average worker (CPU) time per execution in milliseconds", ms.At(i).Description())
+					assert.Equal(t, "ms", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
+					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
+					attrVal, ok := dp.Attributes().Get("query_id")
+					assert.True(t, ok)
+					assert.Equal(t, "query_id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("normalised_sql_hash")
+					assert.True(t, ok)
+					assert.Equal(t, "normalised_sql_hash-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("nr_service_guid")
+					assert.True(t, ok)
+					assert.Equal(t, "nr_service_guid-val", attrVal.Str())
+				case "sqlserver.slowquery.interval_elapsed_time_ms":
+					assert.False(t, validatedMetrics["sqlserver.slowquery.interval_elapsed_time_ms"], "Found a duplicate in the metrics slice: sqlserver.slowquery.interval_elapsed_time_ms")
+					validatedMetrics["sqlserver.slowquery.interval_elapsed_time_ms"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Interval total elapsed time in milliseconds (delta for this collection interval)", ms.At(i).Description())
+					assert.Equal(t, "ms", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("query_id")
+					assert.True(t, ok)
+					assert.Equal(t, "query_id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("normalised_sql_hash")
+					assert.True(t, ok)
+					assert.Equal(t, "normalised_sql_hash-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("nr_service_guid")
+					assert.True(t, ok)
+					assert.Equal(t, "nr_service_guid-val", attrVal.Str())
 				case "sqlserver.slowquery.interval_execution_count":
 					assert.False(t, validatedMetrics["sqlserver.slowquery.interval_execution_count"], "Found a duplicate in the metrics slice: sqlserver.slowquery.interval_execution_count")
 					validatedMetrics["sqlserver.slowquery.interval_execution_count"] = true
@@ -2580,6 +2963,132 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("database_name")
 					assert.True(t, ok)
 					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("normalised_sql_hash")
+					assert.True(t, ok)
+					assert.Equal(t, "normalised_sql_hash-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("nr_service_guid")
+					assert.True(t, ok)
+					assert.Equal(t, "nr_service_guid-val", attrVal.Str())
+				case "sqlserver.slowquery.interval_logical_reads":
+					assert.False(t, validatedMetrics["sqlserver.slowquery.interval_logical_reads"], "Found a duplicate in the metrics slice: sqlserver.slowquery.interval_logical_reads")
+					validatedMetrics["sqlserver.slowquery.interval_logical_reads"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Interval logical reads (delta for this collection interval)", ms.At(i).Description())
+					assert.Equal(t, "{reads}", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("query_id")
+					assert.True(t, ok)
+					assert.Equal(t, "query_id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("normalised_sql_hash")
+					assert.True(t, ok)
+					assert.Equal(t, "normalised_sql_hash-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("nr_service_guid")
+					assert.True(t, ok)
+					assert.Equal(t, "nr_service_guid-val", attrVal.Str())
+				case "sqlserver.slowquery.interval_physical_reads":
+					assert.False(t, validatedMetrics["sqlserver.slowquery.interval_physical_reads"], "Found a duplicate in the metrics slice: sqlserver.slowquery.interval_physical_reads")
+					validatedMetrics["sqlserver.slowquery.interval_physical_reads"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Interval physical reads (delta for this collection interval)", ms.At(i).Description())
+					assert.Equal(t, "{reads}", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("query_id")
+					assert.True(t, ok)
+					assert.Equal(t, "query_id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("normalised_sql_hash")
+					assert.True(t, ok)
+					assert.Equal(t, "normalised_sql_hash-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("nr_service_guid")
+					assert.True(t, ok)
+					assert.Equal(t, "nr_service_guid-val", attrVal.Str())
+				case "sqlserver.slowquery.interval_rows":
+					assert.False(t, validatedMetrics["sqlserver.slowquery.interval_rows"], "Found a duplicate in the metrics slice: sqlserver.slowquery.interval_rows")
+					validatedMetrics["sqlserver.slowquery.interval_rows"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Interval rows returned (delta for this collection interval)", ms.At(i).Description())
+					assert.Equal(t, "{rows}", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("query_id")
+					assert.True(t, ok)
+					assert.Equal(t, "query_id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("normalised_sql_hash")
+					assert.True(t, ok)
+					assert.Equal(t, "normalised_sql_hash-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("nr_service_guid")
+					assert.True(t, ok)
+					assert.Equal(t, "nr_service_guid-val", attrVal.Str())
+				case "sqlserver.slowquery.interval_wait_time_ms":
+					assert.False(t, validatedMetrics["sqlserver.slowquery.interval_wait_time_ms"], "Found a duplicate in the metrics slice: sqlserver.slowquery.interval_wait_time_ms")
+					validatedMetrics["sqlserver.slowquery.interval_wait_time_ms"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Interval wait time in milliseconds (delta for this collection interval)", ms.At(i).Description())
+					assert.Equal(t, "ms", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("query_id")
+					assert.True(t, ok)
+					assert.Equal(t, "query_id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("normalised_sql_hash")
+					assert.True(t, ok)
+					assert.Equal(t, "normalised_sql_hash-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("nr_service_guid")
+					assert.True(t, ok)
+					assert.Equal(t, "nr_service_guid-val", attrVal.Str())
+				case "sqlserver.slowquery.interval_worker_time_ms":
+					assert.False(t, validatedMetrics["sqlserver.slowquery.interval_worker_time_ms"], "Found a duplicate in the metrics slice: sqlserver.slowquery.interval_worker_time_ms")
+					validatedMetrics["sqlserver.slowquery.interval_worker_time_ms"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Interval worker (CPU) time in milliseconds (delta for this collection interval)", ms.At(i).Description())
+					assert.Equal(t, "ms", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("query_id")
+					assert.True(t, ok)
+					assert.Equal(t, "query_id-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("normalised_sql_hash")
+					assert.True(t, ok)
+					assert.Equal(t, "normalised_sql_hash-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("nr_service_guid")
+					assert.True(t, ok)
+					assert.Equal(t, "nr_service_guid-val", attrVal.Str())
 				case "sqlserver.slowquery.query_details":
 					assert.False(t, validatedMetrics["sqlserver.slowquery.query_details"], "Found a duplicate in the metrics slice: sqlserver.slowquery.query_details")
 					validatedMetrics["sqlserver.slowquery.query_details"] = true
@@ -2610,6 +3119,12 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("last_execution_timestamp")
 					assert.True(t, ok)
 					assert.Equal(t, "last_execution_timestamp-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("normalised_sql_hash")
+					assert.True(t, ok)
+					assert.Equal(t, "normalised_sql_hash-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("nr_service_guid")
+					assert.True(t, ok)
+					assert.Equal(t, "nr_service_guid-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("newrelic.event.type")
 					assert.True(t, ok)
 					assert.Equal(t, "newrelic.event.type-val", attrVal.Str())

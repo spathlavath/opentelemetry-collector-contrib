@@ -7,6 +7,7 @@ import (
 	"context"
 	"fmt"
 	"sort"
+	"strings"
 	"time"
 
 	"go.opentelemetry.io/collector/pdata/pcommon"
@@ -32,6 +33,7 @@ type QueryPerformanceScraper struct {
 	intervalCalculator  *SimplifiedIntervalCalculator // Simplified delta-based interval calculator
 	metadataCache       *helpers.MetadataCache        // Metadata cache for wait resource enrichment
 	executionPlanCache  *helpers.ExecutionPlanCache   // Cache for execution plan deduplication
+	// NOTE: apmMetadataCache removed - now passed as parameter to scrape methods
 }
 
 // NewQueryPerformanceScraper creates a new query performance scraper with smoothing and interval calculator configuration
@@ -65,6 +67,9 @@ func NewQueryPerformanceScraper(
 	execPlanCache := helpers.NewExecutionPlanCache(logger)
 	logger.Info("Execution plan caching enabled (TTL: 24 hours hardcoded)")
 
+	// NOTE: APM metadata cache is NOT created here - it's created fresh for each scrape cycle
+	// This ensures no stale metadata persists across scrapes
+
 	return &QueryPerformanceScraper{
 		connection:          conn,
 		logger:              logger,
@@ -90,9 +95,10 @@ func (s *QueryPerformanceScraper) CleanupExecutionPlanCache() {
 	if s.executionPlanCache != nil {
 		s.executionPlanCache.CleanupStaleEntries()
 	}
+	// NOTE: APM metadata cache cleanup removed - cache is now per-scrape and auto-discarded
 }
 
-func (s *QueryPerformanceScraper) ScrapeSlowQueryMetrics(ctx context.Context, intervalSeconds, topN, elapsedTimeThreshold int, emitMetrics bool) ([]models.SlowQuery, error) {
+func (s *QueryPerformanceScraper) ScrapeSlowQueryMetrics(ctx context.Context, intervalSeconds, topN, elapsedTimeThreshold int, emitMetrics bool, apmMetadataCache *helpers.APMMetadataCache) ([]models.SlowQuery, error) {
 	query := fmt.Sprintf(queries.SlowQuery, intervalSeconds)
 
 	var rawResults []models.SlowQuery
@@ -123,8 +129,29 @@ func (s *QueryPerformanceScraper) ScrapeSlowQueryMetrics(ctx context.Context, in
 				continue
 			}
 
+			// Populate interval metrics in the model
+			rawQuery.IntervalElapsedTimeMS = &metrics.IntervalElapsedTimeMs
 			rawQuery.IntervalAvgElapsedTimeMS = &metrics.IntervalAvgElapsedTimeMs
 			rawQuery.IntervalExecutionCount = &metrics.IntervalExecutionCount
+
+			// Populate new interval metrics
+			rawQuery.IntervalWorkerTimeMS = &metrics.IntervalWorkerTimeMs
+			rawQuery.IntervalAvgWorkerTimeMS = &metrics.IntervalAvgWorkerTimeMs
+			rawQuery.IntervalRows = &metrics.IntervalRows
+			rawQuery.IntervalAvgRows = &metrics.IntervalAvgRows
+			rawQuery.IntervalLogicalReads = &metrics.IntervalLogicalReads
+			rawQuery.IntervalAvgLogicalReads = &metrics.IntervalAvgLogicalReads
+			rawQuery.IntervalPhysicalReads = &metrics.IntervalPhysicalReads
+			rawQuery.IntervalAvgPhysicalReads = &metrics.IntervalAvgPhysicalReads
+			rawQuery.IntervalWaitTimeMS = &metrics.IntervalWaitTimeMs
+			rawQuery.IntervalAvgWaitTimeMS = &metrics.IntervalAvgWaitTimeMs
+
+			// Calculate and populate historical wait time (total_elapsed - total_worker)
+			// Note: Both are float64 in milliseconds, convert result to int64
+			if rawQuery.TotalElapsedTimeMS != nil && rawQuery.TotalWorkerTimeMS != nil {
+				waitTimeMs := int64(*rawQuery.TotalElapsedTimeMS - *rawQuery.TotalWorkerTimeMS)
+				rawQuery.TotalWaitTimeMS = &waitTimeMs
+			}
 
 			resultsWithIntervalMetrics = append(resultsWithIntervalMetrics, rawQuery)
 		}
@@ -164,7 +191,7 @@ func (s *QueryPerformanceScraper) ScrapeSlowQueryMetrics(ctx context.Context, in
 
 	if emitMetrics {
 		for i, result := range resultsToProcess {
-			if err := s.processSlowQueryMetrics(result, i); err != nil {
+			if err := s.processSlowQueryMetrics(result, i, apmMetadataCache); err != nil {
 				s.logger.Error("Failed to process slow query metric", zap.Error(err), zap.Int("index", i))
 			}
 		}
@@ -350,7 +377,6 @@ func (s *QueryPerformanceScraper) emitExecutionPlanNodeMetrics(executionPlan mod
 			node.TotalWorkerTime,
 			node.TotalElapsedTime,
 			node.TotalLogicalReads,
-			node.TotalLogicalWrites,
 			node.ExecutionCount,
 			requestStartTime,
 			node.LastExecutionTime,
@@ -359,13 +385,118 @@ func (s *QueryPerformanceScraper) emitExecutionPlanNodeMetrics(executionPlan mod
 	}
 }
 
-func (s *QueryPerformanceScraper) processSlowQueryMetrics(result models.SlowQuery, index int) error {
+func (s *QueryPerformanceScraper) processSlowQueryMetrics(result models.SlowQuery, index int, apmMetadataCache *helpers.APMMetadataCache) error {
 	timestamp := pcommon.NewTimestampFromTime(time.Now())
 
 	// Compute all attribute values once
 	queryID := ""
 	if result.QueryID != nil {
 		queryID = result.QueryID.String()
+	}
+
+	// Extract New Relic metadata and normalize SQL for cross-language correlation
+	// This enables APM integration and query correlation across different language agents
+	if result.QueryText != nil && *result.QueryText != "" {
+		// Check for NR metadata comments in query text
+		hasNrGuidComment := strings.Contains(*result.QueryText, "nr_service_guid=") ||
+			strings.Contains(*result.QueryText, "nr_apm_guid=") ||
+			strings.Contains(*result.QueryText, "nr_guid=")
+		hasNrServiceComment := strings.Contains(*result.QueryText, "nr_service=")
+
+		// FIRST: Log the complete raw query text from SQL Server (before any processing)
+		queryPreview := *result.QueryText
+		if len(queryPreview) > 500 {
+			queryPreview = queryPreview[:500] + "..."
+		}
+
+		s.logger.Info("🔍 SLOW QUERY: Processing query text from plan cache",
+			zap.String("query_id", queryID),
+			zap.Int("query_text_length", len(*result.QueryText)),
+			zap.Bool("has_nr_guid_comment", hasNrGuidComment),
+			zap.Bool("has_nr_service_comment", hasNrServiceComment),
+			zap.String("query_text_preview", queryPreview))
+
+		// Log full query text at debug level
+		s.logger.Debug("SLOW QUERY: Full query text",
+			zap.String("query_id", queryID),
+			zap.String("full_query_text", *result.QueryText))
+
+		// Extract metadata from New Relic query comments (e.g., /* nr_apm_guid="ABC123", nr_service="order-service" */)
+		nrApmGuid, clientName := helpers.ExtractNewRelicMetadata(*result.QueryText)
+
+		s.logger.Info("🏷️  SLOW QUERY: Extracted APM metadata from query text",
+			zap.String("query_id", queryID),
+			zap.String("extracted_nr_service_guid", nrApmGuid),
+			zap.String("extracted_client_name", clientName),
+			zap.Bool("extraction_successful", nrApmGuid != "" || clientName != ""))
+
+		// Normalize SQL and generate MD5 hash for cross-language query correlation
+		normalizedSQL, sqlHash := helpers.NormalizeSqlAndHash(*result.QueryText)
+
+		s.logger.Info("🔐 SLOW QUERY: Normalized SQL and generated hash",
+			zap.String("query_id", queryID),
+			zap.String("normalised_sql_hash", sqlHash),
+			zap.Int("normalized_length", len(normalizedSQL)),
+			zap.String("normalized_sql_preview", func() string {
+				if len(normalizedSQL) > 200 {
+					return normalizedSQL[:200] + "..."
+				}
+				return normalizedSQL
+			}()))
+
+		// Populate model fields with extracted metadata
+		if nrApmGuid != "" {
+			result.NrServiceGuid = &nrApmGuid
+		}
+		if sqlHash != "" {
+			result.NormalisedSqlHash = &sqlHash
+		}
+
+		// Cache APM metadata for active query enrichment (in same scrape)
+		// This allows active queries to skip extraction and use pre-computed metadata
+		if result.QueryID != nil && !result.QueryID.IsEmpty() && (nrApmGuid != "" || sqlHash != "") && apmMetadataCache != nil {
+			queryHashStr := result.QueryID.String()
+			apmMetadataCache.Set(queryHashStr, nrApmGuid, sqlHash)
+
+			s.logger.Info("💾 SLOW QUERY: Cached APM metadata for active query enrichment",
+				zap.String("query_id", queryHashStr),
+				zap.String("cached_nr_service_guid", nrApmGuid),
+				zap.String("cached_normalised_sql_hash", sqlHash))
+		}
+
+		// If no APM metadata found in query text (typical for cached plans),
+		// try to retrieve from APM metadata cache (populated by earlier slow queries in same scrape)
+		if (nrApmGuid == "" || sqlHash == "") && queryID != "" && apmMetadataCache != nil {
+			s.logger.Info("💾 SLOW QUERY: Checking cache for missing metadata",
+				zap.String("query_id", queryID),
+				zap.Bool("missing_nr_service_guid", nrApmGuid == ""),
+				zap.Bool("missing_sql_hash", sqlHash == ""))
+
+			if cachedMetadata, found := apmMetadataCache.Get(queryID); found {
+				s.logger.Info("✅ SLOW QUERY: Enriching with cached APM metadata",
+					zap.String("query_id", queryID),
+					zap.String("cached_nr_service_guid", cachedMetadata.NrServiceGuid),
+					zap.String("cached_normalized_sql_hash", cachedMetadata.NormalisedSqlHash))
+
+				// Use cached values if not already present
+				if nrApmGuid == "" && cachedMetadata.NrServiceGuid != "" {
+					nrApmGuid = cachedMetadata.NrServiceGuid
+					result.NrServiceGuid = &cachedMetadata.NrServiceGuid
+				}
+				if sqlHash == "" && cachedMetadata.NormalisedSqlHash != "" {
+					sqlHash = cachedMetadata.NormalisedSqlHash
+					result.NormalisedSqlHash = &cachedMetadata.NormalisedSqlHash
+				}
+			} else {
+				s.logger.Warn("⚠️  SLOW QUERY: No cached APM metadata found",
+					zap.String("query_id", queryID),
+					zap.String("message", "This query will be emitted WITHOUT APM correlation metadata"))
+			}
+		}
+
+		// Replace QueryText with normalized version for privacy and consistency
+		// This removes literals while preserving query structure
+		result.QueryText = &normalizedSQL
 	}
 
 	planHandle := ""
@@ -393,7 +524,26 @@ func (s *QueryPerformanceScraper) processSlowQueryMetrics(result models.SlowQuer
 		lastExecutionTimestamp = *result.LastExecutionTimestamp
 	}
 
+	normalizedSqlHash := ""
+	if result.NormalisedSqlHash != nil {
+		normalizedSqlHash = *result.NormalisedSqlHash
+	}
+
+	nrServiceGuid := ""
+	if result.NrServiceGuid != nil {
+		nrServiceGuid = *result.NrServiceGuid
+	}
+
 	// Emit a single metric with all query details (non-numeric attributes)
+	// This metric is converted to logs via metricsaslogs connector
+	s.logger.Info("📤 SLOW QUERY: Emitting event with final metadata",
+		zap.String("query_id", queryID),
+		zap.String("database_name", databaseName),
+		zap.String("normalised_sql_hash", normalizedSqlHash),
+		zap.String("nr_service_guid", nrServiceGuid),
+		zap.Bool("has_apm_correlation", nrServiceGuid != "" && normalizedSqlHash != ""),
+		zap.String("event_type", "SqlServerSlowQueryDetails"))
+
 	s.mb.RecordSqlserverSlowqueryQueryDetailsDataPoint(
 		timestamp,
 		1,
@@ -403,15 +553,38 @@ func (s *QueryPerformanceScraper) processSlowQueryMetrics(result models.SlowQuer
 		queryText,
 		collectionTimestamp,
 		lastExecutionTimestamp,
+		normalizedSqlHash,
+		nrServiceGuid,
 		"SqlServerSlowQueryDetails",
 	)
 
 	if result.AvgElapsedTimeMS != nil {
+		s.mb.RecordSqlserverSlowqueryAvgElapsedTimeMsDataPoint(
+			timestamp,
+			*result.AvgElapsedTimeMS,
+			queryID,
+			databaseName,
+			normalizedSqlHash,
+			nrServiceGuid,
+		)
+
+		// Also emit as historical_avg_elapsed_time_ms (with only query_id and database_name attributes)
 		s.mb.RecordSqlserverSlowqueryHistoricalAvgElapsedTimeMsDataPoint(
 			timestamp,
 			*result.AvgElapsedTimeMS,
 			queryID,
 			databaseName,
+		)
+	}
+
+	if result.IntervalElapsedTimeMS != nil {
+		s.mb.RecordSqlserverSlowqueryIntervalElapsedTimeMsDataPoint(
+			timestamp,
+			*result.IntervalElapsedTimeMS,
+			queryID,
+			databaseName,
+			normalizedSqlHash,
+			nrServiceGuid,
 		)
 	}
 
@@ -421,6 +594,8 @@ func (s *QueryPerformanceScraper) processSlowQueryMetrics(result models.SlowQuer
 			*result.IntervalAvgElapsedTimeMS,
 			queryID,
 			databaseName,
+			normalizedSqlHash,
+			nrServiceGuid,
 		)
 	}
 
@@ -430,6 +605,8 @@ func (s *QueryPerformanceScraper) processSlowQueryMetrics(result models.SlowQuer
 			*result.ExecutionCount,
 			queryID,
 			databaseName,
+			normalizedSqlHash,
+			nrServiceGuid,
 		)
 	}
 
@@ -439,6 +616,176 @@ func (s *QueryPerformanceScraper) processSlowQueryMetrics(result models.SlowQuer
 			*result.IntervalExecutionCount,
 			queryID,
 			databaseName,
+			normalizedSqlHash,
+			nrServiceGuid,
+		)
+	}
+
+	// New historical metrics
+	// Note: TotalWorkerTimeMS is *float64 from SQL (ms), cast to int64 for emission
+	if result.TotalWorkerTimeMS != nil {
+		s.mb.RecordSqlserverSlowqueryHistoricalWorkerTimeMsDataPoint(
+			timestamp,
+			int64(*result.TotalWorkerTimeMS),
+			queryID,
+			databaseName,
+			normalizedSqlHash,
+			nrServiceGuid,
+		)
+	}
+
+	if result.TotalRows != nil {
+		s.mb.RecordSqlserverSlowqueryHistoricalRowsDataPoint(
+			timestamp,
+			*result.TotalRows,
+			queryID,
+			databaseName,
+			normalizedSqlHash,
+			nrServiceGuid,
+		)
+	}
+
+	if result.TotalLogicalReads != nil {
+		s.mb.RecordSqlserverSlowqueryHistoricalLogicalReadsDataPoint(
+			timestamp,
+			*result.TotalLogicalReads,
+			queryID,
+			databaseName,
+			normalizedSqlHash,
+			nrServiceGuid,
+		)
+	}
+
+	if result.TotalPhysicalReads != nil {
+		s.mb.RecordSqlserverSlowqueryHistoricalPhysicalReadsDataPoint(
+			timestamp,
+			*result.TotalPhysicalReads,
+			queryID,
+			databaseName,
+			normalizedSqlHash,
+			nrServiceGuid,
+		)
+	}
+
+	if result.TotalWaitTimeMS != nil {
+		s.mb.RecordSqlserverSlowqueryHistoricalWaitTimeMsDataPoint(
+			timestamp,
+			*result.TotalWaitTimeMS,
+			queryID,
+			databaseName,
+			normalizedSqlHash,
+			nrServiceGuid,
+		)
+	}
+
+	// New interval metrics
+	if result.IntervalWorkerTimeMS != nil {
+		s.mb.RecordSqlserverSlowqueryIntervalWorkerTimeMsDataPoint(
+			timestamp,
+			*result.IntervalWorkerTimeMS,
+			queryID,
+			databaseName,
+			normalizedSqlHash,
+			nrServiceGuid,
+		)
+	}
+
+	if result.IntervalAvgWorkerTimeMS != nil {
+		s.mb.RecordSqlserverSlowqueryIntervalAvgWorkerTimeMsDataPoint(
+			timestamp,
+			*result.IntervalAvgWorkerTimeMS,
+			queryID,
+			databaseName,
+			normalizedSqlHash,
+			nrServiceGuid,
+		)
+	}
+
+	if result.IntervalRows != nil {
+		s.mb.RecordSqlserverSlowqueryIntervalRowsDataPoint(
+			timestamp,
+			*result.IntervalRows,
+			queryID,
+			databaseName,
+			normalizedSqlHash,
+			nrServiceGuid,
+		)
+	}
+
+	if result.IntervalAvgRows != nil {
+		s.mb.RecordSqlserverSlowqueryIntervalAvgRowsDataPoint(
+			timestamp,
+			*result.IntervalAvgRows,
+			queryID,
+			databaseName,
+			normalizedSqlHash,
+			nrServiceGuid,
+		)
+	}
+
+	if result.IntervalLogicalReads != nil {
+		s.mb.RecordSqlserverSlowqueryIntervalLogicalReadsDataPoint(
+			timestamp,
+			*result.IntervalLogicalReads,
+			queryID,
+			databaseName,
+			normalizedSqlHash,
+			nrServiceGuid,
+		)
+	}
+
+	if result.IntervalAvgLogicalReads != nil {
+		s.mb.RecordSqlserverSlowqueryIntervalAvgLogicalReadsDataPoint(
+			timestamp,
+			*result.IntervalAvgLogicalReads,
+			queryID,
+			databaseName,
+			normalizedSqlHash,
+			nrServiceGuid,
+		)
+	}
+
+	if result.IntervalPhysicalReads != nil {
+		s.mb.RecordSqlserverSlowqueryIntervalPhysicalReadsDataPoint(
+			timestamp,
+			*result.IntervalPhysicalReads,
+			queryID,
+			databaseName,
+			normalizedSqlHash,
+			nrServiceGuid,
+		)
+	}
+
+	if result.IntervalAvgPhysicalReads != nil {
+		s.mb.RecordSqlserverSlowqueryIntervalAvgPhysicalReadsDataPoint(
+			timestamp,
+			*result.IntervalAvgPhysicalReads,
+			queryID,
+			databaseName,
+			normalizedSqlHash,
+			nrServiceGuid,
+		)
+	}
+
+	if result.IntervalWaitTimeMS != nil {
+		s.mb.RecordSqlserverSlowqueryIntervalWaitTimeMsDataPoint(
+			timestamp,
+			*result.IntervalWaitTimeMS,
+			queryID,
+			databaseName,
+			normalizedSqlHash,
+			nrServiceGuid,
+		)
+	}
+
+	if result.IntervalAvgWaitTimeMS != nil {
+		s.mb.RecordSqlserverSlowqueryIntervalAvgWaitTimeMsDataPoint(
+			timestamp,
+			*result.IntervalAvgWaitTimeMS,
+			queryID,
+			databaseName,
+			normalizedSqlHash,
+			nrServiceGuid,
 		)
 	}
 

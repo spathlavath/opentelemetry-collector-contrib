@@ -16,10 +16,43 @@ type SlowQuery struct {
 	TotalElapsedTimeMS     *float64 `db:"total_elapsed_time_ms"` // Used for precise delta calculation only
 	CollectionTimestamp    *string  `db:"collection_timestamp" metric_name:"collection_timestamp" source_type:"attribute"`
 
+	// Historical metrics from dm_exec_query_stats (cumulative since plan cached)
+	TotalWorkerTimeMS  *float64 `db:"total_worker_time_ms"` // Used for delta calculation (in milliseconds)
+	TotalRows          *int64   `db:"total_rows"`           // Used for delta calculation
+	TotalLogicalReads  *int64   `db:"total_logical_reads"`  // Used for delta calculation
+	TotalPhysicalReads *int64   `db:"total_physical_reads"` // Used for delta calculation
+	TotalWaitTimeMS    *int64   `db:"-"`                    // Calculated: total_elapsed_time_ms - total_worker_time_ms
+
 	// Interval-based delta metrics (calculated in-memory, not from DB)
 	// These are populated by the SimplifiedIntervalCalculator
+	IntervalElapsedTimeMS    *int64   `db:"-" metric_name:"sqlserver.slowquery.interval_elapsed_time_ms" source_type:"gauge"`
 	IntervalAvgElapsedTimeMS *float64 `db:"-" metric_name:"sqlserver.slowquery.interval_avg_elapsed_time_ms" source_type:"gauge"`
 	IntervalExecutionCount   *int64   `db:"-" metric_name:"sqlserver.slowquery.interval_execution_count" source_type:"gauge"`
+
+	// New interval metrics for worker time
+	IntervalWorkerTimeMS    *int64   `db:"-" metric_name:"sqlserver.slowquery.interval_worker_time_ms" source_type:"gauge"`
+	IntervalAvgWorkerTimeMS *float64 `db:"-" metric_name:"sqlserver.slowquery.interval_avg_worker_time_ms" source_type:"gauge"`
+
+	// New interval metrics for rows
+	IntervalRows    *int64   `db:"-" metric_name:"sqlserver.slowquery.interval_rows" source_type:"gauge"`
+	IntervalAvgRows *float64 `db:"-" metric_name:"sqlserver.slowquery.interval_avg_rows" source_type:"gauge"`
+
+	// New interval metrics for logical reads
+	IntervalLogicalReads    *int64   `db:"-" metric_name:"sqlserver.slowquery.interval_logical_reads" source_type:"gauge"`
+	IntervalAvgLogicalReads *float64 `db:"-" metric_name:"sqlserver.slowquery.interval_avg_logical_reads" source_type:"gauge"`
+
+	// New interval metrics for physical reads
+	IntervalPhysicalReads    *int64   `db:"-" metric_name:"sqlserver.slowquery.interval_physical_reads" source_type:"gauge"`
+	IntervalAvgPhysicalReads *float64 `db:"-" metric_name:"sqlserver.slowquery.interval_avg_physical_reads" source_type:"gauge"`
+
+	// New interval metrics for wait time
+	IntervalWaitTimeMS    *int64   `db:"-" metric_name:"sqlserver.slowquery.interval_wait_time_ms" source_type:"gauge"`
+	IntervalAvgWaitTimeMS *float64 `db:"-" metric_name:"sqlserver.slowquery.interval_avg_wait_time_ms" source_type:"gauge"`
+
+	// New Relic Metadata Extraction (calculated in-memory from query comments, not from DB)
+	// These fields enable cross-language query correlation and APM integration
+	NrServiceGuid     *string `db:"-" metric_name:"nr_service_guid" source_type:"attribute"`     // Extracted from nr_apm_guid comment (APM service GUID)
+	NormalisedSqlHash *string `db:"-" metric_name:"normalised_sql_hash" source_type:"attribute"` // MD5 hash of normalised SQL for cross-language correlation
 }
 
 // ExecutionPlanNode represents a parsed execution plan node with detailed operator information
@@ -129,16 +162,28 @@ type ActiveRunningQuery struct {
 	BlockerLoginName           *string  `db:"blocker_login_name" metric_name:"blocker_login_name" source_type:"attribute"`
 	BlockingQueryStatementText *string  `db:"blocking_query_statement_text" metric_name:"blocking_query_statement_text" source_type:"attribute"`
 	BlockingQueryHash          *QueryID `db:"blocking_query_hash" metric_name:"blocking_query_hash" source_type:"attribute"`
+
+	// K. APM Integration (calculated in-memory from query comments, not from DB)
+	// These fields enable cross-language query correlation for active queries
+	NrServiceGuid     *string `db:"-" metric_name:"nr_service_guid" source_type:"attribute"`     // Extracted from nr_apm_guid comment (APM service GUID)
+	NormalisedSqlHash *string `db:"-" metric_name:"normalised_sql_hash" source_type:"attribute"` // MD5 hash of normalised SQL for cross-language correlation
+
+	// L. BLOCKING QUERY APM Integration (calculated from blocking query comments)
+	// These fields enable APM correlation for the blocker/blocking query
+	BlockingNrServiceGuid     *string `db:"-" metric_name:"blocking_nr_service_guid" source_type:"attribute"`     // Extracted from blocker's query comments
+	BlockingNormalisedSqlHash *string `db:"-" metric_name:"blocking_normalised_sql_hash" source_type:"attribute"` // MD5 hash of normalised blocking SQL
 }
 
 // BlockingQueryEvent represents a blocking query that should be emitted as a custom event
 // This is used to send blocking query text as OpenTelemetry logs (custom events in New Relic)
 type BlockingQueryEvent struct {
-	SessionID         int64  // Victim's session (who is blocked)
-	RequestID         int64  // Victim's request (handles MARS - Multiple Active Result Sets)
-	RequestStartTime  string // When victim started waiting (uniqueness + correlation)
-	BlockingSessionID int64  // Who is blocking
-	BlockingQueryText string // Full SQL text of blocking query (no truncation)
+	SessionID                 int64  // Victim's session (who is blocked)
+	RequestID                 int64  // Victim's request (handles MARS - Multiple Active Result Sets)
+	RequestStartTime          string // When victim started waiting (uniqueness + correlation)
+	BlockingSessionID         int64  // Who is blocking
+	BlockingQueryText         string // Full SQL text of blocking query (no truncation)
+	BlockingNrServiceGuid     string // APM service GUID extracted from blocking query (for APM correlation)
+	BlockingNormalisedSqlHash string // MD5 hash of normalised blocking SQL (for cross-language correlation)
 }
 
 // SlowQueryPlanData represents lightweight plan data extracted from slow queries

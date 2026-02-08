@@ -422,6 +422,11 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 
 	// Scrape slow query metrics if query monitoring is enabled
 	// Store query IDs and lightweight plan data (5 fields only) for correlation with active queries
+	// Create a fresh APM metadata cache for this scrape cycle
+	// This cache will be shared between active and slow query scrapers and discarded at scrape end
+	apmMetadataCache := helpers.NewAPMMetadataCache(s.logger)
+	s.logger.Debug("Created fresh APM metadata cache for current scrape cycle")
+
 	var slowQueryIDs []string
 	var slowQueryPlanDataMap map[string]models.SlowQueryPlanData
 	if s.config.EnableQueryMonitoring {
@@ -438,7 +443,7 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 			zap.Int("top_n", topN),
 			zap.Int("elapsed_time_threshold", elapsedTimeThreshold))
 
-		slowQueries, err := s.queryPerformanceScraper.ScrapeSlowQueryMetrics(scrapeCtx, intervalSeconds, topN, elapsedTimeThreshold, true)
+		slowQueries, err := s.queryPerformanceScraper.ScrapeSlowQueryMetrics(scrapeCtx, intervalSeconds, topN, elapsedTimeThreshold, true, apmMetadataCache)
 		if err != nil {
 			s.logger.Warn("Failed to scrape slow query metrics - continuing with other metrics",
 				zap.Error(err),
@@ -492,8 +497,8 @@ func (s *sqlServerScraper) scrape(ctx context.Context) (pmetric.Metrics, error) 
 		s.logger.Info("Active queries fetched, emitting metrics",
 			zap.Int("active_query_count", len(activeQueries)))
 
-		// Step 2: Emit metrics for active queries (using lightweight plan data from memory)
-		if err := s.queryPerformanceScraper.EmitActiveRunningQueriesMetrics(scrapeCtx, activeQueries, slowQueryPlanDataMap); err != nil {
+		// Step 2: Emit metrics for active queries (using lightweight plan data from memory and APM metadata cache)
+		if err := s.queryPerformanceScraper.EmitActiveRunningQueriesMetrics(scrapeCtx, activeQueries, slowQueryPlanDataMap, apmMetadataCache); err != nil {
 			s.logger.Warn("Failed to emit active running queries metrics",
 				zap.Error(err))
 		} else {
