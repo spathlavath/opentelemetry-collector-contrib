@@ -115,7 +115,8 @@ func (s *QueryPerformanceScraper) EmitActiveRunningQueriesMetrics(ctx context.Co
 		processedCount++
 
 		// Emit metrics for this active query (no execution plan XML) using slow query plan_handle
-		if err := s.processActiveRunningQueryMetricsWithPlan(result, i, "", slowQueryPlanHandle, apmMetadataCache); err != nil {
+		// Pass by pointer so blocking metadata modifications persist
+		if err := s.processActiveRunningQueryMetricsWithPlan(&activeQueries[i], i, "", slowQueryPlanHandle, apmMetadataCache); err != nil {
 			s.logger.Error("Failed to emit active running query metrics", zap.Error(err), zap.Int("index", i))
 		}
 	}
@@ -131,7 +132,8 @@ func (s *QueryPerformanceScraper) EmitActiveRunningQueriesMetrics(ctx context.Co
 
 // processActiveRunningQueryMetricsWithPlan emits metrics for a single active running query
 // Uses slow query plan_handle for consistency across all metrics and logs
-func (s *QueryPerformanceScraper) processActiveRunningQueryMetricsWithPlan(result models.ActiveRunningQuery, index int, executionPlanXML string, slowQueryPlanHandle *models.QueryID, apmMetadataCache *helpers.APMMetadataCache) error {
+// IMPORTANT: Takes *models.ActiveRunningQuery (pointer) so blocking metadata modifications persist
+func (s *QueryPerformanceScraper) processActiveRunningQueryMetricsWithPlan(result *models.ActiveRunningQuery, index int, executionPlanXML string, slowQueryPlanHandle *models.QueryID, apmMetadataCache *helpers.APMMetadataCache) error {
 	if result.CurrentSessionID == nil {
 		s.logger.Debug("Skipping active running query with nil session ID", zap.Int("index", index))
 		return nil
