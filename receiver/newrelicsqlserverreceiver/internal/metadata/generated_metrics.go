@@ -184,12 +184,6 @@ var MetricsInfo = metricsInfo{
 	SqlserverFailoverClusterTransactionDelayMs: metricInfo{
 		Name: "sqlserver.failover_cluster.transaction_delay_ms",
 	},
-	SqlserverIndividualQueryTotalCPUMs: metricInfo{
-		Name: "sqlserver.individual_query.total_cpu_ms",
-	},
-	SqlserverIndividualQueryTotalElapsedMs: metricInfo{
-		Name: "sqlserver.individual_query.total_elapsed_ms",
-	},
 	SqlserverInstanceBackgroundProcessesCount: metricInfo{
 		Name: "sqlserver.instance.background_processes_count",
 	},
@@ -580,8 +574,6 @@ type metricsInfo struct {
 	SqlserverFailoverClusterRedoQueueKb                       metricInfo
 	SqlserverFailoverClusterRedoRateKbSec                     metricInfo
 	SqlserverFailoverClusterTransactionDelayMs                metricInfo
-	SqlserverIndividualQueryTotalCPUMs                        metricInfo
-	SqlserverIndividualQueryTotalElapsedMs                    metricInfo
 	SqlserverInstanceBackgroundProcessesCount                 metricInfo
 	SqlserverInstanceBlockedProcessesCount                    metricInfo
 	SqlserverInstanceBufferPoolHitPercent                     metricInfo
@@ -3693,118 +3685,6 @@ func (m *metricSqlserverFailoverClusterTransactionDelayMs) emit(metrics pmetric.
 
 func newMetricSqlserverFailoverClusterTransactionDelayMs(cfg MetricConfig) metricSqlserverFailoverClusterTransactionDelayMs {
 	m := metricSqlserverFailoverClusterTransactionDelayMs{config: cfg}
-	if cfg.Enabled {
-		m.data = pmetric.NewMetric()
-		m.init()
-	}
-	return m
-}
-
-type metricSqlserverIndividualQueryTotalCPUMs struct {
-	data     pmetric.Metric // data buffer for generated metric.
-	config   MetricConfig   // metric config provided by user.
-	capacity int            // max observed number of data points added to the metric.
-}
-
-// init fills sqlserver.individual_query.total_cpu_ms metric with initial data.
-func (m *metricSqlserverIndividualQueryTotalCPUMs) init() {
-	m.data.SetName("sqlserver.individual_query.total_cpu_ms")
-	m.data.SetDescription("Total CPU time in milliseconds for individual query analysis")
-	m.data.SetUnit("ms")
-	m.data.SetEmptyGauge()
-	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
-}
-
-func (m *metricSqlserverIndividualQueryTotalCPUMs) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, queryIDAttributeValue string, planHandleAttributeValue string, queryPlanIDAttributeValue string, queryTextAttributeValue string, creationTimeAttributeValue string, lastExecutionTimeAttributeValue string) {
-	if !m.config.Enabled {
-		return
-	}
-	dp := m.data.Gauge().DataPoints().AppendEmpty()
-	dp.SetStartTimestamp(start)
-	dp.SetTimestamp(ts)
-	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
-	dp.Attributes().PutStr("plan_handle", planHandleAttributeValue)
-	dp.Attributes().PutStr("query_plan_id", queryPlanIDAttributeValue)
-	dp.Attributes().PutStr("query_text", queryTextAttributeValue)
-	dp.Attributes().PutStr("creation_time", creationTimeAttributeValue)
-	dp.Attributes().PutStr("last_execution_time", lastExecutionTimeAttributeValue)
-}
-
-// updateCapacity saves max length of data point slices that will be used for the slice capacity.
-func (m *metricSqlserverIndividualQueryTotalCPUMs) updateCapacity() {
-	if m.data.Gauge().DataPoints().Len() > m.capacity {
-		m.capacity = m.data.Gauge().DataPoints().Len()
-	}
-}
-
-// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
-func (m *metricSqlserverIndividualQueryTotalCPUMs) emit(metrics pmetric.MetricSlice) {
-	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
-		m.updateCapacity()
-		m.data.MoveTo(metrics.AppendEmpty())
-		m.init()
-	}
-}
-
-func newMetricSqlserverIndividualQueryTotalCPUMs(cfg MetricConfig) metricSqlserverIndividualQueryTotalCPUMs {
-	m := metricSqlserverIndividualQueryTotalCPUMs{config: cfg}
-	if cfg.Enabled {
-		m.data = pmetric.NewMetric()
-		m.init()
-	}
-	return m
-}
-
-type metricSqlserverIndividualQueryTotalElapsedMs struct {
-	data     pmetric.Metric // data buffer for generated metric.
-	config   MetricConfig   // metric config provided by user.
-	capacity int            // max observed number of data points added to the metric.
-}
-
-// init fills sqlserver.individual_query.total_elapsed_ms metric with initial data.
-func (m *metricSqlserverIndividualQueryTotalElapsedMs) init() {
-	m.data.SetName("sqlserver.individual_query.total_elapsed_ms")
-	m.data.SetDescription("Total elapsed time in milliseconds for individual query analysis")
-	m.data.SetUnit("ms")
-	m.data.SetEmptyGauge()
-	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
-}
-
-func (m *metricSqlserverIndividualQueryTotalElapsedMs) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, queryIDAttributeValue string, planHandleAttributeValue string, queryPlanIDAttributeValue string, queryTextAttributeValue string, creationTimeAttributeValue string, lastExecutionTimeAttributeValue string) {
-	if !m.config.Enabled {
-		return
-	}
-	dp := m.data.Gauge().DataPoints().AppendEmpty()
-	dp.SetStartTimestamp(start)
-	dp.SetTimestamp(ts)
-	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
-	dp.Attributes().PutStr("plan_handle", planHandleAttributeValue)
-	dp.Attributes().PutStr("query_plan_id", queryPlanIDAttributeValue)
-	dp.Attributes().PutStr("query_text", queryTextAttributeValue)
-	dp.Attributes().PutStr("creation_time", creationTimeAttributeValue)
-	dp.Attributes().PutStr("last_execution_time", lastExecutionTimeAttributeValue)
-}
-
-// updateCapacity saves max length of data point slices that will be used for the slice capacity.
-func (m *metricSqlserverIndividualQueryTotalElapsedMs) updateCapacity() {
-	if m.data.Gauge().DataPoints().Len() > m.capacity {
-		m.capacity = m.data.Gauge().DataPoints().Len()
-	}
-}
-
-// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
-func (m *metricSqlserverIndividualQueryTotalElapsedMs) emit(metrics pmetric.MetricSlice) {
-	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
-		m.updateCapacity()
-		m.data.MoveTo(metrics.AppendEmpty())
-		m.init()
-	}
-}
-
-func newMetricSqlserverIndividualQueryTotalElapsedMs(cfg MetricConfig) metricSqlserverIndividualQueryTotalElapsedMs {
-	m := metricSqlserverIndividualQueryTotalElapsedMs{config: cfg}
 	if cfg.Enabled {
 		m.data = pmetric.NewMetric()
 		m.init()
@@ -9498,8 +9378,6 @@ type MetricsBuilder struct {
 	metricSqlserverFailoverClusterRedoQueueKb                       metricSqlserverFailoverClusterRedoQueueKb
 	metricSqlserverFailoverClusterRedoRateKbSec                     metricSqlserverFailoverClusterRedoRateKbSec
 	metricSqlserverFailoverClusterTransactionDelayMs                metricSqlserverFailoverClusterTransactionDelayMs
-	metricSqlserverIndividualQueryTotalCPUMs                        metricSqlserverIndividualQueryTotalCPUMs
-	metricSqlserverIndividualQueryTotalElapsedMs                    metricSqlserverIndividualQueryTotalElapsedMs
 	metricSqlserverInstanceBackgroundProcessesCount                 metricSqlserverInstanceBackgroundProcessesCount
 	metricSqlserverInstanceBlockedProcessesCount                    metricSqlserverInstanceBlockedProcessesCount
 	metricSqlserverInstanceBufferPoolHitPercent                     metricSqlserverInstanceBufferPoolHitPercent
@@ -9692,8 +9570,6 @@ func NewMetricsBuilder(mbc MetricsBuilderConfig, settings receiver.Settings, opt
 		metricSqlserverFailoverClusterRedoQueueKb:                       newMetricSqlserverFailoverClusterRedoQueueKb(mbc.Metrics.SqlserverFailoverClusterRedoQueueKb),
 		metricSqlserverFailoverClusterRedoRateKbSec:                     newMetricSqlserverFailoverClusterRedoRateKbSec(mbc.Metrics.SqlserverFailoverClusterRedoRateKbSec),
 		metricSqlserverFailoverClusterTransactionDelayMs:                newMetricSqlserverFailoverClusterTransactionDelayMs(mbc.Metrics.SqlserverFailoverClusterTransactionDelayMs),
-		metricSqlserverIndividualQueryTotalCPUMs:                        newMetricSqlserverIndividualQueryTotalCPUMs(mbc.Metrics.SqlserverIndividualQueryTotalCPUMs),
-		metricSqlserverIndividualQueryTotalElapsedMs:                    newMetricSqlserverIndividualQueryTotalElapsedMs(mbc.Metrics.SqlserverIndividualQueryTotalElapsedMs),
 		metricSqlserverInstanceBackgroundProcessesCount:                 newMetricSqlserverInstanceBackgroundProcessesCount(mbc.Metrics.SqlserverInstanceBackgroundProcessesCount),
 		metricSqlserverInstanceBlockedProcessesCount:                    newMetricSqlserverInstanceBlockedProcessesCount(mbc.Metrics.SqlserverInstanceBlockedProcessesCount),
 		metricSqlserverInstanceBufferPoolHitPercent:                     newMetricSqlserverInstanceBufferPoolHitPercent(mbc.Metrics.SqlserverInstanceBufferPoolHitPercent),
@@ -9963,8 +9839,6 @@ func (mb *MetricsBuilder) EmitForResource(options ...ResourceMetricsOption) {
 	mb.metricSqlserverFailoverClusterRedoQueueKb.emit(ils.Metrics())
 	mb.metricSqlserverFailoverClusterRedoRateKbSec.emit(ils.Metrics())
 	mb.metricSqlserverFailoverClusterTransactionDelayMs.emit(ils.Metrics())
-	mb.metricSqlserverIndividualQueryTotalCPUMs.emit(ils.Metrics())
-	mb.metricSqlserverIndividualQueryTotalElapsedMs.emit(ils.Metrics())
 	mb.metricSqlserverInstanceBackgroundProcessesCount.emit(ils.Metrics())
 	mb.metricSqlserverInstanceBlockedProcessesCount.emit(ils.Metrics())
 	mb.metricSqlserverInstanceBufferPoolHitPercent.emit(ils.Metrics())
@@ -10389,16 +10263,6 @@ func (mb *MetricsBuilder) RecordSqlserverFailoverClusterRedoRateKbSecDataPoint(t
 // RecordSqlserverFailoverClusterTransactionDelayMsDataPoint adds a data point to sqlserver.failover_cluster.transaction_delay_ms metric.
 func (mb *MetricsBuilder) RecordSqlserverFailoverClusterTransactionDelayMsDataPoint(ts pcommon.Timestamp, val int64, instanceNameAttributeValue string) {
 	mb.metricSqlserverFailoverClusterTransactionDelayMs.recordDataPoint(mb.startTime, ts, val, instanceNameAttributeValue)
-}
-
-// RecordSqlserverIndividualQueryTotalCPUMsDataPoint adds a data point to sqlserver.individual_query.total_cpu_ms metric.
-func (mb *MetricsBuilder) RecordSqlserverIndividualQueryTotalCPUMsDataPoint(ts pcommon.Timestamp, val float64, queryIDAttributeValue string, planHandleAttributeValue string, queryPlanIDAttributeValue string, queryTextAttributeValue string, creationTimeAttributeValue string, lastExecutionTimeAttributeValue string) {
-	mb.metricSqlserverIndividualQueryTotalCPUMs.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, planHandleAttributeValue, queryPlanIDAttributeValue, queryTextAttributeValue, creationTimeAttributeValue, lastExecutionTimeAttributeValue)
-}
-
-// RecordSqlserverIndividualQueryTotalElapsedMsDataPoint adds a data point to sqlserver.individual_query.total_elapsed_ms metric.
-func (mb *MetricsBuilder) RecordSqlserverIndividualQueryTotalElapsedMsDataPoint(ts pcommon.Timestamp, val float64, queryIDAttributeValue string, planHandleAttributeValue string, queryPlanIDAttributeValue string, queryTextAttributeValue string, creationTimeAttributeValue string, lastExecutionTimeAttributeValue string) {
-	mb.metricSqlserverIndividualQueryTotalElapsedMs.recordDataPoint(mb.startTime, ts, val, queryIDAttributeValue, planHandleAttributeValue, queryPlanIDAttributeValue, queryTextAttributeValue, creationTimeAttributeValue, lastExecutionTimeAttributeValue)
 }
 
 // RecordSqlserverInstanceBackgroundProcessesCountDataPoint adds a data point to sqlserver.instance.background_processes_count metric.

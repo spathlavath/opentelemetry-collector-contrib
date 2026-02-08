@@ -298,14 +298,6 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordSqlserverIndividualQueryTotalCPUMsDataPoint(ts, 1, "query_id-val", "plan_handle-val", "query_plan_id-val", "query_text-val", "creation_time-val", "last_execution_time-val")
-
-			defaultMetricsCount++
-			allMetricsCount++
-			mb.RecordSqlserverIndividualQueryTotalElapsedMsDataPoint(ts, 1, "query_id-val", "plan_handle-val", "query_plan_id-val", "query_text-val", "creation_time-val", "last_execution_time-val")
-
-			defaultMetricsCount++
-			allMetricsCount++
 			mb.RecordSqlserverInstanceBackgroundProcessesCountDataPoint(ts, 1)
 
 			defaultMetricsCount++
@@ -1933,66 +1925,6 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok := dp.Attributes().Get("instance_name")
 					assert.True(t, ok)
 					assert.Equal(t, "instance_name-val", attrVal.Str())
-				case "sqlserver.individual_query.total_cpu_ms":
-					assert.False(t, validatedMetrics["sqlserver.individual_query.total_cpu_ms"], "Found a duplicate in the metrics slice: sqlserver.individual_query.total_cpu_ms")
-					validatedMetrics["sqlserver.individual_query.total_cpu_ms"] = true
-					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
-					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
-					assert.Equal(t, "Total CPU time in milliseconds for individual query analysis", ms.At(i).Description())
-					assert.Equal(t, "ms", ms.At(i).Unit())
-					dp := ms.At(i).Gauge().DataPoints().At(0)
-					assert.Equal(t, start, dp.StartTimestamp())
-					assert.Equal(t, ts, dp.Timestamp())
-					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
-					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("query_id")
-					assert.True(t, ok)
-					assert.Equal(t, "query_id-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("plan_handle")
-					assert.True(t, ok)
-					assert.Equal(t, "plan_handle-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("query_plan_id")
-					assert.True(t, ok)
-					assert.Equal(t, "query_plan_id-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("query_text")
-					assert.True(t, ok)
-					assert.Equal(t, "query_text-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("creation_time")
-					assert.True(t, ok)
-					assert.Equal(t, "creation_time-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("last_execution_time")
-					assert.True(t, ok)
-					assert.Equal(t, "last_execution_time-val", attrVal.Str())
-				case "sqlserver.individual_query.total_elapsed_ms":
-					assert.False(t, validatedMetrics["sqlserver.individual_query.total_elapsed_ms"], "Found a duplicate in the metrics slice: sqlserver.individual_query.total_elapsed_ms")
-					validatedMetrics["sqlserver.individual_query.total_elapsed_ms"] = true
-					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
-					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
-					assert.Equal(t, "Total elapsed time in milliseconds for individual query analysis", ms.At(i).Description())
-					assert.Equal(t, "ms", ms.At(i).Unit())
-					dp := ms.At(i).Gauge().DataPoints().At(0)
-					assert.Equal(t, start, dp.StartTimestamp())
-					assert.Equal(t, ts, dp.Timestamp())
-					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
-					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("query_id")
-					assert.True(t, ok)
-					assert.Equal(t, "query_id-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("plan_handle")
-					assert.True(t, ok)
-					assert.Equal(t, "plan_handle-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("query_plan_id")
-					assert.True(t, ok)
-					assert.Equal(t, "query_plan_id-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("query_text")
-					assert.True(t, ok)
-					assert.Equal(t, "query_text-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("creation_time")
-					assert.True(t, ok)
-					assert.Equal(t, "creation_time-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("last_execution_time")
-					assert.True(t, ok)
-					assert.Equal(t, "last_execution_time-val", attrVal.Str())
 				case "sqlserver.instance.background_processes_count":
 					assert.False(t, validatedMetrics["sqlserver.instance.background_processes_count"], "Found a duplicate in the metrics slice: sqlserver.instance.background_processes_count")
 					validatedMetrics["sqlserver.instance.background_processes_count"] = true

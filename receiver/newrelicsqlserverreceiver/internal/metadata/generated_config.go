@@ -85,8 +85,6 @@ type MetricsConfig struct {
 	SqlserverFailoverClusterRedoQueueKb                       MetricConfig `mapstructure:"sqlserver.failover_cluster.redo_queue_kb"`
 	SqlserverFailoverClusterRedoRateKbSec                     MetricConfig `mapstructure:"sqlserver.failover_cluster.redo_rate_kb_sec"`
 	SqlserverFailoverClusterTransactionDelayMs                MetricConfig `mapstructure:"sqlserver.failover_cluster.transaction_delay_ms"`
-	SqlserverIndividualQueryTotalCPUMs                        MetricConfig `mapstructure:"sqlserver.individual_query.total_cpu_ms"`
-	SqlserverIndividualQueryTotalElapsedMs                    MetricConfig `mapstructure:"sqlserver.individual_query.total_elapsed_ms"`
 	SqlserverInstanceBackgroundProcessesCount                 MetricConfig `mapstructure:"sqlserver.instance.background_processes_count"`
 	SqlserverInstanceBlockedProcessesCount                    MetricConfig `mapstructure:"sqlserver.instance.blocked_processes_count"`
 	SqlserverInstanceBufferPoolHitPercent                     MetricConfig `mapstructure:"sqlserver.instance.buffer_pool_hit_percent"`
@@ -370,12 +368,6 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		SqlserverFailoverClusterTransactionDelayMs: MetricConfig{
-			Enabled: true,
-		},
-		SqlserverIndividualQueryTotalCPUMs: MetricConfig{
-			Enabled: true,
-		},
-		SqlserverIndividualQueryTotalElapsedMs: MetricConfig{
 			Enabled: true,
 		},
 		SqlserverInstanceBackgroundProcessesCount: MetricConfig{

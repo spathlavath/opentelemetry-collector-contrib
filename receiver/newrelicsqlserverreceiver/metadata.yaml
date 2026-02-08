@@ -98,6 +98,24 @@ metrics:
         newrelic.event.type,
       ]
 
+  sqlserver.blocking_query.details:
+    enabled: true
+    stability:
+      level: alpha
+    description: Blocking query details for correlation with active queries (emitted as custom events)
+    unit: "1"
+    gauge:
+      value_type: int
+    attributes:
+      [
+        session_id,
+        request_id,
+        request_start_time,
+        blocking_session_id,
+        blocking_query_text,
+        newrelic.event.type,
+      ]
+
   sqlserver.buffer.cache_hit_ratio:
     enabled: true
     stability:
@@ -688,42 +706,6 @@ metrics:
     gauge:
       value_type: int
     attributes: [instance_name]
-
-  sqlserver.individual_query.total_cpu_ms:
-    enabled: true
-    stability:
-      level: alpha
-    description: Total CPU time in milliseconds for individual query analysis
-    unit: ms
-    gauge:
-      value_type: double
-    attributes:
-      [
-        query_id,
-        plan_handle,
-        query_plan_id,
-        query_text,
-        creation_time,
-        last_execution_time,
-      ]
-
-  sqlserver.individual_query.total_elapsed_ms:
-    enabled: true
-    stability:
-      level: alpha
-    description: Total elapsed time in milliseconds for individual query analysis
-    unit: ms
-    gauge:
-      value_type: double
-    attributes:
-      [
-        query_id,
-        plan_handle,
-        query_plan_id,
-        query_text,
-        creation_time,
-        last_execution_time,
-      ]
 
   # Security Metrics
   sqlserver.instance.background_processes_count:
@@ -1962,9 +1944,6 @@ attributes:
     type: string
   query_id:
     description: Unique identifier for the SQL query
-    type: string
-  query_plan_id:
-    description: Unique identifier for the query execution plan
     type: string
   query_text:
     description: SQL query text (anonymized)

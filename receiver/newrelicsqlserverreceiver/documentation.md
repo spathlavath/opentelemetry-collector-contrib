@@ -80,6 +80,25 @@ Blocking query details for correlation with active queries (emitted as custom ev
 | blocking_normalised_sql_hash | MD5 hash of normalized blocking SQL for cross-language query correlation | Any Str | Recommended |
 | newrelic.event.type | Event type for New Relic integration | Any Str | Recommended |
 
+### sqlserver.blocking_query.details
+
+Blocking query details for correlation with active queries (emitted as custom events)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| session_id | SQL Server session identifier | Any Int | Recommended |
+| request_id | SQL Server request identifier | Any Int | Recommended |
+| request_start_time | Timestamp when the request started | Any Str | Recommended |
+| blocking_session_id | Session ID that is blocking this request | Any Int | Recommended |
+| blocking_query_text | SQL query text of the blocking session | Any Str | Recommended |
+| newrelic.event.type | Event type for New Relic integration | Any Str | Recommended |
+
 ### sqlserver.buffer.cache_hit_ratio
 
 Buffer cache hit ratio percentage
@@ -876,44 +895,6 @@ Average delay for transactions on the secondary replica in milliseconds
 | Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
 | instance_name | SQL Server instance name | Any Str | Recommended |
-
-### sqlserver.individual_query.total_cpu_ms
-
-Total CPU time in milliseconds for individual query analysis
-
-| Unit | Metric Type | Value Type | Stability |
-| ---- | ----------- | ---------- | --------- |
-| ms | Gauge | Double | Alpha |
-
-#### Attributes
-
-| Name | Description | Values | Requirement Level |
-| ---- | ----------- | ------ | -------- |
-| query_id | Unique identifier for the SQL query | Any Str | Recommended |
-| plan_handle | Handle to the cached execution plan | Any Str | Recommended |
-| query_plan_id | Unique identifier for the query execution plan | Any Str | Recommended |
-| query_text | SQL query text (anonymized) | Any Str | Recommended |
-| creation_time | Timestamp when the plan was created | Any Str | Recommended |
-| last_execution_time | Timestamp of last execution | Any Str | Recommended |
-
-### sqlserver.individual_query.total_elapsed_ms
-
-Total elapsed time in milliseconds for individual query analysis
-
-| Unit | Metric Type | Value Type | Stability |
-| ---- | ----------- | ---------- | --------- |
-| ms | Gauge | Double | Alpha |
-
-#### Attributes
-
-| Name | Description | Values | Requirement Level |
-| ---- | ----------- | ------ | -------- |
-| query_id | Unique identifier for the SQL query | Any Str | Recommended |
-| plan_handle | Handle to the cached execution plan | Any Str | Recommended |
-| query_plan_id | Unique identifier for the query execution plan | Any Str | Recommended |
-| query_text | SQL query text (anonymized) | Any Str | Recommended |
-| creation_time | Timestamp when the plan was created | Any Str | Recommended |
-| last_execution_time | Timestamp of last execution | Any Str | Recommended |
 
 ### sqlserver.instance.background_processes_count
 
