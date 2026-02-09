@@ -2590,11 +2590,10 @@ Average number of buffer cache hits per execution
 
 | Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| collection_timestamp | ISO8601 timestamp when the metric was collected | Any Str | Recommended |
 | database_name | Name of the PostgreSQL database | Any Str | Recommended |
 | user_name | Name of the user/role connected to the database | Any Str | Recommended |
 | query_id | Unique identifier for a normalized query (hash from pg_stat_statements) | Any Str | Recommended |
-| query_text | Normalized SQL query text from pg_stat_statements | Any Str | Recommended |
 
 ### postgresql.slow_queries.avg_cpu_time_ms
 
@@ -2608,11 +2607,10 @@ Average CPU time (planning + execution) of the query in milliseconds
 
 | Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| collection_timestamp | ISO8601 timestamp when the metric was collected | Any Str | Recommended |
 | database_name | Name of the PostgreSQL database | Any Str | Recommended |
 | user_name | Name of the user/role connected to the database | Any Str | Recommended |
 | query_id | Unique identifier for a normalized query (hash from pg_stat_statements) | Any Str | Recommended |
-| query_text | Normalized SQL query text from pg_stat_statements | Any Str | Recommended |
 
 ### postgresql.slow_queries.avg_disk_reads
 
@@ -2626,11 +2624,10 @@ Average number of disk blocks read per execution
 
 | Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| collection_timestamp | ISO8601 timestamp when the metric was collected | Any Str | Recommended |
 | database_name | Name of the PostgreSQL database | Any Str | Recommended |
 | user_name | Name of the user/role connected to the database | Any Str | Recommended |
 | query_id | Unique identifier for a normalized query (hash from pg_stat_statements) | Any Str | Recommended |
-| query_text | Normalized SQL query text from pg_stat_statements | Any Str | Recommended |
 
 ### postgresql.slow_queries.avg_disk_writes
 
@@ -2644,11 +2641,10 @@ Average number of disk blocks written per execution
 
 | Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| collection_timestamp | ISO8601 timestamp when the metric was collected | Any Str | Recommended |
 | database_name | Name of the PostgreSQL database | Any Str | Recommended |
 | user_name | Name of the user/role connected to the database | Any Str | Recommended |
 | query_id | Unique identifier for a normalized query (hash from pg_stat_statements) | Any Str | Recommended |
-| query_text | Normalized SQL query text from pg_stat_statements | Any Str | Recommended |
 
 ### postgresql.slow_queries.avg_elapsed_time_ms
 
@@ -2662,11 +2658,10 @@ Average execution time of the query in milliseconds
 
 | Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| collection_timestamp | ISO8601 timestamp when the metric was collected | Any Str | Recommended |
 | database_name | Name of the PostgreSQL database | Any Str | Recommended |
 | user_name | Name of the user/role connected to the database | Any Str | Recommended |
 | query_id | Unique identifier for a normalized query (hash from pg_stat_statements) | Any Str | Recommended |
-| query_text | Normalized SQL query text from pg_stat_statements | Any Str | Recommended |
 
 ### postgresql.slow_queries.avg_plan_time_ms
 
@@ -2680,11 +2675,10 @@ Average planning time of the query in milliseconds (PostgreSQL 13+)
 
 | Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| collection_timestamp | ISO8601 timestamp when the metric was collected | Any Str | Recommended |
 | database_name | Name of the PostgreSQL database | Any Str | Recommended |
 | user_name | Name of the user/role connected to the database | Any Str | Recommended |
 | query_id | Unique identifier for a normalized query (hash from pg_stat_statements) | Any Str | Recommended |
-| query_text | Normalized SQL query text from pg_stat_statements | Any Str | Recommended |
 
 ### postgresql.slow_queries.avg_rows_returned
 
@@ -2698,11 +2692,10 @@ Average number of rows returned per execution
 
 | Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| collection_timestamp | ISO8601 timestamp when the metric was collected | Any Str | Recommended |
 | database_name | Name of the PostgreSQL database | Any Str | Recommended |
 | user_name | Name of the user/role connected to the database | Any Str | Recommended |
 | query_id | Unique identifier for a normalized query (hash from pg_stat_statements) | Any Str | Recommended |
-| query_text | Normalized SQL query text from pg_stat_statements | Any Str | Recommended |
 
 ### postgresql.slow_queries.execution_count
 
@@ -2716,11 +2709,10 @@ Number of times the query has been executed
 
 | Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| collection_timestamp | ISO8601 timestamp when the metric was collected | Any Str | Recommended |
 | database_name | Name of the PostgreSQL database | Any Str | Recommended |
 | user_name | Name of the user/role connected to the database | Any Str | Recommended |
 | query_id | Unique identifier for a normalized query (hash from pg_stat_statements) | Any Str | Recommended |
-| query_text | Normalized SQL query text from pg_stat_statements | Any Str | Recommended |
 
 ### postgresql.slow_queries.max_elapsed_time_ms
 
@@ -2734,11 +2726,10 @@ Maximum execution time of the query in milliseconds
 
 | Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| collection_timestamp | ISO8601 timestamp when the metric was collected | Any Str | Recommended |
 | database_name | Name of the PostgreSQL database | Any Str | Recommended |
 | user_name | Name of the user/role connected to the database | Any Str | Recommended |
 | query_id | Unique identifier for a normalized query (hash from pg_stat_statements) | Any Str | Recommended |
-| query_text | Normalized SQL query text from pg_stat_statements | Any Str | Recommended |
 
 ### postgresql.slow_queries.min_elapsed_time_ms
 
@@ -2752,11 +2743,30 @@ Minimum execution time of the query in milliseconds
 
 | Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| collection_timestamp | ISO8601 timestamp when the metric was collected | Any Str | Recommended |
 | database_name | Name of the PostgreSQL database | Any Str | Recommended |
 | user_name | Name of the user/role connected to the database | Any Str | Recommended |
 | query_id | Unique identifier for a normalized query (hash from pg_stat_statements) | Any Str | Recommended |
+
+### postgresql.slow_queries.query_details
+
+Query details event containing full query text and metadata for slow queries
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| event_type | Type of event for query details (PostgreSQLQueryDetails) | Any Str | Recommended |
+| collection_timestamp | ISO8601 timestamp when the metric was collected | Any Str | Recommended |
+| database_name | Name of the PostgreSQL database | Any Str | Recommended |
+| query_id | Unique identifier for a normalized query (hash from pg_stat_statements) | Any Str | Recommended |
 | query_text | Normalized SQL query text from pg_stat_statements | Any Str | Recommended |
+| user_name | Name of the user/role connected to the database | Any Str | Recommended |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
 
 ### postgresql.slow_queries.stddev_elapsed_time_ms
 
@@ -2770,11 +2780,10 @@ Standard deviation of execution time of the query in milliseconds
 
 | Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| collection_timestamp | ISO8601 timestamp when the metric was collected | Any Str | Recommended |
 | database_name | Name of the PostgreSQL database | Any Str | Recommended |
 | user_name | Name of the user/role connected to the database | Any Str | Recommended |
 | query_id | Unique identifier for a normalized query (hash from pg_stat_statements) | Any Str | Recommended |
-| query_text | Normalized SQL query text from pg_stat_statements | Any Str | Recommended |
 
 ### postgresql.slow_queries.total_buffer_hits
 
@@ -2788,11 +2797,10 @@ Total number of buffer cache hits
 
 | Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| collection_timestamp | ISO8601 timestamp when the metric was collected | Any Str | Recommended |
 | database_name | Name of the PostgreSQL database | Any Str | Recommended |
 | user_name | Name of the user/role connected to the database | Any Str | Recommended |
 | query_id | Unique identifier for a normalized query (hash from pg_stat_statements) | Any Str | Recommended |
-| query_text | Normalized SQL query text from pg_stat_statements | Any Str | Recommended |
 
 ### postgresql.slow_queries.total_disk_reads
 
@@ -2806,11 +2814,10 @@ Total number of disk blocks read
 
 | Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| collection_timestamp | ISO8601 timestamp when the metric was collected | Any Str | Recommended |
 | database_name | Name of the PostgreSQL database | Any Str | Recommended |
 | user_name | Name of the user/role connected to the database | Any Str | Recommended |
 | query_id | Unique identifier for a normalized query (hash from pg_stat_statements) | Any Str | Recommended |
-| query_text | Normalized SQL query text from pg_stat_statements | Any Str | Recommended |
 
 ### postgresql.slow_queries.total_disk_writes
 
@@ -2824,11 +2831,10 @@ Total number of disk blocks written
 
 | Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| collection_timestamp | ISO8601 timestamp when the metric was collected | Any Str | Recommended |
 | database_name | Name of the PostgreSQL database | Any Str | Recommended |
 | user_name | Name of the user/role connected to the database | Any Str | Recommended |
 | query_id | Unique identifier for a normalized query (hash from pg_stat_statements) | Any Str | Recommended |
-| query_text | Normalized SQL query text from pg_stat_statements | Any Str | Recommended |
 
 ### postgresql.slow_queries.total_elapsed_time_ms
 
@@ -2842,11 +2848,10 @@ Total execution time of the query in milliseconds
 
 | Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| collection_timestamp | ISO8601 timestamp when the metric was collected | Any Str | Recommended |
 | database_name | Name of the PostgreSQL database | Any Str | Recommended |
 | user_name | Name of the user/role connected to the database | Any Str | Recommended |
 | query_id | Unique identifier for a normalized query (hash from pg_stat_statements) | Any Str | Recommended |
-| query_text | Normalized SQL query text from pg_stat_statements | Any Str | Recommended |
 
 ### postgresql.slow_queries.total_rows
 
@@ -2860,11 +2865,10 @@ Total number of rows returned
 
 | Name | Description | Values | Requirement Level |
 | ---- | ----------- | ------ | -------- |
-| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+| collection_timestamp | ISO8601 timestamp when the metric was collected | Any Str | Recommended |
 | database_name | Name of the PostgreSQL database | Any Str | Recommended |
 | user_name | Name of the user/role connected to the database | Any Str | Recommended |
 | query_id | Unique identifier for a normalized query (hash from pg_stat_statements) | Any Str | Recommended |
-| query_text | Normalized SQL query text from pg_stat_statements | Any Str | Recommended |
 
 ### postgresql.slru.blks_exists
 

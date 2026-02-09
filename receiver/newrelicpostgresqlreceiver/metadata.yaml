@@ -45,11 +45,17 @@ attributes:
   client_address:
     description: IP address of the standby server
     type: string
+  collection_timestamp:
+    description: ISO8601 timestamp when the metric was collected
+    type: string
   command:
     description: Command type (CLUSTER or VACUUM FULL)
     type: string
   database_name:
     description: Name of the PostgreSQL database
+    type: string
+  event_type:
+    description: Type of event for query details (PostgreSQLQueryDetails)
     type: string
   index_name:
     description: Name of the index being created
@@ -2143,11 +2149,10 @@ metrics:
     gauge:
       value_type: double
     attributes:
-    - newrelicpostgresql.instance_name
+    - collection_timestamp
     - database_name
     - user_name
     - query_id
-    - query_text
     unit: '{blocks}'
     stability:
       level: alpha
@@ -2157,11 +2162,10 @@ metrics:
     gauge:
       value_type: double
     attributes:
-    - newrelicpostgresql.instance_name
+    - collection_timestamp
     - database_name
     - user_name
     - query_id
-    - query_text
     unit: ms
     stability:
       level: alpha
@@ -2171,11 +2175,10 @@ metrics:
     gauge:
       value_type: double
     attributes:
-    - newrelicpostgresql.instance_name
+    - collection_timestamp
     - database_name
     - user_name
     - query_id
-    - query_text
     unit: '{blocks}'
     stability:
       level: alpha
@@ -2185,11 +2188,10 @@ metrics:
     gauge:
       value_type: double
     attributes:
-    - newrelicpostgresql.instance_name
+    - collection_timestamp
     - database_name
     - user_name
     - query_id
-    - query_text
     unit: '{blocks}'
     stability:
       level: alpha
@@ -2199,11 +2201,10 @@ metrics:
     gauge:
       value_type: double
     attributes:
-    - newrelicpostgresql.instance_name
+    - collection_timestamp
     - database_name
     - user_name
     - query_id
-    - query_text
     unit: ms
     stability:
       level: alpha
@@ -2213,11 +2214,10 @@ metrics:
     gauge:
       value_type: double
     attributes:
-    - newrelicpostgresql.instance_name
+    - collection_timestamp
     - database_name
     - user_name
     - query_id
-    - query_text
     unit: ms
     stability:
       level: alpha
@@ -2227,11 +2227,10 @@ metrics:
     gauge:
       value_type: double
     attributes:
-    - newrelicpostgresql.instance_name
+    - collection_timestamp
     - database_name
     - user_name
     - query_id
-    - query_text
     unit: '{rows}'
     stability:
       level: alpha
@@ -2243,11 +2242,10 @@ metrics:
       monotonic: true
       aggregation_temporality: cumulative
     attributes:
-    - newrelicpostgresql.instance_name
+    - collection_timestamp
     - database_name
     - user_name
     - query_id
-    - query_text
     unit: '{executions}'
     stability:
       level: alpha
@@ -2257,11 +2255,10 @@ metrics:
     gauge:
       value_type: double
     attributes:
-    - newrelicpostgresql.instance_name
+    - collection_timestamp
     - database_name
     - user_name
     - query_id
-    - query_text
     unit: ms
     stability:
       level: alpha
@@ -2271,12 +2268,27 @@ metrics:
     gauge:
       value_type: double
     attributes:
-    - newrelicpostgresql.instance_name
+    - collection_timestamp
     - database_name
     - user_name
     - query_id
-    - query_text
     unit: ms
+    stability:
+      level: alpha
+  postgresql.slow_queries.query_details:
+    description: Query details event containing full query text and metadata for slow queries
+    enabled: true
+    gauge:
+      value_type: int
+    attributes:
+    - event_type
+    - collection_timestamp
+    - database_name
+    - query_id
+    - query_text
+    - user_name
+    - newrelicpostgresql.instance_name
+    unit: '1'
     stability:
       level: alpha
   postgresql.slow_queries.stddev_elapsed_time_ms:
@@ -2285,11 +2297,10 @@ metrics:
     gauge:
       value_type: double
     attributes:
-    - newrelicpostgresql.instance_name
+    - collection_timestamp
     - database_name
     - user_name
     - query_id
-    - query_text
     unit: ms
     stability:
       level: alpha
@@ -2301,11 +2312,10 @@ metrics:
       monotonic: true
       aggregation_temporality: cumulative
     attributes:
-    - newrelicpostgresql.instance_name
+    - collection_timestamp
     - database_name
     - user_name
     - query_id
-    - query_text
     unit: '{blocks}'
     stability:
       level: alpha
@@ -2317,11 +2327,10 @@ metrics:
       monotonic: true
       aggregation_temporality: cumulative
     attributes:
-    - newrelicpostgresql.instance_name
+    - collection_timestamp
     - database_name
     - user_name
     - query_id
-    - query_text
     unit: '{blocks}'
     stability:
       level: alpha
@@ -2333,11 +2342,10 @@ metrics:
       monotonic: true
       aggregation_temporality: cumulative
     attributes:
-    - newrelicpostgresql.instance_name
+    - collection_timestamp
     - database_name
     - user_name
     - query_id
-    - query_text
     unit: '{blocks}'
     stability:
       level: alpha
@@ -2349,11 +2357,10 @@ metrics:
       monotonic: true
       aggregation_temporality: cumulative
     attributes:
-    - newrelicpostgresql.instance_name
+    - collection_timestamp
     - database_name
     - user_name
     - query_id
-    - query_text
     unit: ms
     stability:
       level: alpha
@@ -2365,11 +2372,10 @@ metrics:
       monotonic: true
       aggregation_temporality: cumulative
     attributes:
-    - newrelicpostgresql.instance_name
+    - collection_timestamp
     - database_name
     - user_name
     - query_id
-    - query_text
     unit: '{rows}'
     stability:
       level: alpha

@@ -12,27 +12,29 @@ import (
 	"go.opentelemetry.io/collector/scraper/scraperhelper"
 
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicpostgresqlreceiver/internal/metadata"
+	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicpostgresqlreceiver/queries"
 )
 
 const (
-	// Slow queries defaults
-	defaultQueryMonitoringSQLRowLimit           = 5000 // Fetch top 5000 candidates by historical average
-	defaultQueryMonitoringResponseTimeThreshold = 1000 // 1000ms threshold
-	defaultQueryMonitoringCountThreshold        = 100  // Top 100 queries after delta calculation
+	// Query Performance Monitoring defaults
+	defaultEnableSlowQueryMonitoring                = false
+	defaultQueryMonitoringSQLRowLimit               = 5000 // Fetch top 5000 candidates by historical average
+	defaultQueryMonitoringResponseTimeThreshold     = queries.DefaultQueryMonitoringResponseTimeThreshold
+	defaultQueryMonitoringCountThreshold            = queries.DefaultQueryMonitoringCountThreshold
 
-	// Interval calculator defaults
+	// Interval Calculator defaults
 	defaultEnableIntervalBasedAveraging      = true // Enable by default for better slow query detection
 	defaultIntervalCalculatorCacheTTLMinutes = 10   // 10 minutes cache TTL
 
 	// Validation ranges
-	minQueryMonitoringSQLRowLimit = 100
-	maxQueryMonitoringSQLRowLimit = 50000
-	minResponseTimeThreshold      = 1
-	maxResponseTimeThreshold      = 5000
-	minCountThreshold             = 10
-	maxCountThreshold             = 500
-	minCacheTTLMinutes            = 1
-	maxCacheTTLMinutes            = 60
+	minQueryMonitoringSQLRowLimit           = 100   // Minimum SQL row limit
+	maxQueryMonitoringSQLRowLimit           = 50000 // Maximum SQL row limit
+	minQueryMonitoringResponseTimeThreshold = queries.MinQueryMonitoringResponseTimeThreshold
+	maxQueryMonitoringResponseTimeThreshold = queries.MaxQueryMonitoringResponseTimeThreshold
+	minQueryMonitoringCountThreshold        = queries.MinQueryMonitoringCountThreshold
+	maxQueryMonitoringCountThreshold        = queries.MaxQueryMonitoringCountThreshold
+	minIntervalCalculatorCacheTTLMinutes    = 1  // Minimum cache TTL (1 minute)
+	maxIntervalCalculatorCacheTTLMinutes    = 60 // Maximum cache TTL (60 minutes)
 )
 
 // RelationConfig configures which tables to collect per-table metrics from
@@ -80,6 +82,7 @@ type Config struct {
 
 	// Slow Query Monitoring Configuration (similar to Oracle's query_monitoring)
 	// Controls slow query detection from pg_stat_statements extension
+	// Default: false (opt-in feature - must be explicitly enabled)
 	EnableSlowQueryMonitoring bool `mapstructure:"enable_slow_query_monitoring"`
 
 	// SQL row limit for pre-filtering (replaces Oracle's interval_seconds)
@@ -110,7 +113,10 @@ type Config struct {
 
 // SetDefaults sets default values for configuration fields that are not explicitly set
 func (cfg *Config) SetDefaults() {
-	// Set slow query monitoring defaults
+	// Note: EnableSlowQueryMonitoring defaults to false (opt-in feature)
+	// User must explicitly set enable_slow_query_monitoring: true in config
+
+	// Set slow query monitoring defaults (only used if slow query monitoring is enabled)
 	if cfg.QueryMonitoringSQLRowLimit == 0 {
 		cfg.QueryMonitoringSQLRowLimit = defaultQueryMonitoringSQLRowLimit
 	}
@@ -171,22 +177,22 @@ func (cfg *Config) Validate() error {
 				minQueryMonitoringSQLRowLimit, maxQueryMonitoringSQLRowLimit, cfg.QueryMonitoringSQLRowLimit)
 		}
 
-		if cfg.QueryMonitoringResponseTimeThreshold < minResponseTimeThreshold ||
-			cfg.QueryMonitoringResponseTimeThreshold > maxResponseTimeThreshold {
+		if cfg.QueryMonitoringResponseTimeThreshold < minQueryMonitoringResponseTimeThreshold ||
+			cfg.QueryMonitoringResponseTimeThreshold > maxQueryMonitoringResponseTimeThreshold {
 			return fmt.Errorf("query_monitoring_response_time_threshold must be between %d and %d ms, got %d",
-				minResponseTimeThreshold, maxResponseTimeThreshold, cfg.QueryMonitoringResponseTimeThreshold)
+				minQueryMonitoringResponseTimeThreshold, maxQueryMonitoringResponseTimeThreshold, cfg.QueryMonitoringResponseTimeThreshold)
 		}
 
-		if cfg.QueryMonitoringCountThreshold < minCountThreshold ||
-			cfg.QueryMonitoringCountThreshold > maxCountThreshold {
+		if cfg.QueryMonitoringCountThreshold < minQueryMonitoringCountThreshold ||
+			cfg.QueryMonitoringCountThreshold > maxQueryMonitoringCountThreshold {
 			return fmt.Errorf("query_monitoring_count_threshold must be between %d and %d, got %d",
-				minCountThreshold, maxCountThreshold, cfg.QueryMonitoringCountThreshold)
+				minQueryMonitoringCountThreshold, maxQueryMonitoringCountThreshold, cfg.QueryMonitoringCountThreshold)
 		}
 
-		if cfg.IntervalCalculatorCacheTTLMinutes < minCacheTTLMinutes ||
-			cfg.IntervalCalculatorCacheTTLMinutes > maxCacheTTLMinutes {
+		if cfg.IntervalCalculatorCacheTTLMinutes < minIntervalCalculatorCacheTTLMinutes ||
+			cfg.IntervalCalculatorCacheTTLMinutes > maxIntervalCalculatorCacheTTLMinutes {
 			return fmt.Errorf("interval_calculator_cache_ttl_minutes must be between %d and %d, got %d",
-				minCacheTTLMinutes, maxCacheTTLMinutes, cfg.IntervalCalculatorCacheTTLMinutes)
+				minIntervalCalculatorCacheTTLMinutes, maxIntervalCalculatorCacheTTLMinutes, cfg.IntervalCalculatorCacheTTLMinutes)
 		}
 	}
 

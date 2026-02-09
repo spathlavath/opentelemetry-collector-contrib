@@ -201,6 +201,7 @@ type MetricsConfig struct {
 	PostgresqlSlowQueriesExecutionCount               MetricConfig `mapstructure:"postgresql.slow_queries.execution_count"`
 	PostgresqlSlowQueriesMaxElapsedTimeMs             MetricConfig `mapstructure:"postgresql.slow_queries.max_elapsed_time_ms"`
 	PostgresqlSlowQueriesMinElapsedTimeMs             MetricConfig `mapstructure:"postgresql.slow_queries.min_elapsed_time_ms"`
+	PostgresqlSlowQueriesQueryDetails                 MetricConfig `mapstructure:"postgresql.slow_queries.query_details"`
 	PostgresqlSlowQueriesStddevElapsedTimeMs          MetricConfig `mapstructure:"postgresql.slow_queries.stddev_elapsed_time_ms"`
 	PostgresqlSlowQueriesTotalBufferHits              MetricConfig `mapstructure:"postgresql.slow_queries.total_buffer_hits"`
 	PostgresqlSlowQueriesTotalDiskReads               MetricConfig `mapstructure:"postgresql.slow_queries.total_disk_reads"`
@@ -793,6 +794,9 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		PostgresqlSlowQueriesMinElapsedTimeMs: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlSlowQueriesQueryDetails: MetricConfig{
 			Enabled: true,
 		},
 		PostgresqlSlowQueriesStddevElapsedTimeMs: MetricConfig{

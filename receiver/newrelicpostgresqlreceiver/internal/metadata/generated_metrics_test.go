@@ -722,67 +722,71 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordPostgresqlSlowQueriesAvgBufferHitsDataPoint(ts, 1, "newrelicpostgresql.instance_name-val", "database_name-val", "user_name-val", "query_id-val", "query_text-val")
+			mb.RecordPostgresqlSlowQueriesAvgBufferHitsDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "user_name-val", "query_id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordPostgresqlSlowQueriesAvgCPUTimeMsDataPoint(ts, 1, "newrelicpostgresql.instance_name-val", "database_name-val", "user_name-val", "query_id-val", "query_text-val")
+			mb.RecordPostgresqlSlowQueriesAvgCPUTimeMsDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "user_name-val", "query_id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordPostgresqlSlowQueriesAvgDiskReadsDataPoint(ts, 1, "newrelicpostgresql.instance_name-val", "database_name-val", "user_name-val", "query_id-val", "query_text-val")
+			mb.RecordPostgresqlSlowQueriesAvgDiskReadsDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "user_name-val", "query_id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordPostgresqlSlowQueriesAvgDiskWritesDataPoint(ts, 1, "newrelicpostgresql.instance_name-val", "database_name-val", "user_name-val", "query_id-val", "query_text-val")
+			mb.RecordPostgresqlSlowQueriesAvgDiskWritesDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "user_name-val", "query_id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordPostgresqlSlowQueriesAvgElapsedTimeMsDataPoint(ts, 1, "newrelicpostgresql.instance_name-val", "database_name-val", "user_name-val", "query_id-val", "query_text-val")
+			mb.RecordPostgresqlSlowQueriesAvgElapsedTimeMsDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "user_name-val", "query_id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordPostgresqlSlowQueriesAvgPlanTimeMsDataPoint(ts, 1, "newrelicpostgresql.instance_name-val", "database_name-val", "user_name-val", "query_id-val", "query_text-val")
+			mb.RecordPostgresqlSlowQueriesAvgPlanTimeMsDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "user_name-val", "query_id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordPostgresqlSlowQueriesAvgRowsReturnedDataPoint(ts, 1, "newrelicpostgresql.instance_name-val", "database_name-val", "user_name-val", "query_id-val", "query_text-val")
+			mb.RecordPostgresqlSlowQueriesAvgRowsReturnedDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "user_name-val", "query_id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordPostgresqlSlowQueriesExecutionCountDataPoint(ts, 1, "newrelicpostgresql.instance_name-val", "database_name-val", "user_name-val", "query_id-val", "query_text-val")
+			mb.RecordPostgresqlSlowQueriesExecutionCountDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "user_name-val", "query_id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordPostgresqlSlowQueriesMaxElapsedTimeMsDataPoint(ts, 1, "newrelicpostgresql.instance_name-val", "database_name-val", "user_name-val", "query_id-val", "query_text-val")
+			mb.RecordPostgresqlSlowQueriesMaxElapsedTimeMsDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "user_name-val", "query_id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordPostgresqlSlowQueriesMinElapsedTimeMsDataPoint(ts, 1, "newrelicpostgresql.instance_name-val", "database_name-val", "user_name-val", "query_id-val", "query_text-val")
+			mb.RecordPostgresqlSlowQueriesMinElapsedTimeMsDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "user_name-val", "query_id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordPostgresqlSlowQueriesStddevElapsedTimeMsDataPoint(ts, 1, "newrelicpostgresql.instance_name-val", "database_name-val", "user_name-val", "query_id-val", "query_text-val")
+			mb.RecordPostgresqlSlowQueriesQueryDetailsDataPoint(ts, 1, "event_type-val", "collection_timestamp-val", "database_name-val", "query_id-val", "query_text-val", "user_name-val", "newrelicpostgresql.instance_name-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordPostgresqlSlowQueriesTotalBufferHitsDataPoint(ts, 1, "newrelicpostgresql.instance_name-val", "database_name-val", "user_name-val", "query_id-val", "query_text-val")
+			mb.RecordPostgresqlSlowQueriesStddevElapsedTimeMsDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "user_name-val", "query_id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordPostgresqlSlowQueriesTotalDiskReadsDataPoint(ts, 1, "newrelicpostgresql.instance_name-val", "database_name-val", "user_name-val", "query_id-val", "query_text-val")
+			mb.RecordPostgresqlSlowQueriesTotalBufferHitsDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "user_name-val", "query_id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordPostgresqlSlowQueriesTotalDiskWritesDataPoint(ts, 1, "newrelicpostgresql.instance_name-val", "database_name-val", "user_name-val", "query_id-val", "query_text-val")
+			mb.RecordPostgresqlSlowQueriesTotalDiskReadsDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "user_name-val", "query_id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordPostgresqlSlowQueriesTotalElapsedTimeMsDataPoint(ts, 1, "newrelicpostgresql.instance_name-val", "database_name-val", "user_name-val", "query_id-val", "query_text-val")
+			mb.RecordPostgresqlSlowQueriesTotalDiskWritesDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "user_name-val", "query_id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
-			mb.RecordPostgresqlSlowQueriesTotalRowsDataPoint(ts, 1, "newrelicpostgresql.instance_name-val", "database_name-val", "user_name-val", "query_id-val", "query_text-val")
+			mb.RecordPostgresqlSlowQueriesTotalElapsedTimeMsDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "user_name-val", "query_id-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordPostgresqlSlowQueriesTotalRowsDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "user_name-val", "query_id-val")
 
 			defaultMetricsCount++
 			allMetricsCount++
@@ -4502,9 +4506,9 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelicpostgresql.instance_name")
+					attrVal, ok := dp.Attributes().Get("collection_timestamp")
 					assert.True(t, ok)
-					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
+					assert.Equal(t, "collection_timestamp-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("database_name")
 					assert.True(t, ok)
 					assert.Equal(t, "database_name-val", attrVal.Str())
@@ -4514,9 +4518,6 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("query_id")
 					assert.True(t, ok)
 					assert.Equal(t, "query_id-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("query_text")
-					assert.True(t, ok)
-					assert.Equal(t, "query_text-val", attrVal.Str())
 				case "postgresql.slow_queries.avg_cpu_time_ms":
 					assert.False(t, validatedMetrics["postgresql.slow_queries.avg_cpu_time_ms"], "Found a duplicate in the metrics slice: postgresql.slow_queries.avg_cpu_time_ms")
 					validatedMetrics["postgresql.slow_queries.avg_cpu_time_ms"] = true
@@ -4529,9 +4530,9 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelicpostgresql.instance_name")
+					attrVal, ok := dp.Attributes().Get("collection_timestamp")
 					assert.True(t, ok)
-					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
+					assert.Equal(t, "collection_timestamp-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("database_name")
 					assert.True(t, ok)
 					assert.Equal(t, "database_name-val", attrVal.Str())
@@ -4541,9 +4542,6 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("query_id")
 					assert.True(t, ok)
 					assert.Equal(t, "query_id-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("query_text")
-					assert.True(t, ok)
-					assert.Equal(t, "query_text-val", attrVal.Str())
 				case "postgresql.slow_queries.avg_disk_reads":
 					assert.False(t, validatedMetrics["postgresql.slow_queries.avg_disk_reads"], "Found a duplicate in the metrics slice: postgresql.slow_queries.avg_disk_reads")
 					validatedMetrics["postgresql.slow_queries.avg_disk_reads"] = true
@@ -4556,9 +4554,9 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelicpostgresql.instance_name")
+					attrVal, ok := dp.Attributes().Get("collection_timestamp")
 					assert.True(t, ok)
-					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
+					assert.Equal(t, "collection_timestamp-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("database_name")
 					assert.True(t, ok)
 					assert.Equal(t, "database_name-val", attrVal.Str())
@@ -4568,9 +4566,6 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("query_id")
 					assert.True(t, ok)
 					assert.Equal(t, "query_id-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("query_text")
-					assert.True(t, ok)
-					assert.Equal(t, "query_text-val", attrVal.Str())
 				case "postgresql.slow_queries.avg_disk_writes":
 					assert.False(t, validatedMetrics["postgresql.slow_queries.avg_disk_writes"], "Found a duplicate in the metrics slice: postgresql.slow_queries.avg_disk_writes")
 					validatedMetrics["postgresql.slow_queries.avg_disk_writes"] = true
@@ -4583,9 +4578,9 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelicpostgresql.instance_name")
+					attrVal, ok := dp.Attributes().Get("collection_timestamp")
 					assert.True(t, ok)
-					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
+					assert.Equal(t, "collection_timestamp-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("database_name")
 					assert.True(t, ok)
 					assert.Equal(t, "database_name-val", attrVal.Str())
@@ -4595,9 +4590,6 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("query_id")
 					assert.True(t, ok)
 					assert.Equal(t, "query_id-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("query_text")
-					assert.True(t, ok)
-					assert.Equal(t, "query_text-val", attrVal.Str())
 				case "postgresql.slow_queries.avg_elapsed_time_ms":
 					assert.False(t, validatedMetrics["postgresql.slow_queries.avg_elapsed_time_ms"], "Found a duplicate in the metrics slice: postgresql.slow_queries.avg_elapsed_time_ms")
 					validatedMetrics["postgresql.slow_queries.avg_elapsed_time_ms"] = true
@@ -4610,9 +4602,9 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelicpostgresql.instance_name")
+					attrVal, ok := dp.Attributes().Get("collection_timestamp")
 					assert.True(t, ok)
-					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
+					assert.Equal(t, "collection_timestamp-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("database_name")
 					assert.True(t, ok)
 					assert.Equal(t, "database_name-val", attrVal.Str())
@@ -4622,9 +4614,6 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("query_id")
 					assert.True(t, ok)
 					assert.Equal(t, "query_id-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("query_text")
-					assert.True(t, ok)
-					assert.Equal(t, "query_text-val", attrVal.Str())
 				case "postgresql.slow_queries.avg_plan_time_ms":
 					assert.False(t, validatedMetrics["postgresql.slow_queries.avg_plan_time_ms"], "Found a duplicate in the metrics slice: postgresql.slow_queries.avg_plan_time_ms")
 					validatedMetrics["postgresql.slow_queries.avg_plan_time_ms"] = true
@@ -4637,9 +4626,9 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelicpostgresql.instance_name")
+					attrVal, ok := dp.Attributes().Get("collection_timestamp")
 					assert.True(t, ok)
-					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
+					assert.Equal(t, "collection_timestamp-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("database_name")
 					assert.True(t, ok)
 					assert.Equal(t, "database_name-val", attrVal.Str())
@@ -4649,9 +4638,6 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("query_id")
 					assert.True(t, ok)
 					assert.Equal(t, "query_id-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("query_text")
-					assert.True(t, ok)
-					assert.Equal(t, "query_text-val", attrVal.Str())
 				case "postgresql.slow_queries.avg_rows_returned":
 					assert.False(t, validatedMetrics["postgresql.slow_queries.avg_rows_returned"], "Found a duplicate in the metrics slice: postgresql.slow_queries.avg_rows_returned")
 					validatedMetrics["postgresql.slow_queries.avg_rows_returned"] = true
@@ -4664,9 +4650,9 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelicpostgresql.instance_name")
+					attrVal, ok := dp.Attributes().Get("collection_timestamp")
 					assert.True(t, ok)
-					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
+					assert.Equal(t, "collection_timestamp-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("database_name")
 					assert.True(t, ok)
 					assert.Equal(t, "database_name-val", attrVal.Str())
@@ -4676,9 +4662,6 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("query_id")
 					assert.True(t, ok)
 					assert.Equal(t, "query_id-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("query_text")
-					assert.True(t, ok)
-					assert.Equal(t, "query_text-val", attrVal.Str())
 				case "postgresql.slow_queries.execution_count":
 					assert.False(t, validatedMetrics["postgresql.slow_queries.execution_count"], "Found a duplicate in the metrics slice: postgresql.slow_queries.execution_count")
 					validatedMetrics["postgresql.slow_queries.execution_count"] = true
@@ -4693,9 +4676,9 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
 					assert.Equal(t, int64(1), dp.IntValue())
-					attrVal, ok := dp.Attributes().Get("newrelicpostgresql.instance_name")
+					attrVal, ok := dp.Attributes().Get("collection_timestamp")
 					assert.True(t, ok)
-					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
+					assert.Equal(t, "collection_timestamp-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("database_name")
 					assert.True(t, ok)
 					assert.Equal(t, "database_name-val", attrVal.Str())
@@ -4705,9 +4688,6 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("query_id")
 					assert.True(t, ok)
 					assert.Equal(t, "query_id-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("query_text")
-					assert.True(t, ok)
-					assert.Equal(t, "query_text-val", attrVal.Str())
 				case "postgresql.slow_queries.max_elapsed_time_ms":
 					assert.False(t, validatedMetrics["postgresql.slow_queries.max_elapsed_time_ms"], "Found a duplicate in the metrics slice: postgresql.slow_queries.max_elapsed_time_ms")
 					validatedMetrics["postgresql.slow_queries.max_elapsed_time_ms"] = true
@@ -4720,9 +4700,9 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelicpostgresql.instance_name")
+					attrVal, ok := dp.Attributes().Get("collection_timestamp")
 					assert.True(t, ok)
-					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
+					assert.Equal(t, "collection_timestamp-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("database_name")
 					assert.True(t, ok)
 					assert.Equal(t, "database_name-val", attrVal.Str())
@@ -4732,9 +4712,6 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("query_id")
 					assert.True(t, ok)
 					assert.Equal(t, "query_id-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("query_text")
-					assert.True(t, ok)
-					assert.Equal(t, "query_text-val", attrVal.Str())
 				case "postgresql.slow_queries.min_elapsed_time_ms":
 					assert.False(t, validatedMetrics["postgresql.slow_queries.min_elapsed_time_ms"], "Found a duplicate in the metrics slice: postgresql.slow_queries.min_elapsed_time_ms")
 					validatedMetrics["postgresql.slow_queries.min_elapsed_time_ms"] = true
@@ -4747,9 +4724,9 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelicpostgresql.instance_name")
+					attrVal, ok := dp.Attributes().Get("collection_timestamp")
 					assert.True(t, ok)
-					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
+					assert.Equal(t, "collection_timestamp-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("database_name")
 					assert.True(t, ok)
 					assert.Equal(t, "database_name-val", attrVal.Str())
@@ -4759,9 +4736,39 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("query_id")
 					assert.True(t, ok)
 					assert.Equal(t, "query_id-val", attrVal.Str())
+				case "postgresql.slow_queries.query_details":
+					assert.False(t, validatedMetrics["postgresql.slow_queries.query_details"], "Found a duplicate in the metrics slice: postgresql.slow_queries.query_details")
+					validatedMetrics["postgresql.slow_queries.query_details"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Query details event containing full query text and metadata for slow queries", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("event_type")
+					assert.True(t, ok)
+					assert.Equal(t, "event_type-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("collection_timestamp")
+					assert.True(t, ok)
+					assert.Equal(t, "collection_timestamp-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("query_id")
+					assert.True(t, ok)
+					assert.Equal(t, "query_id-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("query_text")
 					assert.True(t, ok)
 					assert.Equal(t, "query_text-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("user_name")
+					assert.True(t, ok)
+					assert.Equal(t, "user_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("newrelicpostgresql.instance_name")
+					assert.True(t, ok)
+					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
 				case "postgresql.slow_queries.stddev_elapsed_time_ms":
 					assert.False(t, validatedMetrics["postgresql.slow_queries.stddev_elapsed_time_ms"], "Found a duplicate in the metrics slice: postgresql.slow_queries.stddev_elapsed_time_ms")
 					validatedMetrics["postgresql.slow_queries.stddev_elapsed_time_ms"] = true
@@ -4774,9 +4781,9 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelicpostgresql.instance_name")
+					attrVal, ok := dp.Attributes().Get("collection_timestamp")
 					assert.True(t, ok)
-					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
+					assert.Equal(t, "collection_timestamp-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("database_name")
 					assert.True(t, ok)
 					assert.Equal(t, "database_name-val", attrVal.Str())
@@ -4786,9 +4793,6 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("query_id")
 					assert.True(t, ok)
 					assert.Equal(t, "query_id-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("query_text")
-					assert.True(t, ok)
-					assert.Equal(t, "query_text-val", attrVal.Str())
 				case "postgresql.slow_queries.total_buffer_hits":
 					assert.False(t, validatedMetrics["postgresql.slow_queries.total_buffer_hits"], "Found a duplicate in the metrics slice: postgresql.slow_queries.total_buffer_hits")
 					validatedMetrics["postgresql.slow_queries.total_buffer_hits"] = true
@@ -4803,9 +4807,9 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
 					assert.Equal(t, int64(1), dp.IntValue())
-					attrVal, ok := dp.Attributes().Get("newrelicpostgresql.instance_name")
+					attrVal, ok := dp.Attributes().Get("collection_timestamp")
 					assert.True(t, ok)
-					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
+					assert.Equal(t, "collection_timestamp-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("database_name")
 					assert.True(t, ok)
 					assert.Equal(t, "database_name-val", attrVal.Str())
@@ -4815,9 +4819,6 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("query_id")
 					assert.True(t, ok)
 					assert.Equal(t, "query_id-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("query_text")
-					assert.True(t, ok)
-					assert.Equal(t, "query_text-val", attrVal.Str())
 				case "postgresql.slow_queries.total_disk_reads":
 					assert.False(t, validatedMetrics["postgresql.slow_queries.total_disk_reads"], "Found a duplicate in the metrics slice: postgresql.slow_queries.total_disk_reads")
 					validatedMetrics["postgresql.slow_queries.total_disk_reads"] = true
@@ -4832,9 +4833,9 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
 					assert.Equal(t, int64(1), dp.IntValue())
-					attrVal, ok := dp.Attributes().Get("newrelicpostgresql.instance_name")
+					attrVal, ok := dp.Attributes().Get("collection_timestamp")
 					assert.True(t, ok)
-					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
+					assert.Equal(t, "collection_timestamp-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("database_name")
 					assert.True(t, ok)
 					assert.Equal(t, "database_name-val", attrVal.Str())
@@ -4844,9 +4845,6 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("query_id")
 					assert.True(t, ok)
 					assert.Equal(t, "query_id-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("query_text")
-					assert.True(t, ok)
-					assert.Equal(t, "query_text-val", attrVal.Str())
 				case "postgresql.slow_queries.total_disk_writes":
 					assert.False(t, validatedMetrics["postgresql.slow_queries.total_disk_writes"], "Found a duplicate in the metrics slice: postgresql.slow_queries.total_disk_writes")
 					validatedMetrics["postgresql.slow_queries.total_disk_writes"] = true
@@ -4861,9 +4859,9 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
 					assert.Equal(t, int64(1), dp.IntValue())
-					attrVal, ok := dp.Attributes().Get("newrelicpostgresql.instance_name")
+					attrVal, ok := dp.Attributes().Get("collection_timestamp")
 					assert.True(t, ok)
-					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
+					assert.Equal(t, "collection_timestamp-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("database_name")
 					assert.True(t, ok)
 					assert.Equal(t, "database_name-val", attrVal.Str())
@@ -4873,9 +4871,6 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("query_id")
 					assert.True(t, ok)
 					assert.Equal(t, "query_id-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("query_text")
-					assert.True(t, ok)
-					assert.Equal(t, "query_text-val", attrVal.Str())
 				case "postgresql.slow_queries.total_elapsed_time_ms":
 					assert.False(t, validatedMetrics["postgresql.slow_queries.total_elapsed_time_ms"], "Found a duplicate in the metrics slice: postgresql.slow_queries.total_elapsed_time_ms")
 					validatedMetrics["postgresql.slow_queries.total_elapsed_time_ms"] = true
@@ -4890,9 +4885,9 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
-					attrVal, ok := dp.Attributes().Get("newrelicpostgresql.instance_name")
+					attrVal, ok := dp.Attributes().Get("collection_timestamp")
 					assert.True(t, ok)
-					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
+					assert.Equal(t, "collection_timestamp-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("database_name")
 					assert.True(t, ok)
 					assert.Equal(t, "database_name-val", attrVal.Str())
@@ -4902,9 +4897,6 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("query_id")
 					assert.True(t, ok)
 					assert.Equal(t, "query_id-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("query_text")
-					assert.True(t, ok)
-					assert.Equal(t, "query_text-val", attrVal.Str())
 				case "postgresql.slow_queries.total_rows":
 					assert.False(t, validatedMetrics["postgresql.slow_queries.total_rows"], "Found a duplicate in the metrics slice: postgresql.slow_queries.total_rows")
 					validatedMetrics["postgresql.slow_queries.total_rows"] = true
@@ -4919,9 +4911,9 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
 					assert.Equal(t, int64(1), dp.IntValue())
-					attrVal, ok := dp.Attributes().Get("newrelicpostgresql.instance_name")
+					attrVal, ok := dp.Attributes().Get("collection_timestamp")
 					assert.True(t, ok)
-					assert.Equal(t, "newrelicpostgresql.instance_name-val", attrVal.Str())
+					assert.Equal(t, "collection_timestamp-val", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("database_name")
 					assert.True(t, ok)
 					assert.Equal(t, "database_name-val", attrVal.Str())
@@ -4931,9 +4923,6 @@ func TestMetricsBuilder(t *testing.T) {
 					attrVal, ok = dp.Attributes().Get("query_id")
 					assert.True(t, ok)
 					assert.Equal(t, "query_id-val", attrVal.Str())
-					attrVal, ok = dp.Attributes().Get("query_text")
-					assert.True(t, ok)
-					assert.Equal(t, "query_text-val", attrVal.Str())
 				case "postgresql.slru.blks_exists":
 					assert.False(t, validatedMetrics["postgresql.slru.blks_exists"], "Found a duplicate in the metrics slice: postgresql.slru.blks_exists")
 					validatedMetrics["postgresql.slru.blks_exists"] = true

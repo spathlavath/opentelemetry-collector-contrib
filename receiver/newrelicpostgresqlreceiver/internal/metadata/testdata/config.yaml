@@ -347,6 +347,8 @@ all_set:
       enabled: true
     postgresql.slow_queries.min_elapsed_time_ms:
       enabled: true
+    postgresql.slow_queries.query_details:
+      enabled: true
     postgresql.slow_queries.stddev_elapsed_time_ms:
       enabled: true
     postgresql.slow_queries.total_buffer_hits:
@@ -849,6 +851,8 @@ none_set:
     postgresql.slow_queries.max_elapsed_time_ms:
       enabled: false
     postgresql.slow_queries.min_elapsed_time_ms:
+      enabled: false
+    postgresql.slow_queries.query_details:
       enabled: false
     postgresql.slow_queries.stddev_elapsed_time_ms:
       enabled: false

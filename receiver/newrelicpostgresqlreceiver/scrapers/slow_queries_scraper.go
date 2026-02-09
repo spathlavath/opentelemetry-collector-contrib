@@ -181,168 +181,169 @@ func (s *SlowQueriesScraper) recordMetricsForSlowQuery(now pcommon.Timestamp, me
 	queryID := metric.QueryID
 	queryText := getString(metric.QueryText)
 
-	// Record execution metrics
+	// Format collection timestamp for metrics
+	collectionTimestamp := metric.CollectionTimestamp.Format(time.RFC3339)
+
+	// Record execution metrics (with timestamp, without query_text)
 	s.mb.RecordPostgresqlSlowQueriesExecutionCountDataPoint(
 		now,
 		getInt64(metric.ExecutionCount),
-		s.instanceName,
+		collectionTimestamp,
 		databaseName,
 		userName,
 		queryID,
-		queryText,
 	)
 
 	s.mb.RecordPostgresqlSlowQueriesAvgElapsedTimeMsDataPoint(
 		now,
 		getFloat64(metric.AvgElapsedTimeMs),
-		s.instanceName,
+		collectionTimestamp,
 		databaseName,
 		userName,
 		queryID,
-		queryText,
 	)
 
 	s.mb.RecordPostgresqlSlowQueriesMinElapsedTimeMsDataPoint(
 		now,
 		getFloat64(metric.MinElapsedTimeMs),
-		s.instanceName,
+		collectionTimestamp,
 		databaseName,
 		userName,
 		queryID,
-		queryText,
 	)
 
 	s.mb.RecordPostgresqlSlowQueriesMaxElapsedTimeMsDataPoint(
 		now,
 		getFloat64(metric.MaxElapsedTimeMs),
-		s.instanceName,
+		collectionTimestamp,
 		databaseName,
 		userName,
 		queryID,
-		queryText,
 	)
 
 	s.mb.RecordPostgresqlSlowQueriesStddevElapsedTimeMsDataPoint(
 		now,
 		getFloat64(metric.StddevElapsedTimeMs),
-		s.instanceName,
+		collectionTimestamp,
 		databaseName,
 		userName,
 		queryID,
-		queryText,
 	)
 
 	s.mb.RecordPostgresqlSlowQueriesTotalElapsedTimeMsDataPoint(
 		now,
 		getFloat64(metric.TotalElapsedTimeMs),
-		s.instanceName,
+		collectionTimestamp,
 		databaseName,
 		userName,
 		queryID,
-		queryText,
 	)
 
 	// Record planning time metrics
 	s.mb.RecordPostgresqlSlowQueriesAvgPlanTimeMsDataPoint(
 		now,
 		getFloat64(metric.AvgPlanTimeMs),
-		s.instanceName,
+		collectionTimestamp,
 		databaseName,
 		userName,
 		queryID,
-		queryText,
 	)
 
 	// Record CPU time metrics
 	s.mb.RecordPostgresqlSlowQueriesAvgCPUTimeMsDataPoint(
 		now,
 		getFloat64(metric.AvgCPUTimeMs),
-		s.instanceName,
+		collectionTimestamp,
 		databaseName,
 		userName,
 		queryID,
-		queryText,
 	)
 
 	// Record I/O metrics
 	s.mb.RecordPostgresqlSlowQueriesAvgDiskReadsDataPoint(
 		now,
 		getFloat64(metric.AvgDiskReads),
-		s.instanceName,
+		collectionTimestamp,
 		databaseName,
 		userName,
 		queryID,
-		queryText,
 	)
 
 	s.mb.RecordPostgresqlSlowQueriesTotalDiskReadsDataPoint(
 		now,
 		getInt64(metric.TotalDiskReads),
-		s.instanceName,
+		collectionTimestamp,
 		databaseName,
 		userName,
 		queryID,
-		queryText,
 	)
 
 	s.mb.RecordPostgresqlSlowQueriesAvgBufferHitsDataPoint(
 		now,
 		getFloat64(metric.AvgBufferHits),
-		s.instanceName,
+		collectionTimestamp,
 		databaseName,
 		userName,
 		queryID,
-		queryText,
 	)
 
 	s.mb.RecordPostgresqlSlowQueriesTotalBufferHitsDataPoint(
 		now,
 		getInt64(metric.TotalBufferHits),
-		s.instanceName,
+		collectionTimestamp,
 		databaseName,
 		userName,
 		queryID,
-		queryText,
 	)
 
 	s.mb.RecordPostgresqlSlowQueriesAvgDiskWritesDataPoint(
 		now,
 		getFloat64(metric.AvgDiskWrites),
-		s.instanceName,
+		collectionTimestamp,
 		databaseName,
 		userName,
 		queryID,
-		queryText,
 	)
 
 	s.mb.RecordPostgresqlSlowQueriesTotalDiskWritesDataPoint(
 		now,
 		getInt64(metric.TotalDiskWrites),
-		s.instanceName,
+		collectionTimestamp,
 		databaseName,
 		userName,
 		queryID,
-		queryText,
 	)
 
 	// Record row statistics
 	s.mb.RecordPostgresqlSlowQueriesAvgRowsReturnedDataPoint(
 		now,
 		getFloat64(metric.AvgRowsReturned),
-		s.instanceName,
+		collectionTimestamp,
 		databaseName,
 		userName,
 		queryID,
-		queryText,
 	)
 
 	s.mb.RecordPostgresqlSlowQueriesTotalRowsDataPoint(
 		now,
 		getInt64(metric.TotalRows),
-		s.instanceName,
+		collectionTimestamp,
 		databaseName,
 		userName,
 		queryID,
+	)
+
+	// Record query details event (similar to Oracle's QueryDetails event)
+	// This contains the full query text and other metadata
+	s.mb.RecordPostgresqlSlowQueriesQueryDetailsDataPoint(
+		now,
+		1, // Event marker value
+		"PostgreSQLQueryDetails",
+		collectionTimestamp,
+		databaseName,
+		queryID,
 		queryText,
+		userName,
+		s.instanceName,
 	)
 }

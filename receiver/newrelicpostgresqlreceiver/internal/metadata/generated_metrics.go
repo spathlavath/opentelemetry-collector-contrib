@@ -532,6 +532,9 @@ var MetricsInfo = metricsInfo{
 	PostgresqlSlowQueriesMinElapsedTimeMs: metricInfo{
 		Name: "postgresql.slow_queries.min_elapsed_time_ms",
 	},
+	PostgresqlSlowQueriesQueryDetails: metricInfo{
+		Name: "postgresql.slow_queries.query_details",
+	},
 	PostgresqlSlowQueriesStddevElapsedTimeMs: metricInfo{
 		Name: "postgresql.slow_queries.stddev_elapsed_time_ms",
 	},
@@ -921,6 +924,7 @@ type metricsInfo struct {
 	PostgresqlSlowQueriesExecutionCount               metricInfo
 	PostgresqlSlowQueriesMaxElapsedTimeMs             metricInfo
 	PostgresqlSlowQueriesMinElapsedTimeMs             metricInfo
+	PostgresqlSlowQueriesQueryDetails                 metricInfo
 	PostgresqlSlowQueriesStddevElapsedTimeMs          metricInfo
 	PostgresqlSlowQueriesTotalBufferHits              metricInfo
 	PostgresqlSlowQueriesTotalDiskReads               metricInfo
@@ -9730,7 +9734,7 @@ func (m *metricPostgresqlSlowQueriesAvgBufferHits) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricPostgresqlSlowQueriesAvgBufferHits) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, queryIDAttributeValue string, queryTextAttributeValue string) {
+func (m *metricPostgresqlSlowQueriesAvgBufferHits) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, collectionTimestampAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, queryIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -9738,11 +9742,10 @@ func (m *metricPostgresqlSlowQueriesAvgBufferHits) recordDataPoint(start pcommon
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+	dp.Attributes().PutStr("collection_timestamp", collectionTimestampAttributeValue)
 	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
 	dp.Attributes().PutStr("user_name", userNameAttributeValue)
 	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
-	dp.Attributes().PutStr("query_text", queryTextAttributeValue)
 }
 
 // updateCapacity saves max length of data point slices that will be used for the slice capacity.
@@ -9785,7 +9788,7 @@ func (m *metricPostgresqlSlowQueriesAvgCPUTimeMs) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricPostgresqlSlowQueriesAvgCPUTimeMs) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, queryIDAttributeValue string, queryTextAttributeValue string) {
+func (m *metricPostgresqlSlowQueriesAvgCPUTimeMs) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, collectionTimestampAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, queryIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -9793,11 +9796,10 @@ func (m *metricPostgresqlSlowQueriesAvgCPUTimeMs) recordDataPoint(start pcommon.
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+	dp.Attributes().PutStr("collection_timestamp", collectionTimestampAttributeValue)
 	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
 	dp.Attributes().PutStr("user_name", userNameAttributeValue)
 	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
-	dp.Attributes().PutStr("query_text", queryTextAttributeValue)
 }
 
 // updateCapacity saves max length of data point slices that will be used for the slice capacity.
@@ -9840,7 +9842,7 @@ func (m *metricPostgresqlSlowQueriesAvgDiskReads) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricPostgresqlSlowQueriesAvgDiskReads) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, queryIDAttributeValue string, queryTextAttributeValue string) {
+func (m *metricPostgresqlSlowQueriesAvgDiskReads) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, collectionTimestampAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, queryIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -9848,11 +9850,10 @@ func (m *metricPostgresqlSlowQueriesAvgDiskReads) recordDataPoint(start pcommon.
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+	dp.Attributes().PutStr("collection_timestamp", collectionTimestampAttributeValue)
 	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
 	dp.Attributes().PutStr("user_name", userNameAttributeValue)
 	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
-	dp.Attributes().PutStr("query_text", queryTextAttributeValue)
 }
 
 // updateCapacity saves max length of data point slices that will be used for the slice capacity.
@@ -9895,7 +9896,7 @@ func (m *metricPostgresqlSlowQueriesAvgDiskWrites) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricPostgresqlSlowQueriesAvgDiskWrites) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, queryIDAttributeValue string, queryTextAttributeValue string) {
+func (m *metricPostgresqlSlowQueriesAvgDiskWrites) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, collectionTimestampAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, queryIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -9903,11 +9904,10 @@ func (m *metricPostgresqlSlowQueriesAvgDiskWrites) recordDataPoint(start pcommon
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+	dp.Attributes().PutStr("collection_timestamp", collectionTimestampAttributeValue)
 	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
 	dp.Attributes().PutStr("user_name", userNameAttributeValue)
 	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
-	dp.Attributes().PutStr("query_text", queryTextAttributeValue)
 }
 
 // updateCapacity saves max length of data point slices that will be used for the slice capacity.
@@ -9950,7 +9950,7 @@ func (m *metricPostgresqlSlowQueriesAvgElapsedTimeMs) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricPostgresqlSlowQueriesAvgElapsedTimeMs) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, queryIDAttributeValue string, queryTextAttributeValue string) {
+func (m *metricPostgresqlSlowQueriesAvgElapsedTimeMs) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, collectionTimestampAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, queryIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -9958,11 +9958,10 @@ func (m *metricPostgresqlSlowQueriesAvgElapsedTimeMs) recordDataPoint(start pcom
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+	dp.Attributes().PutStr("collection_timestamp", collectionTimestampAttributeValue)
 	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
 	dp.Attributes().PutStr("user_name", userNameAttributeValue)
 	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
-	dp.Attributes().PutStr("query_text", queryTextAttributeValue)
 }
 
 // updateCapacity saves max length of data point slices that will be used for the slice capacity.
@@ -10005,7 +10004,7 @@ func (m *metricPostgresqlSlowQueriesAvgPlanTimeMs) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricPostgresqlSlowQueriesAvgPlanTimeMs) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, queryIDAttributeValue string, queryTextAttributeValue string) {
+func (m *metricPostgresqlSlowQueriesAvgPlanTimeMs) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, collectionTimestampAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, queryIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -10013,11 +10012,10 @@ func (m *metricPostgresqlSlowQueriesAvgPlanTimeMs) recordDataPoint(start pcommon
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+	dp.Attributes().PutStr("collection_timestamp", collectionTimestampAttributeValue)
 	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
 	dp.Attributes().PutStr("user_name", userNameAttributeValue)
 	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
-	dp.Attributes().PutStr("query_text", queryTextAttributeValue)
 }
 
 // updateCapacity saves max length of data point slices that will be used for the slice capacity.
@@ -10060,7 +10058,7 @@ func (m *metricPostgresqlSlowQueriesAvgRowsReturned) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricPostgresqlSlowQueriesAvgRowsReturned) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, queryIDAttributeValue string, queryTextAttributeValue string) {
+func (m *metricPostgresqlSlowQueriesAvgRowsReturned) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, collectionTimestampAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, queryIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -10068,11 +10066,10 @@ func (m *metricPostgresqlSlowQueriesAvgRowsReturned) recordDataPoint(start pcomm
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+	dp.Attributes().PutStr("collection_timestamp", collectionTimestampAttributeValue)
 	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
 	dp.Attributes().PutStr("user_name", userNameAttributeValue)
 	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
-	dp.Attributes().PutStr("query_text", queryTextAttributeValue)
 }
 
 // updateCapacity saves max length of data point slices that will be used for the slice capacity.
@@ -10117,7 +10114,7 @@ func (m *metricPostgresqlSlowQueriesExecutionCount) init() {
 	m.data.Sum().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricPostgresqlSlowQueriesExecutionCount) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, queryIDAttributeValue string, queryTextAttributeValue string) {
+func (m *metricPostgresqlSlowQueriesExecutionCount) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, collectionTimestampAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, queryIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -10125,11 +10122,10 @@ func (m *metricPostgresqlSlowQueriesExecutionCount) recordDataPoint(start pcommo
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetIntValue(val)
-	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+	dp.Attributes().PutStr("collection_timestamp", collectionTimestampAttributeValue)
 	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
 	dp.Attributes().PutStr("user_name", userNameAttributeValue)
 	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
-	dp.Attributes().PutStr("query_text", queryTextAttributeValue)
 }
 
 // updateCapacity saves max length of data point slices that will be used for the slice capacity.
@@ -10172,7 +10168,7 @@ func (m *metricPostgresqlSlowQueriesMaxElapsedTimeMs) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricPostgresqlSlowQueriesMaxElapsedTimeMs) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, queryIDAttributeValue string, queryTextAttributeValue string) {
+func (m *metricPostgresqlSlowQueriesMaxElapsedTimeMs) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, collectionTimestampAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, queryIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -10180,11 +10176,10 @@ func (m *metricPostgresqlSlowQueriesMaxElapsedTimeMs) recordDataPoint(start pcom
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+	dp.Attributes().PutStr("collection_timestamp", collectionTimestampAttributeValue)
 	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
 	dp.Attributes().PutStr("user_name", userNameAttributeValue)
 	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
-	dp.Attributes().PutStr("query_text", queryTextAttributeValue)
 }
 
 // updateCapacity saves max length of data point slices that will be used for the slice capacity.
@@ -10227,7 +10222,7 @@ func (m *metricPostgresqlSlowQueriesMinElapsedTimeMs) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricPostgresqlSlowQueriesMinElapsedTimeMs) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, queryIDAttributeValue string, queryTextAttributeValue string) {
+func (m *metricPostgresqlSlowQueriesMinElapsedTimeMs) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, collectionTimestampAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, queryIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -10235,11 +10230,10 @@ func (m *metricPostgresqlSlowQueriesMinElapsedTimeMs) recordDataPoint(start pcom
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+	dp.Attributes().PutStr("collection_timestamp", collectionTimestampAttributeValue)
 	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
 	dp.Attributes().PutStr("user_name", userNameAttributeValue)
 	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
-	dp.Attributes().PutStr("query_text", queryTextAttributeValue)
 }
 
 // updateCapacity saves max length of data point slices that will be used for the slice capacity.
@@ -10267,6 +10261,63 @@ func newMetricPostgresqlSlowQueriesMinElapsedTimeMs(cfg MetricConfig) metricPost
 	return m
 }
 
+type metricPostgresqlSlowQueriesQueryDetails struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.slow_queries.query_details metric with initial data.
+func (m *metricPostgresqlSlowQueriesQueryDetails) init() {
+	m.data.SetName("postgresql.slow_queries.query_details")
+	m.data.SetDescription("Query details event containing full query text and metadata for slow queries")
+	m.data.SetUnit("1")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlSlowQueriesQueryDetails) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, eventTypeAttributeValue string, collectionTimestampAttributeValue string, databaseNameAttributeValue string, queryIDAttributeValue string, queryTextAttributeValue string, userNameAttributeValue string, newrelicpostgresqlInstanceNameAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("event_type", eventTypeAttributeValue)
+	dp.Attributes().PutStr("collection_timestamp", collectionTimestampAttributeValue)
+	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
+	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
+	dp.Attributes().PutStr("query_text", queryTextAttributeValue)
+	dp.Attributes().PutStr("user_name", userNameAttributeValue)
+	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlSlowQueriesQueryDetails) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlSlowQueriesQueryDetails) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlSlowQueriesQueryDetails(cfg MetricConfig) metricPostgresqlSlowQueriesQueryDetails {
+	m := metricPostgresqlSlowQueriesQueryDetails{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
 type metricPostgresqlSlowQueriesStddevElapsedTimeMs struct {
 	data     pmetric.Metric // data buffer for generated metric.
 	config   MetricConfig   // metric config provided by user.
@@ -10282,7 +10333,7 @@ func (m *metricPostgresqlSlowQueriesStddevElapsedTimeMs) init() {
 	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricPostgresqlSlowQueriesStddevElapsedTimeMs) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, queryIDAttributeValue string, queryTextAttributeValue string) {
+func (m *metricPostgresqlSlowQueriesStddevElapsedTimeMs) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, collectionTimestampAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, queryIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -10290,11 +10341,10 @@ func (m *metricPostgresqlSlowQueriesStddevElapsedTimeMs) recordDataPoint(start p
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+	dp.Attributes().PutStr("collection_timestamp", collectionTimestampAttributeValue)
 	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
 	dp.Attributes().PutStr("user_name", userNameAttributeValue)
 	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
-	dp.Attributes().PutStr("query_text", queryTextAttributeValue)
 }
 
 // updateCapacity saves max length of data point slices that will be used for the slice capacity.
@@ -10339,7 +10389,7 @@ func (m *metricPostgresqlSlowQueriesTotalBufferHits) init() {
 	m.data.Sum().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricPostgresqlSlowQueriesTotalBufferHits) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, queryIDAttributeValue string, queryTextAttributeValue string) {
+func (m *metricPostgresqlSlowQueriesTotalBufferHits) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, collectionTimestampAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, queryIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -10347,11 +10397,10 @@ func (m *metricPostgresqlSlowQueriesTotalBufferHits) recordDataPoint(start pcomm
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetIntValue(val)
-	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+	dp.Attributes().PutStr("collection_timestamp", collectionTimestampAttributeValue)
 	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
 	dp.Attributes().PutStr("user_name", userNameAttributeValue)
 	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
-	dp.Attributes().PutStr("query_text", queryTextAttributeValue)
 }
 
 // updateCapacity saves max length of data point slices that will be used for the slice capacity.
@@ -10396,7 +10445,7 @@ func (m *metricPostgresqlSlowQueriesTotalDiskReads) init() {
 	m.data.Sum().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricPostgresqlSlowQueriesTotalDiskReads) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, queryIDAttributeValue string, queryTextAttributeValue string) {
+func (m *metricPostgresqlSlowQueriesTotalDiskReads) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, collectionTimestampAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, queryIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -10404,11 +10453,10 @@ func (m *metricPostgresqlSlowQueriesTotalDiskReads) recordDataPoint(start pcommo
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetIntValue(val)
-	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+	dp.Attributes().PutStr("collection_timestamp", collectionTimestampAttributeValue)
 	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
 	dp.Attributes().PutStr("user_name", userNameAttributeValue)
 	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
-	dp.Attributes().PutStr("query_text", queryTextAttributeValue)
 }
 
 // updateCapacity saves max length of data point slices that will be used for the slice capacity.
@@ -10453,7 +10501,7 @@ func (m *metricPostgresqlSlowQueriesTotalDiskWrites) init() {
 	m.data.Sum().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricPostgresqlSlowQueriesTotalDiskWrites) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, queryIDAttributeValue string, queryTextAttributeValue string) {
+func (m *metricPostgresqlSlowQueriesTotalDiskWrites) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, collectionTimestampAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, queryIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -10461,11 +10509,10 @@ func (m *metricPostgresqlSlowQueriesTotalDiskWrites) recordDataPoint(start pcomm
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetIntValue(val)
-	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+	dp.Attributes().PutStr("collection_timestamp", collectionTimestampAttributeValue)
 	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
 	dp.Attributes().PutStr("user_name", userNameAttributeValue)
 	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
-	dp.Attributes().PutStr("query_text", queryTextAttributeValue)
 }
 
 // updateCapacity saves max length of data point slices that will be used for the slice capacity.
@@ -10510,7 +10557,7 @@ func (m *metricPostgresqlSlowQueriesTotalElapsedTimeMs) init() {
 	m.data.Sum().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricPostgresqlSlowQueriesTotalElapsedTimeMs) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, queryIDAttributeValue string, queryTextAttributeValue string) {
+func (m *metricPostgresqlSlowQueriesTotalElapsedTimeMs) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, collectionTimestampAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, queryIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -10518,11 +10565,10 @@ func (m *metricPostgresqlSlowQueriesTotalElapsedTimeMs) recordDataPoint(start pc
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
-	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+	dp.Attributes().PutStr("collection_timestamp", collectionTimestampAttributeValue)
 	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
 	dp.Attributes().PutStr("user_name", userNameAttributeValue)
 	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
-	dp.Attributes().PutStr("query_text", queryTextAttributeValue)
 }
 
 // updateCapacity saves max length of data point slices that will be used for the slice capacity.
@@ -10567,7 +10613,7 @@ func (m *metricPostgresqlSlowQueriesTotalRows) init() {
 	m.data.Sum().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricPostgresqlSlowQueriesTotalRows) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, queryIDAttributeValue string, queryTextAttributeValue string) {
+func (m *metricPostgresqlSlowQueriesTotalRows) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, collectionTimestampAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, queryIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
@@ -10575,11 +10621,10 @@ func (m *metricPostgresqlSlowQueriesTotalRows) recordDataPoint(start pcommon.Tim
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetIntValue(val)
-	dp.Attributes().PutStr("newrelicpostgresql.instance_name", newrelicpostgresqlInstanceNameAttributeValue)
+	dp.Attributes().PutStr("collection_timestamp", collectionTimestampAttributeValue)
 	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
 	dp.Attributes().PutStr("user_name", userNameAttributeValue)
 	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
-	dp.Attributes().PutStr("query_text", queryTextAttributeValue)
 }
 
 // updateCapacity saves max length of data point slices that will be used for the slice capacity.
@@ -14260,6 +14305,7 @@ type MetricsBuilder struct {
 	metricPostgresqlSlowQueriesExecutionCount               metricPostgresqlSlowQueriesExecutionCount
 	metricPostgresqlSlowQueriesMaxElapsedTimeMs             metricPostgresqlSlowQueriesMaxElapsedTimeMs
 	metricPostgresqlSlowQueriesMinElapsedTimeMs             metricPostgresqlSlowQueriesMinElapsedTimeMs
+	metricPostgresqlSlowQueriesQueryDetails                 metricPostgresqlSlowQueriesQueryDetails
 	metricPostgresqlSlowQueriesStddevElapsedTimeMs          metricPostgresqlSlowQueriesStddevElapsedTimeMs
 	metricPostgresqlSlowQueriesTotalBufferHits              metricPostgresqlSlowQueriesTotalBufferHits
 	metricPostgresqlSlowQueriesTotalDiskReads               metricPostgresqlSlowQueriesTotalDiskReads
@@ -14529,6 +14575,7 @@ func NewMetricsBuilder(mbc MetricsBuilderConfig, settings receiver.Settings, opt
 		metricPostgresqlSlowQueriesExecutionCount:               newMetricPostgresqlSlowQueriesExecutionCount(mbc.Metrics.PostgresqlSlowQueriesExecutionCount),
 		metricPostgresqlSlowQueriesMaxElapsedTimeMs:             newMetricPostgresqlSlowQueriesMaxElapsedTimeMs(mbc.Metrics.PostgresqlSlowQueriesMaxElapsedTimeMs),
 		metricPostgresqlSlowQueriesMinElapsedTimeMs:             newMetricPostgresqlSlowQueriesMinElapsedTimeMs(mbc.Metrics.PostgresqlSlowQueriesMinElapsedTimeMs),
+		metricPostgresqlSlowQueriesQueryDetails:                 newMetricPostgresqlSlowQueriesQueryDetails(mbc.Metrics.PostgresqlSlowQueriesQueryDetails),
 		metricPostgresqlSlowQueriesStddevElapsedTimeMs:          newMetricPostgresqlSlowQueriesStddevElapsedTimeMs(mbc.Metrics.PostgresqlSlowQueriesStddevElapsedTimeMs),
 		metricPostgresqlSlowQueriesTotalBufferHits:              newMetricPostgresqlSlowQueriesTotalBufferHits(mbc.Metrics.PostgresqlSlowQueriesTotalBufferHits),
 		metricPostgresqlSlowQueriesTotalDiskReads:               newMetricPostgresqlSlowQueriesTotalDiskReads(mbc.Metrics.PostgresqlSlowQueriesTotalDiskReads),
@@ -14881,6 +14928,7 @@ func (mb *MetricsBuilder) EmitForResource(options ...ResourceMetricsOption) {
 	mb.metricPostgresqlSlowQueriesExecutionCount.emit(ils.Metrics())
 	mb.metricPostgresqlSlowQueriesMaxElapsedTimeMs.emit(ils.Metrics())
 	mb.metricPostgresqlSlowQueriesMinElapsedTimeMs.emit(ils.Metrics())
+	mb.metricPostgresqlSlowQueriesQueryDetails.emit(ils.Metrics())
 	mb.metricPostgresqlSlowQueriesStddevElapsedTimeMs.emit(ils.Metrics())
 	mb.metricPostgresqlSlowQueriesTotalBufferHits.emit(ils.Metrics())
 	mb.metricPostgresqlSlowQueriesTotalDiskReads.emit(ils.Metrics())
@@ -15799,83 +15847,88 @@ func (mb *MetricsBuilder) RecordPostgresqlSessionsSessionTimeDataPoint(ts pcommo
 }
 
 // RecordPostgresqlSlowQueriesAvgBufferHitsDataPoint adds a data point to postgresql.slow_queries.avg_buffer_hits metric.
-func (mb *MetricsBuilder) RecordPostgresqlSlowQueriesAvgBufferHitsDataPoint(ts pcommon.Timestamp, val float64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, queryIDAttributeValue string, queryTextAttributeValue string) {
-	mb.metricPostgresqlSlowQueriesAvgBufferHits.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue, databaseNameAttributeValue, userNameAttributeValue, queryIDAttributeValue, queryTextAttributeValue)
+func (mb *MetricsBuilder) RecordPostgresqlSlowQueriesAvgBufferHitsDataPoint(ts pcommon.Timestamp, val float64, collectionTimestampAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, queryIDAttributeValue string) {
+	mb.metricPostgresqlSlowQueriesAvgBufferHits.recordDataPoint(mb.startTime, ts, val, collectionTimestampAttributeValue, databaseNameAttributeValue, userNameAttributeValue, queryIDAttributeValue)
 }
 
 // RecordPostgresqlSlowQueriesAvgCPUTimeMsDataPoint adds a data point to postgresql.slow_queries.avg_cpu_time_ms metric.
-func (mb *MetricsBuilder) RecordPostgresqlSlowQueriesAvgCPUTimeMsDataPoint(ts pcommon.Timestamp, val float64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, queryIDAttributeValue string, queryTextAttributeValue string) {
-	mb.metricPostgresqlSlowQueriesAvgCPUTimeMs.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue, databaseNameAttributeValue, userNameAttributeValue, queryIDAttributeValue, queryTextAttributeValue)
+func (mb *MetricsBuilder) RecordPostgresqlSlowQueriesAvgCPUTimeMsDataPoint(ts pcommon.Timestamp, val float64, collectionTimestampAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, queryIDAttributeValue string) {
+	mb.metricPostgresqlSlowQueriesAvgCPUTimeMs.recordDataPoint(mb.startTime, ts, val, collectionTimestampAttributeValue, databaseNameAttributeValue, userNameAttributeValue, queryIDAttributeValue)
 }
 
 // RecordPostgresqlSlowQueriesAvgDiskReadsDataPoint adds a data point to postgresql.slow_queries.avg_disk_reads metric.
-func (mb *MetricsBuilder) RecordPostgresqlSlowQueriesAvgDiskReadsDataPoint(ts pcommon.Timestamp, val float64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, queryIDAttributeValue string, queryTextAttributeValue string) {
-	mb.metricPostgresqlSlowQueriesAvgDiskReads.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue, databaseNameAttributeValue, userNameAttributeValue, queryIDAttributeValue, queryTextAttributeValue)
+func (mb *MetricsBuilder) RecordPostgresqlSlowQueriesAvgDiskReadsDataPoint(ts pcommon.Timestamp, val float64, collectionTimestampAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, queryIDAttributeValue string) {
+	mb.metricPostgresqlSlowQueriesAvgDiskReads.recordDataPoint(mb.startTime, ts, val, collectionTimestampAttributeValue, databaseNameAttributeValue, userNameAttributeValue, queryIDAttributeValue)
 }
 
 // RecordPostgresqlSlowQueriesAvgDiskWritesDataPoint adds a data point to postgresql.slow_queries.avg_disk_writes metric.
-func (mb *MetricsBuilder) RecordPostgresqlSlowQueriesAvgDiskWritesDataPoint(ts pcommon.Timestamp, val float64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, queryIDAttributeValue string, queryTextAttributeValue string) {
-	mb.metricPostgresqlSlowQueriesAvgDiskWrites.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue, databaseNameAttributeValue, userNameAttributeValue, queryIDAttributeValue, queryTextAttributeValue)
+func (mb *MetricsBuilder) RecordPostgresqlSlowQueriesAvgDiskWritesDataPoint(ts pcommon.Timestamp, val float64, collectionTimestampAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, queryIDAttributeValue string) {
+	mb.metricPostgresqlSlowQueriesAvgDiskWrites.recordDataPoint(mb.startTime, ts, val, collectionTimestampAttributeValue, databaseNameAttributeValue, userNameAttributeValue, queryIDAttributeValue)
 }
 
 // RecordPostgresqlSlowQueriesAvgElapsedTimeMsDataPoint adds a data point to postgresql.slow_queries.avg_elapsed_time_ms metric.
-func (mb *MetricsBuilder) RecordPostgresqlSlowQueriesAvgElapsedTimeMsDataPoint(ts pcommon.Timestamp, val float64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, queryIDAttributeValue string, queryTextAttributeValue string) {
-	mb.metricPostgresqlSlowQueriesAvgElapsedTimeMs.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue, databaseNameAttributeValue, userNameAttributeValue, queryIDAttributeValue, queryTextAttributeValue)
+func (mb *MetricsBuilder) RecordPostgresqlSlowQueriesAvgElapsedTimeMsDataPoint(ts pcommon.Timestamp, val float64, collectionTimestampAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, queryIDAttributeValue string) {
+	mb.metricPostgresqlSlowQueriesAvgElapsedTimeMs.recordDataPoint(mb.startTime, ts, val, collectionTimestampAttributeValue, databaseNameAttributeValue, userNameAttributeValue, queryIDAttributeValue)
 }
 
 // RecordPostgresqlSlowQueriesAvgPlanTimeMsDataPoint adds a data point to postgresql.slow_queries.avg_plan_time_ms metric.
-func (mb *MetricsBuilder) RecordPostgresqlSlowQueriesAvgPlanTimeMsDataPoint(ts pcommon.Timestamp, val float64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, queryIDAttributeValue string, queryTextAttributeValue string) {
-	mb.metricPostgresqlSlowQueriesAvgPlanTimeMs.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue, databaseNameAttributeValue, userNameAttributeValue, queryIDAttributeValue, queryTextAttributeValue)
+func (mb *MetricsBuilder) RecordPostgresqlSlowQueriesAvgPlanTimeMsDataPoint(ts pcommon.Timestamp, val float64, collectionTimestampAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, queryIDAttributeValue string) {
+	mb.metricPostgresqlSlowQueriesAvgPlanTimeMs.recordDataPoint(mb.startTime, ts, val, collectionTimestampAttributeValue, databaseNameAttributeValue, userNameAttributeValue, queryIDAttributeValue)
 }
 
 // RecordPostgresqlSlowQueriesAvgRowsReturnedDataPoint adds a data point to postgresql.slow_queries.avg_rows_returned metric.
-func (mb *MetricsBuilder) RecordPostgresqlSlowQueriesAvgRowsReturnedDataPoint(ts pcommon.Timestamp, val float64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, queryIDAttributeValue string, queryTextAttributeValue string) {
-	mb.metricPostgresqlSlowQueriesAvgRowsReturned.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue, databaseNameAttributeValue, userNameAttributeValue, queryIDAttributeValue, queryTextAttributeValue)
+func (mb *MetricsBuilder) RecordPostgresqlSlowQueriesAvgRowsReturnedDataPoint(ts pcommon.Timestamp, val float64, collectionTimestampAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, queryIDAttributeValue string) {
+	mb.metricPostgresqlSlowQueriesAvgRowsReturned.recordDataPoint(mb.startTime, ts, val, collectionTimestampAttributeValue, databaseNameAttributeValue, userNameAttributeValue, queryIDAttributeValue)
 }
 
 // RecordPostgresqlSlowQueriesExecutionCountDataPoint adds a data point to postgresql.slow_queries.execution_count metric.
-func (mb *MetricsBuilder) RecordPostgresqlSlowQueriesExecutionCountDataPoint(ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, queryIDAttributeValue string, queryTextAttributeValue string) {
-	mb.metricPostgresqlSlowQueriesExecutionCount.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue, databaseNameAttributeValue, userNameAttributeValue, queryIDAttributeValue, queryTextAttributeValue)
+func (mb *MetricsBuilder) RecordPostgresqlSlowQueriesExecutionCountDataPoint(ts pcommon.Timestamp, val int64, collectionTimestampAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, queryIDAttributeValue string) {
+	mb.metricPostgresqlSlowQueriesExecutionCount.recordDataPoint(mb.startTime, ts, val, collectionTimestampAttributeValue, databaseNameAttributeValue, userNameAttributeValue, queryIDAttributeValue)
 }
 
 // RecordPostgresqlSlowQueriesMaxElapsedTimeMsDataPoint adds a data point to postgresql.slow_queries.max_elapsed_time_ms metric.
-func (mb *MetricsBuilder) RecordPostgresqlSlowQueriesMaxElapsedTimeMsDataPoint(ts pcommon.Timestamp, val float64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, queryIDAttributeValue string, queryTextAttributeValue string) {
-	mb.metricPostgresqlSlowQueriesMaxElapsedTimeMs.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue, databaseNameAttributeValue, userNameAttributeValue, queryIDAttributeValue, queryTextAttributeValue)
+func (mb *MetricsBuilder) RecordPostgresqlSlowQueriesMaxElapsedTimeMsDataPoint(ts pcommon.Timestamp, val float64, collectionTimestampAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, queryIDAttributeValue string) {
+	mb.metricPostgresqlSlowQueriesMaxElapsedTimeMs.recordDataPoint(mb.startTime, ts, val, collectionTimestampAttributeValue, databaseNameAttributeValue, userNameAttributeValue, queryIDAttributeValue)
 }
 
 // RecordPostgresqlSlowQueriesMinElapsedTimeMsDataPoint adds a data point to postgresql.slow_queries.min_elapsed_time_ms metric.
-func (mb *MetricsBuilder) RecordPostgresqlSlowQueriesMinElapsedTimeMsDataPoint(ts pcommon.Timestamp, val float64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, queryIDAttributeValue string, queryTextAttributeValue string) {
-	mb.metricPostgresqlSlowQueriesMinElapsedTimeMs.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue, databaseNameAttributeValue, userNameAttributeValue, queryIDAttributeValue, queryTextAttributeValue)
+func (mb *MetricsBuilder) RecordPostgresqlSlowQueriesMinElapsedTimeMsDataPoint(ts pcommon.Timestamp, val float64, collectionTimestampAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, queryIDAttributeValue string) {
+	mb.metricPostgresqlSlowQueriesMinElapsedTimeMs.recordDataPoint(mb.startTime, ts, val, collectionTimestampAttributeValue, databaseNameAttributeValue, userNameAttributeValue, queryIDAttributeValue)
+}
+
+// RecordPostgresqlSlowQueriesQueryDetailsDataPoint adds a data point to postgresql.slow_queries.query_details metric.
+func (mb *MetricsBuilder) RecordPostgresqlSlowQueriesQueryDetailsDataPoint(ts pcommon.Timestamp, val int64, eventTypeAttributeValue string, collectionTimestampAttributeValue string, databaseNameAttributeValue string, queryIDAttributeValue string, queryTextAttributeValue string, userNameAttributeValue string, newrelicpostgresqlInstanceNameAttributeValue string) {
+	mb.metricPostgresqlSlowQueriesQueryDetails.recordDataPoint(mb.startTime, ts, val, eventTypeAttributeValue, collectionTimestampAttributeValue, databaseNameAttributeValue, queryIDAttributeValue, queryTextAttributeValue, userNameAttributeValue, newrelicpostgresqlInstanceNameAttributeValue)
 }
 
 // RecordPostgresqlSlowQueriesStddevElapsedTimeMsDataPoint adds a data point to postgresql.slow_queries.stddev_elapsed_time_ms metric.
-func (mb *MetricsBuilder) RecordPostgresqlSlowQueriesStddevElapsedTimeMsDataPoint(ts pcommon.Timestamp, val float64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, queryIDAttributeValue string, queryTextAttributeValue string) {
-	mb.metricPostgresqlSlowQueriesStddevElapsedTimeMs.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue, databaseNameAttributeValue, userNameAttributeValue, queryIDAttributeValue, queryTextAttributeValue)
+func (mb *MetricsBuilder) RecordPostgresqlSlowQueriesStddevElapsedTimeMsDataPoint(ts pcommon.Timestamp, val float64, collectionTimestampAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, queryIDAttributeValue string) {
+	mb.metricPostgresqlSlowQueriesStddevElapsedTimeMs.recordDataPoint(mb.startTime, ts, val, collectionTimestampAttributeValue, databaseNameAttributeValue, userNameAttributeValue, queryIDAttributeValue)
 }
 
 // RecordPostgresqlSlowQueriesTotalBufferHitsDataPoint adds a data point to postgresql.slow_queries.total_buffer_hits metric.
-func (mb *MetricsBuilder) RecordPostgresqlSlowQueriesTotalBufferHitsDataPoint(ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, queryIDAttributeValue string, queryTextAttributeValue string) {
-	mb.metricPostgresqlSlowQueriesTotalBufferHits.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue, databaseNameAttributeValue, userNameAttributeValue, queryIDAttributeValue, queryTextAttributeValue)
+func (mb *MetricsBuilder) RecordPostgresqlSlowQueriesTotalBufferHitsDataPoint(ts pcommon.Timestamp, val int64, collectionTimestampAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, queryIDAttributeValue string) {
+	mb.metricPostgresqlSlowQueriesTotalBufferHits.recordDataPoint(mb.startTime, ts, val, collectionTimestampAttributeValue, databaseNameAttributeValue, userNameAttributeValue, queryIDAttributeValue)
 }
 
 // RecordPostgresqlSlowQueriesTotalDiskReadsDataPoint adds a data point to postgresql.slow_queries.total_disk_reads metric.
-func (mb *MetricsBuilder) RecordPostgresqlSlowQueriesTotalDiskReadsDataPoint(ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, queryIDAttributeValue string, queryTextAttributeValue string) {
-	mb.metricPostgresqlSlowQueriesTotalDiskReads.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue, databaseNameAttributeValue, userNameAttributeValue, queryIDAttributeValue, queryTextAttributeValue)
+func (mb *MetricsBuilder) RecordPostgresqlSlowQueriesTotalDiskReadsDataPoint(ts pcommon.Timestamp, val int64, collectionTimestampAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, queryIDAttributeValue string) {
+	mb.metricPostgresqlSlowQueriesTotalDiskReads.recordDataPoint(mb.startTime, ts, val, collectionTimestampAttributeValue, databaseNameAttributeValue, userNameAttributeValue, queryIDAttributeValue)
 }
 
 // RecordPostgresqlSlowQueriesTotalDiskWritesDataPoint adds a data point to postgresql.slow_queries.total_disk_writes metric.
-func (mb *MetricsBuilder) RecordPostgresqlSlowQueriesTotalDiskWritesDataPoint(ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, queryIDAttributeValue string, queryTextAttributeValue string) {
-	mb.metricPostgresqlSlowQueriesTotalDiskWrites.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue, databaseNameAttributeValue, userNameAttributeValue, queryIDAttributeValue, queryTextAttributeValue)
+func (mb *MetricsBuilder) RecordPostgresqlSlowQueriesTotalDiskWritesDataPoint(ts pcommon.Timestamp, val int64, collectionTimestampAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, queryIDAttributeValue string) {
+	mb.metricPostgresqlSlowQueriesTotalDiskWrites.recordDataPoint(mb.startTime, ts, val, collectionTimestampAttributeValue, databaseNameAttributeValue, userNameAttributeValue, queryIDAttributeValue)
 }
 
 // RecordPostgresqlSlowQueriesTotalElapsedTimeMsDataPoint adds a data point to postgresql.slow_queries.total_elapsed_time_ms metric.
-func (mb *MetricsBuilder) RecordPostgresqlSlowQueriesTotalElapsedTimeMsDataPoint(ts pcommon.Timestamp, val float64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, queryIDAttributeValue string, queryTextAttributeValue string) {
-	mb.metricPostgresqlSlowQueriesTotalElapsedTimeMs.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue, databaseNameAttributeValue, userNameAttributeValue, queryIDAttributeValue, queryTextAttributeValue)
+func (mb *MetricsBuilder) RecordPostgresqlSlowQueriesTotalElapsedTimeMsDataPoint(ts pcommon.Timestamp, val float64, collectionTimestampAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, queryIDAttributeValue string) {
+	mb.metricPostgresqlSlowQueriesTotalElapsedTimeMs.recordDataPoint(mb.startTime, ts, val, collectionTimestampAttributeValue, databaseNameAttributeValue, userNameAttributeValue, queryIDAttributeValue)
 }
 
 // RecordPostgresqlSlowQueriesTotalRowsDataPoint adds a data point to postgresql.slow_queries.total_rows metric.
-func (mb *MetricsBuilder) RecordPostgresqlSlowQueriesTotalRowsDataPoint(ts pcommon.Timestamp, val int64, newrelicpostgresqlInstanceNameAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, queryIDAttributeValue string, queryTextAttributeValue string) {
-	mb.metricPostgresqlSlowQueriesTotalRows.recordDataPoint(mb.startTime, ts, val, newrelicpostgresqlInstanceNameAttributeValue, databaseNameAttributeValue, userNameAttributeValue, queryIDAttributeValue, queryTextAttributeValue)
+func (mb *MetricsBuilder) RecordPostgresqlSlowQueriesTotalRowsDataPoint(ts pcommon.Timestamp, val int64, collectionTimestampAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, queryIDAttributeValue string) {
+	mb.metricPostgresqlSlowQueriesTotalRows.recordDataPoint(mb.startTime, ts, val, collectionTimestampAttributeValue, databaseNameAttributeValue, userNameAttributeValue, queryIDAttributeValue)
 }
 
 // RecordPostgresqlSlruBlksExistsDataPoint adds a data point to postgresql.slru.blks_exists metric.
