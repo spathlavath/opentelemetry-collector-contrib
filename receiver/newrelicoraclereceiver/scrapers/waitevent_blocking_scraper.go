@@ -250,7 +250,7 @@ func (s *WaitEventBlockingScraper) recordBlockingMetrics(now pcommon.Timestamp, 
 	finalBlockerSerial := commonutils.FormatInt64(event.GetFinalBlockerSerial())
 	finalBlockerUser := event.GetFinalBlockerUser()
 	finalBlockerQueryID := event.GetFinalBlockerQueryID()
-	finalBlockerQueryText := commonutils.AnonymizeAndNormalize(event.GetFinalBlockerQueryText())
+	finalBlockerQueryText := commonutils.NormalizeSql(event.GetFinalBlockerQueryText())
 
 	// Get nr_service_guid and normalised_sql_hash from sqlIDMap for the blocked query
 	// These will be empty strings if not present in the map or if the metadata values were empty
