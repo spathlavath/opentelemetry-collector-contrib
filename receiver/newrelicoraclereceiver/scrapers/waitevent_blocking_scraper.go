@@ -316,8 +316,8 @@ func (s *WaitEventBlockingScraper) recordBlockingMetrics(now pcommon.Timestamp, 
 			"",                        // schema_name
 			"",                        // user_name
 			"",                        // last_active_time
-			nrServiceGuid,             // normalised_sql_hash
-			normalisedSQLHash,         // nr_service_guid
+			normalisedSQLHash,         // normalised_sql_hash
+			nrServiceGuid,             // nr_service_guid
 			normalisedBlockingSQLHash, // normalised_blocking_sql_hash (same - this IS the blocking query)
 			nrBlockingServiceGuid,     // nr_blocking_service_guid (same - this IS the blocking query)
 		)
