@@ -17,10 +17,10 @@ import (
 
 const (
 	// Query Performance Monitoring defaults
-	defaultEnableSlowQueryMonitoring                = false
-	defaultQueryMonitoringSQLRowLimit               = 5000 // Fetch top 5000 candidates by historical average
-	defaultQueryMonitoringResponseTimeThreshold     = queries.DefaultQueryMonitoringResponseTimeThreshold
-	defaultQueryMonitoringCountThreshold            = queries.DefaultQueryMonitoringCountThreshold
+	// defaultEnableQueryMonitoring                = false
+	defaultQueryMonitoringSQLRowLimit           = 5000 // Fetch top 5000 candidates by historical average
+	defaultQueryMonitoringResponseTimeThreshold = queries.DefaultQueryMonitoringResponseTimeThreshold
+	defaultQueryMonitoringCountThreshold        = queries.DefaultQueryMonitoringCountThreshold
 
 	// Interval Calculator defaults
 	defaultEnableIntervalBasedAveraging      = true // Enable by default for better slow query detection
@@ -83,7 +83,7 @@ type Config struct {
 	// Slow Query Monitoring Configuration (similar to Oracle's query_monitoring)
 	// Controls slow query detection from pg_stat_statements extension
 	// Default: false (opt-in feature - must be explicitly enabled)
-	EnableSlowQueryMonitoring bool `mapstructure:"enable_slow_query_monitoring"`
+	EnableQueryMonitoring bool `mapstructure:"enable_query_monitoring"`
 
 	// SQL row limit for pre-filtering (replaces Oracle's interval_seconds)
 	// Fetches top N queries by historical average to reduce memory usage
@@ -113,8 +113,8 @@ type Config struct {
 
 // SetDefaults sets default values for configuration fields that are not explicitly set
 func (cfg *Config) SetDefaults() {
-	// Note: EnableSlowQueryMonitoring defaults to false (opt-in feature)
-	// User must explicitly set enable_slow_query_monitoring: true in config
+	// Note: EnableQueryMonitoring defaults to false (opt-in feature)
+	// User must explicitly set enable_query_monitoring: true in config
 
 	// Set slow query monitoring defaults (only used if slow query monitoring is enabled)
 	if cfg.QueryMonitoringSQLRowLimit == 0 {
@@ -128,8 +128,8 @@ func (cfg *Config) SetDefaults() {
 	}
 
 	// Set interval calculator defaults
-	// Note: EnableIntervalBasedAveraging defaults to true if EnableSlowQueryMonitoring is true
-	if cfg.EnableSlowQueryMonitoring && !cfg.EnableIntervalBasedAveraging {
+	// Note: EnableIntervalBasedAveraging defaults to true if EnableQueryMonitoring is true
+	if cfg.EnableQueryMonitoring && !cfg.EnableIntervalBasedAveraging {
 		cfg.EnableIntervalBasedAveraging = defaultEnableIntervalBasedAveraging
 	}
 	if cfg.IntervalCalculatorCacheTTLMinutes == 0 {
@@ -170,7 +170,7 @@ func (cfg *Config) Validate() error {
 	// Timeout is optional, no validation needed
 
 	// Validate slow query monitoring settings
-	if cfg.EnableSlowQueryMonitoring {
+	if cfg.EnableQueryMonitoring {
 		if cfg.QueryMonitoringSQLRowLimit < minQueryMonitoringSQLRowLimit ||
 			cfg.QueryMonitoringSQLRowLimit > maxQueryMonitoringSQLRowLimit {
 			return fmt.Errorf("query_monitoring_sql_row_limit must be between %d and %d, got %d",

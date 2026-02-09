@@ -346,7 +346,7 @@ func (s *newRelicPostgreSQLScraper) initializeScrapers() error {
 	// Initialize Slow Queries scraper (collects slow query statistics from pg_stat_statements)
 	// This scraper collects query performance metrics from the pg_stat_statements extension
 	// Uses SQL LIMIT instead of time filtering
-	if s.config.EnableSlowQueryMonitoring {
+	if s.config.EnableQueryMonitoring {
 		s.slowQueriesScraper = scrapers.NewSlowQueriesScraper(
 			s.client,
 			s.mb,
@@ -366,7 +366,7 @@ func (s *newRelicPostgreSQLScraper) initializeScrapers() error {
 			zap.Int("response_time_threshold_ms", s.config.QueryMonitoringResponseTimeThreshold),
 			zap.Int("count_threshold", s.config.QueryMonitoringCountThreshold))
 	} else {
-		s.logger.Info("Slow Queries scraper disabled (enable_slow_query_monitoring is false)")
+		s.logger.Info("Slow Queries scraper disabled (enable_query_monitoring is false)")
 	}
 
 	return nil
