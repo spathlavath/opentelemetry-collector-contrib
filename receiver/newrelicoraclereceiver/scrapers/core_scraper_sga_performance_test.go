@@ -4,7 +4,6 @@
 package scrapers
 
 import (
-	"context"
 	"database/sql"
 	"errors"
 	"testing"
@@ -15,9 +14,9 @@ import (
 	"go.opentelemetry.io/collector/receiver/receivertest"
 	"go.uber.org/zap"
 
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/client"
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/internal/metadata"
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/models"
+	"github.com/newrelic/nrdot-collector-components/receiver/newrelicoraclereceiver/client"
+	"github.com/newrelic/nrdot-collector-components/receiver/newrelicoraclereceiver/internal/metadata"
+	"github.com/newrelic/nrdot-collector-components/receiver/newrelicoraclereceiver/models"
 )
 
 func testSGATimestamp() pcommon.Timestamp {
@@ -41,7 +40,7 @@ func TestScrapeSGASharedPoolLibraryCacheReloadRatioMetrics_Success(t *testing.T)
 		config: metadata.DefaultMetricsBuilderConfig(),
 	}
 
-	errs := scraper.scrapeSGASharedPoolLibraryCacheReloadRatioMetrics(context.Background(), testSGATimestamp())
+	errs := scraper.scrapeSGASharedPoolLibraryCacheReloadRatioMetrics(t.Context(), testSGATimestamp())
 	require.Empty(t, errs)
 }
 
@@ -56,7 +55,7 @@ func TestScrapeSGASharedPoolLibraryCacheReloadRatioMetrics_QueryError(t *testing
 		config: metadata.DefaultMetricsBuilderConfig(),
 	}
 
-	errs := scraper.scrapeSGASharedPoolLibraryCacheReloadRatioMetrics(context.Background(), testSGATimestamp())
+	errs := scraper.scrapeSGASharedPoolLibraryCacheReloadRatioMetrics(t.Context(), testSGATimestamp())
 	require.Len(t, errs, 1)
 }
 
@@ -77,7 +76,7 @@ func TestScrapeSGASharedPoolLibraryCacheHitRatioMetrics_Success(t *testing.T) {
 		config: metadata.DefaultMetricsBuilderConfig(),
 	}
 
-	errs := scraper.scrapeSGASharedPoolLibraryCacheHitRatioMetrics(context.Background(), testSGATimestamp())
+	errs := scraper.scrapeSGASharedPoolLibraryCacheHitRatioMetrics(t.Context(), testSGATimestamp())
 	require.Empty(t, errs)
 }
 
@@ -92,7 +91,7 @@ func TestScrapeSGASharedPoolLibraryCacheHitRatioMetrics_QueryError(t *testing.T)
 		config: metadata.DefaultMetricsBuilderConfig(),
 	}
 
-	errs := scraper.scrapeSGASharedPoolLibraryCacheHitRatioMetrics(context.Background(), testSGATimestamp())
+	errs := scraper.scrapeSGASharedPoolLibraryCacheHitRatioMetrics(t.Context(), testSGATimestamp())
 	require.Len(t, errs, 1)
 }
 
@@ -113,7 +112,7 @@ func TestScrapeSGASharedPoolDictCacheMissRatioMetrics_Success(t *testing.T) {
 		config: metadata.DefaultMetricsBuilderConfig(),
 	}
 
-	errs := scraper.scrapeSGASharedPoolDictCacheMissRatioMetrics(context.Background(), testSGATimestamp())
+	errs := scraper.scrapeSGASharedPoolDictCacheMissRatioMetrics(t.Context(), testSGATimestamp())
 	require.Empty(t, errs)
 }
 
@@ -128,7 +127,7 @@ func TestScrapeSGASharedPoolDictCacheMissRatioMetrics_QueryError(t *testing.T) {
 		config: metadata.DefaultMetricsBuilderConfig(),
 	}
 
-	errs := scraper.scrapeSGASharedPoolDictCacheMissRatioMetrics(context.Background(), testSGATimestamp())
+	errs := scraper.scrapeSGASharedPoolDictCacheMissRatioMetrics(t.Context(), testSGATimestamp())
 	require.Len(t, errs, 1)
 }
 
@@ -149,7 +148,7 @@ func TestScrapeSGALogBufferSpaceWaitsMetrics_Success(t *testing.T) {
 		config: metadata.DefaultMetricsBuilderConfig(),
 	}
 
-	errs := scraper.scrapeSGALogBufferSpaceWaitsMetrics(context.Background(), testSGATimestamp())
+	errs := scraper.scrapeSGALogBufferSpaceWaitsMetrics(t.Context(), testSGATimestamp())
 	require.Empty(t, errs)
 }
 
@@ -164,7 +163,7 @@ func TestScrapeSGALogBufferSpaceWaitsMetrics_QueryError(t *testing.T) {
 		config: metadata.DefaultMetricsBuilderConfig(),
 	}
 
-	errs := scraper.scrapeSGALogBufferSpaceWaitsMetrics(context.Background(), testSGATimestamp())
+	errs := scraper.scrapeSGALogBufferSpaceWaitsMetrics(t.Context(), testSGATimestamp())
 	require.Len(t, errs, 1)
 }
 
@@ -185,7 +184,7 @@ func TestScrapeSGALogAllocRetriesMetrics_Success(t *testing.T) {
 		config: metadata.DefaultMetricsBuilderConfig(),
 	}
 
-	errs := scraper.scrapeSGALogAllocRetriesMetrics(context.Background(), testSGATimestamp())
+	errs := scraper.scrapeSGALogAllocRetriesMetrics(t.Context(), testSGATimestamp())
 	require.Empty(t, errs)
 }
 
@@ -203,7 +202,7 @@ func TestScrapeSGALogAllocRetriesMetrics_NullRatio(t *testing.T) {
 		config: metadata.DefaultMetricsBuilderConfig(),
 	}
 
-	errs := scraper.scrapeSGALogAllocRetriesMetrics(context.Background(), testSGATimestamp())
+	errs := scraper.scrapeSGALogAllocRetriesMetrics(t.Context(), testSGATimestamp())
 	require.Empty(t, errs)
 }
 
@@ -218,7 +217,7 @@ func TestScrapeSGALogAllocRetriesMetrics_QueryError(t *testing.T) {
 		config: metadata.DefaultMetricsBuilderConfig(),
 	}
 
-	errs := scraper.scrapeSGALogAllocRetriesMetrics(context.Background(), testSGATimestamp())
+	errs := scraper.scrapeSGALogAllocRetriesMetrics(t.Context(), testSGATimestamp())
 	require.Len(t, errs, 1)
 }
 
@@ -239,7 +238,7 @@ func TestScrapeSGAHitRatioMetrics_Success(t *testing.T) {
 		config: metadata.DefaultMetricsBuilderConfig(),
 	}
 
-	errs := scraper.scrapeSGAHitRatioMetrics(context.Background(), testSGATimestamp())
+	errs := scraper.scrapeSGAHitRatioMetrics(t.Context(), testSGATimestamp())
 	require.Empty(t, errs)
 }
 
@@ -257,7 +256,7 @@ func TestScrapeSGAHitRatioMetrics_NullRatio(t *testing.T) {
 		config: metadata.DefaultMetricsBuilderConfig(),
 	}
 
-	errs := scraper.scrapeSGAHitRatioMetrics(context.Background(), testSGATimestamp())
+	errs := scraper.scrapeSGAHitRatioMetrics(t.Context(), testSGATimestamp())
 	require.Empty(t, errs)
 }
 
@@ -272,6 +271,6 @@ func TestScrapeSGAHitRatioMetrics_QueryError(t *testing.T) {
 		config: metadata.DefaultMetricsBuilderConfig(),
 	}
 
-	errs := scraper.scrapeSGAHitRatioMetrics(context.Background(), testSGATimestamp())
+	errs := scraper.scrapeSGAHitRatioMetrics(t.Context(), testSGATimestamp())
 	require.Len(t, errs, 1)
 }

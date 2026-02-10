@@ -11,7 +11,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/zap"
 
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/models"
+	"github.com/newrelic/nrdot-collector-components/receiver/newrelicoraclereceiver/models"
 )
 
 func TestNewOracleIntervalCalculator(t *testing.T) {
@@ -23,7 +23,7 @@ func TestNewOracleIntervalCalculator(t *testing.T) {
 	assert.NotNil(t, calc)
 	assert.Equal(t, ttl, calc.cacheTTL)
 	assert.NotNil(t, calc.stateCache)
-	assert.Equal(t, 0, len(calc.stateCache))
+	assert.Empty(t, calc.stateCache)
 }
 
 func TestNewOracleIntervalCalculator_InvalidTTL(t *testing.T) {
@@ -410,11 +410,11 @@ func TestReset(t *testing.T) {
 	}
 
 	calc.CalculateMetrics(query, now)
-	assert.Equal(t, 1, len(calc.stateCache))
+	assert.Len(t, calc.stateCache, 1)
 
 	calc.Reset()
 
-	assert.Equal(t, 0, len(calc.stateCache))
+	assert.Empty(t, calc.stateCache)
 }
 
 func TestCalculateMetrics_PreserveFirstSeenTimestamp(t *testing.T) {

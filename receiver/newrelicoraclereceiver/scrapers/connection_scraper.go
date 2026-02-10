@@ -1,20 +1,19 @@
 // Copyright New Relic, Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package scrapers
+package scrapers // import "github.com/newrelic/nrdot-collector-components/receiver/newrelicoraclereceiver/scrapers"
 
 import (
 	"context"
-	"database/sql"
-	"fmt"
+	"errors"
 	"strconv"
 	"time"
 
 	"go.opentelemetry.io/collector/pdata/pcommon"
 	"go.uber.org/zap"
 
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/client"
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/internal/metadata"
+	"github.com/newrelic/nrdot-collector-components/receiver/newrelicoraclereceiver/client"
+	"github.com/newrelic/nrdot-collector-components/receiver/newrelicoraclereceiver/internal/metadata"
 )
 
 // ConnectionScraper contains the scraper for Oracle connection statistics
@@ -33,13 +32,13 @@ func NewConnectionScraper(
 	metricsBuilderConfig metadata.MetricsBuilderConfig,
 ) (*ConnectionScraper, error) {
 	if oracleClient == nil {
-		return nil, fmt.Errorf("client cannot be nil")
+		return nil, errors.New("client cannot be nil")
 	}
 	if mb == nil {
-		return nil, fmt.Errorf("metrics builder cannot be nil")
+		return nil, errors.New("metrics builder cannot be nil")
 	}
 	if logger == nil {
-		return nil, fmt.Errorf("logger cannot be nil")
+		return nil, errors.New("logger cannot be nil")
 	}
 
 	return &ConnectionScraper{
@@ -285,20 +284,4 @@ func (s *ConnectionScraper) scrapeConnectionQuality(ctx context.Context, timesta
 	}
 
 	return errors
-}
-
-// formatInt64 converts sql.NullInt64 to string
-func (s *ConnectionScraper) formatInt64(val sql.NullInt64) string {
-	if val.Valid {
-		return strconv.FormatInt(val.Int64, 10)
-	}
-	return ""
-}
-
-// formatString converts sql.NullString to string
-func (s *ConnectionScraper) formatString(val sql.NullString) string {
-	if val.Valid {
-		return val.String
-	}
-	return ""
 }

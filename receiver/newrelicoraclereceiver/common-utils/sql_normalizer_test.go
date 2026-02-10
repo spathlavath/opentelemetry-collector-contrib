@@ -1,10 +1,13 @@
+// Copyright New Relic, Inc. All rights reserved.
+// SPDX-License-Identifier: Apache-2.0
+
 package commonutils
 
 import (
 	"testing"
 )
 
-func TestNormalizeSql(t *testing.T) {
+func TestNormalizeSQL(t *testing.T) {
 	tests := []struct {
 		name     string
 		input    string
@@ -79,15 +82,15 @@ func TestNormalizeSql(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			result := NormalizeSql(tt.input)
+			result := NormalizeSQL(tt.input)
 			if result != tt.expected {
-				t.Errorf("NormalizeSql(%q) = %q; want %q", tt.input, result, tt.expected)
+				t.Errorf("NormalizeSQL(%q) = %q; want %q", tt.input, result, tt.expected)
 			}
 		})
 	}
 }
 
-func TestNormalizeSqlWithCommentBeforeSelect(t *testing.T) {
+func TestNormalizeSQLWithCommentBeforeSelect(t *testing.T) {
 	tests := []struct {
 		name     string
 		input    string
@@ -99,8 +102,8 @@ func TestNormalizeSqlWithCommentBeforeSelect(t *testing.T) {
 			expected: "?SELECT * FROM USERS",
 		},
 		{
-			name:     "Comment with nr_service_guid before SELECT",
-			input:    "/* nr_service_guid=\"ABC123\" */SELECT * FROM users WHERE id = 5",
+			name:     "Comment with nrServiceGUID before SELECT",
+			input:    "/* nrServiceGUID=\"ABC123\" */SELECT * FROM users WHERE id = 5",
 			expected: "?SELECT * FROM USERS WHERE ID = ?",
 		},
 		{
@@ -172,23 +175,23 @@ func TestNormalizeSqlWithCommentBeforeSelect(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			result := NormalizeSql(tt.input)
+			result := NormalizeSQL(tt.input)
 			if result != tt.expected {
-				t.Errorf("NormalizeSql(%q) = %q; want %q", tt.input, result, tt.expected)
+				t.Errorf("NormalizeSQL(%q) = %q; want %q", tt.input, result, tt.expected)
 			}
 		})
 	}
 }
 
-func TestNormalizeSqlAndHash(t *testing.T) {
+func TestNormalizeSQLAndHash(t *testing.T) {
 	// Test that the same normalized query produces the same hash
 	query1 := "SELECT * FROM users WHERE id = 123"
 	query2 := "SELECT * FROM users WHERE id = 456"
 	query3 := "select * from users where id = 789" // lowercase version
 
-	normalized1, hash1 := NormalizeSqlAndHash(query1)
-	normalized2, hash2 := NormalizeSqlAndHash(query2)
-	normalized3, hash3 := NormalizeSqlAndHash(query3)
+	normalized1, hash1 := NormalizeSQLAndHash(query1)
+	normalized2, hash2 := NormalizeSQLAndHash(query2)
+	normalized3, hash3 := NormalizeSQLAndHash(query3)
 
 	// All three queries should normalize to the same SQL
 	expectedNormalized := "SELECT * FROM USERS WHERE ID = ?"
@@ -248,60 +251,60 @@ func TestExtractNewRelicMetadata(t *testing.T) {
 	tests := []struct {
 		name         string
 		input        string
-		expectedGuid string
+		expectedGUID string
 	}{
 		{
 			name:         "No New Relic metadata",
 			input:        "SELECT * FROM employees WHERE id = 1",
-			expectedGuid: "",
+			expectedGUID: "",
 		},
 		{
 			name:         "Comment without New Relic metadata",
 			input:        "/* This is a regular comment */ SELECT * FROM employees",
-			expectedGuid: "",
+			expectedGUID: "",
 		},
 		{
 			name:         "Empty query",
 			input:        "",
-			expectedGuid: "",
+			expectedGUID: "",
 		},
 		{
 			name:         "Quoted GUID (basic)",
-			input:        "/*nr_service_guid=\"MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI4MzA5MDIxMQ\"*/ SELECT * FROM pets",
-			expectedGuid: "MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI4MzA5MDIxMQ",
+			input:        "/*nrServiceGUID=\"MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI4MzA5MDIxMQ\"*/ SELECT * FROM pets",
+			expectedGUID: "MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI4MzA5MDIxMQ",
 		},
 		{
 			name:         "Quoted GUID with spaces in comment",
-			input:        "/* nr_service_guid=\"MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI4MzA5MDIxMQ\" */ SELECT * FROM pets",
-			expectedGuid: "MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI4MzA5MDIxMQ",
+			input:        "/* nrServiceGUID=\"MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI4MzA5MDIxMQ\" */ SELECT * FROM pets",
+			expectedGUID: "MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI4MzA5MDIxMQ",
 		},
 		{
 			name:         "GUID with different base64 value",
-			input:        "/* nr_service_guid=\"ABC123XYZ789==\",other=\"value\" */ SELECT * FROM users",
-			expectedGuid: "ABC123XYZ789==",
+			input:        "/* nrServiceGUID=\"ABC123XYZ789==\",other=\"value\" */ SELECT * FROM users",
+			expectedGUID: "ABC123XYZ789==",
 		},
 		{
 			name:         "Empty quoted GUID",
-			input:        "/* nr_service_guid=\"\" */ SELECT * FROM users",
-			expectedGuid: "",
+			input:        "/* nrServiceGUID=\"\" */ SELECT * FROM users",
+			expectedGUID: "",
 		},
 		{
 			name:         "GUID in middle of query",
-			input:        "SELECT /* nr_service_guid=\"MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI4MzA5MDIxMQ\" */ * FROM users",
-			expectedGuid: "MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI4MzA5MDIxMQ",
+			input:        "SELECT /* nrServiceGUID=\"MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI4MzA5MDIxMQ\" */ * FROM users",
+			expectedGUID: "MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI4MzA5MDIxMQ",
 		},
 		{
 			name:         "Real-world GUID with UPDATE statement",
-			input:        "/* nr_service_guid=\"MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI4MzA5MDIxMQ\" */ UPDATE payments SET status = ?",
-			expectedGuid: "MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI4MzA5MDIxMQ",
+			input:        "/* nrServiceGUID=\"MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI4MzA5MDIxMQ\" */ UPDATE payments SET status = ?",
+			expectedGUID: "MTE2MDAzMTl8QVBNfEFQUExJQ0FUSU9OfDI4MzA5MDIxMQ",
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			nrApmGuid := ExtractNewRelicMetadata(tt.input)
-			if nrApmGuid != tt.expectedGuid {
-				t.Errorf("ExtractNewRelicMetadata(%q) = %q; want %q", tt.input, nrApmGuid, tt.expectedGuid)
+			nrApmGUID := ExtractNewRelicMetadata(tt.input)
+			if nrApmGUID != tt.expectedGUID {
+				t.Errorf("ExtractNewRelicMetadata(%q) = %q; want %q", tt.input, nrApmGUID, tt.expectedGUID)
 			}
 		})
 	}
@@ -353,9 +356,9 @@ func TestOracleSpecificNormalization(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			result := NormalizeSql(tt.input)
+			result := NormalizeSQL(tt.input)
 			if result != tt.expected {
-				t.Errorf("NormalizeSql(%q) = %q; want %q", tt.input, result, tt.expected)
+				t.Errorf("NormalizeSQL(%q) = %q; want %q", tt.input, result, tt.expected)
 			}
 		})
 	}
@@ -364,11 +367,11 @@ func TestOracleSpecificNormalization(t *testing.T) {
 func TestPrintNormalizedQueries(t *testing.T) {
 	queries := []string{
 		"/* text */SELECT D.DEPARTMENT_NAME FROM DEPARTMENTS",
-		"/* nr_service_guid=\"ABC\" */SELECT * FROM users WHERE id = 5",
+		"/* nrServiceGUID=\"ABC\" */SELECT * FROM users WHERE id = 5",
 	}
-	
+
 	for _, query := range queries {
-		normalized := NormalizeSql(query)
+		normalized := NormalizeSQL(query)
 		t.Logf("Input:      %s", query)
 		t.Logf("Normalized: %s\n", normalized)
 	}

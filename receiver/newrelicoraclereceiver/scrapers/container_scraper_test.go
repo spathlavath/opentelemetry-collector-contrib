@@ -4,7 +4,6 @@
 package scrapers
 
 import (
-	"context"
 	"database/sql"
 	"errors"
 	"testing"
@@ -16,9 +15,9 @@ import (
 	"go.opentelemetry.io/collector/receiver/receivertest"
 	"go.uber.org/zap"
 
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/client"
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/internal/metadata"
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/models"
+	"github.com/newrelic/nrdot-collector-components/receiver/newrelicoraclereceiver/client"
+	"github.com/newrelic/nrdot-collector-components/receiver/newrelicoraclereceiver/internal/metadata"
+	"github.com/newrelic/nrdot-collector-components/receiver/newrelicoraclereceiver/models"
 )
 
 func TestNewContainerScraper_ValidInputs(t *testing.T) {
@@ -103,7 +102,7 @@ func TestContainerScraper_CheckEnvironmentCapability_CDBCapable(t *testing.T) {
 	scraper, err := NewContainerScraper(mockClient, mb, logger, config, nil, nil)
 	require.NoError(t, err)
 
-	ctx := context.Background()
+	ctx := t.Context()
 	err = scraper.checkEnvironmentCapability(ctx)
 
 	assert.NoError(t, err)
@@ -124,7 +123,7 @@ func TestContainerScraper_CheckEnvironmentCapability_NotCapable(t *testing.T) {
 	scraper, err := NewContainerScraper(mockClient, mb, logger, config, nil, nil)
 	require.NoError(t, err)
 
-	ctx := context.Background()
+	ctx := t.Context()
 	err = scraper.checkEnvironmentCapability(ctx)
 
 	assert.NoError(t, err)
@@ -144,7 +143,7 @@ func TestContainerScraper_CheckEnvironmentCapability_Error(t *testing.T) {
 	scraper, err := NewContainerScraper(mockClient, mb, logger, config, nil, nil)
 	require.NoError(t, err)
 
-	ctx := context.Background()
+	ctx := t.Context()
 	err = scraper.checkEnvironmentCapability(ctx)
 
 	assert.Error(t, err)
@@ -165,7 +164,7 @@ func TestContainerScraper_CheckCurrentContext_CDBRoot(t *testing.T) {
 	scraper, err := NewContainerScraper(mockClient, mb, logger, config, nil, nil)
 	require.NoError(t, err)
 
-	ctx := context.Background()
+	ctx := t.Context()
 	err = scraper.checkCurrentContext(ctx)
 
 	assert.NoError(t, err)
@@ -187,7 +186,7 @@ func TestContainerScraper_CheckCurrentContext_PDB(t *testing.T) {
 	scraper, err := NewContainerScraper(mockClient, mb, logger, config, nil, nil)
 	require.NoError(t, err)
 
-	ctx := context.Background()
+	ctx := t.Context()
 	err = scraper.checkCurrentContext(ctx)
 
 	assert.NoError(t, err)
@@ -206,7 +205,7 @@ func TestContainerScraper_CheckCurrentContext_Error(t *testing.T) {
 	scraper, err := NewContainerScraper(mockClient, mb, logger, config, nil, nil)
 	require.NoError(t, err)
 
-	ctx := context.Background()
+	ctx := t.Context()
 	err = scraper.checkCurrentContext(ctx)
 
 	assert.Error(t, err)
@@ -237,7 +236,7 @@ func TestContainerScraper_ScrapeContainerStatus_Success(t *testing.T) {
 	scraper, err := NewContainerScraper(mockClient, mb, logger, config, nil, nil)
 	require.NoError(t, err)
 
-	ctx := context.Background()
+	ctx := t.Context()
 	now := pcommon.NewTimestampFromTime(time.Now())
 	errs := scraper.scrapeContainerStatus(ctx, now)
 
@@ -255,7 +254,7 @@ func TestContainerScraper_ScrapeContainerStatus_Error(t *testing.T) {
 	scraper, err := NewContainerScraper(mockClient, mb, logger, config, nil, nil)
 	require.NoError(t, err)
 
-	ctx := context.Background()
+	ctx := t.Context()
 	now := pcommon.NewTimestampFromTime(time.Now())
 	errs := scraper.scrapeContainerStatus(ctx, now)
 
@@ -283,7 +282,7 @@ func TestContainerScraper_ScrapeContainerStatus_InvalidData(t *testing.T) {
 	scraper, err := NewContainerScraper(mockClient, mb, logger, config, nil, nil)
 	require.NoError(t, err)
 
-	ctx := context.Background()
+	ctx := t.Context()
 	now := pcommon.NewTimestampFromTime(time.Now())
 	errs := scraper.scrapeContainerStatus(ctx, now)
 
@@ -308,7 +307,7 @@ func TestContainerScraper_ScrapePDBStatus_Success(t *testing.T) {
 	scraper, err := NewContainerScraper(mockClient, mb, logger, config, nil, nil)
 	require.NoError(t, err)
 
-	ctx := context.Background()
+	ctx := t.Context()
 	now := pcommon.NewTimestampFromTime(time.Now())
 	errs := scraper.scrapePDBStatus(ctx, now)
 
@@ -326,7 +325,7 @@ func TestContainerScraper_ScrapePDBStatus_Error(t *testing.T) {
 	scraper, err := NewContainerScraper(mockClient, mb, logger, config, nil, nil)
 	require.NoError(t, err)
 
-	ctx := context.Background()
+	ctx := t.Context()
 	now := pcommon.NewTimestampFromTime(time.Now())
 	errs := scraper.scrapePDBStatus(ctx, now)
 
@@ -353,7 +352,7 @@ func TestContainerScraper_ScrapeCDBTablespaceUsage_Success(t *testing.T) {
 	scraper, err := NewContainerScraper(mockClient, mb, logger, config, nil, nil)
 	require.NoError(t, err)
 
-	ctx := context.Background()
+	ctx := t.Context()
 	now := pcommon.NewTimestampFromTime(time.Now())
 	errs := scraper.scrapeCDBTablespaceUsage(ctx, now)
 
@@ -371,7 +370,7 @@ func TestContainerScraper_ScrapeCDBTablespaceUsage_Error(t *testing.T) {
 	scraper, err := NewContainerScraper(mockClient, mb, logger, config, nil, nil)
 	require.NoError(t, err)
 
-	ctx := context.Background()
+	ctx := t.Context()
 	now := pcommon.NewTimestampFromTime(time.Now())
 	errs := scraper.scrapeCDBTablespaceUsage(ctx, now)
 
@@ -401,7 +400,7 @@ func TestContainerScraper_ScrapeCDBDataFiles_Success(t *testing.T) {
 	scraper, err := NewContainerScraper(mockClient, mb, logger, config, nil, nil)
 	require.NoError(t, err)
 
-	ctx := context.Background()
+	ctx := t.Context()
 	now := pcommon.NewTimestampFromTime(time.Now())
 	errs := scraper.scrapeCDBDataFiles(ctx, now)
 
@@ -419,7 +418,7 @@ func TestContainerScraper_ScrapeCDBDataFiles_Error(t *testing.T) {
 	scraper, err := NewContainerScraper(mockClient, mb, logger, config, nil, nil)
 	require.NoError(t, err)
 
-	ctx := context.Background()
+	ctx := t.Context()
 	now := pcommon.NewTimestampFromTime(time.Now())
 	errs := scraper.scrapeCDBDataFiles(ctx, now)
 
@@ -446,7 +445,7 @@ func TestContainerScraper_ScrapeCDBServices_Success(t *testing.T) {
 	scraper, err := NewContainerScraper(mockClient, mb, logger, config, nil, nil)
 	require.NoError(t, err)
 
-	ctx := context.Background()
+	ctx := t.Context()
 	now := pcommon.NewTimestampFromTime(time.Now())
 	errs := scraper.scrapeCDBServices(ctx, now)
 
@@ -464,7 +463,7 @@ func TestContainerScraper_ScrapeCDBServices_Error(t *testing.T) {
 	scraper, err := NewContainerScraper(mockClient, mb, logger, config, nil, nil)
 	require.NoError(t, err)
 
-	ctx := context.Background()
+	ctx := t.Context()
 	now := pcommon.NewTimestampFromTime(time.Now())
 	errs := scraper.scrapeCDBServices(ctx, now)
 
@@ -538,7 +537,7 @@ func TestContainerScraper_IsConnectedToCDBRoot(t *testing.T) {
 		ContainerName: sql.NullString{String: "CDB$ROOT", Valid: true},
 		ContainerID:   sql.NullString{String: "1", Valid: true},
 	}
-	ctx := context.Background()
+	ctx := t.Context()
 	err = scraper.checkCurrentContext(ctx)
 	require.NoError(t, err)
 	assert.True(t, scraper.isConnectedToCDBRoot())
@@ -572,7 +571,7 @@ func TestContainerScraper_IsConnectedToPDB(t *testing.T) {
 		ContainerName: sql.NullString{String: "PDB1", Valid: true},
 		ContainerID:   sql.NullString{String: "3", Valid: true},
 	}
-	ctx := context.Background()
+	ctx := t.Context()
 	err = scraper.checkCurrentContext(ctx)
 	require.NoError(t, err)
 	assert.True(t, scraper.isConnectedToPDB())
@@ -650,7 +649,7 @@ func TestScrapeContainerMetrics(t *testing.T) {
 		scraper, err := NewContainerScraper(mockClient, mb, logger, config, nil, nil)
 		require.NoError(t, err)
 
-		ctx := context.Background()
+		ctx := t.Context()
 		errs := scraper.ScrapeContainerMetrics(ctx)
 
 		assert.Empty(t, errs)
@@ -675,7 +674,7 @@ func TestScrapeContainerMetrics(t *testing.T) {
 		scraper, err := NewContainerScraper(mockClient, mb, logger, config, nil, nil)
 		require.NoError(t, err)
 
-		ctx := context.Background()
+		ctx := t.Context()
 		errs := scraper.ScrapeContainerMetrics(ctx)
 
 		// Should succeed but skip CDB-specific metrics
@@ -699,7 +698,7 @@ func TestScrapeContainerMetrics(t *testing.T) {
 		scraper, err := NewContainerScraper(mockClient, mb, logger, config, nil, nil)
 		require.NoError(t, err)
 
-		ctx := context.Background()
+		ctx := t.Context()
 		errs := scraper.ScrapeContainerMetrics(ctx)
 
 		// Should skip all metrics when CDB not supported
@@ -720,7 +719,7 @@ func TestScrapeContainerMetrics(t *testing.T) {
 		scraper, err := NewContainerScraper(mockClient, mb, logger, config, nil, nil)
 		require.NoError(t, err)
 
-		ctx := context.Background()
+		ctx := t.Context()
 		errs := scraper.ScrapeContainerMetrics(ctx)
 
 		assert.NotEmpty(t, errs)
@@ -740,7 +739,7 @@ func TestScrapeContainerMetrics(t *testing.T) {
 		scraper, err := NewContainerScraper(mockClient, mb, logger, config, nil, nil)
 		require.NoError(t, err)
 
-		ctx := context.Background()
+		ctx := t.Context()
 		// First check environment capability successfully
 		err = scraper.checkEnvironmentCapability(ctx)
 		require.NoError(t, err)
@@ -771,7 +770,7 @@ func TestScrapeContainerMetrics(t *testing.T) {
 		scraper, err := NewContainerScraper(mockClient, mb, logger, config, nil, nil)
 		require.NoError(t, err)
 
-		ctx := context.Background()
+		ctx := t.Context()
 		// First, complete environment and context checks successfully
 		err = scraper.checkEnvironmentCapability(ctx)
 		require.NoError(t, err)
@@ -803,7 +802,7 @@ func TestScrapeContainerStatus_EdgeCases(t *testing.T) {
 		scraper, err := NewContainerScraper(mockClient, mb, logger, config, nil, nil)
 		require.NoError(t, err)
 
-		ctx := context.Background()
+		ctx := t.Context()
 		now := pcommon.NewTimestampFromTime(time.Now())
 		errs := scraper.scrapeContainerStatus(ctx, now)
 
@@ -830,7 +829,7 @@ func TestScrapeContainerStatus_EdgeCases(t *testing.T) {
 		scraper, err := NewContainerScraper(mockClient, mb, logger, config, nil, nil)
 		require.NoError(t, err)
 
-		ctx := context.Background()
+		ctx := t.Context()
 		now := pcommon.NewTimestampFromTime(time.Now())
 		errs := scraper.scrapeContainerStatus(ctx, now)
 
@@ -862,7 +861,7 @@ func TestScrapeContainerStatus_EdgeCases(t *testing.T) {
 		scraper, err := NewContainerScraper(mockClient, mb, logger, config, nil, nil)
 		require.NoError(t, err)
 
-		ctx := context.Background()
+		ctx := t.Context()
 		now := pcommon.NewTimestampFromTime(time.Now())
 		errs := scraper.scrapeContainerStatus(ctx, now)
 
@@ -897,7 +896,7 @@ func TestScrapePDBStatus_EdgeCases(t *testing.T) {
 		scraper, err := NewContainerScraper(mockClient, mb, logger, config, nil, nil)
 		require.NoError(t, err)
 
-		ctx := context.Background()
+		ctx := t.Context()
 		now := pcommon.NewTimestampFromTime(time.Now())
 		errs := scraper.scrapePDBStatus(ctx, now)
 
@@ -924,7 +923,7 @@ func TestScrapePDBStatus_EdgeCases(t *testing.T) {
 		scraper, err := NewContainerScraper(mockClient, mb, logger, config, nil, nil)
 		require.NoError(t, err)
 
-		ctx := context.Background()
+		ctx := t.Context()
 		now := pcommon.NewTimestampFromTime(time.Now())
 		errs := scraper.scrapePDBStatus(ctx, now)
 
@@ -961,7 +960,7 @@ func TestScrapeCDBTablespaceUsage_EdgeCases(t *testing.T) {
 		scraper, err := NewContainerScraper(mockClient, mb, logger, config, nil, nil)
 		require.NoError(t, err)
 
-		ctx := context.Background()
+		ctx := t.Context()
 		now := pcommon.NewTimestampFromTime(time.Now())
 		errs := scraper.scrapeCDBTablespaceUsage(ctx, now)
 
@@ -996,7 +995,7 @@ func TestScrapeCDBTablespaceUsage_EdgeCases(t *testing.T) {
 		scraper, err := NewContainerScraper(mockClient, mb, logger, config, includeTablespaces, nil)
 		require.NoError(t, err)
 
-		ctx := context.Background()
+		ctx := t.Context()
 		now := pcommon.NewTimestampFromTime(time.Now())
 		errs := scraper.scrapeCDBTablespaceUsage(ctx, now)
 
@@ -1031,7 +1030,7 @@ func TestScrapeCDBTablespaceUsage_EdgeCases(t *testing.T) {
 		scraper, err := NewContainerScraper(mockClient, mb, logger, config, nil, excludeTablespaces)
 		require.NoError(t, err)
 
-		ctx := context.Background()
+		ctx := t.Context()
 		now := pcommon.NewTimestampFromTime(time.Now())
 		errs := scraper.scrapeCDBTablespaceUsage(ctx, now)
 
@@ -1057,7 +1056,7 @@ func TestScrapeCDBTablespaceUsage_EdgeCases(t *testing.T) {
 		scraper, err := NewContainerScraper(mockClient, mb, logger, config, nil, nil)
 		require.NoError(t, err)
 
-		ctx := context.Background()
+		ctx := t.Context()
 		now := pcommon.NewTimestampFromTime(time.Now())
 		errs := scraper.scrapeCDBTablespaceUsage(ctx, now)
 
@@ -1092,7 +1091,7 @@ func TestScrapeCDBDataFiles_EdgeCases(t *testing.T) {
 		scraper, err := NewContainerScraper(mockClient, mb, logger, config, nil, nil)
 		require.NoError(t, err)
 
-		ctx := context.Background()
+		ctx := t.Context()
 		now := pcommon.NewTimestampFromTime(time.Now())
 		errs := scraper.scrapeCDBDataFiles(ctx, now)
 
@@ -1119,7 +1118,7 @@ func TestScrapeCDBDataFiles_EdgeCases(t *testing.T) {
 		scraper, err := NewContainerScraper(mockClient, mb, logger, config, nil, nil)
 		require.NoError(t, err)
 
-		ctx := context.Background()
+		ctx := t.Context()
 		now := pcommon.NewTimestampFromTime(time.Now())
 		errs := scraper.scrapeCDBDataFiles(ctx, now)
 
@@ -1156,7 +1155,7 @@ func TestScrapeCDBServices_EdgeCases(t *testing.T) {
 		scraper, err := NewContainerScraper(mockClient, mb, logger, config, nil, nil)
 		require.NoError(t, err)
 
-		ctx := context.Background()
+		ctx := t.Context()
 		now := pcommon.NewTimestampFromTime(time.Now())
 		errs := scraper.scrapeCDBServices(ctx, now)
 
@@ -1184,7 +1183,7 @@ func TestScrapeCDBServices_EdgeCases(t *testing.T) {
 		scraper, err := NewContainerScraper(mockClient, mb, logger, config, nil, nil)
 		require.NoError(t, err)
 
-		ctx := context.Background()
+		ctx := t.Context()
 		now := pcommon.NewTimestampFromTime(time.Now())
 		errs := scraper.scrapeCDBServices(ctx, now)
 
@@ -1207,7 +1206,7 @@ func TestCheckEnvironmentCapability_EdgeCases(t *testing.T) {
 		scraper, err := NewContainerScraper(mockClient, mb, logger, config, nil, nil)
 		require.NoError(t, err)
 
-		ctx := context.Background()
+		ctx := t.Context()
 
 		// First call
 		err = scraper.checkEnvironmentCapability(ctx)
@@ -1234,7 +1233,7 @@ func TestCheckEnvironmentCapability_EdgeCases(t *testing.T) {
 		scraper, err := NewContainerScraper(mockClient, mb, logger, config, nil, nil)
 		require.NoError(t, err)
 
-		ctx := context.Background()
+		ctx := t.Context()
 		err = scraper.checkEnvironmentCapability(ctx)
 
 		assert.Error(t, err)
@@ -1254,7 +1253,7 @@ func TestCheckEnvironmentCapability_EdgeCases(t *testing.T) {
 		scraper, err := NewContainerScraper(mockClient, mb, logger, config, nil, nil)
 		require.NoError(t, err)
 
-		ctx := context.Background()
+		ctx := t.Context()
 		err = scraper.checkEnvironmentCapability(ctx)
 
 		assert.Error(t, err)
@@ -1279,7 +1278,7 @@ func TestCheckCurrentContext_EdgeCases(t *testing.T) {
 		scraper, err := NewContainerScraper(mockClient, mb, logger, config, nil, nil)
 		require.NoError(t, err)
 
-		ctx := context.Background()
+		ctx := t.Context()
 
 		// First call
 		err = scraper.checkCurrentContext(ctx)
@@ -1309,11 +1308,11 @@ func TestCheckCurrentContext_EdgeCases(t *testing.T) {
 		scraper, err := NewContainerScraper(mockClient, mb, logger, config, nil, nil)
 		require.NoError(t, err)
 
-		ctx := context.Background()
+		ctx := t.Context()
 		err = scraper.checkCurrentContext(ctx)
 
 		assert.NoError(t, err) // Should handle gracefully
-		assert.Equal(t, "", scraper.currentContainer)
+		assert.Empty(t, scraper.currentContainer)
 	})
 
 	t.Run("InvalidContainerID", func(t *testing.T) {
@@ -1331,10 +1330,10 @@ func TestCheckCurrentContext_EdgeCases(t *testing.T) {
 		scraper, err := NewContainerScraper(mockClient, mb, logger, config, nil, nil)
 		require.NoError(t, err)
 
-		ctx := context.Background()
+		ctx := t.Context()
 		err = scraper.checkCurrentContext(ctx)
 
 		assert.NoError(t, err) // Should handle gracefully
-		assert.Equal(t, "", scraper.currentContainerID)
+		assert.Empty(t, scraper.currentContainerID)
 	})
 }

@@ -12,9 +12,9 @@ import (
 	"go.opentelemetry.io/collector/receiver/receivertest"
 	"go.uber.org/zap"
 
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/client"
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/internal/metadata"
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/models"
+	"github.com/newrelic/nrdot-collector-components/receiver/newrelicoraclereceiver/client"
+	"github.com/newrelic/nrdot-collector-components/receiver/newrelicoraclereceiver/internal/metadata"
+	"github.com/newrelic/nrdot-collector-components/receiver/newrelicoraclereceiver/models"
 )
 
 func TestNewSystemScraper(t *testing.T) {
@@ -210,7 +210,7 @@ func TestScrapeSystemMetrics_Success(t *testing.T) {
 	logger := zap.NewNop()
 	scraper := NewSystemScraper(mockClient, mb, logger, metadata.DefaultMetricsBuilderConfig())
 
-	ctx := context.Background()
+	ctx := t.Context()
 	errs := scraper.ScrapeSystemMetrics(ctx)
 
 	assert.Nil(t, errs)
@@ -225,7 +225,7 @@ func TestScrapeSystemMetrics_QueryError(t *testing.T) {
 	logger := zap.NewNop()
 	scraper := NewSystemScraper(mockClient, mb, logger, metadata.DefaultMetricsBuilderConfig())
 
-	ctx := context.Background()
+	ctx := t.Context()
 	errs := scraper.ScrapeSystemMetrics(ctx)
 
 	assert.NotNil(t, errs)
@@ -242,7 +242,7 @@ func TestScrapeSystemMetrics_EmptyResults(t *testing.T) {
 	logger := zap.NewNop()
 	scraper := NewSystemScraper(mockClient, mb, logger, metadata.DefaultMetricsBuilderConfig())
 
-	ctx := context.Background()
+	ctx := t.Context()
 	errs := scraper.ScrapeSystemMetrics(ctx)
 
 	assert.Nil(t, errs)
@@ -261,7 +261,7 @@ func TestScrapeSystemMetrics_MultipleInstances(t *testing.T) {
 	logger := zap.NewNop()
 	scraper := NewSystemScraper(mockClient, mb, logger, metadata.DefaultMetricsBuilderConfig())
 
-	ctx := context.Background()
+	ctx := t.Context()
 	errs := scraper.ScrapeSystemMetrics(ctx)
 
 	assert.Nil(t, errs)
@@ -283,7 +283,7 @@ func TestScrapeSystemMetrics_MixedMetrics(t *testing.T) {
 	logger := zap.NewNop()
 	scraper := NewSystemScraper(mockClient, mb, logger, metadata.DefaultMetricsBuilderConfig())
 
-	ctx := context.Background()
+	ctx := t.Context()
 	errs := scraper.ScrapeSystemMetrics(ctx)
 
 	assert.Nil(t, errs)
@@ -302,7 +302,7 @@ func TestScrapeSystemMetrics_UnknownMetrics(t *testing.T) {
 	logger := zap.NewNop()
 	scraper := NewSystemScraper(mockClient, mb, logger, metadata.DefaultMetricsBuilderConfig())
 
-	ctx := context.Background()
+	ctx := t.Context()
 	errs := scraper.ScrapeSystemMetrics(ctx)
 
 	assert.Nil(t, errs)
@@ -320,7 +320,7 @@ func TestScrapeSystemMetrics_ZeroValues(t *testing.T) {
 	logger := zap.NewNop()
 	scraper := NewSystemScraper(mockClient, mb, logger, metadata.DefaultMetricsBuilderConfig())
 
-	ctx := context.Background()
+	ctx := t.Context()
 	errs := scraper.ScrapeSystemMetrics(ctx)
 
 	assert.Nil(t, errs)
@@ -338,7 +338,7 @@ func TestScrapeSystemMetrics_LargeValues(t *testing.T) {
 	logger := zap.NewNop()
 	scraper := NewSystemScraper(mockClient, mb, logger, metadata.DefaultMetricsBuilderConfig())
 
-	ctx := context.Background()
+	ctx := t.Context()
 	errs := scraper.ScrapeSystemMetrics(ctx)
 
 	assert.Nil(t, errs)
@@ -353,7 +353,7 @@ func TestScrapeSystemMetrics_ContextCanceled(t *testing.T) {
 	logger := zap.NewNop()
 	scraper := NewSystemScraper(mockClient, mb, logger, metadata.DefaultMetricsBuilderConfig())
 
-	ctx := context.Background()
+	ctx := t.Context()
 	errs := scraper.ScrapeSystemMetrics(ctx)
 
 	assert.NotNil(t, errs)
@@ -371,7 +371,7 @@ func TestScrapeSystemMetrics_MultipleSuccessfulCalls(t *testing.T) {
 	logger := zap.NewNop()
 	scraper := NewSystemScraper(mockClient, mb, logger, metadata.DefaultMetricsBuilderConfig())
 
-	ctx := context.Background()
+	ctx := t.Context()
 
 	// First call
 	errs1 := scraper.ScrapeSystemMetrics(ctx)
@@ -394,7 +394,7 @@ func TestScrapeSystemMetrics_ErrorThenSuccess(t *testing.T) {
 	logger := zap.NewNop()
 	scraper := NewSystemScraper(mockClient, mb, logger, metadata.DefaultMetricsBuilderConfig())
 
-	ctx := context.Background()
+	ctx := t.Context()
 
 	// First call fails
 	errs1 := scraper.ScrapeSystemMetrics(ctx)

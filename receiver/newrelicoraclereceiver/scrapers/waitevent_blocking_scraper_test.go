@@ -4,7 +4,6 @@
 package scrapers
 
 import (
-	"context"
 	"database/sql"
 	"errors"
 	"testing"
@@ -15,9 +14,9 @@ import (
 	"go.opentelemetry.io/collector/receiver/receivertest"
 	"go.uber.org/zap"
 
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/client"
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/internal/metadata"
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/models"
+	"github.com/newrelic/nrdot-collector-components/receiver/newrelicoraclereceiver/client"
+	"github.com/newrelic/nrdot-collector-components/receiver/newrelicoraclereceiver/internal/metadata"
+	"github.com/newrelic/nrdot-collector-components/receiver/newrelicoraclereceiver/models"
 )
 
 func TestNewWaitEventBlockingScraper_Success(t *testing.T) {
@@ -97,7 +96,7 @@ func TestFetchWaitEvents_Success(t *testing.T) {
 
 	scraper, _ := NewWaitEventBlockingScraper(mockClient, mb, logger, config, 10)
 
-	ctx := context.Background()
+	ctx := t.Context()
 	slowQuerySQLIDs := []string{"sql1", "sql2"}
 
 	waitEvents, err := scraper.fetchWaitEvents(ctx, slowQuerySQLIDs)
@@ -118,7 +117,7 @@ func TestFetchWaitEvents_QueryError(t *testing.T) {
 
 	scraper, _ := NewWaitEventBlockingScraper(mockClient, mb, logger, config, 10)
 
-	ctx := context.Background()
+	ctx := t.Context()
 	slowQuerySQLIDs := []string{"sql1"}
 
 	waitEvents, err := scraper.fetchWaitEvents(ctx, slowQuerySQLIDs)
@@ -158,7 +157,7 @@ func TestScrapeWaitEventsAndBlocking_Success(t *testing.T) {
 
 	scraper, _ := NewWaitEventBlockingScraper(mockClient, mb, logger, config, 10)
 
-	ctx := context.Background()
+	ctx := t.Context()
 	slowQueryIdentifiers := []models.SQLIdentifier{{SQLID: "sql1", ChildNumber: 0, Timestamp: time.Now()}}
 
 	sqlIdentifiers, errs := scraper.ScrapeWaitEventsAndBlocking(ctx, slowQueryIdentifiers)
@@ -178,7 +177,7 @@ func TestScrapeWaitEventsAndBlocking_FetchError(t *testing.T) {
 
 	scraper, _ := NewWaitEventBlockingScraper(mockClient, mb, logger, config, 10)
 
-	ctx := context.Background()
+	ctx := t.Context()
 	slowQueryIdentifiers := []models.SQLIdentifier{{SQLID: "sql1", ChildNumber: 0, Timestamp: time.Now()}}
 
 	sqlIdentifiers, errs := scraper.ScrapeWaitEventsAndBlocking(ctx, slowQueryIdentifiers)
@@ -199,7 +198,7 @@ func TestScrapeWaitEventsAndBlocking_EmptyResults(t *testing.T) {
 
 	scraper, _ := NewWaitEventBlockingScraper(mockClient, mb, logger, config, 10)
 
-	ctx := context.Background()
+	ctx := t.Context()
 	slowQueryIdentifiers := []models.SQLIdentifier{}
 
 	sqlIdentifiers, errs := scraper.ScrapeWaitEventsAndBlocking(ctx, slowQueryIdentifiers)
@@ -208,7 +207,7 @@ func TestScrapeWaitEventsAndBlocking_EmptyResults(t *testing.T) {
 	assert.Empty(t, sqlIdentifiers)
 }
 
-func TestRecordWaitEventMetrics_ValidEvent(t *testing.T) {
+func TestRecordWaitEventMetrics_ValidEvent(_ *testing.T) {
 	mockClient := &client.MockClient{}
 	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), settings)
@@ -237,7 +236,7 @@ func TestRecordWaitEventMetrics_ValidEvent(t *testing.T) {
 	scraper.recordWaitEventMetrics(pcommon.NewTimestampFromTime(now), event, make(map[string]models.SQLIdentifier))
 }
 
-func TestRecordWaitEventMetrics_InvalidEvent(t *testing.T) {
+func TestRecordWaitEventMetrics_InvalidEvent(_ *testing.T) {
 	mockClient := &client.MockClient{}
 	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), settings)
@@ -538,7 +537,7 @@ func TestExtractSQLIdentifiers_ZeroTimestamp(t *testing.T) {
 	assert.False(t, identifiers[0].Timestamp.IsZero())
 }
 
-func TestRecordBlockingMetrics_ValidBlockedEvent(t *testing.T) {
+func TestRecordBlockingMetrics_ValidBlockedEvent(_ *testing.T) {
 	mockClient := &client.MockClient{}
 	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), settings)
@@ -571,7 +570,7 @@ func TestRecordBlockingMetrics_ValidBlockedEvent(t *testing.T) {
 	scraper.recordBlockingMetrics(pcommon.NewTimestampFromTime(now), event, make(map[string]models.SQLIdentifier))
 }
 
-func TestRecordBlockingMetrics_ZeroWaitTime(t *testing.T) {
+func TestRecordBlockingMetrics_ZeroWaitTime(_ *testing.T) {
 	mockClient := &client.MockClient{}
 	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), settings)
@@ -593,7 +592,7 @@ func TestRecordBlockingMetrics_ZeroWaitTime(t *testing.T) {
 	scraper.recordBlockingMetrics(pcommon.NewTimestampFromTime(now), event, make(map[string]models.SQLIdentifier))
 }
 
-func TestRecordBlockingMetrics_NegativeWaitTime(t *testing.T) {
+func TestRecordBlockingMetrics_NegativeWaitTime(_ *testing.T) {
 	mockClient := &client.MockClient{}
 	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), settings)

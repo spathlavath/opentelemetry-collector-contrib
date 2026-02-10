@@ -4,7 +4,6 @@
 package newrelicoraclereceiver
 
 import (
-	"context"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -12,7 +11,7 @@ import (
 	"go.opentelemetry.io/collector/consumer/consumertest"
 	"go.opentelemetry.io/collector/receiver/receivertest"
 
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/internal/metadata"
+	"github.com/newrelic/nrdot-collector-components/receiver/newrelicoraclereceiver/internal/metadata"
 )
 
 func TestCreateDefaultConfig(t *testing.T) {
@@ -38,7 +37,7 @@ func TestCreateReceiver(t *testing.T) {
 	set := receivertest.NewNopSettings(metadata.Type)
 	consumer := consumertest.NewNop()
 
-	receiver, err := factory.CreateMetrics(context.Background(), set, cfg, consumer)
+	receiver, err := factory.CreateMetrics(t.Context(), set, cfg, consumer)
 	assert.NoError(t, err, "failed to create receiver")
 	assert.NotNil(t, receiver, "receiver creation returned nil")
 }
@@ -56,7 +55,7 @@ func TestCreateReceiverWithConnectionPool(t *testing.T) {
 	set := receivertest.NewNopSettings(metadata.Type)
 	consumer := consumertest.NewNop()
 
-	receiver, err := factory.CreateMetrics(context.Background(), set, cfg, consumer)
+	receiver, err := factory.CreateMetrics(t.Context(), set, cfg, consumer)
 	assert.NoError(t, err, "failed to create receiver with connection pool settings")
 	assert.NotNil(t, receiver, "receiver creation returned nil")
 }
@@ -74,7 +73,7 @@ func TestCreateReceiverWithDisabledConnectionPool(t *testing.T) {
 	set := receivertest.NewNopSettings(metadata.Type)
 	consumer := consumertest.NewNop()
 
-	receiver, err := factory.CreateMetrics(context.Background(), set, cfg, consumer)
+	receiver, err := factory.CreateMetrics(t.Context(), set, cfg, consumer)
 	assert.NoError(t, err, "failed to create receiver with disabled connection pool")
 	assert.NotNil(t, receiver, "receiver creation returned nil")
 }
@@ -87,7 +86,7 @@ func TestCreateReceiverWithInvalidConfig(t *testing.T) {
 	set := receivertest.NewNopSettings(metadata.Type)
 	consumer := consumertest.NewNop()
 
-	receiver, err := factory.CreateMetrics(context.Background(), set, cfg, consumer)
+	receiver, err := factory.CreateMetrics(t.Context(), set, cfg, consumer)
 	assert.Error(t, err, "expected error for invalid config")
 	assert.Nil(t, receiver, "receiver should be nil for invalid config")
 }

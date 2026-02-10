@@ -4,7 +4,6 @@
 package scrapers
 
 import (
-	"context"
 	"errors"
 	"testing"
 	"time"
@@ -15,9 +14,9 @@ import (
 	"go.opentelemetry.io/collector/receiver/receivertest"
 	"go.uber.org/zap"
 
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/client"
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/internal/metadata"
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/models"
+	"github.com/newrelic/nrdot-collector-components/receiver/newrelicoraclereceiver/client"
+	"github.com/newrelic/nrdot-collector-components/receiver/newrelicoraclereceiver/internal/metadata"
+	"github.com/newrelic/nrdot-collector-components/receiver/newrelicoraclereceiver/models"
 )
 
 // Test constructor validation
@@ -97,7 +96,7 @@ func TestScrapeReadWriteMetrics_AllMetricsDisabled(t *testing.T) {
 	scraper, err := NewCoreScraper(mockClient, mb, zap.NewNop(), config)
 	require.NoError(t, err)
 
-	ctx := context.Background()
+	ctx := t.Context()
 	now := pcommon.NewTimestampFromTime(time.Now())
 
 	errors := scraper.scrapeReadWriteMetrics(ctx, now)
@@ -142,7 +141,7 @@ func TestScrapeReadWriteMetrics_Success_AllMetricsEnabled(t *testing.T) {
 	scraper, err := NewCoreScraper(mockClient, mb, zap.NewNop(), config)
 	require.NoError(t, err)
 
-	ctx := context.Background()
+	ctx := t.Context()
 	now := pcommon.NewTimestampFromTime(time.Now())
 
 	errors := scraper.scrapeReadWriteMetrics(ctx, now)
@@ -178,7 +177,7 @@ func TestScrapeReadWriteMetrics_Success_PartialMetricsEnabled(t *testing.T) {
 	scraper, err := NewCoreScraper(mockClient, mb, zap.NewNop(), config)
 	require.NoError(t, err)
 
-	ctx := context.Background()
+	ctx := t.Context()
 	now := pcommon.NewTimestampFromTime(time.Now())
 
 	errors := scraper.scrapeReadWriteMetrics(ctx, now)
@@ -199,7 +198,7 @@ func TestScrapeReadWriteMetrics_QueryError(t *testing.T) {
 	scraper, err := NewCoreScraper(mockClient, mb, zap.NewNop(), config)
 	require.NoError(t, err)
 
-	ctx := context.Background()
+	ctx := t.Context()
 	now := pcommon.NewTimestampFromTime(time.Now())
 
 	errors := scraper.scrapeReadWriteMetrics(ctx, now)
@@ -223,7 +222,7 @@ func TestScrapeReadWriteMetrics_EmptyResultSet(t *testing.T) {
 	scraper, err := NewCoreScraper(mockClient, mb, zap.NewNop(), config)
 	require.NoError(t, err)
 
-	ctx := context.Background()
+	ctx := t.Context()
 	now := pcommon.NewTimestampFromTime(time.Now())
 
 	errors := scraper.scrapeReadWriteMetrics(ctx, now)
@@ -254,7 +253,7 @@ func TestScrapeReadWriteMetrics_StringInstanceID(t *testing.T) {
 	scraper, err := NewCoreScraper(mockClient, mb, zap.NewNop(), config)
 	require.NoError(t, err)
 
-	ctx := context.Background()
+	ctx := t.Context()
 	now := pcommon.NewTimestampFromTime(time.Now())
 
 	errors := scraper.scrapeReadWriteMetrics(ctx, now)
@@ -285,7 +284,7 @@ func TestScrapeReadWriteMetrics_NilInstanceID(t *testing.T) {
 	scraper, err := NewCoreScraper(mockClient, mb, zap.NewNop(), config)
 	require.NoError(t, err)
 
-	ctx := context.Background()
+	ctx := t.Context()
 	now := pcommon.NewTimestampFromTime(time.Now())
 
 	errors := scraper.scrapeReadWriteMetrics(ctx, now)
@@ -321,7 +320,7 @@ func TestScrapeReadWriteMetrics_ZeroValues(t *testing.T) {
 	scraper, err := NewCoreScraper(mockClient, mb, zap.NewNop(), config)
 	require.NoError(t, err)
 
-	ctx := context.Background()
+	ctx := t.Context()
 	now := pcommon.NewTimestampFromTime(time.Now())
 
 	errors := scraper.scrapeReadWriteMetrics(ctx, now)
@@ -357,7 +356,7 @@ func TestScrapeReadWriteMetrics_LargeValues(t *testing.T) {
 	scraper, err := NewCoreScraper(mockClient, mb, zap.NewNop(), config)
 	require.NoError(t, err)
 
-	ctx := context.Background()
+	ctx := t.Context()
 	now := pcommon.NewTimestampFromTime(time.Now())
 
 	errors := scraper.scrapeReadWriteMetrics(ctx, now)
@@ -411,7 +410,7 @@ func TestScrapeReadWriteMetrics_MultipleInstances(t *testing.T) {
 	scraper, err := NewCoreScraper(mockClient, mb, zap.NewNop(), config)
 	require.NoError(t, err)
 
-	ctx := context.Background()
+	ctx := t.Context()
 	now := pcommon.NewTimestampFromTime(time.Now())
 
 	errors := scraper.scrapeReadWriteMetrics(ctx, now)

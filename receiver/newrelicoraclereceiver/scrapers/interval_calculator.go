@@ -1,40 +1,6 @@
 // Copyright New Relic, Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-
-// Package scrapers provides simplified interval-based delta calculator for Oracle slow query detection
-//
-// Problem Statement:
-// Cumulative averages from Oracle V$SQLAREA (total_elapsed_time / executions)
-// change very slowly when queries are optimized or degrade, causing:
-// - False positives (slow queries still flagged after optimization)
-// - Delayed detection of new performance issues
-// - Inefficient resource usage
-//
-// Solution:
-// Interval-based delta calculations that show what happened in the LAST polling interval,
-// not cumulative since plan cache. This provides immediate visibility into changes.
-//
-// Algorithm:
-// 1. First Scrape: Use historical (cumulative) average, filter by threshold
-// 2. Subsequent Scrapes: Calculate delta between current and previous values
-//   - interval_avg_elapsed = (current_total_elapsed - prev_total_elapsed) / (current_exec_count - prev_exec_count)
-//   - interval_avg_cpu = (current_total_cpu - prev_total_cpu) / (current_exec_count - prev_exec_count)
-//   - interval_avg_disk_reads = (current_total_disk_reads - prev_total_disk_reads) / (current_exec_count - prev_exec_count)
-//   - interval_avg_buffer_gets = (current_total_buffer_gets - prev_total_buffer_gets) / (current_exec_count - prev_exec_count)
-//   - interval_avg_rows_processed = (current_total_rows_processed - prev_total_rows_processed) / (current_exec_count - prev_exec_count)
-//
-// 3. Emit both interval average AND historical average for all metrics
-// 4. Only emit metrics if interval average > threshold (memory efficient)
-// 5. Eviction: Only TTL-based (inactive queries), NOT threshold-based
-//   - This preserves delta calculation ability when queries oscillate
-//
-// Example (threshold = 1000ms):
-// Scrape 1: 100 execs, 500ms total → cumulative avg = 5ms → not slow
-// Scrape 2: 120 execs, 700ms total → interval avg = (700-500)/(120-100) = 10ms → not slow
-// Scrape 5: 180 execs, 21,100ms total → interval avg = 20,000/20 = 1,000ms → SLOW! (immediate detection)
-// Scrape 7: 220 execs, 43,100ms total → interval avg = 2,000/20 = 100ms → at threshold
-// Scrape 9: 241 execs, 45,600ms total → interval avg = 500/1 = 500ms → SLOW! (outlier detected)
-package scrapers
+package scrapers // import "github.com/newrelic/nrdot-collector-components/receiver/newrelicoraclereceiver/scrapers"
 
 import (
 	"sync"
@@ -42,12 +8,11 @@ import (
 
 	"go.uber.org/zap"
 
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/models"
+	"github.com/newrelic/nrdot-collector-components/receiver/newrelicoraclereceiver/models"
 )
 
 // OracleQueryState tracks previous scrape data for delta calculation
 type OracleQueryState struct {
-	// Previous cumulative values from Oracle V$SQLAREA
 	PrevExecutionCount     int64
 	PrevTotalElapsedTimeMs float64 // milliseconds
 	PrevTotalCPUTimeMs     float64 // milliseconds
@@ -490,11 +455,11 @@ func (oic *OracleIntervalCalculator) CleanupStaleEntries(now time.Time) {
 }
 
 // GetCacheStats returns cache statistics
-func (oic *OracleIntervalCalculator) GetCacheStats() map[string]interface{} {
+func (oic *OracleIntervalCalculator) GetCacheStats() map[string]any {
 	oic.stateCacheMutex.RLock()
 	defer oic.stateCacheMutex.RUnlock()
 
-	return map[string]interface{}{
+	return map[string]any{
 		"total_queries_tracked": len(oic.stateCache),
 		"cache_ttl_minutes":     oic.cacheTTL.Minutes(),
 	}

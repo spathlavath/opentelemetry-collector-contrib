@@ -4,7 +4,6 @@
 package scrapers
 
 import (
-	"context"
 	"errors"
 	"testing"
 
@@ -13,9 +12,9 @@ import (
 	"go.opentelemetry.io/collector/receiver/receivertest"
 	"go.uber.org/zap"
 
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/client"
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/internal/metadata"
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/models"
+	"github.com/newrelic/nrdot-collector-components/receiver/newrelicoraclereceiver/client"
+	"github.com/newrelic/nrdot-collector-components/receiver/newrelicoraclereceiver/internal/metadata"
+	"github.com/newrelic/nrdot-collector-components/receiver/newrelicoraclereceiver/models"
 )
 
 func TestNewPdbScraper(t *testing.T) {
@@ -96,7 +95,7 @@ func TestContainsORACode_NilError(t *testing.T) {
 	assert.False(t, containsORACode(nil, "ORA-00942"))
 }
 
-func TestRecordMetric_SessionMetrics(t *testing.T) {
+func TestRecordMetric_SessionMetrics(_ *testing.T) {
 	mockClient := &client.MockClient{}
 	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), settings)
@@ -115,7 +114,7 @@ func TestRecordMetric_SessionMetrics(t *testing.T) {
 	}
 }
 
-func TestRecordMetric_CPUMetrics(t *testing.T) {
+func TestRecordMetric_CPUMetrics(_ *testing.T) {
 	mockClient := &client.MockClient{}
 	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), settings)
@@ -134,7 +133,7 @@ func TestRecordMetric_CPUMetrics(t *testing.T) {
 	}
 }
 
-func TestRecordMetric_IOMetrics(t *testing.T) {
+func TestRecordMetric_IOMetrics(_ *testing.T) {
 	mockClient := &client.MockClient{}
 	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), settings)
@@ -153,7 +152,7 @@ func TestRecordMetric_IOMetrics(t *testing.T) {
 	}
 }
 
-func TestRecordMetric_ParseMetrics(t *testing.T) {
+func TestRecordMetric_ParseMetrics(_ *testing.T) {
 	mockClient := &client.MockClient{}
 	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), settings)
@@ -171,7 +170,7 @@ func TestRecordMetric_ParseMetrics(t *testing.T) {
 	}
 }
 
-func TestRecordMetric_TransactionMetrics(t *testing.T) {
+func TestRecordMetric_TransactionMetrics(_ *testing.T) {
 	mockClient := &client.MockClient{}
 	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), settings)
@@ -189,7 +188,7 @@ func TestRecordMetric_TransactionMetrics(t *testing.T) {
 	}
 }
 
-func TestRecordMetric_UnknownMetric(t *testing.T) {
+func TestRecordMetric_UnknownMetric(_ *testing.T) {
 	mockClient := &client.MockClient{}
 	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), settings)
@@ -237,7 +236,7 @@ func TestScrapePdbMetrics_CDBNotSupported(t *testing.T) {
 	logger := zap.NewNop()
 	scraper := NewPdbScraper(mockClient, mb, logger, metadata.DefaultMetricsBuilderConfig())
 
-	ctx := context.Background()
+	ctx := t.Context()
 	errs := scraper.ScrapePdbMetrics(ctx)
 
 	assert.Nil(t, errs)
@@ -258,7 +257,7 @@ func TestScrapePdbMetrics_CDBSupported_Success(t *testing.T) {
 	logger := zap.NewNop()
 	scraper := NewPdbScraper(mockClient, mb, logger, metadata.DefaultMetricsBuilderConfig())
 
-	ctx := context.Background()
+	ctx := t.Context()
 	errs := scraper.ScrapePdbMetrics(ctx)
 
 	assert.Nil(t, errs)
@@ -274,7 +273,7 @@ func TestScrapePdbMetrics_CDBCapabilityCheckError(t *testing.T) {
 	logger := zap.NewNop()
 	scraper := NewPdbScraper(mockClient, mb, logger, metadata.DefaultMetricsBuilderConfig())
 
-	ctx := context.Background()
+	ctx := t.Context()
 	errs := scraper.ScrapePdbMetrics(ctx)
 
 	assert.NotNil(t, errs)
@@ -292,7 +291,7 @@ func TestScrapePdbMetrics_QueryMetricsError(t *testing.T) {
 	scraper := NewPdbScraper(mockClient, mb, logger, metadata.DefaultMetricsBuilderConfig())
 
 	// First call succeeds for CDB capability check
-	ctx := context.Background()
+	ctx := t.Context()
 	_ = scraper.ScrapePdbMetrics(ctx)
 
 	// Set error for metrics query
@@ -324,7 +323,7 @@ func TestScrapePdbMetrics_MultipleMetrics(t *testing.T) {
 	logger := zap.NewNop()
 	scraper := NewPdbScraper(mockClient, mb, logger, metadata.DefaultMetricsBuilderConfig())
 
-	ctx := context.Background()
+	ctx := t.Context()
 	errs := scraper.ScrapePdbMetrics(ctx)
 
 	assert.Nil(t, errs)
@@ -341,7 +340,7 @@ func TestScrapePdbMetrics_EmptyMetricsList(t *testing.T) {
 	logger := zap.NewNop()
 	scraper := NewPdbScraper(mockClient, mb, logger, metadata.DefaultMetricsBuilderConfig())
 
-	ctx := context.Background()
+	ctx := t.Context()
 	errs := scraper.ScrapePdbMetrics(ctx)
 
 	assert.Nil(t, errs)
@@ -362,7 +361,7 @@ func TestScrapePDBSysMetrics_Success(t *testing.T) {
 	logger := zap.NewNop()
 	scraper := NewPdbScraper(mockClient, mb, logger, metadata.DefaultMetricsBuilderConfig())
 
-	ctx := context.Background()
+	ctx := t.Context()
 	now := pcommon.Timestamp(0)
 	errs := scraper.scrapePDBSysMetrics(ctx, now)
 
@@ -378,7 +377,7 @@ func TestScrapePDBSysMetrics_QueryError(t *testing.T) {
 	logger := zap.NewNop()
 	scraper := NewPdbScraper(mockClient, mb, logger, metadata.DefaultMetricsBuilderConfig())
 
-	ctx := context.Background()
+	ctx := t.Context()
 	now := pcommon.Timestamp(0)
 	errs := scraper.scrapePDBSysMetrics(ctx, now)
 
@@ -400,7 +399,7 @@ func TestScrapePDBSysMetrics_UnknownMetrics(t *testing.T) {
 	logger := zap.NewNop()
 	scraper := NewPdbScraper(mockClient, mb, logger, metadata.DefaultMetricsBuilderConfig())
 
-	ctx := context.Background()
+	ctx := t.Context()
 	now := pcommon.Timestamp(0)
 	errs := scraper.scrapePDBSysMetrics(ctx, now)
 
@@ -409,7 +408,7 @@ func TestScrapePDBSysMetrics_UnknownMetrics(t *testing.T) {
 
 // Tests for recordMetric
 
-func TestRecordMetric_KnownMetric(t *testing.T) {
+func TestRecordMetric_KnownMetric(_ *testing.T) {
 	mockClient := &client.MockClient{}
 	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), settings)
@@ -419,7 +418,7 @@ func TestRecordMetric_KnownMetric(t *testing.T) {
 	scraper.recordMetric(0, "Session Count", 100.0, "1", "TEST_PDB")
 }
 
-func TestRecordMetric_UnknownMetricLogged(t *testing.T) {
+func TestRecordMetric_UnknownMetricLogged(_ *testing.T) {
 	mockClient := &client.MockClient{}
 	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), settings)
@@ -440,10 +439,10 @@ func TestCheckCDBCapability_FirstCall_Success(t *testing.T) {
 	logger := zap.NewNop()
 	scraper := NewPdbScraper(mockClient, mb, logger, metadata.DefaultMetricsBuilderConfig())
 
-	ctx := context.Background()
+	ctx := t.Context()
 	err := scraper.checkCDBCapability(ctx)
 
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.True(t, scraper.environmentChecked)
 	assert.NotNil(t, scraper.isCDBCapable)
 	assert.True(t, *scraper.isCDBCapable)
@@ -458,10 +457,10 @@ func TestCheckCDBCapability_FirstCall_NotCDB(t *testing.T) {
 	logger := zap.NewNop()
 	scraper := NewPdbScraper(mockClient, mb, logger, metadata.DefaultMetricsBuilderConfig())
 
-	ctx := context.Background()
+	ctx := t.Context()
 	err := scraper.checkCDBCapability(ctx)
 
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.True(t, scraper.environmentChecked)
 	assert.NotNil(t, scraper.isCDBCapable)
 	assert.False(t, *scraper.isCDBCapable)
@@ -476,10 +475,10 @@ func TestCheckCDBCapability_QueryError(t *testing.T) {
 	logger := zap.NewNop()
 	scraper := NewPdbScraper(mockClient, mb, logger, metadata.DefaultMetricsBuilderConfig())
 
-	ctx := context.Background()
+	ctx := t.Context()
 	err := scraper.checkCDBCapability(ctx)
 
-	assert.NotNil(t, err)
+	assert.Error(t, err)
 	assert.Contains(t, err.Error(), "connection refused")
 	assert.False(t, scraper.environmentChecked)
 	assert.Nil(t, scraper.isCDBCapable)
@@ -494,11 +493,11 @@ func TestCheckCDBCapability_AlreadyChecked(t *testing.T) {
 	logger := zap.NewNop()
 	scraper := NewPdbScraper(mockClient, mb, logger, metadata.DefaultMetricsBuilderConfig())
 
-	ctx := context.Background()
+	ctx := t.Context()
 
 	// First check
 	err1 := scraper.checkCDBCapability(ctx)
-	assert.Nil(t, err1)
+	assert.NoError(t, err1)
 	assert.True(t, scraper.environmentChecked)
 
 	// Set error to verify it's not called again
@@ -506,7 +505,7 @@ func TestCheckCDBCapability_AlreadyChecked(t *testing.T) {
 
 	// Second check should skip query
 	err2 := scraper.checkCDBCapability(ctx)
-	assert.Nil(t, err2)
+	assert.NoError(t, err2)
 	assert.True(t, scraper.environmentChecked)
 }
 

@@ -13,9 +13,9 @@ import (
 	"go.opentelemetry.io/collector/receiver/receivertest"
 	"go.uber.org/zap"
 
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/client"
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/internal/metadata"
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/models"
+	"github.com/newrelic/nrdot-collector-components/receiver/newrelicoraclereceiver/client"
+	"github.com/newrelic/nrdot-collector-components/receiver/newrelicoraclereceiver/internal/metadata"
+	"github.com/newrelic/nrdot-collector-components/receiver/newrelicoraclereceiver/models"
 )
 
 func TestNewSessionScraper(t *testing.T) {
@@ -161,11 +161,11 @@ func TestScrapeSessionCount_Success(t *testing.T) {
 	logger := zap.NewNop()
 	scraper := NewSessionScraper(mockClient, mb, logger, metadata.DefaultMetricsBuilderConfig())
 
-	ctx := context.Background()
+	ctx := t.Context()
 	errs := scraper.ScrapeSessionCount(ctx)
 
 	assert.Nil(t, errs)
-	assert.Len(t, errs, 0)
+	assert.Empty(t, errs)
 }
 
 func TestScrapeSessionCount_MetricDisabled(t *testing.T) {
@@ -177,11 +177,11 @@ func TestScrapeSessionCount_MetricDisabled(t *testing.T) {
 	logger := zap.NewNop()
 	scraper := NewSessionScraper(mockClient, mb, logger, config)
 
-	ctx := context.Background()
+	ctx := t.Context()
 	errs := scraper.ScrapeSessionCount(ctx)
 
 	assert.Nil(t, errs)
-	assert.Len(t, errs, 0)
+	assert.Empty(t, errs)
 }
 
 func TestScrapeSessionCount_NoRows(t *testing.T) {
@@ -193,11 +193,11 @@ func TestScrapeSessionCount_NoRows(t *testing.T) {
 	logger := zap.NewNop()
 	scraper := NewSessionScraper(mockClient, mb, logger, metadata.DefaultMetricsBuilderConfig())
 
-	ctx := context.Background()
+	ctx := t.Context()
 	errs := scraper.ScrapeSessionCount(ctx)
 
 	assert.Nil(t, errs)
-	assert.Len(t, errs, 0)
+	assert.Empty(t, errs)
 }
 
 func TestScrapeSessionCount_QueryError(t *testing.T) {
@@ -209,7 +209,7 @@ func TestScrapeSessionCount_QueryError(t *testing.T) {
 	logger := zap.NewNop()
 	scraper := NewSessionScraper(mockClient, mb, logger, metadata.DefaultMetricsBuilderConfig())
 
-	ctx := context.Background()
+	ctx := t.Context()
 	errs := scraper.ScrapeSessionCount(ctx)
 
 	assert.NotNil(t, errs)
@@ -226,11 +226,11 @@ func TestScrapeSessionCount_ZeroCount(t *testing.T) {
 	logger := zap.NewNop()
 	scraper := NewSessionScraper(mockClient, mb, logger, metadata.DefaultMetricsBuilderConfig())
 
-	ctx := context.Background()
+	ctx := t.Context()
 	errs := scraper.ScrapeSessionCount(ctx)
 
 	assert.Nil(t, errs)
-	assert.Len(t, errs, 0)
+	assert.Empty(t, errs)
 }
 
 func TestScrapeSessionCount_LargeCount(t *testing.T) {
@@ -242,11 +242,11 @@ func TestScrapeSessionCount_LargeCount(t *testing.T) {
 	logger := zap.NewNop()
 	scraper := NewSessionScraper(mockClient, mb, logger, metadata.DefaultMetricsBuilderConfig())
 
-	ctx := context.Background()
+	ctx := t.Context()
 	errs := scraper.ScrapeSessionCount(ctx)
 
 	assert.Nil(t, errs)
-	assert.Len(t, errs, 0)
+	assert.Empty(t, errs)
 }
 
 func TestScrapeSessionCount_NilCount(t *testing.T) {
@@ -258,11 +258,11 @@ func TestScrapeSessionCount_NilCount(t *testing.T) {
 	logger := zap.NewNop()
 	scraper := NewSessionScraper(mockClient, mb, logger, metadata.DefaultMetricsBuilderConfig())
 
-	ctx := context.Background()
+	ctx := t.Context()
 	errs := scraper.ScrapeSessionCount(ctx)
 
 	assert.Nil(t, errs)
-	assert.Len(t, errs, 0)
+	assert.Empty(t, errs)
 }
 
 func TestScrapeSessionCount_ContextCanceled(t *testing.T) {
@@ -274,7 +274,7 @@ func TestScrapeSessionCount_ContextCanceled(t *testing.T) {
 	logger := zap.NewNop()
 	scraper := NewSessionScraper(mockClient, mb, logger, metadata.DefaultMetricsBuilderConfig())
 
-	ctx := context.Background()
+	ctx := t.Context()
 	errs := scraper.ScrapeSessionCount(ctx)
 
 	assert.NotNil(t, errs)
@@ -290,7 +290,7 @@ func TestScrapeSessionCount_MultipleSuccessfulCalls(t *testing.T) {
 	logger := zap.NewNop()
 	scraper := NewSessionScraper(mockClient, mb, logger, metadata.DefaultMetricsBuilderConfig())
 
-	ctx := context.Background()
+	ctx := t.Context()
 
 	// First call
 	errs1 := scraper.ScrapeSessionCount(ctx)
@@ -311,7 +311,7 @@ func TestScrapeSessionCount_ErrorThenSuccess(t *testing.T) {
 	logger := zap.NewNop()
 	scraper := NewSessionScraper(mockClient, mb, logger, metadata.DefaultMetricsBuilderConfig())
 
-	ctx := context.Background()
+	ctx := t.Context()
 
 	// First call fails
 	errs1 := scraper.ScrapeSessionCount(ctx)

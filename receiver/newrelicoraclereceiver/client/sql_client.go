@@ -1,16 +1,16 @@
 // Copyright New Relic, Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package client
+package client // import "github.com/newrelic/nrdot-collector-components/receiver/newrelicoraclereceiver/client"
 
 import (
 	"context"
 	"database/sql"
-	"fmt"
+	"errors"
 	"strings"
 
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/models"
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/queries"
+	"github.com/newrelic/nrdot-collector-components/receiver/newrelicoraclereceiver/models"
+	"github.com/newrelic/nrdot-collector-components/receiver/newrelicoraclereceiver/queries"
 )
 
 // SQLClient is the production implementation that executes real SQL queries.
@@ -53,7 +53,7 @@ func (c *SQLClient) QueryExecutionPlanForChild(ctx context.Context, sqlID string
 	for rows.Next() {
 		var row models.ExecutionPlanRow
 
-		err := rows.Scan(
+		err = rows.Scan(
 			&row.SQLID,
 			&row.Timestamp,
 			&row.TempSpace,
@@ -84,7 +84,7 @@ func (c *SQLClient) QueryExecutionPlanForChild(ctx context.Context, sqlID string
 		planRows = append(planRows, row)
 	}
 
-	if err = rows.Err(); err != nil {
+	if err := rows.Err(); err != nil {
 		return nil, err
 	}
 
@@ -95,7 +95,7 @@ func (c *SQLClient) QueryExecutionPlanForChild(ctx context.Context, sqlID string
 // intervalSeconds: Time window to fetch queries that ran in the last N seconds
 // responseTimeThreshold: Threshold filtering done in Go after delta calculation (not used in SQL)
 // countThreshold: TOP N selection done in Go after delta calculation (not used in SQL)
-func (c *SQLClient) QuerySlowQueries(ctx context.Context, intervalSeconds, responseTimeThreshold, countThreshold int) ([]models.SlowQuery, error) {
+func (c *SQLClient) QuerySlowQueries(ctx context.Context, intervalSeconds, _, _ int) ([]models.SlowQuery, error) {
 	query := queries.GetSlowQueriesSQL(intervalSeconds)
 
 	rows, err := c.db.QueryContext(ctx, query)
@@ -109,7 +109,7 @@ func (c *SQLClient) QuerySlowQueries(ctx context.Context, intervalSeconds, respo
 	for rows.Next() {
 		var slowQuery models.SlowQuery
 
-		err := rows.Scan(
+		err = rows.Scan(
 			&slowQuery.CollectionTimestamp,
 			&slowQuery.DatabaseName,
 			&slowQuery.QueryID,
@@ -133,7 +133,7 @@ func (c *SQLClient) QuerySlowQueries(ctx context.Context, intervalSeconds, respo
 		results = append(results, slowQuery)
 	}
 
-	if err = rows.Err(); err != nil {
+	if err := rows.Err(); err != nil {
 		return nil, err
 	}
 
@@ -143,7 +143,7 @@ func (c *SQLClient) QuerySlowQueries(ctx context.Context, intervalSeconds, respo
 // QuerySpecificChildCursor queries for a specific child cursor by sql_id and child_number
 func (c *SQLClient) QuerySpecificChildCursor(ctx context.Context, sqlID string, childNumber int64) (*models.ChildCursor, error) {
 	if c == nil || c.db == nil {
-		return nil, fmt.Errorf("SQL client or database connection is nil")
+		return nil, errors.New("SQL client or database connection is nil")
 	}
 
 	query := queries.GetSpecificChildCursorQuery(sqlID, childNumber)
@@ -157,7 +157,7 @@ func (c *SQLClient) QuerySpecificChildCursor(ctx context.Context, sqlID string, 
 	if rows.Next() {
 		var childCursor models.ChildCursor
 
-		err := rows.Scan(
+		err = rows.Scan(
 			&childCursor.CollectionTimestamp,
 			&childCursor.DatabaseName,
 			&childCursor.SQLID,
@@ -201,7 +201,7 @@ func (c *SQLClient) QueryWaitEventsWithBlocking(ctx context.Context, countThresh
 	for rows.Next() {
 		var w models.WaitEventWithBlocking
 
-		err := rows.Scan(
+		err = rows.Scan(
 			&w.CollectionTimestamp,
 			&w.DatabaseName,
 			&w.Username,
@@ -240,7 +240,7 @@ func (c *SQLClient) QueryWaitEventsWithBlocking(ctx context.Context, countThresh
 		results = append(results, w)
 	}
 
-	if err = rows.Err(); err != nil {
+	if err := rows.Err(); err != nil {
 		return nil, err
 	}
 
@@ -297,14 +297,14 @@ func (c *SQLClient) QuerySessionStatus(ctx context.Context) ([]models.SessionSta
 	var results []models.SessionStatus
 	for rows.Next() {
 		var status models.SessionStatus
-		err := rows.Scan(&status.Status, &status.Count)
+		err = rows.Scan(&status.Status, &status.Count)
 		if err != nil {
 			return nil, err
 		}
 		results = append(results, status)
 	}
 
-	if err = rows.Err(); err != nil {
+	if err := rows.Err(); err != nil {
 		return nil, err
 	}
 	return results, nil
@@ -321,14 +321,14 @@ func (c *SQLClient) QuerySessionTypes(ctx context.Context) ([]models.SessionType
 	var results []models.SessionType
 	for rows.Next() {
 		var sessionType models.SessionType
-		err := rows.Scan(&sessionType.Type, &sessionType.Count)
+		err = rows.Scan(&sessionType.Type, &sessionType.Count)
 		if err != nil {
 			return nil, err
 		}
 		results = append(results, sessionType)
 	}
 
-	if err = rows.Err(); err != nil {
+	if err := rows.Err(); err != nil {
 		return nil, err
 	}
 	return results, nil
@@ -345,14 +345,14 @@ func (c *SQLClient) QueryLogonStats(ctx context.Context) ([]models.LogonStat, er
 	var results []models.LogonStat
 	for rows.Next() {
 		var stat models.LogonStat
-		err := rows.Scan(&stat.Name, &stat.Value)
+		err = rows.Scan(&stat.Name, &stat.Value)
 		if err != nil {
 			return nil, err
 		}
 		results = append(results, stat)
 	}
 
-	if err = rows.Err(); err != nil {
+	if err := rows.Err(); err != nil {
 		return nil, err
 	}
 	return results, nil
@@ -369,14 +369,14 @@ func (c *SQLClient) QueryConnectionPoolMetrics(ctx context.Context) ([]models.Co
 	var results []models.ConnectionPoolMetric
 	for rows.Next() {
 		var metric models.ConnectionPoolMetric
-		err := rows.Scan(&metric.MetricName, &metric.Value)
+		err = rows.Scan(&metric.MetricName, &metric.Value)
 		if err != nil {
 			return nil, err
 		}
 		results = append(results, metric)
 	}
 
-	if err = rows.Err(); err != nil {
+	if err := rows.Err(); err != nil {
 		return nil, err
 	}
 	return results, nil
@@ -393,7 +393,7 @@ func (c *SQLClient) QuerySessionLimits(ctx context.Context) ([]models.SessionLim
 	var results []models.SessionLimit
 	for rows.Next() {
 		var limit models.SessionLimit
-		err := rows.Scan(
+		err = rows.Scan(
 			&limit.ResourceName,
 			&limit.CurrentUtilization,
 			&limit.MaxUtilization,
@@ -406,7 +406,7 @@ func (c *SQLClient) QuerySessionLimits(ctx context.Context) ([]models.SessionLim
 		results = append(results, limit)
 	}
 
-	if err = rows.Err(); err != nil {
+	if err := rows.Err(); err != nil {
 		return nil, err
 	}
 	return results, nil
@@ -423,14 +423,14 @@ func (c *SQLClient) QueryConnectionQuality(ctx context.Context) ([]models.Connec
 	var results []models.ConnectionQualityMetric
 	for rows.Next() {
 		var metric models.ConnectionQualityMetric
-		err := rows.Scan(&metric.Name, &metric.Value)
+		err = rows.Scan(&metric.Name, &metric.Value)
 		if err != nil {
 			return nil, err
 		}
 		results = append(results, metric)
 	}
 
-	if err = rows.Err(); err != nil {
+	if err := rows.Err(); err != nil {
 		return nil, err
 	}
 	return results, nil

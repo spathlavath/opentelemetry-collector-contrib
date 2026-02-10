@@ -4,7 +4,6 @@
 package scrapers
 
 import (
-	"context"
 	"database/sql"
 	"errors"
 	"testing"
@@ -15,9 +14,9 @@ import (
 	"go.opentelemetry.io/collector/receiver/receivertest"
 	"go.uber.org/zap"
 
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/client"
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/internal/metadata"
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/models"
+	"github.com/newrelic/nrdot-collector-components/receiver/newrelicoraclereceiver/client"
+	"github.com/newrelic/nrdot-collector-components/receiver/newrelicoraclereceiver/internal/metadata"
+	"github.com/newrelic/nrdot-collector-components/receiver/newrelicoraclereceiver/models"
 )
 
 func TestNewTablespaceScraper(t *testing.T) {
@@ -253,7 +252,7 @@ func TestCheckEnvironmentCapability_NonCDB(t *testing.T) {
 
 	scraper := NewTablespaceScraper(mockClient, mb, logger, config, nil, nil)
 
-	ctx := context.Background()
+	ctx := t.Context()
 	err := scraper.checkEnvironmentCapability(ctx)
 
 	assert.NoError(t, err)
@@ -274,7 +273,7 @@ func TestCheckEnvironmentCapability_CDBWithPDB(t *testing.T) {
 
 	scraper := NewTablespaceScraper(mockClient, mb, logger, config, nil, nil)
 
-	ctx := context.Background()
+	ctx := t.Context()
 	err := scraper.checkEnvironmentCapability(ctx)
 
 	assert.NoError(t, err)
@@ -295,7 +294,7 @@ func TestCheckEnvironmentCapability_CDBWithoutPDB(t *testing.T) {
 
 	scraper := NewTablespaceScraper(mockClient, mb, logger, config, nil, nil)
 
-	ctx := context.Background()
+	ctx := t.Context()
 	err := scraper.checkEnvironmentCapability(ctx)
 
 	assert.NoError(t, err)
@@ -314,7 +313,7 @@ func TestCheckEnvironmentCapability_QueryError(t *testing.T) {
 
 	scraper := NewTablespaceScraper(mockClient, mb, logger, config, nil, nil)
 
-	ctx := context.Background()
+	ctx := t.Context()
 	err := scraper.checkEnvironmentCapability(ctx)
 
 	assert.Error(t, err)
@@ -331,7 +330,7 @@ func TestCheckEnvironmentCapability_CachedResult(t *testing.T) {
 
 	scraper := NewTablespaceScraper(mockClient, mb, logger, config, nil, nil)
 
-	ctx := context.Background()
+	ctx := t.Context()
 
 	// First call
 	err := scraper.checkEnvironmentCapability(ctx)
@@ -360,7 +359,7 @@ func TestCheckCurrentContext_CDBRoot(t *testing.T) {
 
 	scraper := NewTablespaceScraper(mockClient, mb, logger, config, nil, nil)
 
-	ctx := context.Background()
+	ctx := t.Context()
 	err := scraper.checkCurrentContext(ctx)
 
 	assert.NoError(t, err)
@@ -385,7 +384,7 @@ func TestCheckCurrentContext_PDB(t *testing.T) {
 
 	scraper := NewTablespaceScraper(mockClient, mb, logger, config, nil, nil)
 
-	ctx := context.Background()
+	ctx := t.Context()
 	err := scraper.checkCurrentContext(ctx)
 
 	assert.NoError(t, err)
@@ -409,12 +408,12 @@ func TestCheckCurrentContext_InvalidContainer(t *testing.T) {
 
 	scraper := NewTablespaceScraper(mockClient, mb, logger, config, nil, nil)
 
-	ctx := context.Background()
+	ctx := t.Context()
 	err := scraper.checkCurrentContext(ctx)
 
 	assert.NoError(t, err)
-	assert.Equal(t, "", scraper.currentContainer)
-	assert.Equal(t, "", scraper.currentContainerID)
+	assert.Empty(t, scraper.currentContainer)
+	assert.Empty(t, scraper.currentContainerID)
 	assert.False(t, scraper.isConnectedToCDBRoot())
 	assert.False(t, scraper.isConnectedToPDB())
 }
@@ -430,7 +429,7 @@ func TestCheckCurrentContext_QueryError(t *testing.T) {
 
 	scraper := NewTablespaceScraper(mockClient, mb, logger, config, nil, nil)
 
-	ctx := context.Background()
+	ctx := t.Context()
 	err := scraper.checkCurrentContext(ctx)
 
 	assert.Error(t, err)
@@ -450,7 +449,7 @@ func TestCheckCurrentContext_CachedResult(t *testing.T) {
 
 	scraper := NewTablespaceScraper(mockClient, mb, logger, config, nil, nil)
 
-	ctx := context.Background()
+	ctx := t.Context()
 
 	// First call
 	err := scraper.checkCurrentContext(ctx)
@@ -557,7 +556,7 @@ func TestScrapeTablespaceUsageMetrics_Success(t *testing.T) {
 
 	scraper := NewTablespaceScraper(mockClient, mb, logger, config, []string{"USERS"}, []string{"TEMP"})
 
-	ctx := context.Background()
+	ctx := t.Context()
 	now := pcommon.NewTimestampFromTime(time.Now())
 	metricCount := 0
 
@@ -578,7 +577,7 @@ func TestScrapeTablespaceUsageMetrics_QueryError(t *testing.T) {
 
 	scraper := NewTablespaceScraper(mockClient, mb, logger, config, nil, nil)
 
-	ctx := context.Background()
+	ctx := t.Context()
 	now := pcommon.NewTimestampFromTime(time.Now())
 	metricCount := 0
 
@@ -600,7 +599,7 @@ func TestScrapeTablespaceUsageMetrics_EmptyResults(t *testing.T) {
 
 	scraper := NewTablespaceScraper(mockClient, mb, logger, config, nil, nil)
 
-	ctx := context.Background()
+	ctx := t.Context()
 	now := pcommon.NewTimestampFromTime(time.Now())
 	metricCount := 0
 
@@ -623,7 +622,7 @@ func TestScrapeTablespaceUsageMetrics_MetricsDisabled(t *testing.T) {
 
 	scraper := NewTablespaceScraper(mockClient, mb, logger, config, nil, nil)
 
-	ctx := context.Background()
+	ctx := t.Context()
 	now := pcommon.NewTimestampFromTime(time.Now())
 	metricCount := 0
 
@@ -647,7 +646,7 @@ func TestScrapeGlobalNameTablespaceMetrics_Success(t *testing.T) {
 
 	scraper := NewTablespaceScraper(mockClient, mb, logger, config, nil, nil)
 
-	ctx := context.Background()
+	ctx := t.Context()
 	now := pcommon.NewTimestampFromTime(time.Now())
 	metricCount := 0
 
@@ -668,7 +667,7 @@ func TestScrapeGlobalNameTablespaceMetrics_QueryError(t *testing.T) {
 
 	scraper := NewTablespaceScraper(mockClient, mb, logger, config, nil, nil)
 
-	ctx := context.Background()
+	ctx := t.Context()
 	now := pcommon.NewTimestampFromTime(time.Now())
 	metricCount := 0
 
@@ -689,7 +688,7 @@ func TestScrapeGlobalNameTablespaceMetrics_Disabled(t *testing.T) {
 
 	scraper := NewTablespaceScraper(mockClient, mb, logger, config, nil, nil)
 
-	ctx := context.Background()
+	ctx := t.Context()
 	now := pcommon.NewTimestampFromTime(time.Now())
 	metricCount := 0
 
@@ -713,7 +712,7 @@ func TestScrapeDBIDTablespaceMetrics_Success(t *testing.T) {
 
 	scraper := NewTablespaceScraper(mockClient, mb, logger, config, nil, nil)
 
-	ctx := context.Background()
+	ctx := t.Context()
 	now := pcommon.NewTimestampFromTime(time.Now())
 	metricCount := 0
 
@@ -734,7 +733,7 @@ func TestScrapeDBIDTablespaceMetrics_QueryError(t *testing.T) {
 
 	scraper := NewTablespaceScraper(mockClient, mb, logger, config, nil, nil)
 
-	ctx := context.Background()
+	ctx := t.Context()
 	now := pcommon.NewTimestampFromTime(time.Now())
 	metricCount := 0
 
@@ -755,7 +754,7 @@ func TestScrapeDBIDTablespaceMetrics_Disabled(t *testing.T) {
 
 	scraper := NewTablespaceScraper(mockClient, mb, logger, config, nil, nil)
 
-	ctx := context.Background()
+	ctx := t.Context()
 	now := pcommon.NewTimestampFromTime(time.Now())
 	metricCount := 0
 
@@ -779,7 +778,7 @@ func TestScrapeCDBDatafilesOfflineTablespaceMetrics_Success(t *testing.T) {
 
 	scraper := NewTablespaceScraper(mockClient, mb, logger, config, nil, nil)
 
-	ctx := context.Background()
+	ctx := t.Context()
 	now := pcommon.NewTimestampFromTime(time.Now())
 	metricCount := 0
 
@@ -800,7 +799,7 @@ func TestScrapeCDBDatafilesOfflineTablespaceMetrics_QueryError(t *testing.T) {
 
 	scraper := NewTablespaceScraper(mockClient, mb, logger, config, nil, nil)
 
-	ctx := context.Background()
+	ctx := t.Context()
 	now := pcommon.NewTimestampFromTime(time.Now())
 	metricCount := 0
 
@@ -821,7 +820,7 @@ func TestScrapeCDBDatafilesOfflineTablespaceMetrics_Disabled(t *testing.T) {
 
 	scraper := NewTablespaceScraper(mockClient, mb, logger, config, nil, nil)
 
-	ctx := context.Background()
+	ctx := t.Context()
 	now := pcommon.NewTimestampFromTime(time.Now())
 	metricCount := 0
 
@@ -846,7 +845,7 @@ func TestScrapePDBDatafilesOfflineTablespaceMetrics_CDBRoot(t *testing.T) {
 	scraper.currentContainer = "CDB$ROOT"
 	scraper.contextChecked = true
 
-	ctx := context.Background()
+	ctx := t.Context()
 	now := pcommon.NewTimestampFromTime(time.Now())
 	metricCount := 0
 
@@ -871,7 +870,7 @@ func TestScrapePDBDatafilesOfflineTablespaceMetrics_PDB(t *testing.T) {
 	scraper.currentContainer = "PDB1"
 	scraper.contextChecked = true
 
-	ctx := context.Background()
+	ctx := t.Context()
 	now := pcommon.NewTimestampFromTime(time.Now())
 	metricCount := 0
 
@@ -892,7 +891,7 @@ func TestScrapePDBDatafilesOfflineTablespaceMetrics_NotInCDB(t *testing.T) {
 	scraper.currentContainer = ""
 	scraper.contextChecked = true
 
-	ctx := context.Background()
+	ctx := t.Context()
 	now := pcommon.NewTimestampFromTime(time.Now())
 	metricCount := 0
 
@@ -915,7 +914,7 @@ func TestScrapePDBDatafilesOfflineTablespaceMetrics_QueryError(t *testing.T) {
 	scraper.currentContainer = "CDB$ROOT"
 	scraper.contextChecked = true
 
-	ctx := context.Background()
+	ctx := t.Context()
 	now := pcommon.NewTimestampFromTime(time.Now())
 	metricCount := 0
 
@@ -938,7 +937,7 @@ func TestScrapePDBDatafilesOfflineTablespaceMetrics_Disabled(t *testing.T) {
 	scraper.currentContainer = "CDB$ROOT"
 	scraper.contextChecked = true
 
-	ctx := context.Background()
+	ctx := t.Context()
 	now := pcommon.NewTimestampFromTime(time.Now())
 	metricCount := 0
 
@@ -963,7 +962,7 @@ func TestScrapePDBNonWriteTablespaceMetrics_CDBRoot(t *testing.T) {
 	scraper.currentContainer = "CDB$ROOT"
 	scraper.contextChecked = true
 
-	ctx := context.Background()
+	ctx := t.Context()
 	now := pcommon.NewTimestampFromTime(time.Now())
 	metricCount := 0
 
@@ -988,7 +987,7 @@ func TestScrapePDBNonWriteTablespaceMetrics_PDB(t *testing.T) {
 	scraper.currentContainer = "PDB1"
 	scraper.contextChecked = true
 
-	ctx := context.Background()
+	ctx := t.Context()
 	now := pcommon.NewTimestampFromTime(time.Now())
 	metricCount := 0
 
@@ -1009,7 +1008,7 @@ func TestScrapePDBNonWriteTablespaceMetrics_NotInCDB(t *testing.T) {
 	scraper.currentContainer = ""
 	scraper.contextChecked = true
 
-	ctx := context.Background()
+	ctx := t.Context()
 	now := pcommon.NewTimestampFromTime(time.Now())
 	metricCount := 0
 
@@ -1032,7 +1031,7 @@ func TestScrapePDBNonWriteTablespaceMetrics_QueryError(t *testing.T) {
 	scraper.currentContainer = "CDB$ROOT"
 	scraper.contextChecked = true
 
-	ctx := context.Background()
+	ctx := t.Context()
 	now := pcommon.NewTimestampFromTime(time.Now())
 	metricCount := 0
 
@@ -1055,7 +1054,7 @@ func TestScrapePDBNonWriteTablespaceMetrics_Disabled(t *testing.T) {
 	scraper.currentContainer = "CDB$ROOT"
 	scraper.contextChecked = true
 
-	ctx := context.Background()
+	ctx := t.Context()
 	now := pcommon.NewTimestampFromTime(time.Now())
 	metricCount := 0
 
@@ -1089,7 +1088,7 @@ func TestScrapeTablespaceMetrics_Success(t *testing.T) {
 
 	scraper := NewTablespaceScraper(mockClient, mb, logger, config, nil, nil)
 
-	ctx := context.Background()
+	ctx := t.Context()
 	errs := scraper.ScrapeTablespaceMetrics(ctx)
 
 	assert.Empty(t, errs)
@@ -1129,7 +1128,7 @@ func TestScrapeTablespaceMetrics_WithCDBAndPDB(t *testing.T) {
 
 	scraper := NewTablespaceScraper(mockClient, mb, logger, config, nil, nil)
 
-	ctx := context.Background()
+	ctx := t.Context()
 	errs := scraper.ScrapeTablespaceMetrics(ctx)
 
 	assert.Empty(t, errs)
@@ -1146,7 +1145,7 @@ func TestScrapeTablespaceMetrics_EnvironmentCheckError(t *testing.T) {
 
 	scraper := NewTablespaceScraper(mockClient, mb, logger, config, nil, nil)
 
-	ctx := context.Background()
+	ctx := t.Context()
 	errs := scraper.ScrapeTablespaceMetrics(ctx)
 
 	assert.Len(t, errs, 1)

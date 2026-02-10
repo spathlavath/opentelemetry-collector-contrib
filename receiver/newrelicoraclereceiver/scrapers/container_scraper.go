@@ -1,11 +1,11 @@
 // Copyright New Relic, Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package scrapers
+package scrapers // import "github.com/newrelic/nrdot-collector-components/receiver/newrelicoraclereceiver/scrapers"
 
 import (
 	"context"
-	"fmt"
+	"errors"
 	"strconv"
 	"strings"
 	"time"
@@ -13,9 +13,9 @@ import (
 	"go.opentelemetry.io/collector/pdata/pcommon"
 	"go.uber.org/zap"
 
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/client"
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/internal/errors"
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/internal/metadata"
+	"github.com/newrelic/nrdot-collector-components/receiver/newrelicoraclereceiver/client"
+	internalerrors "github.com/newrelic/nrdot-collector-components/receiver/newrelicoraclereceiver/internal/errors"
+	"github.com/newrelic/nrdot-collector-components/receiver/newrelicoraclereceiver/internal/metadata"
 )
 
 // ContainerScraper handles Oracle CDB/PDB container metrics
@@ -43,13 +43,13 @@ func NewContainerScraper(
 	includeTablespaces, excludeTablespaces []string,
 ) (*ContainerScraper, error) {
 	if oracleClient == nil {
-		return nil, fmt.Errorf("client cannot be nil")
+		return nil, errors.New("client cannot be nil")
 	}
 	if mb == nil {
-		return nil, fmt.Errorf("metrics builder cannot be nil")
+		return nil, errors.New("metrics builder cannot be nil")
 	}
 	if logger == nil {
-		return nil, fmt.Errorf("logger cannot be nil")
+		return nil, errors.New("logger cannot be nil")
 	}
 
 	return &ContainerScraper{
@@ -136,7 +136,7 @@ func (s *ContainerScraper) hasAnyContainerStatusMetricEnabled() bool {
 func (s *ContainerScraper) recordContainerStatusMetrics(now pcommon.Timestamp, conIDStr, containerNameStr, openModeStr, restrictedStr string) {
 	if s.config.Metrics.NewrelicoracledbContainerStatus.Enabled {
 		statusValue := int64(0)
-		if strings.ToUpper(openModeStr) == "READ WRITE" {
+		if strings.EqualFold(openModeStr, "READ WRITE") {
 			statusValue = 1
 		}
 		s.mb.RecordNewrelicoracledbContainerStatusDataPoint(now, statusValue, conIDStr, containerNameStr, openModeStr)
@@ -144,7 +144,7 @@ func (s *ContainerScraper) recordContainerStatusMetrics(now pcommon.Timestamp, c
 
 	if s.config.Metrics.NewrelicoracledbContainerRestricted.Enabled {
 		restrictedValue := int64(0)
-		if strings.ToUpper(restrictedStr) == "YES" {
+		if strings.EqualFold(restrictedStr, "YES") {
 			restrictedValue = 1
 		}
 		s.mb.RecordNewrelicoracledbContainerRestrictedDataPoint(now, restrictedValue, conIDStr, containerNameStr, restrictedStr)
@@ -197,7 +197,8 @@ func (s *ContainerScraper) scrapePDBStatus(ctx context.Context, now pcommon.Time
 	}
 	s.logger.Info("Successfully queried PDB status")
 
-	for _, pdb := range pdbs {
+	for i := range pdbs {
+		pdb := &pdbs[i]
 		if !pdb.ConID.Valid || !pdb.PDBName.Valid {
 			s.logger.Warn("Skipping PDB with invalid ConID or PDBName")
 			continue
@@ -211,8 +212,8 @@ func (s *ContainerScraper) scrapePDBStatus(ctx context.Context, now pcommon.Time
 		}
 
 		// PDB open mode metric (1=READ WRITE, 0=other)
-		var openModeValue int64 = 0
-		if strings.ToUpper(openModeStr) == "READ WRITE" {
+		var openModeValue int64
+		if strings.EqualFold(openModeStr, "READ WRITE") {
 			openModeValue = 1
 		}
 		s.mb.RecordNewrelicoracledbPdbOpenModeDataPoint(now, openModeValue, conIDStr, pdbNameStr, openModeStr)
@@ -275,7 +276,8 @@ func (s *ContainerScraper) scrapeCDBDataFiles(ctx context.Context, now pcommon.T
 		return []error{err}
 	}
 
-	for _, df := range datafiles {
+	for i := range datafiles {
+		df := &datafiles[i]
 		if !df.ConID.Valid || !df.FileName.Valid || !df.TablespaceName.Valid {
 			continue
 		}
@@ -300,8 +302,8 @@ func (s *ContainerScraper) scrapeCDBDataFiles(ctx context.Context, now pcommon.T
 		}
 
 		// Record autoextensible status (1=YES, 0=NO)
-		var autoextensibleValue int64 = 0
-		if strings.ToUpper(autoextensibleStr) == "YES" {
+		var autoextensibleValue int64
+		if strings.EqualFold(autoextensibleStr, "YES") {
 			autoextensibleValue = 1
 		}
 		s.mb.RecordNewrelicoracledbDatafileAutoextensibleDataPoint(now, autoextensibleValue, conIDStr, tablespaceName, fileName, autoextensibleStr)
@@ -326,7 +328,8 @@ func (s *ContainerScraper) scrapeCDBServices(ctx context.Context, now pcommon.Ti
 
 	serviceCount := make(map[string]int64)
 
-	for _, svc := range services {
+	for i := range services {
+		svc := &services[i]
 		if !svc.ConID.Valid || !svc.ServiceName.Valid {
 			continue
 		}
@@ -337,8 +340,8 @@ func (s *ContainerScraper) scrapeCDBServices(ctx context.Context, now pcommon.Ti
 		serviceCount[conIDStr]++
 
 		// Record service status (1=enabled if enabled='YES', 0=disabled)
-		var serviceStatus int64 = 0
-		if svc.Enabled.Valid && strings.ToUpper(svc.Enabled.String) == "YES" {
+		var serviceStatus int64
+		if svc.Enabled.Valid && strings.EqualFold(svc.Enabled.String, "YES") {
 			serviceStatus = 1
 		}
 		s.mb.RecordNewrelicoracledbServiceStatusDataPoint(now, serviceStatus, conIDStr)
@@ -363,7 +366,7 @@ func (s *ContainerScraper) checkEnvironmentCapability(ctx context.Context) error
 	// Check if this is a CDB-capable database
 	isCDB, err := s.client.CheckCDBFeature(ctx)
 	if err != nil {
-		if errors.IsPermanentError(err) {
+		if internalerrors.IsPermanentError(err) {
 			// Likely an older Oracle version that doesn't support CDB
 			s.logger.Info("Database does not support CDB features")
 			cdbCapable := false

@@ -20,13 +20,13 @@ func TestScraperShutdown_NilDB(t *testing.T) {
 	}
 
 	// Test shutdown with nil database
-	err := scraper.shutdown(context.Background())
+	err := scraper.shutdown(t.Context())
 	assert.NoError(t, err) // Should not error when db is nil
 }
 
 func TestConcurrentProcessingTimeout(t *testing.T) {
 	// Test that context timeout is properly handled
-	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Millisecond)
+	ctx, cancel := context.WithTimeout(t.Context(), 1*time.Millisecond)
 	defer cancel()
 
 	// Let the context timeout
@@ -47,7 +47,7 @@ func TestScraperFuncSignature(t *testing.T) {
 	var scraperFunc ScraperFunc
 
 	// Create a test function that matches the signature
-	testFunc := func(ctx context.Context) []error {
+	testFunc := func(_ context.Context) []error {
 		return []error{assert.AnError}
 	}
 
@@ -56,7 +56,7 @@ func TestScraperFuncSignature(t *testing.T) {
 	assert.NotNil(t, scraperFunc)
 
 	// Should be able to call it
-	errors := scraperFunc(context.Background())
+	errors := scraperFunc(t.Context())
 	assert.Len(t, errors, 1)
 	assert.Equal(t, assert.AnError, errors[0])
 }
@@ -72,7 +72,7 @@ func TestErrorChannelHandling(t *testing.T) {
 	}
 
 	// Channel should be at capacity
-	assert.Equal(t, maxErrors, len(errChan))
+	assert.Len(t, errChan, maxErrors)
 
 	// Try to add one more (should not block with proper handling)
 	select {
@@ -95,7 +95,7 @@ func TestErrorChannelHandling(t *testing.T) {
 
 func TestContextCancellation(t *testing.T) {
 	// Test that context cancellation is properly detected
-	ctx, cancel := context.WithCancel(context.Background())
+	ctx, cancel := context.WithCancel(t.Context())
 
 	// Cancel immediately
 	cancel()
@@ -130,10 +130,9 @@ func BenchmarkErrorChannelOperations(b *testing.B) {
 
 		close(errChan)
 
-		// Collect errors
-		var errors []error
-		for err := range errChan {
-			errors = append(errors, err)
+		// Drain channel
+		//nolint:revive // empty block is intentional - draining channel before exit
+		for range errChan {
 		}
 	}
 }

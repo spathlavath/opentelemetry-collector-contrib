@@ -11,7 +11,7 @@ import (
 	"go.opentelemetry.io/collector/pdata/pcommon"
 	"go.opentelemetry.io/collector/receiver/receivertest"
 
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/internal/metadata"
+	"github.com/newrelic/nrdot-collector-components/receiver/newrelicoraclereceiver/internal/metadata"
 )
 
 func TestNewSystemMetricRegistry(t *testing.T) {
@@ -19,7 +19,7 @@ func TestNewSystemMetricRegistry(t *testing.T) {
 
 	assert.NotNil(t, registry)
 	assert.NotNil(t, registry.recorders)
-	assert.Greater(t, len(registry.recorders), 0)
+	assert.NotEmpty(t, registry.recorders)
 }
 
 func TestSystemMetricRegistry_RecordMetric_Success(t *testing.T) {
@@ -174,7 +174,7 @@ func TestNewPdbMetricRegistry(t *testing.T) {
 
 	assert.NotNil(t, registry)
 	assert.NotNil(t, registry.recorders)
-	assert.Greater(t, len(registry.recorders), 0)
+	assert.NotEmpty(t, registry.recorders)
 }
 
 func TestPdbMetricRegistry_RecordMetric_Success(t *testing.T) {

@@ -1,4 +1,7 @@
-package models
+// Copyright New Relic, Inc. All rights reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+package models // import "github.com/newrelic/nrdot-collector-components/receiver/newrelicoraclereceiver/models"
 
 import "database/sql"
 

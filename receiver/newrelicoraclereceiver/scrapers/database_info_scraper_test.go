@@ -4,7 +4,6 @@
 package scrapers
 
 import (
-	"context"
 	"database/sql"
 	"testing"
 	"time"
@@ -13,9 +12,9 @@ import (
 	"go.opentelemetry.io/collector/receiver/receivertest"
 	"go.uber.org/zap"
 
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/client"
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/internal/metadata"
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/models"
+	"github.com/newrelic/nrdot-collector-components/receiver/newrelicoraclereceiver/client"
+	"github.com/newrelic/nrdot-collector-components/receiver/newrelicoraclereceiver/internal/metadata"
+	"github.com/newrelic/nrdot-collector-components/receiver/newrelicoraclereceiver/models"
 )
 
 func TestNewDatabaseInfoScraper(t *testing.T) {
@@ -111,7 +110,7 @@ func TestScrapeDatabaseInfo_MetricDisabled(t *testing.T) {
 	mb := metadata.NewMetricsBuilder(config, settings)
 
 	scraper := NewDatabaseInfoScraper(mockClient, mb, logger, config)
-	ctx := context.Background()
+	ctx := t.Context()
 
 	errs := scraper.ScrapeDatabaseInfo(ctx)
 	assert.Empty(t, errs)
@@ -126,7 +125,7 @@ func TestScrapeHostingInfo_MetricDisabled(t *testing.T) {
 	mb := metadata.NewMetricsBuilder(config, settings)
 
 	scraper := NewDatabaseInfoScraper(mockClient, mb, logger, config)
-	ctx := context.Background()
+	ctx := t.Context()
 
 	errs := scraper.ScrapeHostingInfo(ctx)
 	assert.Empty(t, errs)
@@ -148,7 +147,7 @@ func TestEnsureCacheValid_UsesCacheWhenValid(t *testing.T) {
 	}
 	scraper.cacheValidUntil = time.Now().Add(30 * time.Minute)
 
-	ctx := context.Background()
+	ctx := t.Context()
 	err := scraper.ensureCacheValid(ctx)
 
 	assert.NoError(t, err)
@@ -168,7 +167,7 @@ func TestScrapeDatabaseInfo_Success(t *testing.T) {
 	mb := metadata.NewMetricsBuilder(config, settings)
 
 	scraper := NewDatabaseInfoScraper(mockClient, mb, logger, config)
-	ctx := context.Background()
+	ctx := t.Context()
 
 	errs := scraper.ScrapeDatabaseInfo(ctx)
 	assert.Empty(t, errs)
@@ -188,7 +187,7 @@ func TestScrapeDatabaseInfo_QueryError(t *testing.T) {
 	mb := metadata.NewMetricsBuilder(config, settings)
 
 	scraper := NewDatabaseInfoScraper(mockClient, mb, logger, config)
-	ctx := context.Background()
+	ctx := t.Context()
 
 	errs := scraper.ScrapeDatabaseInfo(ctx)
 	assert.NotEmpty(t, errs)
@@ -205,7 +204,7 @@ func TestScrapeDatabaseInfo_EmptyMetrics(t *testing.T) {
 	mb := metadata.NewMetricsBuilder(config, settings)
 
 	scraper := NewDatabaseInfoScraper(mockClient, mb, logger, config)
-	ctx := context.Background()
+	ctx := t.Context()
 
 	errs := scraper.ScrapeDatabaseInfo(ctx)
 	assert.Empty(t, errs)
@@ -224,7 +223,7 @@ func TestScrapeDatabaseInfo_UsesCachedData(t *testing.T) {
 	mb := metadata.NewMetricsBuilder(config, settings)
 
 	scraper := NewDatabaseInfoScraper(mockClient, mb, logger, config)
-	ctx := context.Background()
+	ctx := t.Context()
 
 	// First call populates cache
 	errs := scraper.ScrapeDatabaseInfo(ctx)
@@ -258,7 +257,7 @@ func TestScrapeHostingInfo_Success(t *testing.T) {
 	mb := metadata.NewMetricsBuilder(config, settings)
 
 	scraper := NewDatabaseInfoScraper(mockClient, mb, logger, config)
-	ctx := context.Background()
+	ctx := t.Context()
 
 	errs := scraper.ScrapeHostingInfo(ctx)
 	assert.Empty(t, errs)
@@ -276,7 +275,7 @@ func TestScrapeHostingInfo_QueryError(t *testing.T) {
 	mb := metadata.NewMetricsBuilder(config, settings)
 
 	scraper := NewDatabaseInfoScraper(mockClient, mb, logger, config)
-	ctx := context.Background()
+	ctx := t.Context()
 
 	errs := scraper.ScrapeHostingInfo(ctx)
 	assert.NotEmpty(t, errs)
@@ -295,7 +294,7 @@ func TestScrapeHostingInfo_UsesCachedData(t *testing.T) {
 	mb := metadata.NewMetricsBuilder(config, settings)
 
 	scraper := NewDatabaseInfoScraper(mockClient, mb, logger, config)
-	ctx := context.Background()
+	ctx := t.Context()
 
 	// First call populates cache
 	errs := scraper.ScrapeHostingInfo(ctx)
@@ -323,7 +322,7 @@ func TestScrapeDatabaseRole_Success(t *testing.T) {
 	mb := metadata.NewMetricsBuilder(config, settings)
 
 	scraper := NewDatabaseInfoScraper(mockClient, mb, logger, config)
-	ctx := context.Background()
+	ctx := t.Context()
 
 	errs := scraper.ScrapeDatabaseRole(ctx)
 	assert.Empty(t, errs)
@@ -338,7 +337,7 @@ func TestScrapeDatabaseRole_MetricDisabled(t *testing.T) {
 	mb := metadata.NewMetricsBuilder(config, settings)
 
 	scraper := NewDatabaseInfoScraper(mockClient, mb, logger, config)
-	ctx := context.Background()
+	ctx := t.Context()
 
 	errs := scraper.ScrapeDatabaseRole(ctx)
 	assert.Empty(t, errs)
@@ -355,7 +354,7 @@ func TestScrapeDatabaseRole_QueryError(t *testing.T) {
 	mb := metadata.NewMetricsBuilder(config, settings)
 
 	scraper := NewDatabaseInfoScraper(mockClient, mb, logger, config)
-	ctx := context.Background()
+	ctx := t.Context()
 
 	errs := scraper.ScrapeDatabaseRole(ctx)
 	assert.NotEmpty(t, errs)
@@ -377,7 +376,7 @@ func TestScrapeDatabaseRole_NullValues(t *testing.T) {
 	mb := metadata.NewMetricsBuilder(config, settings)
 
 	scraper := NewDatabaseInfoScraper(mockClient, mb, logger, config)
-	ctx := context.Background()
+	ctx := t.Context()
 
 	errs := scraper.ScrapeDatabaseRole(ctx)
 	assert.Empty(t, errs)
@@ -399,7 +398,7 @@ func TestScrapeDatabaseRole_StandbyRole(t *testing.T) {
 	mb := metadata.NewMetricsBuilder(config, settings)
 
 	scraper := NewDatabaseInfoScraper(mockClient, mb, logger, config)
-	ctx := context.Background()
+	ctx := t.Context()
 
 	errs := scraper.ScrapeDatabaseRole(ctx)
 	assert.Empty(t, errs)
@@ -426,7 +425,7 @@ func TestEnsureCacheValid_RefreshesExpiredCache(t *testing.T) {
 	}
 	scraper.cacheValidUntil = time.Now().Add(-1 * time.Minute)
 
-	ctx := context.Background()
+	ctx := t.Context()
 	err := scraper.ensureCacheValid(ctx)
 
 	assert.NoError(t, err)
@@ -498,7 +497,7 @@ func TestEnsureCacheValid_ConcurrentAccess(t *testing.T) {
 	mb := metadata.NewMetricsBuilder(config, settings)
 
 	scraper := NewDatabaseInfoScraper(mockClient, mb, logger, config)
-	ctx := context.Background()
+	ctx := t.Context()
 
 	// Simulate concurrent access
 	done := make(chan bool)
@@ -528,7 +527,7 @@ func TestScrapeHostingInfo_EmptyCache(t *testing.T) {
 	mb := metadata.NewMetricsBuilder(config, settings)
 
 	scraper := NewDatabaseInfoScraper(mockClient, mb, logger, config)
-	ctx := context.Background()
+	ctx := t.Context()
 
 	errs := scraper.ScrapeHostingInfo(ctx)
 	assert.Empty(t, errs)
@@ -553,7 +552,7 @@ func TestEnsureCacheValid_DoubleCheckLocking(t *testing.T) {
 	}
 	scraper.cacheValidUntil = time.Now().Add(-1 * time.Minute)
 
-	ctx := context.Background()
+	ctx := t.Context()
 
 	// Multiple goroutines trying to refresh at once
 	done := make(chan bool)

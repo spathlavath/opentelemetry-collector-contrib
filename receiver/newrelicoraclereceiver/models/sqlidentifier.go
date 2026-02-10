@@ -1,7 +1,7 @@
 // Copyright New Relic, Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package models
+package models // import "github.com/newrelic/nrdot-collector-components/receiver/newrelicoraclereceiver/models"
 
 import "time"
 
@@ -12,6 +12,6 @@ type SQLIdentifier struct {
 	ChildNumber       int64
 	Timestamp         time.Time // Timestamp when the query was captured (from wait event or slow query)
 	PlanHash          string    // Plan hash value associated with the SQL statement
-	NRServiceGuid     string    // New Relic Service entity GUID
+	NRServiceGUID     string    // New Relic Service entity GUID
 	NormalisedSQLHash string    // MD5 hash of normalized SQL query
 }

@@ -1,7 +1,7 @@
 // Copyright New Relic, Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package errors
+package errors // import "github.com/newrelic/nrdot-collector-components/receiver/newrelicoraclereceiver/internal/errors"
 
 import (
 	"fmt"
@@ -15,7 +15,7 @@ type ScraperError struct {
 	Query     string
 	Err       error
 	Timestamp time.Time
-	Context   map[string]interface{}
+	Context   map[string]any
 }
 
 // Error implements the error interface
@@ -57,7 +57,7 @@ func (e *ScraperError) Unwrap() error {
 }
 
 // NewScraperError creates a new ScraperError with context
-func NewScraperError(operation string, err error, context map[string]interface{}) *ScraperError {
+func NewScraperError(operation string, err error, context map[string]any) *ScraperError {
 	return &ScraperError{
 		Operation: operation,
 		Err:       err,
@@ -67,7 +67,7 @@ func NewScraperError(operation string, err error, context map[string]interface{}
 }
 
 // NewQueryError creates a new ScraperError for query-related errors
-func NewQueryError(operation, query string, err error, context map[string]interface{}) *ScraperError {
+func NewQueryError(operation, query string, err error, context map[string]any) *ScraperError {
 	return &ScraperError{
 		Operation: operation,
 		Query:     query,

@@ -1,10 +1,11 @@
 // Copyright New Relic, Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package scrapers
+package scrapers // import "github.com/newrelic/nrdot-collector-components/receiver/newrelicoraclereceiver/scrapers"
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"strconv"
 	"sync"
@@ -13,10 +14,10 @@ import (
 	"go.opentelemetry.io/collector/pdata/pcommon"
 	"go.uber.org/zap"
 
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/client"
-	commonutils "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/common-utils"
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/internal/metadata"
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/models"
+	"github.com/newrelic/nrdot-collector-components/receiver/newrelicoraclereceiver/client"
+	commonutils "github.com/newrelic/nrdot-collector-components/receiver/newrelicoraclereceiver/common-utils"
+	"github.com/newrelic/nrdot-collector-components/receiver/newrelicoraclereceiver/internal/metadata"
+	"github.com/newrelic/nrdot-collector-components/receiver/newrelicoraclereceiver/models"
 )
 
 // planHashCacheEntry stores when a plan hash value was last scraped
@@ -77,7 +78,7 @@ func (s *ExecutionPlanScraper) ScrapeExecutionPlans(ctx context.Context, sqlIden
 	for cacheKey, identifier := range planHashIdentifier {
 		select {
 		case <-queryCtx.Done():
-			errs = append(errs, fmt.Errorf("context cancelled/timed out, stopping execution plan scraping"))
+			errs = append(errs, errors.New("context cancelled/timed out, stopping execution plan scraping"))
 			return errs
 		default:
 			// Continue processing
@@ -87,12 +88,13 @@ func (s *ExecutionPlanScraper) ScrapeExecutionPlans(ctx context.Context, sqlIden
 			errs = append(errs, fmt.Errorf("failed to query execution plan for SQL_ID %s, CHILD_NUMBER %d: %w", identifier.SQLID, identifier.ChildNumber, err))
 			continue
 		}
-		for _, row := range planRows {
+		for i := range planRows {
+			row := &planRows[i]
 			if !row.SQLID.Valid || row.SQLID.String == "" {
 				s.logger.Debug("Skipping row with invalid SQL_ID")
 				continue
 			}
-			if err := s.buildExecutionPlanMetrics(&row, identifier.Timestamp); err != nil {
+			if err := s.buildExecutionPlanMetrics(row, identifier.Timestamp); err != nil {
 				s.logger.Warn("Failed to build metrics for execution plan row",
 					zap.String("sql_id", row.SQLID.String),
 					zap.Error(err))
@@ -106,7 +108,6 @@ func (s *ExecutionPlanScraper) ScrapeExecutionPlans(ctx context.Context, sqlIden
 			lastScraped: now,
 		}
 		s.cacheMutex.Unlock()
-
 	}
 	s.logger.Debug("Scraped execution plan",
 		zap.Int("scraped_plans", len(planHashIdentifier)),
@@ -115,6 +116,8 @@ func (s *ExecutionPlanScraper) ScrapeExecutionPlans(ctx context.Context, sqlIden
 }
 
 // buildExecutionPlanMetrics converts an execution plan row to a metric data point with all attributes.
+//
+//nolint:unparam // error return is kept for future use and API consistency
 func (s *ExecutionPlanScraper) buildExecutionPlanMetrics(row *models.ExecutionPlanRow, queryTimestamp time.Time) error {
 	if !s.metricsBuilderConfig.Metrics.NewrelicoracledbExecutionPlan.Enabled {
 		return nil

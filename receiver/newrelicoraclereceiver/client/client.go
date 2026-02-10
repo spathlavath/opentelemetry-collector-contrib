@@ -1,12 +1,12 @@
 // Copyright New Relic, Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package client
+package client // import "github.com/newrelic/nrdot-collector-components/receiver/newrelicoraclereceiver/client"
 
 import (
 	"context"
 
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/models"
+	"github.com/newrelic/nrdot-collector-components/receiver/newrelicoraclereceiver/models"
 )
 
 // OracleClient defines the interface for Oracle database operations.

@@ -1,14 +1,17 @@
-package commonutils
+// Copyright New Relic, Inc. All rights reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+package commonutils // import "github.com/newrelic/nrdot-collector-components/receiver/newrelicoraclereceiver/common-utils"
 
 import (
-	"crypto/md5"
+	"crypto/md5" // #nosec G501 - MD5 is used for SQL fingerprinting, not cryptographic security
 	"encoding/hex"
 	"regexp"
 	"strings"
 	"unicode"
 )
 
-// NormalizeSqlAndHash normalizes a SQL statement following New Relic Java agent logic
+// NormalizeSQLAndHash normalizes a SQL statement following New Relic Java agent logic
 // and returns both the normalized SQL and its MD5 hash.
 // This is used for cross-language SQL comparison and query identification.
 //
@@ -20,14 +23,14 @@ import (
 // - Removes comments (single-line and multi-line)
 // - Normalizes whitespace (collapses multiple spaces into single space)
 // - Normalizes IN clauses with multiple values to IN (?)
-func NormalizeSqlAndHash(sql string) (normalizedSQL, hash string) {
-	normalizedSQL = NormalizeSql(sql)
+func NormalizeSQLAndHash(sql string) (normalizedSQL, hash string) {
+	normalizedSQL = NormalizeSQL(sql)
 	hash = GenerateMD5Hash(normalizedSQL)
 	return normalizedSQL, hash
 }
 
-// NormalizeSql normalizes a SQL statement based on New Relic Java agent rules.
-func NormalizeSql(sql string) string {
+// NormalizeSQL normalizes a SQL statement based on New Relic Java agent rules.
+func NormalizeSQL(sql string) string {
 	if sql == "" {
 		return ""
 	}
@@ -38,17 +41,18 @@ func NormalizeSql(sql string) string {
 }
 
 // GenerateMD5Hash generates an MD5 hash of the normalized SQL
+// #nosec G401 G501 - MD5 is used for SQL fingerprinting/identification, not cryptographic security
 func GenerateMD5Hash(normalizedSQL string) string {
-	hash := md5.Sum([]byte(normalizedSQL))
+	hash := md5.Sum([]byte(normalizedSQL)) // #nosec G401 G501
 	return hex.EncodeToString(hash[:])
 }
 
-// ExtractNewRelicMetadata extracts nr_service_guid from New Relic query comments
-// Only supports quoted format: /* nr_service_guid="VALUE" */
-// Returns: nr_service_guid value or empty string if not found
+// ExtractNewRelicMetadata extracts nrServiceGUID from New Relic query comments
+// Only supports quoted format: /* nrServiceGUID="VALUE" */
+// Returns: nrServiceGUID value or empty string if not found
 func ExtractNewRelicMetadata(sql string) string {
-	quotedGuidRegex := regexp.MustCompile(`nr_service_guid="([^"]*)"`)
-	if match := quotedGuidRegex.FindStringSubmatch(sql); len(match) > 1 {
+	quotedGUIDRegex := regexp.MustCompile(`nrServiceGUID="([^"]*)"`)
+	if match := quotedGUIDRegex.FindStringSubmatch(sql); len(match) > 1 {
 		return match[1]
 	}
 	return ""
@@ -62,7 +66,7 @@ type sqlNormalizerState struct {
 	lastWasWhitespace bool
 }
 
-func newSqlNormalizerState(sql string) *sqlNormalizerState {
+func newSQLNormalizerState(sql string) *sqlNormalizerState {
 	return &sqlNormalizerState{
 		sql:               sql,
 		length:            len(sql),
@@ -91,6 +95,7 @@ func (s *sqlNormalizerState) advance() {
 	s.idx++
 }
 
+//nolint:unparam // count parameter is kept for API consistency even though currently only called with 2
 func (s *sqlNormalizerState) advanceBy(count int) {
 	s.idx += count
 }
@@ -103,16 +108,17 @@ func normalizeParametersAndLiterals(sql string) string {
 
 	var result strings.Builder
 	result.Grow(len(sql))
-	state := newSqlNormalizerState(sql)
+	state := newSQLNormalizerState(sql)
 
 	for state.hasMore() {
 		current := state.current()
 
-		if current == '\'' {
+		switch {
+		case current == '\'':
 			// Replace string literals with ?
 			skipStringLiteral(state)
 			result.WriteByte('?')
-		} else if current == '(' {
+		case current == '(':
 			// Check for IN clause with multiple values/placeholders
 			if isPrecededByIn(&result) {
 				inClause := tryNormalizeInClause(state)
@@ -121,15 +127,15 @@ func normalizeParametersAndLiterals(sql string) string {
 				result.WriteByte('(')
 				state.advance()
 			}
-		} else if isNumericLiteral(state) {
+		case isNumericLiteral(state):
 			// Numeric literals
 			skipNumericLiteral(state)
 			result.WriteByte('?')
-		} else if isPlaceholder(state) {
+		case isPlaceholder(state):
 			// Any placeholder type --> ?
 			skipPlaceholder(state)
 			result.WriteByte('?')
-		} else {
+		default:
 			// Just append anything else
 			result.WriteByte(current)
 			state.advance()
@@ -193,10 +199,11 @@ func isPlaceholder(state *sqlNormalizerState) bool {
 func skipPlaceholder(state *sqlNormalizerState) {
 	c := state.current()
 
-	if c == '?' {
+	switch c {
+	case '?':
 		// JDBC placeholder
 		state.advance()
-	} else if c == ':' {
+	case ':':
 		// Oracle bind variable: :NAME or :1
 		state.advance() // Skip :
 		for state.hasMore() && isIdentifierChar(rune(state.current())) {
@@ -298,21 +305,21 @@ func skipStringLiteral(state *sqlNormalizerState) {
 	for state.hasMore() {
 		c := state.current()
 
-		if c == '\'' {
+		switch c {
+		case '\'':
 			// Check for escaped quote ''
-			if state.hasNext() && state.peek() == '\'' {
-				state.advanceBy(2) // Skip both quotes
-			} else {
+			if !state.hasNext() || state.peek() != '\'' {
 				state.advance() // Skip closing quote
-				break
+				return
 			}
-		} else if c == '\\' {
+			state.advanceBy(2) // Skip both quotes
+		case '\\':
 			// Handle backslash escaping (MySQL, PostgreSQL)
 			state.advance()
 			if state.hasMore() {
 				state.advance()
 			}
-		} else {
+		default:
 			state.advance()
 		}
 	}
@@ -333,26 +340,26 @@ func tryNormalizeInClause(state *sqlNormalizerState) string {
 	for state.hasMore() && state.current() != ')' {
 		c := state.current()
 
-		if unicode.IsSpace(rune(c)) {
+		switch {
+		case unicode.IsSpace(rune(c)):
 			state.advance()
-		} else if c == ',' {
+		case c == ',':
 			state.advance()
-		} else if isPlaceholder(state) {
+		case isPlaceholder(state):
 			foundNonWhitespace = true
 			itemCount++
 			skipPlaceholder(state)
-		} else if isNumericLiteral(state) {
+		case isNumericLiteral(state):
 			foundNonWhitespace = true
 			itemCount++
 			skipNumericLiteral(state)
-		} else if c == '\'' {
+		case c == '\'':
 			foundNonWhitespace = true
 			itemCount++
 			skipStringLiteral(state)
-		} else {
+		default:
 			// Not a list, bail
 			allParametersOrLiterals = false
-			break
 		}
 	}
 
@@ -373,28 +380,29 @@ func tryNormalizeInClause(state *sqlNormalizerState) string {
 func removeCommentsAndNormalizeWhitespace(sql string) string {
 	var result strings.Builder
 	result.Grow(len(sql))
-	state := newSqlNormalizerState(sql)
+	state := newSQLNormalizerState(sql)
 
 	for state.hasMore() {
 		current := state.current()
 
-		if current == '\'' {
+		switch {
+		case current == '\'':
 			processStringLiteral(&result, state)
-		} else if isMultilineCommentStart(state) {
+		case isMultilineCommentStart(state):
 			processMultilineComment(state)
 			result.WriteByte('?')
 			state.lastWasWhitespace = false
-		} else if isSingleLineCommentStart(state) {
+		case isSingleLineCommentStart(state):
 			processSingleLineComment(state)
 			result.WriteByte('?')
 			state.lastWasWhitespace = false
-		} else if current == '#' {
+		case current == '#':
 			processHashComment(state)
 			result.WriteByte('?')
 			state.lastWasWhitespace = false
-		} else if unicode.IsSpace(rune(current)) {
+		case unicode.IsSpace(rune(current)):
 			processWhitespace(&result, state)
-		} else {
+		default:
 			processRegularCharacter(&result, state)
 		}
 	}
@@ -413,6 +421,7 @@ func processStringLiteral(result *strings.Builder, state *sqlNormalizerState) {
 
 		if c == '\'' {
 			// Escaped quote '' check
+			//nolint:revive // early-return pattern is more readable here
 			if state.hasNext() && state.peek() == '\'' {
 				result.WriteByte('\'')
 				state.advanceBy(2)

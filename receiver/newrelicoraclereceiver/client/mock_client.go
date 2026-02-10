@@ -1,12 +1,12 @@
 // Copyright New Relic, Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package client
+package client // import "github.com/newrelic/nrdot-collector-components/receiver/newrelicoraclereceiver/client"
 
 import (
 	"context"
 
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/models"
+	"github.com/newrelic/nrdot-collector-components/receiver/newrelicoraclereceiver/models"
 )
 
 // MockClient is a mock implementation of OracleClient for testing.
@@ -121,11 +121,11 @@ func (m *MockClient) Close() error {
 	return m.CloseErr
 }
 
-func (m *MockClient) Ping(ctx context.Context) error {
+func (m *MockClient) Ping(_ context.Context) error {
 	return m.PingErr
 }
 
-func (m *MockClient) QueryExecutionPlanForChild(ctx context.Context, sqlID string, childNumber int64) ([]models.ExecutionPlanRow, error) {
+func (m *MockClient) QueryExecutionPlanForChild(_ context.Context, _ string, _ int64) ([]models.ExecutionPlanRow, error) {
 	if m.QueryErr != nil {
 		return nil, m.QueryErr
 	}
@@ -133,90 +133,91 @@ func (m *MockClient) QueryExecutionPlanForChild(ctx context.Context, sqlID strin
 	return m.ExecutionPlanRows, nil
 }
 
-func (m *MockClient) QuerySlowQueries(ctx context.Context, intervalSeconds, responseTimeThreshold, countThreshold int) ([]models.SlowQuery, error) {
+func (m *MockClient) QuerySlowQueries(_ context.Context, _, _, _ int) ([]models.SlowQuery, error) {
 	if m.QueryErr != nil {
 		return nil, m.QueryErr
 	}
 	return m.SlowQueries, nil
 }
 
-func (m *MockClient) QuerySpecificChildCursor(ctx context.Context, sqlID string, childNumber int64) (*models.ChildCursor, error) {
+func (m *MockClient) QuerySpecificChildCursor(_ context.Context, sqlID string, childNumber int64) (*models.ChildCursor, error) {
 	if m.QueryErr != nil {
 		return nil, m.QueryErr
 	}
 	// Return first matching child cursor from mock data
-	for _, cursor := range m.ChildCursors {
+	for i := range m.ChildCursors {
+		cursor := &m.ChildCursors[i]
 		if cursor.GetSQLID() == sqlID && cursor.GetChildNumber() == childNumber {
-			return &cursor, nil
+			return cursor, nil
 		}
 	}
 	return nil, nil
 }
 
-func (m *MockClient) QueryWaitEventsWithBlocking(ctx context.Context, countThreshold int, slowQuerySQLIDs []string) ([]models.WaitEventWithBlocking, error) {
+func (m *MockClient) QueryWaitEventsWithBlocking(_ context.Context, _ int, _ []string) ([]models.WaitEventWithBlocking, error) {
 	if m.QueryErr != nil {
 		return nil, m.QueryErr
 	}
 	return m.WaitEventsWithBlocking, nil
 }
 
-func (m *MockClient) QueryTotalSessions(ctx context.Context) (int64, error) {
+func (m *MockClient) QueryTotalSessions(_ context.Context) (int64, error) {
 	if m.QueryErr != nil {
 		return 0, m.QueryErr
 	}
 	return m.TotalSessions, nil
 }
 
-func (m *MockClient) QueryActiveSessions(ctx context.Context) (int64, error) {
+func (m *MockClient) QueryActiveSessions(_ context.Context) (int64, error) {
 	if m.QueryErr != nil {
 		return 0, m.QueryErr
 	}
 	return m.ActiveSessionCount, nil
 }
 
-func (m *MockClient) QueryInactiveSessions(ctx context.Context) (int64, error) {
+func (m *MockClient) QueryInactiveSessions(_ context.Context) (int64, error) {
 	if m.QueryErr != nil {
 		return 0, m.QueryErr
 	}
 	return m.InactiveSessions, nil
 }
 
-func (m *MockClient) QuerySessionStatus(ctx context.Context) ([]models.SessionStatus, error) {
+func (m *MockClient) QuerySessionStatus(_ context.Context) ([]models.SessionStatus, error) {
 	if m.QueryErr != nil {
 		return nil, m.QueryErr
 	}
 	return m.SessionStatusList, nil
 }
 
-func (m *MockClient) QuerySessionTypes(ctx context.Context) ([]models.SessionType, error) {
+func (m *MockClient) QuerySessionTypes(_ context.Context) ([]models.SessionType, error) {
 	if m.QueryErr != nil {
 		return nil, m.QueryErr
 	}
 	return m.SessionTypeList, nil
 }
 
-func (m *MockClient) QueryLogonStats(ctx context.Context) ([]models.LogonStat, error) {
+func (m *MockClient) QueryLogonStats(_ context.Context) ([]models.LogonStat, error) {
 	if m.QueryErr != nil {
 		return nil, m.QueryErr
 	}
 	return m.LogonStatsList, nil
 }
 
-func (m *MockClient) QueryConnectionPoolMetrics(ctx context.Context) ([]models.ConnectionPoolMetric, error) {
+func (m *MockClient) QueryConnectionPoolMetrics(_ context.Context) ([]models.ConnectionPoolMetric, error) {
 	if m.QueryErr != nil {
 		return nil, m.QueryErr
 	}
 	return m.ConnectionPoolMetricsList, nil
 }
 
-func (m *MockClient) QuerySessionLimits(ctx context.Context) ([]models.SessionLimit, error) {
+func (m *MockClient) QuerySessionLimits(_ context.Context) ([]models.SessionLimit, error) {
 	if m.QueryErr != nil {
 		return nil, m.QueryErr
 	}
 	return m.SessionLimitsList, nil
 }
 
-func (m *MockClient) QueryConnectionQuality(ctx context.Context) ([]models.ConnectionQualityMetric, error) {
+func (m *MockClient) QueryConnectionQuality(_ context.Context) ([]models.ConnectionQualityMetric, error) {
 	if m.QueryErr != nil {
 		return nil, m.QueryErr
 	}
@@ -224,7 +225,7 @@ func (m *MockClient) QueryConnectionQuality(ctx context.Context) ([]models.Conne
 }
 
 // CheckCDBFeature mock
-func (m *MockClient) CheckCDBFeature(ctx context.Context) (int64, error) {
+func (m *MockClient) CheckCDBFeature(_ context.Context) (int64, error) {
 	if m.QueryErr != nil {
 		return 0, m.QueryErr
 	}
@@ -232,7 +233,7 @@ func (m *MockClient) CheckCDBFeature(ctx context.Context) (int64, error) {
 }
 
 // CheckPDBCapability mock
-func (m *MockClient) CheckPDBCapability(ctx context.Context) (int64, error) {
+func (m *MockClient) CheckPDBCapability(_ context.Context) (int64, error) {
 	if m.QueryErr != nil {
 		return 0, m.QueryErr
 	}
@@ -240,7 +241,7 @@ func (m *MockClient) CheckPDBCapability(ctx context.Context) (int64, error) {
 }
 
 // CheckCurrentContainer mock
-func (m *MockClient) CheckCurrentContainer(ctx context.Context) (models.ContainerContext, error) {
+func (m *MockClient) CheckCurrentContainer(_ context.Context) (models.ContainerContext, error) {
 	if m.QueryErr != nil {
 		return models.ContainerContext{}, m.QueryErr
 	}
@@ -248,7 +249,7 @@ func (m *MockClient) CheckCurrentContainer(ctx context.Context) (models.Containe
 }
 
 // QueryContainerStatus mock
-func (m *MockClient) QueryContainerStatus(ctx context.Context) ([]models.ContainerStatus, error) {
+func (m *MockClient) QueryContainerStatus(_ context.Context) ([]models.ContainerStatus, error) {
 	if m.QueryErr != nil {
 		return nil, m.QueryErr
 	}
@@ -256,7 +257,7 @@ func (m *MockClient) QueryContainerStatus(ctx context.Context) ([]models.Contain
 }
 
 // QueryPDBStatus mock
-func (m *MockClient) QueryPDBStatus(ctx context.Context) ([]models.PDBStatus, error) {
+func (m *MockClient) QueryPDBStatus(_ context.Context) ([]models.PDBStatus, error) {
 	if m.QueryErr != nil {
 		return nil, m.QueryErr
 	}
@@ -272,7 +273,7 @@ func (m *MockClient) QueryCDBTablespaceUsage(_ context.Context, _, _ []string) (
 }
 
 // QueryCDBDataFiles mock
-func (m *MockClient) QueryCDBDataFiles(ctx context.Context) ([]models.CDBDataFile, error) {
+func (m *MockClient) QueryCDBDataFiles(_ context.Context) ([]models.CDBDataFile, error) {
 	if m.QueryErr != nil {
 		return nil, m.QueryErr
 	}
@@ -280,7 +281,7 @@ func (m *MockClient) QueryCDBDataFiles(ctx context.Context) ([]models.CDBDataFil
 }
 
 // QueryCDBServices mock
-func (m *MockClient) QueryCDBServices(ctx context.Context) ([]models.CDBService, error) {
+func (m *MockClient) QueryCDBServices(_ context.Context) ([]models.CDBService, error) {
 	if m.QueryErr != nil {
 		return nil, m.QueryErr
 	}
@@ -288,7 +289,7 @@ func (m *MockClient) QueryCDBServices(ctx context.Context) ([]models.CDBService,
 }
 
 // QueryDiskIOMetrics mock
-func (m *MockClient) QueryDiskIOMetrics(ctx context.Context) ([]models.DiskIOMetrics, error) {
+func (m *MockClient) QueryDiskIOMetrics(_ context.Context) ([]models.DiskIOMetrics, error) {
 	if m.QueryErr != nil {
 		return nil, m.QueryErr
 	}
@@ -296,7 +297,7 @@ func (m *MockClient) QueryDiskIOMetrics(ctx context.Context) ([]models.DiskIOMet
 }
 
 // QueryLockedAccounts mock
-func (m *MockClient) QueryLockedAccounts(ctx context.Context) ([]models.LockedAccountsMetric, error) {
+func (m *MockClient) QueryLockedAccounts(_ context.Context) ([]models.LockedAccountsMetric, error) {
 	if m.QueryErr != nil {
 		return nil, m.QueryErr
 	}
@@ -304,7 +305,7 @@ func (m *MockClient) QueryLockedAccounts(ctx context.Context) ([]models.LockedAc
 }
 
 // QueryGlobalName mock
-func (m *MockClient) QueryGlobalName(ctx context.Context) ([]models.GlobalNameMetric, error) {
+func (m *MockClient) QueryGlobalName(_ context.Context) ([]models.GlobalNameMetric, error) {
 	if m.QueryErr != nil {
 		return nil, m.QueryErr
 	}
@@ -312,7 +313,7 @@ func (m *MockClient) QueryGlobalName(ctx context.Context) ([]models.GlobalNameMe
 }
 
 // QueryDBID mock
-func (m *MockClient) QueryDBID(ctx context.Context) ([]models.DBIDMetric, error) {
+func (m *MockClient) QueryDBID(_ context.Context) ([]models.DBIDMetric, error) {
 	if m.QueryErr != nil {
 		return nil, m.QueryErr
 	}

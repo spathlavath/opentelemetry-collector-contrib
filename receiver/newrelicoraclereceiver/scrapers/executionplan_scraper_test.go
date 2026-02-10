@@ -14,9 +14,9 @@ import (
 	"go.opentelemetry.io/collector/receiver/receivertest"
 	"go.uber.org/zap"
 
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/client"
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/internal/metadata"
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/models"
+	"github.com/newrelic/nrdot-collector-components/receiver/newrelicoraclereceiver/client"
+	"github.com/newrelic/nrdot-collector-components/receiver/newrelicoraclereceiver/internal/metadata"
+	"github.com/newrelic/nrdot-collector-components/receiver/newrelicoraclereceiver/models"
 )
 
 func TestNewExecutionPlanScraper(t *testing.T) {
@@ -43,7 +43,7 @@ func TestScrapeExecutionPlans_EmptyIdentifiers(t *testing.T) {
 	mb := metadata.NewMetricsBuilder(config, settings)
 
 	scraper := NewExecutionPlanScraper(mockClient, mb, logger, config)
-	ctx := context.Background()
+	ctx := t.Context()
 
 	errs := scraper.ScrapeExecutionPlans(ctx, []models.SQLIdentifier{})
 
@@ -81,7 +81,7 @@ func TestScrapeExecutionPlans_Success(t *testing.T) {
 	mb := metadata.NewMetricsBuilder(config, settings)
 
 	scraper := NewExecutionPlanScraper(mockClient, mb, logger, config)
-	ctx := context.Background()
+	ctx := t.Context()
 
 	identifiers := []models.SQLIdentifier{
 		{
@@ -106,7 +106,7 @@ func TestScrapeExecutionPlans_QueryError(t *testing.T) {
 	mb := metadata.NewMetricsBuilder(config, settings)
 
 	scraper := NewExecutionPlanScraper(mockClient, mb, logger, config)
-	ctx := context.Background()
+	ctx := t.Context()
 
 	identifiers := []models.SQLIdentifier{
 		{
@@ -133,7 +133,7 @@ func TestScrapeExecutionPlans_ContextTimeout(t *testing.T) {
 	scraper := NewExecutionPlanScraper(mockClient, mb, logger, config)
 
 	// Create already-cancelled context
-	ctx, cancel := context.WithCancel(context.Background())
+	ctx, cancel := context.WithCancel(t.Context())
 	cancel()
 
 	identifiers := []models.SQLIdentifier{
@@ -167,7 +167,7 @@ func TestScrapeExecutionPlans_MultipleIdentifiers(t *testing.T) {
 	mb := metadata.NewMetricsBuilder(config, settings)
 
 	scraper := NewExecutionPlanScraper(mockClient, mb, logger, config)
-	ctx := context.Background()
+	ctx := t.Context()
 
 	identifiers := []models.SQLIdentifier{
 		{SQLID: "sql_1", ChildNumber: 0, Timestamp: time.Now()},
@@ -196,7 +196,7 @@ func TestScrapeExecutionPlans_InvalidSQLID(t *testing.T) {
 	mb := metadata.NewMetricsBuilder(config, settings)
 
 	scraper := NewExecutionPlanScraper(mockClient, mb, logger, config)
-	ctx := context.Background()
+	ctx := t.Context()
 
 	identifiers := []models.SQLIdentifier{
 		{SQLID: "test_sql_id", ChildNumber: 0, Timestamp: time.Now()},
@@ -404,7 +404,7 @@ func TestScrapeExecutionPlans_PartialFailure(t *testing.T) {
 	mb := metadata.NewMetricsBuilder(config, settings)
 
 	scraper := NewExecutionPlanScraper(mockClient, mb, logger, config)
-	ctx := context.Background()
+	ctx := t.Context()
 
 	identifiers := []models.SQLIdentifier{
 		{SQLID: "sql_1", ChildNumber: 0, Timestamp: time.Now()},
@@ -456,7 +456,7 @@ func TestScrapeExecutionPlans_CachedPlans(t *testing.T) {
 	mb := metadata.NewMetricsBuilder(config, settings)
 
 	scraper := NewExecutionPlanScraper(mockClient, mb, logger, config)
-	ctx := context.Background()
+	ctx := t.Context()
 
 	identifiers := []models.SQLIdentifier{
 		{SQLID: "test_sql_id", ChildNumber: 0, PlanHash: "12345", Timestamp: time.Now()},
@@ -488,7 +488,7 @@ func TestScrapeExecutionPlans_BuildMetricsError(t *testing.T) {
 	mb := metadata.NewMetricsBuilder(config, settings)
 
 	scraper := NewExecutionPlanScraper(mockClient, mb, logger, config)
-	ctx := context.Background()
+	ctx := t.Context()
 
 	identifiers := []models.SQLIdentifier{
 		{SQLID: "test_sql_id", ChildNumber: 0, PlanHash: "12345", Timestamp: time.Now()},

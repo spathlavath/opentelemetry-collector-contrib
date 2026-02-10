@@ -1,7 +1,7 @@
 // Copyright New Relic, Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package models
+package models // import "github.com/newrelic/nrdot-collector-components/receiver/newrelicoraclereceiver/models"
 
 // PDBSysMetric represents a PDB system metric
 type PDBSysMetric struct {

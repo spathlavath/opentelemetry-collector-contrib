@@ -1,19 +1,20 @@
 // Copyright New Relic, Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package scrapers
+package scrapers // import "github.com/newrelic/nrdot-collector-components/receiver/newrelicoraclereceiver/scrapers"
 
 import (
 	"context"
 	"database/sql"
+	"errors"
 	"time"
 
 	"go.opentelemetry.io/collector/pdata/pcommon"
 	"go.uber.org/zap"
 
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/client"
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/internal/errors"
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/internal/metadata"
+	"github.com/newrelic/nrdot-collector-components/receiver/newrelicoraclereceiver/client"
+	internalerrors "github.com/newrelic/nrdot-collector-components/receiver/newrelicoraclereceiver/internal/errors"
+	"github.com/newrelic/nrdot-collector-components/receiver/newrelicoraclereceiver/internal/metadata"
 )
 
 type SessionScraper struct {
@@ -43,17 +44,17 @@ func (s *SessionScraper) ScrapeSessionCount(ctx context.Context) []error {
 
 	count, err := s.client.QuerySessionCount(ctx)
 	if err != nil {
-		if err == sql.ErrNoRows {
+		if errors.Is(err, sql.ErrNoRows) {
 			return errs
 		}
 
-		scraperErr := errors.NewQueryError(
+		scraperErr := internalerrors.NewQueryError(
 			"session_count_query",
 			"SessionCountSQL",
 			err,
-			map[string]interface{}{
-				"retryable": errors.IsRetryableError(err),
-				"permanent": errors.IsPermanentError(err),
+			map[string]any{
+				"retryable": internalerrors.IsRetryableError(err),
+				"permanent": internalerrors.IsPermanentError(err),
 			},
 		)
 

@@ -14,9 +14,9 @@ import (
 	"go.opentelemetry.io/collector/receiver/receivertest"
 	"go.uber.org/zap"
 
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/client"
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/internal/metadata"
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/models"
+	"github.com/newrelic/nrdot-collector-components/receiver/newrelicoraclereceiver/client"
+	"github.com/newrelic/nrdot-collector-components/receiver/newrelicoraclereceiver/internal/metadata"
+	"github.com/newrelic/nrdot-collector-components/receiver/newrelicoraclereceiver/models"
 )
 
 func TestNewConnectionScraper(t *testing.T) {
@@ -84,7 +84,7 @@ func TestConnectionScraper_CoreConnectionCounts(t *testing.T) {
 		scraper, err := NewConnectionScraper(mockClient, mb, logger, config)
 		require.NoError(t, err)
 
-		errs := scraper.ScrapeConnectionMetrics(context.Background())
+		errs := scraper.ScrapeConnectionMetrics(t.Context())
 		assert.Empty(t, errs)
 	})
 
@@ -100,7 +100,7 @@ func TestConnectionScraper_CoreConnectionCounts(t *testing.T) {
 		scraper, err := NewConnectionScraper(mockClient, mb, logger, config)
 		require.NoError(t, err)
 
-		errs := scraper.ScrapeConnectionMetrics(context.Background())
+		errs := scraper.ScrapeConnectionMetrics(t.Context())
 		assert.NotEmpty(t, errs)
 		assert.Contains(t, errs[0].Error(), "total sessions query failed")
 	})
@@ -119,7 +119,7 @@ func TestConnectionScraper_CoreConnectionCounts(t *testing.T) {
 		scraper, err := NewConnectionScraper(mockClient, mb, logger, config)
 		require.NoError(t, err)
 
-		errs := scraper.ScrapeConnectionMetrics(context.Background())
+		errs := scraper.ScrapeConnectionMetrics(t.Context())
 		assert.Empty(t, errs)
 	})
 }
@@ -156,7 +156,7 @@ func TestConnectionScraper_SessionBreakdown(t *testing.T) {
 		scraper, err := NewConnectionScraper(mockClient, mb, logger, config)
 		require.NoError(t, err)
 
-		errs := scraper.ScrapeConnectionMetrics(context.Background())
+		errs := scraper.ScrapeConnectionMetrics(t.Context())
 		assert.Empty(t, errs)
 	})
 
@@ -173,7 +173,7 @@ func TestConnectionScraper_SessionBreakdown(t *testing.T) {
 		scraper, err := NewConnectionScraper(mockClient, mb, logger, config)
 		require.NoError(t, err)
 
-		errs := scraper.ScrapeConnectionMetrics(context.Background())
+		errs := scraper.ScrapeConnectionMetrics(t.Context())
 		assert.Empty(t, errs)
 	})
 
@@ -194,7 +194,7 @@ func TestConnectionScraper_SessionBreakdown(t *testing.T) {
 		scraper, err := NewConnectionScraper(mockClient, mb, logger, config)
 		require.NoError(t, err)
 
-		errs := scraper.ScrapeConnectionMetrics(context.Background())
+		errs := scraper.ScrapeConnectionMetrics(t.Context())
 		assert.Empty(t, errs) // Invalid data is silently skipped
 	})
 }
@@ -221,7 +221,7 @@ func TestConnectionScraper_LogonStats(t *testing.T) {
 		scraper, err := NewConnectionScraper(mockClient, mb, logger, config)
 		require.NoError(t, err)
 
-		errs := scraper.ScrapeConnectionMetrics(context.Background())
+		errs := scraper.ScrapeConnectionMetrics(t.Context())
 		assert.Empty(t, errs)
 	})
 
@@ -237,7 +237,7 @@ func TestConnectionScraper_LogonStats(t *testing.T) {
 		scraper, err := NewConnectionScraper(mockClient, mb, logger, config)
 		require.NoError(t, err)
 
-		errs := scraper.ScrapeConnectionMetrics(context.Background())
+		errs := scraper.ScrapeConnectionMetrics(t.Context())
 		assert.Empty(t, errs)
 	})
 
@@ -262,7 +262,7 @@ func TestConnectionScraper_LogonStats(t *testing.T) {
 		scraper, err := NewConnectionScraper(mockClient, mb, logger, config)
 		require.NoError(t, err)
 
-		errs := scraper.ScrapeConnectionMetrics(context.Background())
+		errs := scraper.ScrapeConnectionMetrics(t.Context())
 		assert.Empty(t, errs) // Invalid data should be skipped
 	})
 
@@ -278,7 +278,7 @@ func TestConnectionScraper_LogonStats(t *testing.T) {
 		scraper, err := NewConnectionScraper(mockClient, mb, logger, config)
 		require.NoError(t, err)
 
-		errs := scraper.ScrapeConnectionMetrics(context.Background())
+		errs := scraper.ScrapeConnectionMetrics(t.Context())
 		assert.NotEmpty(t, errs)
 	})
 }
@@ -309,7 +309,7 @@ func TestConnectionScraper_ConnectionPoolMetrics(t *testing.T) {
 		scraper, err := NewConnectionScraper(mockClient, mb, logger, config)
 		require.NoError(t, err)
 
-		errs := scraper.ScrapeConnectionMetrics(context.Background())
+		errs := scraper.ScrapeConnectionMetrics(t.Context())
 		assert.Empty(t, errs)
 	})
 
@@ -325,7 +325,7 @@ func TestConnectionScraper_ConnectionPoolMetrics(t *testing.T) {
 		scraper, err := NewConnectionScraper(mockClient, mb, logger, config)
 		require.NoError(t, err)
 
-		errs := scraper.ScrapeConnectionMetrics(context.Background())
+		errs := scraper.ScrapeConnectionMetrics(t.Context())
 		assert.Empty(t, errs)
 	})
 
@@ -350,7 +350,7 @@ func TestConnectionScraper_ConnectionPoolMetrics(t *testing.T) {
 		scraper, err := NewConnectionScraper(mockClient, mb, logger, config)
 		require.NoError(t, err)
 
-		errs := scraper.ScrapeConnectionMetrics(context.Background())
+		errs := scraper.ScrapeConnectionMetrics(t.Context())
 		assert.Empty(t, errs) // Invalid data should be skipped
 	})
 
@@ -366,7 +366,7 @@ func TestConnectionScraper_ConnectionPoolMetrics(t *testing.T) {
 		scraper, err := NewConnectionScraper(mockClient, mb, logger, config)
 		require.NoError(t, err)
 
-		errs := scraper.ScrapeConnectionMetrics(context.Background())
+		errs := scraper.ScrapeConnectionMetrics(t.Context())
 		assert.NotEmpty(t, errs)
 	})
 }
@@ -399,7 +399,7 @@ func TestConnectionScraper_SessionLimits(t *testing.T) {
 		scraper, err := NewConnectionScraper(mockClient, mb, logger, config)
 		require.NoError(t, err)
 
-		errs := scraper.ScrapeConnectionMetrics(context.Background())
+		errs := scraper.ScrapeConnectionMetrics(t.Context())
 		assert.Empty(t, errs)
 	})
 
@@ -415,7 +415,7 @@ func TestConnectionScraper_SessionLimits(t *testing.T) {
 		scraper, err := NewConnectionScraper(mockClient, mb, logger, config)
 		require.NoError(t, err)
 
-		errs := scraper.ScrapeConnectionMetrics(context.Background())
+		errs := scraper.ScrapeConnectionMetrics(t.Context())
 		assert.Empty(t, errs)
 	})
 
@@ -440,7 +440,7 @@ func TestConnectionScraper_SessionLimits(t *testing.T) {
 		scraper, err := NewConnectionScraper(mockClient, mb, logger, config)
 		require.NoError(t, err)
 
-		errs := scraper.ScrapeConnectionMetrics(context.Background())
+		errs := scraper.ScrapeConnectionMetrics(t.Context())
 		assert.Empty(t, errs) // Invalid data should be skipped
 	})
 
@@ -456,7 +456,7 @@ func TestConnectionScraper_SessionLimits(t *testing.T) {
 		scraper, err := NewConnectionScraper(mockClient, mb, logger, config)
 		require.NoError(t, err)
 
-		errs := scraper.ScrapeConnectionMetrics(context.Background())
+		errs := scraper.ScrapeConnectionMetrics(t.Context())
 		assert.NotEmpty(t, errs)
 	})
 }
@@ -507,7 +507,7 @@ func TestConnectionScraper_ConnectionQuality(t *testing.T) {
 		scraper, err := NewConnectionScraper(mockClient, mb, logger, config)
 		require.NoError(t, err)
 
-		errs := scraper.ScrapeConnectionMetrics(context.Background())
+		errs := scraper.ScrapeConnectionMetrics(t.Context())
 		assert.Empty(t, errs)
 	})
 
@@ -523,7 +523,7 @@ func TestConnectionScraper_ConnectionQuality(t *testing.T) {
 		scraper, err := NewConnectionScraper(mockClient, mb, logger, config)
 		require.NoError(t, err)
 
-		errs := scraper.ScrapeConnectionMetrics(context.Background())
+		errs := scraper.ScrapeConnectionMetrics(t.Context())
 		assert.Empty(t, errs)
 	})
 
@@ -548,7 +548,7 @@ func TestConnectionScraper_ConnectionQuality(t *testing.T) {
 		scraper, err := NewConnectionScraper(mockClient, mb, logger, config)
 		require.NoError(t, err)
 
-		errs := scraper.ScrapeConnectionMetrics(context.Background())
+		errs := scraper.ScrapeConnectionMetrics(t.Context())
 		assert.Empty(t, errs) // Invalid data should be skipped
 	})
 
@@ -564,39 +564,8 @@ func TestConnectionScraper_ConnectionQuality(t *testing.T) {
 		scraper, err := NewConnectionScraper(mockClient, mb, logger, config)
 		require.NoError(t, err)
 
-		errs := scraper.ScrapeConnectionMetrics(context.Background())
+		errs := scraper.ScrapeConnectionMetrics(t.Context())
 		assert.NotEmpty(t, errs)
-	})
-}
-
-func TestConnectionScraper_HelperFunctions(t *testing.T) {
-	mockClient := client.NewMockClient()
-	config := metadata.DefaultMetricsBuilderConfig()
-	settings := receivertest.NewNopSettings(metadata.Type)
-	mb := metadata.NewMetricsBuilder(config, settings)
-	logger := zap.NewNop()
-
-	scraper, err := NewConnectionScraper(mockClient, mb, logger, config)
-	require.NoError(t, err)
-
-	t.Run("formatInt64 with valid value", func(t *testing.T) {
-		result := scraper.formatInt64(sql.NullInt64{Int64: 12345, Valid: true})
-		assert.Equal(t, "12345", result)
-	})
-
-	t.Run("formatInt64 with invalid value", func(t *testing.T) {
-		result := scraper.formatInt64(sql.NullInt64{Valid: false})
-		assert.Equal(t, "", result)
-	})
-
-	t.Run("formatString with valid value", func(t *testing.T) {
-		result := scraper.formatString(sql.NullString{String: "test-string", Valid: true})
-		assert.Equal(t, "test-string", result)
-	})
-
-	t.Run("formatString with invalid value", func(t *testing.T) {
-		result := scraper.formatString(sql.NullString{Valid: false})
-		assert.Equal(t, "", result)
 	})
 }
 
@@ -612,7 +581,7 @@ func TestConnectionScraper_IntegrationWithMultipleErrors(t *testing.T) {
 	scraper, err := NewConnectionScraper(mockClient, mb, logger, config)
 	require.NoError(t, err)
 
-	errs := scraper.ScrapeConnectionMetrics(context.Background())
+	errs := scraper.ScrapeConnectionMetrics(t.Context())
 	// Should collect errors from multiple failing queries
 	assert.NotEmpty(t, errs)
 	// We expect multiple errors since all queries will fail
@@ -640,7 +609,7 @@ func TestConnectionScraper_NullValuesHandling(t *testing.T) {
 		scraper, err := NewConnectionScraper(mockClient, mb, logger, config)
 		require.NoError(t, err)
 
-		errs := scraper.ScrapeConnectionMetrics(context.Background())
+		errs := scraper.ScrapeConnectionMetrics(t.Context())
 		assert.Empty(t, errs) // Should handle parse error gracefully
 	})
 }
@@ -655,7 +624,7 @@ func TestConnectionScraper_ContextCancellation(t *testing.T) {
 	scraper, err := NewConnectionScraper(mockClient, mb, logger, config)
 	require.NoError(t, err)
 
-	ctx, cancel := context.WithCancel(context.Background())
+	ctx, cancel := context.WithCancel(t.Context())
 	cancel() // Cancel immediately
 
 	// Should handle cancelled context
@@ -683,7 +652,7 @@ func TestConnectionScraper_SessionLimitsUnlimitedValue(t *testing.T) {
 	scraper, err := NewConnectionScraper(mockClient, mb, logger, config)
 	require.NoError(t, err)
 
-	errs := scraper.ScrapeConnectionMetrics(context.Background())
+	errs := scraper.ScrapeConnectionMetrics(t.Context())
 	assert.Empty(t, errs)
 	// Should not record limit value for UNLIMITED resources
 }
@@ -706,7 +675,7 @@ func TestConnectionScraper_UnknownMetricNames(t *testing.T) {
 		scraper, err := NewConnectionScraper(mockClient, mb, logger, config)
 		require.NoError(t, err)
 
-		errs := scraper.ScrapeConnectionMetrics(context.Background())
+		errs := scraper.ScrapeConnectionMetrics(t.Context())
 		assert.Empty(t, errs) // Should ignore unknown metrics
 	})
 
@@ -727,7 +696,7 @@ func TestConnectionScraper_UnknownMetricNames(t *testing.T) {
 		scraper, err := NewConnectionScraper(mockClient, mb, logger, config)
 		require.NoError(t, err)
 
-		errs := scraper.ScrapeConnectionMetrics(context.Background())
+		errs := scraper.ScrapeConnectionMetrics(t.Context())
 		assert.Empty(t, errs) // Should ignore unknown pool metrics
 	})
 
@@ -748,7 +717,7 @@ func TestConnectionScraper_UnknownMetricNames(t *testing.T) {
 		scraper, err := NewConnectionScraper(mockClient, mb, logger, config)
 		require.NoError(t, err)
 
-		errs := scraper.ScrapeConnectionMetrics(context.Background())
+		errs := scraper.ScrapeConnectionMetrics(t.Context())
 		assert.Empty(t, errs) // Should ignore unknown logon stats
 	})
 }

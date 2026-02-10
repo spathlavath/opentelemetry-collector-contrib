@@ -1,7 +1,7 @@
 // Copyright New Relic, Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package newrelicoraclereceiver // import "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver"
+package newrelicoraclereceiver // import "github.com/newrelic/nrdot-collector-components/receiver/newrelicoraclereceiver"
 
 import (
 	"errors"
@@ -16,8 +16,8 @@ import (
 	"go.opentelemetry.io/collector/scraper/scraperhelper"
 	"go.uber.org/multierr"
 
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/internal/metadata"
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/queries"
+	"github.com/newrelic/nrdot-collector-components/receiver/newrelicoraclereceiver/internal/metadata"
+	"github.com/newrelic/nrdot-collector-components/receiver/newrelicoraclereceiver/queries"
 )
 
 const (
@@ -135,8 +135,8 @@ func (c *Config) SetDefaults() {
 	}
 
 	// Set scraper controller defaults if not set
-	if c.ControllerConfig.CollectionInterval == 0 {
-		c.ControllerConfig.CollectionInterval = defaultCollectionInterval
+	if c.CollectionInterval == 0 {
+		c.CollectionInterval = defaultCollectionInterval
 	}
 
 	// Set Query Performance Monitoring defaults if not set
@@ -156,14 +156,14 @@ func (c *Config) SetDefaults() {
 	// IMPORTANT: This should be >= collection_interval to avoid missing queries between scrapes
 	// Default: Use collection_interval converted to seconds (rounded up)
 	if c.QueryMonitoringIntervalSeconds <= 0 {
-		collectionIntervalSeconds := int(c.ControllerConfig.CollectionInterval.Seconds())
+		collectionIntervalSeconds := int(c.CollectionInterval.Seconds())
 		if collectionIntervalSeconds < 1 {
 			collectionIntervalSeconds = 10 // Fallback to 10 seconds minimum
 		}
 		c.QueryMonitoringIntervalSeconds = collectionIntervalSeconds
 	} else {
 		// User specified a value - ensure it's at least as long as collection_interval
-		collectionIntervalSeconds := int(c.ControllerConfig.CollectionInterval.Seconds())
+		collectionIntervalSeconds := int(c.CollectionInterval.Seconds())
 		if c.QueryMonitoringIntervalSeconds < collectionIntervalSeconds {
 			// Log a warning would be nice here, but we don't have logger in config
 			// The value will be adjusted to match collection_interval
@@ -321,8 +321,8 @@ func (c Config) validateConnectionPool() error {
 
 // validateScraperConfig validates scraper controller configuration
 func (c Config) validateScraperConfig() error {
-	if c.ControllerConfig.CollectionInterval < minCollectionInterval || c.ControllerConfig.CollectionInterval > maxCollectionInterval {
-		return fmt.Errorf("%w: got %v", errInvalidTimeout, c.ControllerConfig.CollectionInterval)
+	if c.CollectionInterval < minCollectionInterval || c.CollectionInterval > maxCollectionInterval {
+		return fmt.Errorf("%w: got %v", errInvalidTimeout, c.CollectionInterval)
 	}
 
 	return nil

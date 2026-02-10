@@ -1,14 +1,14 @@
 // Copyright New Relic, Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package scrapers
+package scrapers // import "github.com/newrelic/nrdot-collector-components/receiver/newrelicoraclereceiver/scrapers"
 
 import (
 	"fmt"
 	"strconv"
 )
 
-func getInstanceIDString(instID interface{}) string {
+func getInstanceIDString(instID any) string {
 	if instID == nil {
 		return "unknown"
 	}

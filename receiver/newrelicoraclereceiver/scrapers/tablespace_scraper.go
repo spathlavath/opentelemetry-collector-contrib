@@ -1,7 +1,7 @@
 // Copyright New Relic, Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package scrapers
+package scrapers // import "github.com/newrelic/nrdot-collector-components/receiver/newrelicoraclereceiver/scrapers"
 
 import (
 	"context"
@@ -13,10 +13,10 @@ import (
 	"go.opentelemetry.io/collector/pdata/pcommon"
 	"go.uber.org/zap"
 
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/client"
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/internal/errors"
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/internal/metadata"
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/models"
+	"github.com/newrelic/nrdot-collector-components/receiver/newrelicoraclereceiver/client"
+	"github.com/newrelic/nrdot-collector-components/receiver/newrelicoraclereceiver/internal/errors"
+	"github.com/newrelic/nrdot-collector-components/receiver/newrelicoraclereceiver/internal/metadata"
+	"github.com/newrelic/nrdot-collector-components/receiver/newrelicoraclereceiver/models"
 )
 
 type TablespaceScraper struct {
@@ -183,11 +183,12 @@ func (s *TablespaceScraper) scrapePDBDatafilesOfflineTablespaceMetrics(ctx conte
 	var tablespaces []models.TablespacePDBDatafilesOffline
 	var err error
 
-	if s.isConnectedToCDBRoot() {
+	switch {
+	case s.isConnectedToCDBRoot():
 		tablespaces, err = s.client.QueryTablespacePDBDatafilesOffline(ctx, s.includeTablespaces, s.excludeTablespaces)
-	} else if s.isConnectedToPDB() {
+	case s.isConnectedToPDB():
 		tablespaces, err = s.client.QueryTablespacePDBDatafilesOfflineCurrentContainer(ctx, s.includeTablespaces, s.excludeTablespaces)
-	} else {
+	default:
 		return nil
 	}
 
@@ -211,11 +212,12 @@ func (s *TablespaceScraper) scrapePDBNonWriteTablespaceMetrics(ctx context.Conte
 	var tablespaces []models.TablespacePDBNonWrite
 	var err error
 
-	if s.isConnectedToCDBRoot() {
+	switch {
+	case s.isConnectedToCDBRoot():
 		tablespaces, err = s.client.QueryTablespacePDBNonWrite(ctx, s.includeTablespaces, s.excludeTablespaces)
-	} else if s.isConnectedToPDB() {
+	case s.isConnectedToPDB():
 		tablespaces, err = s.client.QueryTablespacePDBNonWriteCurrentContainer(ctx, s.includeTablespaces, s.excludeTablespaces)
-	} else {
+	default:
 		return nil
 	}
 
@@ -250,7 +252,7 @@ func (s *TablespaceScraper) checkEnvironmentCapability(ctx context.Context) erro
 			return nil
 		}
 		return errors.NewQueryError("cdb_capability_check", "CheckCDBFeatureSQL", err,
-			map[string]interface{}{})
+			map[string]any{})
 	}
 
 	cdbCapable := isCDB == 1
@@ -300,7 +302,7 @@ func (s *TablespaceScraper) checkCurrentContext(ctx context.Context) error {
 	container, err := s.client.CheckCurrentContainer(ctx)
 	if err != nil {
 		return errors.NewQueryError("container_context_check", "CheckCurrentContainerSQL", err,
-			map[string]interface{}{})
+			map[string]any{})
 	}
 
 	if container.ContainerName.Valid {

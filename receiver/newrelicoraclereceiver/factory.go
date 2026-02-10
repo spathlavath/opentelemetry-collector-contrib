@@ -1,7 +1,7 @@
 // Copyright New Relic, Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package newrelicoraclereceiver // import "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver"
+package newrelicoraclereceiver // import "github.com/newrelic/nrdot-collector-components/receiver/newrelicoraclereceiver"
 
 import (
 	"context"
@@ -13,15 +13,15 @@ import (
 	"strings"
 	"time"
 
-	_ "github.com/godror/godror"
+	_ "github.com/godror/godror" // Register Oracle driver
 	"go.opentelemetry.io/collector/component"
 	"go.opentelemetry.io/collector/consumer"
 	"go.opentelemetry.io/collector/receiver"
 	"go.opentelemetry.io/collector/scraper/scraperhelper"
 	"go.uber.org/zap"
 
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/internal/metadata"
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/queries"
+	"github.com/newrelic/nrdot-collector-components/receiver/newrelicoraclereceiver/internal/metadata"
+	"github.com/newrelic/nrdot-collector-components/receiver/newrelicoraclereceiver/queries"
 )
 
 // NewFactory creates a new New Relic Oracle receiver factory.
@@ -101,12 +101,12 @@ func createMetricsReceiverFunc(sqlOpenerFunc sqlOpenerFunc) receiver.CreateMetri
 		// Create scrapers for each service (CDB or PDB)
 		var opts []scraperhelper.ControllerOption
 		for _, service := range monitoredServices {
-			serviceName := service // Capture loop variable
+			svcName := service // Capture loop variable
 			mp, err := newScraper(metricsBuilder, sqlCfg.MetricsBuilderConfig, sqlCfg.ControllerConfig, sqlCfg, settings.Logger,
-				createDBProviderFunc(sqlOpenerFunc, *sqlCfg, serviceName),
-				hostAddress, hostPort, serviceName)
+				createDBProviderFunc(sqlOpenerFunc, *sqlCfg, svcName),
+				hostAddress, hostPort, svcName)
 			if err != nil {
-				return nil, fmt.Errorf("failed to create scraper for service %s: %w", serviceName, err)
+				return nil, fmt.Errorf("failed to create scraper for service %s: %w", svcName, err)
 			}
 			opts = append(opts, scraperhelper.AddScraper(metadata.Type, mp))
 		}
@@ -214,7 +214,7 @@ func getDataSourceWithService(cfg Config, serviceName string) string {
 }
 
 // determineMonitoredServices determines which services to monitor based on pdb_services configuration
-func determineMonitoredServices(sqlOpenerFunc sqlOpenerFunc, dataSource string, configuredService string, pdbServices []string, logger *zap.Logger) ([]string, error) {
+func determineMonitoredServices(sqlOpenerFunc sqlOpenerFunc, dataSource, configuredService string, pdbServices []string, logger *zap.Logger) ([]string, error) {
 	// Case 1: Empty pdb_services - collect only configured service data (CDB or PDB)
 	if len(pdbServices) == 0 {
 		logger.Info("PDB services not configured, collecting configured service data only", zap.String("service", configuredService))
@@ -250,7 +250,7 @@ func determineMonitoredServices(sqlOpenerFunc sqlOpenerFunc, dataSource string, 
 }
 
 // filterServices filters services based on requested names (case-insensitive)
-func filterServices(allServices []string, requestedServices []string, logger *zap.Logger) []string {
+func filterServices(allServices, requestedServices []string, logger *zap.Logger) []string {
 	requestMap := make(map[string]string) // lowercase -> original
 	for _, req := range requestedServices {
 		requestMap[strings.ToLower(req)] = req
