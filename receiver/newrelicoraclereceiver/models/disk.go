@@ -1,7 +1,7 @@
 // Copyright New Relic, Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package models // import "github.com/newrelic/nrdot-collector-components/receiver/newrelicoraclereceiver/models"
+package models // import "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/models"
 
 // DiskIOMetrics represents disk I/O statistics from gv$filestat
 type DiskIOMetrics struct {

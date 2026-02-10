@@ -1,4 +1,4 @@
-module github.com/newrelic/nrdot-collector-components/receiver/newrelicoraclereceiver
+module github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver
 
 go 1.24.0
 

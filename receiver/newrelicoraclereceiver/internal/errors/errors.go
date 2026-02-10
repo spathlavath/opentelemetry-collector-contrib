@@ -1,7 +1,7 @@
 // Copyright New Relic, Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package errors // import "github.com/newrelic/nrdot-collector-components/receiver/newrelicoraclereceiver/internal/errors"
+package errors // import "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/internal/errors"
 
 import (
 	"fmt"

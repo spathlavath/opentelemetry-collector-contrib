@@ -1,12 +1,12 @@
 // Copyright New Relic, Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package client // import "github.com/newrelic/nrdot-collector-components/receiver/newrelicoraclereceiver/client"
+package client // import "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/client"
 
 import (
 	"context"
 
-	"github.com/newrelic/nrdot-collector-components/receiver/newrelicoraclereceiver/models"
+	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/models"
 )
 
 // MockClient is a mock implementation of OracleClient for testing.

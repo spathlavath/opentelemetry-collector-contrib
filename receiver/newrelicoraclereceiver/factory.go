@@ -1,7 +1,7 @@
 // Copyright New Relic, Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package newrelicoraclereceiver // import "github.com/newrelic/nrdot-collector-components/receiver/newrelicoraclereceiver"
+package newrelicoraclereceiver // import "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver"
 
 import (
 	"context"
@@ -20,8 +20,8 @@ import (
 	"go.opentelemetry.io/collector/scraper/scraperhelper"
 	"go.uber.org/zap"
 
-	"github.com/newrelic/nrdot-collector-components/receiver/newrelicoraclereceiver/internal/metadata"
-	"github.com/newrelic/nrdot-collector-components/receiver/newrelicoraclereceiver/queries"
+	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/internal/metadata"
+	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/queries"
 )
 
 // NewFactory creates a new New Relic Oracle receiver factory.

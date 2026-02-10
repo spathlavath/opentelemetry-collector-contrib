@@ -8,7 +8,7 @@ import (
 
 var (
 	Type      = component.MustNewType("newrelicoracledb")
-	ScopeName = "github.com/newrelic/nrdot-collector-components/receiver/newrelicoraclereceiver"
+	ScopeName = "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver"
 )
 
 const (

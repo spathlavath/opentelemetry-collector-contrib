@@ -1,7 +1,7 @@
 // Copyright New Relic, Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package queries // import "github.com/newrelic/nrdot-collector-components/receiver/newrelicoraclereceiver/queries"
+package queries // import "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/queries"
 
 // Oracle database information, detection, and environment queries
 

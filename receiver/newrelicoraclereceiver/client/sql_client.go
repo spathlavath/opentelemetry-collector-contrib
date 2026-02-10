@@ -1,7 +1,7 @@
 // Copyright New Relic, Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package client // import "github.com/newrelic/nrdot-collector-components/receiver/newrelicoraclereceiver/client"
+package client // import "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/client"
 
 import (
 	"context"
@@ -9,8 +9,8 @@ import (
 	"errors"
 	"strings"
 
-	"github.com/newrelic/nrdot-collector-components/receiver/newrelicoraclereceiver/models"
-	"github.com/newrelic/nrdot-collector-components/receiver/newrelicoraclereceiver/queries"
+	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/models"
+	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/queries"
 )
 
 // SQLClient is the production implementation that executes real SQL queries.
