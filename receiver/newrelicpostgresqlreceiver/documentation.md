@@ -2578,6 +2578,332 @@ Time spent in sessions for this database (PostgreSQL 14+)
 | database_name | Name of the PostgreSQL database | Any Str | Recommended |
 | newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
 
+### postgresql.slow_queries.avg_buffer_hits
+
+Average number of buffer cache hits per execution
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {blocks} | Gauge | Double | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| collection_timestamp | ISO8601 timestamp when the metric was collected | Any Str | Recommended |
+| database_name | Name of the PostgreSQL database | Any Str | Recommended |
+| user_name | Name of the user/role connected to the database | Any Str | Recommended |
+| query_id | Unique identifier for a normalized query (hash from pg_stat_statements) | Any Str | Recommended |
+
+### postgresql.slow_queries.avg_cpu_time_ms
+
+Average CPU time (planning + execution) of the query in milliseconds
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| ms | Gauge | Double | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| collection_timestamp | ISO8601 timestamp when the metric was collected | Any Str | Recommended |
+| database_name | Name of the PostgreSQL database | Any Str | Recommended |
+| user_name | Name of the user/role connected to the database | Any Str | Recommended |
+| query_id | Unique identifier for a normalized query (hash from pg_stat_statements) | Any Str | Recommended |
+
+### postgresql.slow_queries.avg_disk_reads
+
+Average number of disk blocks read per execution
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {blocks} | Gauge | Double | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| collection_timestamp | ISO8601 timestamp when the metric was collected | Any Str | Recommended |
+| database_name | Name of the PostgreSQL database | Any Str | Recommended |
+| user_name | Name of the user/role connected to the database | Any Str | Recommended |
+| query_id | Unique identifier for a normalized query (hash from pg_stat_statements) | Any Str | Recommended |
+
+### postgresql.slow_queries.avg_disk_writes
+
+Average number of disk blocks written per execution
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {blocks} | Gauge | Double | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| collection_timestamp | ISO8601 timestamp when the metric was collected | Any Str | Recommended |
+| database_name | Name of the PostgreSQL database | Any Str | Recommended |
+| user_name | Name of the user/role connected to the database | Any Str | Recommended |
+| query_id | Unique identifier for a normalized query (hash from pg_stat_statements) | Any Str | Recommended |
+
+### postgresql.slow_queries.avg_elapsed_time_ms
+
+Average execution time of the query in milliseconds
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| ms | Gauge | Double | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| collection_timestamp | ISO8601 timestamp when the metric was collected | Any Str | Recommended |
+| database_name | Name of the PostgreSQL database | Any Str | Recommended |
+| user_name | Name of the user/role connected to the database | Any Str | Recommended |
+| query_id | Unique identifier for a normalized query (hash from pg_stat_statements) | Any Str | Recommended |
+
+### postgresql.slow_queries.avg_plan_time_ms
+
+Average planning time of the query in milliseconds (PostgreSQL 13+)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| ms | Gauge | Double | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| collection_timestamp | ISO8601 timestamp when the metric was collected | Any Str | Recommended |
+| database_name | Name of the PostgreSQL database | Any Str | Recommended |
+| user_name | Name of the user/role connected to the database | Any Str | Recommended |
+| query_id | Unique identifier for a normalized query (hash from pg_stat_statements) | Any Str | Recommended |
+
+### postgresql.slow_queries.avg_rows_returned
+
+Average number of rows returned per execution
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {rows} | Gauge | Double | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| collection_timestamp | ISO8601 timestamp when the metric was collected | Any Str | Recommended |
+| database_name | Name of the PostgreSQL database | Any Str | Recommended |
+| user_name | Name of the user/role connected to the database | Any Str | Recommended |
+| query_id | Unique identifier for a normalized query (hash from pg_stat_statements) | Any Str | Recommended |
+
+### postgresql.slow_queries.execution_count
+
+Number of times the query has been executed
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {executions} | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| collection_timestamp | ISO8601 timestamp when the metric was collected | Any Str | Recommended |
+| database_name | Name of the PostgreSQL database | Any Str | Recommended |
+| user_name | Name of the user/role connected to the database | Any Str | Recommended |
+| query_id | Unique identifier for a normalized query (hash from pg_stat_statements) | Any Str | Recommended |
+
+### postgresql.slow_queries.interval_avg_elapsed_time_ms
+
+Average elapsed time per execution in the last polling interval (delta metric). On first scrape, represents historical average since pg_stat_statements was last reset.
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| ms | Gauge | Double | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| collection_timestamp | ISO8601 timestamp when the metric was collected | Any Str | Recommended |
+| database_name | Name of the PostgreSQL database | Any Str | Recommended |
+| user_name | Name of the user/role connected to the database | Any Str | Recommended |
+| query_id | Unique identifier for a normalized query (hash from pg_stat_statements) | Any Str | Recommended |
+
+### postgresql.slow_queries.interval_execution_count
+
+Number of new executions since last scrape (delta metric). On first scrape, represents all executions since pg_stat_statements was last reset.
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {executions} | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| collection_timestamp | ISO8601 timestamp when the metric was collected | Any Str | Recommended |
+| database_name | Name of the PostgreSQL database | Any Str | Recommended |
+| user_name | Name of the user/role connected to the database | Any Str | Recommended |
+| query_id | Unique identifier for a normalized query (hash from pg_stat_statements) | Any Str | Recommended |
+
+### postgresql.slow_queries.max_elapsed_time_ms
+
+Maximum execution time of the query in milliseconds
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| ms | Gauge | Double | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| collection_timestamp | ISO8601 timestamp when the metric was collected | Any Str | Recommended |
+| database_name | Name of the PostgreSQL database | Any Str | Recommended |
+| user_name | Name of the user/role connected to the database | Any Str | Recommended |
+| query_id | Unique identifier for a normalized query (hash from pg_stat_statements) | Any Str | Recommended |
+
+### postgresql.slow_queries.min_elapsed_time_ms
+
+Minimum execution time of the query in milliseconds
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| ms | Gauge | Double | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| collection_timestamp | ISO8601 timestamp when the metric was collected | Any Str | Recommended |
+| database_name | Name of the PostgreSQL database | Any Str | Recommended |
+| user_name | Name of the user/role connected to the database | Any Str | Recommended |
+| query_id | Unique identifier for a normalized query (hash from pg_stat_statements) | Any Str | Recommended |
+
+### postgresql.slow_queries.query_details
+
+Query details event containing full query text and metadata for slow queries
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| 1 | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| event_type | Type of event for query details (PostgreSQLQueryDetails) | Any Str | Recommended |
+| collection_timestamp | ISO8601 timestamp when the metric was collected | Any Str | Recommended |
+| database_name | Name of the PostgreSQL database | Any Str | Recommended |
+| query_id | Unique identifier for a normalized query (hash from pg_stat_statements) | Any Str | Recommended |
+| query_text | Normalized SQL query text from pg_stat_statements | Any Str | Recommended |
+| user_name | Name of the user/role connected to the database | Any Str | Recommended |
+| newrelicpostgresql.instance_name | Name of the PostgreSQL instance | Any Str | Recommended |
+
+### postgresql.slow_queries.stddev_elapsed_time_ms
+
+Standard deviation of execution time of the query in milliseconds
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| ms | Gauge | Double | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| collection_timestamp | ISO8601 timestamp when the metric was collected | Any Str | Recommended |
+| database_name | Name of the PostgreSQL database | Any Str | Recommended |
+| user_name | Name of the user/role connected to the database | Any Str | Recommended |
+| query_id | Unique identifier for a normalized query (hash from pg_stat_statements) | Any Str | Recommended |
+
+### postgresql.slow_queries.total_buffer_hits
+
+Total number of buffer cache hits
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {blocks} | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| collection_timestamp | ISO8601 timestamp when the metric was collected | Any Str | Recommended |
+| database_name | Name of the PostgreSQL database | Any Str | Recommended |
+| user_name | Name of the user/role connected to the database | Any Str | Recommended |
+| query_id | Unique identifier for a normalized query (hash from pg_stat_statements) | Any Str | Recommended |
+
+### postgresql.slow_queries.total_disk_reads
+
+Total number of disk blocks read
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {blocks} | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| collection_timestamp | ISO8601 timestamp when the metric was collected | Any Str | Recommended |
+| database_name | Name of the PostgreSQL database | Any Str | Recommended |
+| user_name | Name of the user/role connected to the database | Any Str | Recommended |
+| query_id | Unique identifier for a normalized query (hash from pg_stat_statements) | Any Str | Recommended |
+
+### postgresql.slow_queries.total_disk_writes
+
+Total number of disk blocks written
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {blocks} | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| collection_timestamp | ISO8601 timestamp when the metric was collected | Any Str | Recommended |
+| database_name | Name of the PostgreSQL database | Any Str | Recommended |
+| user_name | Name of the user/role connected to the database | Any Str | Recommended |
+| query_id | Unique identifier for a normalized query (hash from pg_stat_statements) | Any Str | Recommended |
+
+### postgresql.slow_queries.total_elapsed_time_ms
+
+Total execution time of the query in milliseconds
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| ms | Gauge | Double | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| collection_timestamp | ISO8601 timestamp when the metric was collected | Any Str | Recommended |
+| database_name | Name of the PostgreSQL database | Any Str | Recommended |
+| user_name | Name of the user/role connected to the database | Any Str | Recommended |
+| query_id | Unique identifier for a normalized query (hash from pg_stat_statements) | Any Str | Recommended |
+
+### postgresql.slow_queries.total_rows
+
+Total number of rows returned
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {rows} | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| collection_timestamp | ISO8601 timestamp when the metric was collected | Any Str | Recommended |
+| database_name | Name of the PostgreSQL database | Any Str | Recommended |
+| user_name | Name of the user/role connected to the database | Any Str | Recommended |
+| query_id | Unique identifier for a normalized query (hash from pg_stat_statements) | Any Str | Recommended |
+
 ### postgresql.slru.blks_exists
 
 Number of blocks checked for existence for this SLRU (PostgreSQL 13+)

@@ -191,6 +191,25 @@ type MetricsConfig struct {
 	PostgresqlSessionsIdleInTransactionTime           MetricConfig `mapstructure:"postgresql.sessions.idle_in_transaction_time"`
 	PostgresqlSessionsKilled                          MetricConfig `mapstructure:"postgresql.sessions.killed"`
 	PostgresqlSessionsSessionTime                     MetricConfig `mapstructure:"postgresql.sessions.session_time"`
+	PostgresqlSlowQueriesAvgBufferHits                MetricConfig `mapstructure:"postgresql.slow_queries.avg_buffer_hits"`
+	PostgresqlSlowQueriesAvgCPUTimeMs                 MetricConfig `mapstructure:"postgresql.slow_queries.avg_cpu_time_ms"`
+	PostgresqlSlowQueriesAvgDiskReads                 MetricConfig `mapstructure:"postgresql.slow_queries.avg_disk_reads"`
+	PostgresqlSlowQueriesAvgDiskWrites                MetricConfig `mapstructure:"postgresql.slow_queries.avg_disk_writes"`
+	PostgresqlSlowQueriesAvgElapsedTimeMs             MetricConfig `mapstructure:"postgresql.slow_queries.avg_elapsed_time_ms"`
+	PostgresqlSlowQueriesAvgPlanTimeMs                MetricConfig `mapstructure:"postgresql.slow_queries.avg_plan_time_ms"`
+	PostgresqlSlowQueriesAvgRowsReturned              MetricConfig `mapstructure:"postgresql.slow_queries.avg_rows_returned"`
+	PostgresqlSlowQueriesExecutionCount               MetricConfig `mapstructure:"postgresql.slow_queries.execution_count"`
+	PostgresqlSlowQueriesIntervalAvgElapsedTimeMs     MetricConfig `mapstructure:"postgresql.slow_queries.interval_avg_elapsed_time_ms"`
+	PostgresqlSlowQueriesIntervalExecutionCount       MetricConfig `mapstructure:"postgresql.slow_queries.interval_execution_count"`
+	PostgresqlSlowQueriesMaxElapsedTimeMs             MetricConfig `mapstructure:"postgresql.slow_queries.max_elapsed_time_ms"`
+	PostgresqlSlowQueriesMinElapsedTimeMs             MetricConfig `mapstructure:"postgresql.slow_queries.min_elapsed_time_ms"`
+	PostgresqlSlowQueriesQueryDetails                 MetricConfig `mapstructure:"postgresql.slow_queries.query_details"`
+	PostgresqlSlowQueriesStddevElapsedTimeMs          MetricConfig `mapstructure:"postgresql.slow_queries.stddev_elapsed_time_ms"`
+	PostgresqlSlowQueriesTotalBufferHits              MetricConfig `mapstructure:"postgresql.slow_queries.total_buffer_hits"`
+	PostgresqlSlowQueriesTotalDiskReads               MetricConfig `mapstructure:"postgresql.slow_queries.total_disk_reads"`
+	PostgresqlSlowQueriesTotalDiskWrites              MetricConfig `mapstructure:"postgresql.slow_queries.total_disk_writes"`
+	PostgresqlSlowQueriesTotalElapsedTimeMs           MetricConfig `mapstructure:"postgresql.slow_queries.total_elapsed_time_ms"`
+	PostgresqlSlowQueriesTotalRows                    MetricConfig `mapstructure:"postgresql.slow_queries.total_rows"`
 	PostgresqlSlruBlksExists                          MetricConfig `mapstructure:"postgresql.slru.blks_exists"`
 	PostgresqlSlruBlksHit                             MetricConfig `mapstructure:"postgresql.slru.blks_hit"`
 	PostgresqlSlruBlksRead                            MetricConfig `mapstructure:"postgresql.slru.blks_read"`
@@ -747,6 +766,63 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		PostgresqlSessionsSessionTime: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlSlowQueriesAvgBufferHits: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlSlowQueriesAvgCPUTimeMs: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlSlowQueriesAvgDiskReads: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlSlowQueriesAvgDiskWrites: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlSlowQueriesAvgElapsedTimeMs: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlSlowQueriesAvgPlanTimeMs: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlSlowQueriesAvgRowsReturned: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlSlowQueriesExecutionCount: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlSlowQueriesIntervalAvgElapsedTimeMs: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlSlowQueriesIntervalExecutionCount: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlSlowQueriesMaxElapsedTimeMs: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlSlowQueriesMinElapsedTimeMs: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlSlowQueriesQueryDetails: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlSlowQueriesStddevElapsedTimeMs: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlSlowQueriesTotalBufferHits: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlSlowQueriesTotalDiskReads: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlSlowQueriesTotalDiskWrites: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlSlowQueriesTotalElapsedTimeMs: MetricConfig{
+			Enabled: true,
+		},
+		PostgresqlSlowQueriesTotalRows: MetricConfig{
 			Enabled: true,
 		},
 		PostgresqlSlruBlksExists: MetricConfig{

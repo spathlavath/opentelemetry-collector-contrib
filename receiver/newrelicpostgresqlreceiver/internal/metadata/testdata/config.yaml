@@ -327,6 +327,44 @@ all_set:
       enabled: true
     postgresql.sessions.session_time:
       enabled: true
+    postgresql.slow_queries.avg_buffer_hits:
+      enabled: true
+    postgresql.slow_queries.avg_cpu_time_ms:
+      enabled: true
+    postgresql.slow_queries.avg_disk_reads:
+      enabled: true
+    postgresql.slow_queries.avg_disk_writes:
+      enabled: true
+    postgresql.slow_queries.avg_elapsed_time_ms:
+      enabled: true
+    postgresql.slow_queries.avg_plan_time_ms:
+      enabled: true
+    postgresql.slow_queries.avg_rows_returned:
+      enabled: true
+    postgresql.slow_queries.execution_count:
+      enabled: true
+    postgresql.slow_queries.interval_avg_elapsed_time_ms:
+      enabled: true
+    postgresql.slow_queries.interval_execution_count:
+      enabled: true
+    postgresql.slow_queries.max_elapsed_time_ms:
+      enabled: true
+    postgresql.slow_queries.min_elapsed_time_ms:
+      enabled: true
+    postgresql.slow_queries.query_details:
+      enabled: true
+    postgresql.slow_queries.stddev_elapsed_time_ms:
+      enabled: true
+    postgresql.slow_queries.total_buffer_hits:
+      enabled: true
+    postgresql.slow_queries.total_disk_reads:
+      enabled: true
+    postgresql.slow_queries.total_disk_writes:
+      enabled: true
+    postgresql.slow_queries.total_elapsed_time_ms:
+      enabled: true
+    postgresql.slow_queries.total_rows:
+      enabled: true
     postgresql.slru.blks_exists:
       enabled: true
     postgresql.slru.blks_hit:
@@ -797,6 +835,44 @@ none_set:
     postgresql.sessions.killed:
       enabled: false
     postgresql.sessions.session_time:
+      enabled: false
+    postgresql.slow_queries.avg_buffer_hits:
+      enabled: false
+    postgresql.slow_queries.avg_cpu_time_ms:
+      enabled: false
+    postgresql.slow_queries.avg_disk_reads:
+      enabled: false
+    postgresql.slow_queries.avg_disk_writes:
+      enabled: false
+    postgresql.slow_queries.avg_elapsed_time_ms:
+      enabled: false
+    postgresql.slow_queries.avg_plan_time_ms:
+      enabled: false
+    postgresql.slow_queries.avg_rows_returned:
+      enabled: false
+    postgresql.slow_queries.execution_count:
+      enabled: false
+    postgresql.slow_queries.interval_avg_elapsed_time_ms:
+      enabled: false
+    postgresql.slow_queries.interval_execution_count:
+      enabled: false
+    postgresql.slow_queries.max_elapsed_time_ms:
+      enabled: false
+    postgresql.slow_queries.min_elapsed_time_ms:
+      enabled: false
+    postgresql.slow_queries.query_details:
+      enabled: false
+    postgresql.slow_queries.stddev_elapsed_time_ms:
+      enabled: false
+    postgresql.slow_queries.total_buffer_hits:
+      enabled: false
+    postgresql.slow_queries.total_disk_reads:
+      enabled: false
+    postgresql.slow_queries.total_disk_writes:
+      enabled: false
+    postgresql.slow_queries.total_elapsed_time_ms:
+      enabled: false
+    postgresql.slow_queries.total_rows:
       enabled: false
     postgresql.slru.blks_exists:
       enabled: false

@@ -7,6 +7,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"strings"
 
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicpostgresqlreceiver/models"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicpostgresqlreceiver/queries"
@@ -1393,4 +1394,74 @@ func (c *SQLClient) QueryIndexSize(ctx context.Context, indexOID int64) (int64, 
 	}
 
 	return size.Int64, nil
+}
+
+// QuerySlowQueries retrieves slow query statistics from pg_stat_statements
+func (c *SQLClient) QuerySlowQueries(ctx context.Context, version, sqlRowLimit int) ([]models.PgSlowQueryMetric, error) {
+	// Get version-specific query with SQL row limit for pre-filtering
+	// This reduces memory usage by fetching only top N queries by historical average
+	query := queries.GetSlowQueriesSQL(version, sqlRowLimit)
+
+	// DEBUG: Log query info to diagnose syntax errors
+	fmt.Printf("DEBUG: Executing slow queries SQL (version=%d, limit=%d), query length=%d chars\n", version, sqlRowLimit, len(query))
+	if len(query) < 1000 {
+		fmt.Printf("DEBUG: Full query:\n%s\n", query)
+	} else {
+		fmt.Printf("DEBUG: Query start:\n%s...\n", query[:500])
+	}
+
+	rows, err := c.db.QueryContext(ctx, query)
+	if err != nil {
+		// Only return empty slice gracefully if pg_stat_statements extension is not installed
+		// For all other errors (SQL syntax, permissions, connection issues), return the error
+		errMsg := err.Error()
+		if strings.Contains(errMsg, "pg_stat_statements") && strings.Contains(errMsg, "does not exist") {
+			// Extension not installed - return empty slice gracefully
+			return []models.PgSlowQueryMetric{}, nil
+		}
+		// All other errors should be reported
+		return nil, fmt.Errorf("failed to query slow queries: %w", err)
+	}
+	defer rows.Close()
+
+	var metrics []models.PgSlowQueryMetric
+
+	for rows.Next() {
+		var metric models.PgSlowQueryMetric
+
+		err = rows.Scan(
+			&metric.CollectionTimestamp,
+			&metric.QueryID,
+			&metric.DatabaseName,
+			&metric.UserName,
+			&metric.ExecutionCount,
+			&metric.QueryText,
+			&metric.AvgElapsedTimeMs,
+			&metric.MinElapsedTimeMs,
+			&metric.MaxElapsedTimeMs,
+			&metric.StddevElapsedTimeMs,
+			&metric.TotalElapsedTimeMs,
+			&metric.AvgPlanTimeMs,
+			&metric.AvgCPUTimeMs,
+			&metric.AvgDiskReads,
+			&metric.TotalDiskReads,
+			&metric.AvgBufferHits,
+			&metric.TotalBufferHits,
+			&metric.AvgDiskWrites,
+			&metric.TotalDiskWrites,
+			&metric.AvgRowsReturned,
+			&metric.TotalRows,
+		)
+		if err != nil {
+			return nil, fmt.Errorf("failed to scan slow query row: %w", err)
+		}
+
+		metrics = append(metrics, metric)
+	}
+
+	if err = rows.Err(); err != nil {
+		return nil, fmt.Errorf("error iterating slow query rows: %w", err)
+	}
+
+	return metrics, nil
 }
