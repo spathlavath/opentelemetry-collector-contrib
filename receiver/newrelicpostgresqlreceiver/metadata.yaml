@@ -2237,10 +2237,34 @@ metrics:
   postgresql.slow_queries.execution_count:
     description: Number of times the query has been executed
     enabled: true
-    sum:
+    gauge:
       value_type: int
-      monotonic: true
-      aggregation_temporality: cumulative
+    attributes:
+    - collection_timestamp
+    - database_name
+    - user_name
+    - query_id
+    unit: '{executions}'
+    stability:
+      level: alpha
+  postgresql.slow_queries.interval_avg_elapsed_time_ms:
+    description: Average elapsed time per execution in the last polling interval (delta metric). On first scrape, represents historical average since pg_stat_statements was last reset.
+    enabled: true
+    gauge:
+      value_type: double
+    attributes:
+    - collection_timestamp
+    - database_name
+    - user_name
+    - query_id
+    unit: ms
+    stability:
+      level: alpha
+  postgresql.slow_queries.interval_execution_count:
+    description: Number of new executions since last scrape (delta metric). On first scrape, represents all executions since pg_stat_statements was last reset.
+    enabled: true
+    gauge:
+      value_type: int
     attributes:
     - collection_timestamp
     - database_name
@@ -2307,10 +2331,8 @@ metrics:
   postgresql.slow_queries.total_buffer_hits:
     description: Total number of buffer cache hits
     enabled: true
-    sum:
+    gauge:
       value_type: int
-      monotonic: true
-      aggregation_temporality: cumulative
     attributes:
     - collection_timestamp
     - database_name
@@ -2322,10 +2344,8 @@ metrics:
   postgresql.slow_queries.total_disk_reads:
     description: Total number of disk blocks read
     enabled: true
-    sum:
+    gauge:
       value_type: int
-      monotonic: true
-      aggregation_temporality: cumulative
     attributes:
     - collection_timestamp
     - database_name
@@ -2337,10 +2357,8 @@ metrics:
   postgresql.slow_queries.total_disk_writes:
     description: Total number of disk blocks written
     enabled: true
-    sum:
+    gauge:
       value_type: int
-      monotonic: true
-      aggregation_temporality: cumulative
     attributes:
     - collection_timestamp
     - database_name
@@ -2352,10 +2370,8 @@ metrics:
   postgresql.slow_queries.total_elapsed_time_ms:
     description: Total execution time of the query in milliseconds
     enabled: true
-    sum:
+    gauge:
       value_type: double
-      monotonic: true
-      aggregation_temporality: cumulative
     attributes:
     - collection_timestamp
     - database_name
@@ -2367,10 +2383,8 @@ metrics:
   postgresql.slow_queries.total_rows:
     description: Total number of rows returned
     enabled: true
-    sum:
+    gauge:
       value_type: int
-      monotonic: true
-      aggregation_temporality: cumulative
     attributes:
     - collection_timestamp
     - database_name

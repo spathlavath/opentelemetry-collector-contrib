@@ -754,6 +754,14 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
+			mb.RecordPostgresqlSlowQueriesIntervalAvgElapsedTimeMsDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "user_name-val", "query_id-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordPostgresqlSlowQueriesIntervalExecutionCountDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "user_name-val", "query_id-val")
+
+			defaultMetricsCount++
+			allMetricsCount++
 			mb.RecordPostgresqlSlowQueriesMaxElapsedTimeMsDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "user_name-val", "query_id-val")
 
 			defaultMetricsCount++
@@ -4665,13 +4673,59 @@ func TestMetricsBuilder(t *testing.T) {
 				case "postgresql.slow_queries.execution_count":
 					assert.False(t, validatedMetrics["postgresql.slow_queries.execution_count"], "Found a duplicate in the metrics slice: postgresql.slow_queries.execution_count")
 					validatedMetrics["postgresql.slow_queries.execution_count"] = true
-					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
-					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
 					assert.Equal(t, "Number of times the query has been executed", ms.At(i).Description())
 					assert.Equal(t, "{executions}", ms.At(i).Unit())
-					assert.True(t, ms.At(i).Sum().IsMonotonic())
-					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
-					dp := ms.At(i).Sum().DataPoints().At(0)
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+					attrVal, ok := dp.Attributes().Get("collection_timestamp")
+					assert.True(t, ok)
+					assert.Equal(t, "collection_timestamp-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("user_name")
+					assert.True(t, ok)
+					assert.Equal(t, "user_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("query_id")
+					assert.True(t, ok)
+					assert.Equal(t, "query_id-val", attrVal.Str())
+				case "postgresql.slow_queries.interval_avg_elapsed_time_ms":
+					assert.False(t, validatedMetrics["postgresql.slow_queries.interval_avg_elapsed_time_ms"], "Found a duplicate in the metrics slice: postgresql.slow_queries.interval_avg_elapsed_time_ms")
+					validatedMetrics["postgresql.slow_queries.interval_avg_elapsed_time_ms"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Average elapsed time per execution in the last polling interval (delta metric). On first scrape, represents historical average since pg_stat_statements was last reset.", ms.At(i).Description())
+					assert.Equal(t, "ms", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
+					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
+					attrVal, ok := dp.Attributes().Get("collection_timestamp")
+					assert.True(t, ok)
+					assert.Equal(t, "collection_timestamp-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("database_name")
+					assert.True(t, ok)
+					assert.Equal(t, "database_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("user_name")
+					assert.True(t, ok)
+					assert.Equal(t, "user_name-val", attrVal.Str())
+					attrVal, ok = dp.Attributes().Get("query_id")
+					assert.True(t, ok)
+					assert.Equal(t, "query_id-val", attrVal.Str())
+				case "postgresql.slow_queries.interval_execution_count":
+					assert.False(t, validatedMetrics["postgresql.slow_queries.interval_execution_count"], "Found a duplicate in the metrics slice: postgresql.slow_queries.interval_execution_count")
+					validatedMetrics["postgresql.slow_queries.interval_execution_count"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Number of new executions since last scrape (delta metric). On first scrape, represents all executions since pg_stat_statements was last reset.", ms.At(i).Description())
+					assert.Equal(t, "{executions}", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
 					assert.Equal(t, start, dp.StartTimestamp())
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
@@ -4796,13 +4850,11 @@ func TestMetricsBuilder(t *testing.T) {
 				case "postgresql.slow_queries.total_buffer_hits":
 					assert.False(t, validatedMetrics["postgresql.slow_queries.total_buffer_hits"], "Found a duplicate in the metrics slice: postgresql.slow_queries.total_buffer_hits")
 					validatedMetrics["postgresql.slow_queries.total_buffer_hits"] = true
-					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
-					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
 					assert.Equal(t, "Total number of buffer cache hits", ms.At(i).Description())
 					assert.Equal(t, "{blocks}", ms.At(i).Unit())
-					assert.True(t, ms.At(i).Sum().IsMonotonic())
-					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
-					dp := ms.At(i).Sum().DataPoints().At(0)
+					dp := ms.At(i).Gauge().DataPoints().At(0)
 					assert.Equal(t, start, dp.StartTimestamp())
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
@@ -4822,13 +4874,11 @@ func TestMetricsBuilder(t *testing.T) {
 				case "postgresql.slow_queries.total_disk_reads":
 					assert.False(t, validatedMetrics["postgresql.slow_queries.total_disk_reads"], "Found a duplicate in the metrics slice: postgresql.slow_queries.total_disk_reads")
 					validatedMetrics["postgresql.slow_queries.total_disk_reads"] = true
-					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
-					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
 					assert.Equal(t, "Total number of disk blocks read", ms.At(i).Description())
 					assert.Equal(t, "{blocks}", ms.At(i).Unit())
-					assert.True(t, ms.At(i).Sum().IsMonotonic())
-					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
-					dp := ms.At(i).Sum().DataPoints().At(0)
+					dp := ms.At(i).Gauge().DataPoints().At(0)
 					assert.Equal(t, start, dp.StartTimestamp())
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
@@ -4848,13 +4898,11 @@ func TestMetricsBuilder(t *testing.T) {
 				case "postgresql.slow_queries.total_disk_writes":
 					assert.False(t, validatedMetrics["postgresql.slow_queries.total_disk_writes"], "Found a duplicate in the metrics slice: postgresql.slow_queries.total_disk_writes")
 					validatedMetrics["postgresql.slow_queries.total_disk_writes"] = true
-					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
-					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
 					assert.Equal(t, "Total number of disk blocks written", ms.At(i).Description())
 					assert.Equal(t, "{blocks}", ms.At(i).Unit())
-					assert.True(t, ms.At(i).Sum().IsMonotonic())
-					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
-					dp := ms.At(i).Sum().DataPoints().At(0)
+					dp := ms.At(i).Gauge().DataPoints().At(0)
 					assert.Equal(t, start, dp.StartTimestamp())
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
@@ -4874,13 +4922,11 @@ func TestMetricsBuilder(t *testing.T) {
 				case "postgresql.slow_queries.total_elapsed_time_ms":
 					assert.False(t, validatedMetrics["postgresql.slow_queries.total_elapsed_time_ms"], "Found a duplicate in the metrics slice: postgresql.slow_queries.total_elapsed_time_ms")
 					validatedMetrics["postgresql.slow_queries.total_elapsed_time_ms"] = true
-					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
-					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
 					assert.Equal(t, "Total execution time of the query in milliseconds", ms.At(i).Description())
 					assert.Equal(t, "ms", ms.At(i).Unit())
-					assert.True(t, ms.At(i).Sum().IsMonotonic())
-					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
-					dp := ms.At(i).Sum().DataPoints().At(0)
+					dp := ms.At(i).Gauge().DataPoints().At(0)
 					assert.Equal(t, start, dp.StartTimestamp())
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
@@ -4900,13 +4946,11 @@ func TestMetricsBuilder(t *testing.T) {
 				case "postgresql.slow_queries.total_rows":
 					assert.False(t, validatedMetrics["postgresql.slow_queries.total_rows"], "Found a duplicate in the metrics slice: postgresql.slow_queries.total_rows")
 					validatedMetrics["postgresql.slow_queries.total_rows"] = true
-					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
-					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
 					assert.Equal(t, "Total number of rows returned", ms.At(i).Description())
 					assert.Equal(t, "{rows}", ms.At(i).Unit())
-					assert.True(t, ms.At(i).Sum().IsMonotonic())
-					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
-					dp := ms.At(i).Sum().DataPoints().At(0)
+					dp := ms.At(i).Gauge().DataPoints().At(0)
 					assert.Equal(t, start, dp.StartTimestamp())
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())

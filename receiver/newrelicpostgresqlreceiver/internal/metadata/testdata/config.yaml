@@ -343,6 +343,10 @@ all_set:
       enabled: true
     postgresql.slow_queries.execution_count:
       enabled: true
+    postgresql.slow_queries.interval_avg_elapsed_time_ms:
+      enabled: true
+    postgresql.slow_queries.interval_execution_count:
+      enabled: true
     postgresql.slow_queries.max_elapsed_time_ms:
       enabled: true
     postgresql.slow_queries.min_elapsed_time_ms:
@@ -847,6 +851,10 @@ none_set:
     postgresql.slow_queries.avg_rows_returned:
       enabled: false
     postgresql.slow_queries.execution_count:
+      enabled: false
+    postgresql.slow_queries.interval_avg_elapsed_time_ms:
+      enabled: false
+    postgresql.slow_queries.interval_execution_count:
       enabled: false
     postgresql.slow_queries.max_elapsed_time_ms:
       enabled: false

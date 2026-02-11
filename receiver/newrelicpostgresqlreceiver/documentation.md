@@ -2701,9 +2701,43 @@ Average number of rows returned per execution
 
 Number of times the query has been executed
 
-| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
-| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
-| {executions} | Sum | Int | Cumulative | true | Alpha |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {executions} | Gauge | Int | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| collection_timestamp | ISO8601 timestamp when the metric was collected | Any Str | Recommended |
+| database_name | Name of the PostgreSQL database | Any Str | Recommended |
+| user_name | Name of the user/role connected to the database | Any Str | Recommended |
+| query_id | Unique identifier for a normalized query (hash from pg_stat_statements) | Any Str | Recommended |
+
+### postgresql.slow_queries.interval_avg_elapsed_time_ms
+
+Average elapsed time per execution in the last polling interval (delta metric). On first scrape, represents historical average since pg_stat_statements was last reset.
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| ms | Gauge | Double | Alpha |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| collection_timestamp | ISO8601 timestamp when the metric was collected | Any Str | Recommended |
+| database_name | Name of the PostgreSQL database | Any Str | Recommended |
+| user_name | Name of the user/role connected to the database | Any Str | Recommended |
+| query_id | Unique identifier for a normalized query (hash from pg_stat_statements) | Any Str | Recommended |
+
+### postgresql.slow_queries.interval_execution_count
+
+Number of new executions since last scrape (delta metric). On first scrape, represents all executions since pg_stat_statements was last reset.
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {executions} | Gauge | Int | Alpha |
 
 #### Attributes
 
@@ -2789,9 +2823,9 @@ Standard deviation of execution time of the query in milliseconds
 
 Total number of buffer cache hits
 
-| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
-| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
-| {blocks} | Sum | Int | Cumulative | true | Alpha |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {blocks} | Gauge | Int | Alpha |
 
 #### Attributes
 
@@ -2806,9 +2840,9 @@ Total number of buffer cache hits
 
 Total number of disk blocks read
 
-| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
-| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
-| {blocks} | Sum | Int | Cumulative | true | Alpha |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {blocks} | Gauge | Int | Alpha |
 
 #### Attributes
 
@@ -2823,9 +2857,9 @@ Total number of disk blocks read
 
 Total number of disk blocks written
 
-| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
-| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
-| {blocks} | Sum | Int | Cumulative | true | Alpha |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {blocks} | Gauge | Int | Alpha |
 
 #### Attributes
 
@@ -2840,9 +2874,9 @@ Total number of disk blocks written
 
 Total execution time of the query in milliseconds
 
-| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
-| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
-| ms | Sum | Double | Cumulative | true | Alpha |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| ms | Gauge | Double | Alpha |
 
 #### Attributes
 
@@ -2857,9 +2891,9 @@ Total execution time of the query in milliseconds
 
 Total number of rows returned
 
-| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
-| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
-| {rows} | Sum | Int | Cumulative | true | Alpha |
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {rows} | Gauge | Int | Alpha |
 
 #### Attributes
 

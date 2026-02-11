@@ -526,6 +526,12 @@ var MetricsInfo = metricsInfo{
 	PostgresqlSlowQueriesExecutionCount: metricInfo{
 		Name: "postgresql.slow_queries.execution_count",
 	},
+	PostgresqlSlowQueriesIntervalAvgElapsedTimeMs: metricInfo{
+		Name: "postgresql.slow_queries.interval_avg_elapsed_time_ms",
+	},
+	PostgresqlSlowQueriesIntervalExecutionCount: metricInfo{
+		Name: "postgresql.slow_queries.interval_execution_count",
+	},
 	PostgresqlSlowQueriesMaxElapsedTimeMs: metricInfo{
 		Name: "postgresql.slow_queries.max_elapsed_time_ms",
 	},
@@ -922,6 +928,8 @@ type metricsInfo struct {
 	PostgresqlSlowQueriesAvgPlanTimeMs                metricInfo
 	PostgresqlSlowQueriesAvgRowsReturned              metricInfo
 	PostgresqlSlowQueriesExecutionCount               metricInfo
+	PostgresqlSlowQueriesIntervalAvgElapsedTimeMs     metricInfo
+	PostgresqlSlowQueriesIntervalExecutionCount       metricInfo
 	PostgresqlSlowQueriesMaxElapsedTimeMs             metricInfo
 	PostgresqlSlowQueriesMinElapsedTimeMs             metricInfo
 	PostgresqlSlowQueriesQueryDetails                 metricInfo
@@ -10108,17 +10116,15 @@ func (m *metricPostgresqlSlowQueriesExecutionCount) init() {
 	m.data.SetName("postgresql.slow_queries.execution_count")
 	m.data.SetDescription("Number of times the query has been executed")
 	m.data.SetUnit("{executions}")
-	m.data.SetEmptySum()
-	m.data.Sum().SetIsMonotonic(true)
-	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
-	m.data.Sum().DataPoints().EnsureCapacity(m.capacity)
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
 func (m *metricPostgresqlSlowQueriesExecutionCount) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, collectionTimestampAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, queryIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
-	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetIntValue(val)
@@ -10130,14 +10136,14 @@ func (m *metricPostgresqlSlowQueriesExecutionCount) recordDataPoint(start pcommo
 
 // updateCapacity saves max length of data point slices that will be used for the slice capacity.
 func (m *metricPostgresqlSlowQueriesExecutionCount) updateCapacity() {
-	if m.data.Sum().DataPoints().Len() > m.capacity {
-		m.capacity = m.data.Sum().DataPoints().Len()
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
 	}
 }
 
 // emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
 func (m *metricPostgresqlSlowQueriesExecutionCount) emit(metrics pmetric.MetricSlice) {
-	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
 		m.updateCapacity()
 		m.data.MoveTo(metrics.AppendEmpty())
 		m.init()
@@ -10146,6 +10152,114 @@ func (m *metricPostgresqlSlowQueriesExecutionCount) emit(metrics pmetric.MetricS
 
 func newMetricPostgresqlSlowQueriesExecutionCount(cfg MetricConfig) metricPostgresqlSlowQueriesExecutionCount {
 	m := metricPostgresqlSlowQueriesExecutionCount{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlSlowQueriesIntervalAvgElapsedTimeMs struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.slow_queries.interval_avg_elapsed_time_ms metric with initial data.
+func (m *metricPostgresqlSlowQueriesIntervalAvgElapsedTimeMs) init() {
+	m.data.SetName("postgresql.slow_queries.interval_avg_elapsed_time_ms")
+	m.data.SetDescription("Average elapsed time per execution in the last polling interval (delta metric). On first scrape, represents historical average since pg_stat_statements was last reset.")
+	m.data.SetUnit("ms")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlSlowQueriesIntervalAvgElapsedTimeMs) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, collectionTimestampAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, queryIDAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetDoubleValue(val)
+	dp.Attributes().PutStr("collection_timestamp", collectionTimestampAttributeValue)
+	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
+	dp.Attributes().PutStr("user_name", userNameAttributeValue)
+	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlSlowQueriesIntervalAvgElapsedTimeMs) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlSlowQueriesIntervalAvgElapsedTimeMs) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlSlowQueriesIntervalAvgElapsedTimeMs(cfg MetricConfig) metricPostgresqlSlowQueriesIntervalAvgElapsedTimeMs {
+	m := metricPostgresqlSlowQueriesIntervalAvgElapsedTimeMs{config: cfg}
+	if cfg.Enabled {
+		m.data = pmetric.NewMetric()
+		m.init()
+	}
+	return m
+}
+
+type metricPostgresqlSlowQueriesIntervalExecutionCount struct {
+	data     pmetric.Metric // data buffer for generated metric.
+	config   MetricConfig   // metric config provided by user.
+	capacity int            // max observed number of data points added to the metric.
+}
+
+// init fills postgresql.slow_queries.interval_execution_count metric with initial data.
+func (m *metricPostgresqlSlowQueriesIntervalExecutionCount) init() {
+	m.data.SetName("postgresql.slow_queries.interval_execution_count")
+	m.data.SetDescription("Number of new executions since last scrape (delta metric). On first scrape, represents all executions since pg_stat_statements was last reset.")
+	m.data.SetUnit("{executions}")
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
+}
+
+func (m *metricPostgresqlSlowQueriesIntervalExecutionCount) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, collectionTimestampAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, queryIDAttributeValue string) {
+	if !m.config.Enabled {
+		return
+	}
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
+	dp.SetStartTimestamp(start)
+	dp.SetTimestamp(ts)
+	dp.SetIntValue(val)
+	dp.Attributes().PutStr("collection_timestamp", collectionTimestampAttributeValue)
+	dp.Attributes().PutStr("database_name", databaseNameAttributeValue)
+	dp.Attributes().PutStr("user_name", userNameAttributeValue)
+	dp.Attributes().PutStr("query_id", queryIDAttributeValue)
+}
+
+// updateCapacity saves max length of data point slices that will be used for the slice capacity.
+func (m *metricPostgresqlSlowQueriesIntervalExecutionCount) updateCapacity() {
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
+	}
+}
+
+// emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
+func (m *metricPostgresqlSlowQueriesIntervalExecutionCount) emit(metrics pmetric.MetricSlice) {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
+		m.updateCapacity()
+		m.data.MoveTo(metrics.AppendEmpty())
+		m.init()
+	}
+}
+
+func newMetricPostgresqlSlowQueriesIntervalExecutionCount(cfg MetricConfig) metricPostgresqlSlowQueriesIntervalExecutionCount {
+	m := metricPostgresqlSlowQueriesIntervalExecutionCount{config: cfg}
 	if cfg.Enabled {
 		m.data = pmetric.NewMetric()
 		m.init()
@@ -10383,17 +10497,15 @@ func (m *metricPostgresqlSlowQueriesTotalBufferHits) init() {
 	m.data.SetName("postgresql.slow_queries.total_buffer_hits")
 	m.data.SetDescription("Total number of buffer cache hits")
 	m.data.SetUnit("{blocks}")
-	m.data.SetEmptySum()
-	m.data.Sum().SetIsMonotonic(true)
-	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
-	m.data.Sum().DataPoints().EnsureCapacity(m.capacity)
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
 func (m *metricPostgresqlSlowQueriesTotalBufferHits) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, collectionTimestampAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, queryIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
-	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetIntValue(val)
@@ -10405,14 +10517,14 @@ func (m *metricPostgresqlSlowQueriesTotalBufferHits) recordDataPoint(start pcomm
 
 // updateCapacity saves max length of data point slices that will be used for the slice capacity.
 func (m *metricPostgresqlSlowQueriesTotalBufferHits) updateCapacity() {
-	if m.data.Sum().DataPoints().Len() > m.capacity {
-		m.capacity = m.data.Sum().DataPoints().Len()
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
 	}
 }
 
 // emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
 func (m *metricPostgresqlSlowQueriesTotalBufferHits) emit(metrics pmetric.MetricSlice) {
-	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
 		m.updateCapacity()
 		m.data.MoveTo(metrics.AppendEmpty())
 		m.init()
@@ -10439,17 +10551,15 @@ func (m *metricPostgresqlSlowQueriesTotalDiskReads) init() {
 	m.data.SetName("postgresql.slow_queries.total_disk_reads")
 	m.data.SetDescription("Total number of disk blocks read")
 	m.data.SetUnit("{blocks}")
-	m.data.SetEmptySum()
-	m.data.Sum().SetIsMonotonic(true)
-	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
-	m.data.Sum().DataPoints().EnsureCapacity(m.capacity)
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
 func (m *metricPostgresqlSlowQueriesTotalDiskReads) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, collectionTimestampAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, queryIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
-	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetIntValue(val)
@@ -10461,14 +10571,14 @@ func (m *metricPostgresqlSlowQueriesTotalDiskReads) recordDataPoint(start pcommo
 
 // updateCapacity saves max length of data point slices that will be used for the slice capacity.
 func (m *metricPostgresqlSlowQueriesTotalDiskReads) updateCapacity() {
-	if m.data.Sum().DataPoints().Len() > m.capacity {
-		m.capacity = m.data.Sum().DataPoints().Len()
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
 	}
 }
 
 // emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
 func (m *metricPostgresqlSlowQueriesTotalDiskReads) emit(metrics pmetric.MetricSlice) {
-	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
 		m.updateCapacity()
 		m.data.MoveTo(metrics.AppendEmpty())
 		m.init()
@@ -10495,17 +10605,15 @@ func (m *metricPostgresqlSlowQueriesTotalDiskWrites) init() {
 	m.data.SetName("postgresql.slow_queries.total_disk_writes")
 	m.data.SetDescription("Total number of disk blocks written")
 	m.data.SetUnit("{blocks}")
-	m.data.SetEmptySum()
-	m.data.Sum().SetIsMonotonic(true)
-	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
-	m.data.Sum().DataPoints().EnsureCapacity(m.capacity)
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
 func (m *metricPostgresqlSlowQueriesTotalDiskWrites) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, collectionTimestampAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, queryIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
-	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetIntValue(val)
@@ -10517,14 +10625,14 @@ func (m *metricPostgresqlSlowQueriesTotalDiskWrites) recordDataPoint(start pcomm
 
 // updateCapacity saves max length of data point slices that will be used for the slice capacity.
 func (m *metricPostgresqlSlowQueriesTotalDiskWrites) updateCapacity() {
-	if m.data.Sum().DataPoints().Len() > m.capacity {
-		m.capacity = m.data.Sum().DataPoints().Len()
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
 	}
 }
 
 // emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
 func (m *metricPostgresqlSlowQueriesTotalDiskWrites) emit(metrics pmetric.MetricSlice) {
-	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
 		m.updateCapacity()
 		m.data.MoveTo(metrics.AppendEmpty())
 		m.init()
@@ -10551,17 +10659,15 @@ func (m *metricPostgresqlSlowQueriesTotalElapsedTimeMs) init() {
 	m.data.SetName("postgresql.slow_queries.total_elapsed_time_ms")
 	m.data.SetDescription("Total execution time of the query in milliseconds")
 	m.data.SetUnit("ms")
-	m.data.SetEmptySum()
-	m.data.Sum().SetIsMonotonic(true)
-	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
-	m.data.Sum().DataPoints().EnsureCapacity(m.capacity)
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
 func (m *metricPostgresqlSlowQueriesTotalElapsedTimeMs) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val float64, collectionTimestampAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, queryIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
-	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetDoubleValue(val)
@@ -10573,14 +10679,14 @@ func (m *metricPostgresqlSlowQueriesTotalElapsedTimeMs) recordDataPoint(start pc
 
 // updateCapacity saves max length of data point slices that will be used for the slice capacity.
 func (m *metricPostgresqlSlowQueriesTotalElapsedTimeMs) updateCapacity() {
-	if m.data.Sum().DataPoints().Len() > m.capacity {
-		m.capacity = m.data.Sum().DataPoints().Len()
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
 	}
 }
 
 // emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
 func (m *metricPostgresqlSlowQueriesTotalElapsedTimeMs) emit(metrics pmetric.MetricSlice) {
-	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
 		m.updateCapacity()
 		m.data.MoveTo(metrics.AppendEmpty())
 		m.init()
@@ -10607,17 +10713,15 @@ func (m *metricPostgresqlSlowQueriesTotalRows) init() {
 	m.data.SetName("postgresql.slow_queries.total_rows")
 	m.data.SetDescription("Total number of rows returned")
 	m.data.SetUnit("{rows}")
-	m.data.SetEmptySum()
-	m.data.Sum().SetIsMonotonic(true)
-	m.data.Sum().SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
-	m.data.Sum().DataPoints().EnsureCapacity(m.capacity)
+	m.data.SetEmptyGauge()
+	m.data.Gauge().DataPoints().EnsureCapacity(m.capacity)
 }
 
 func (m *metricPostgresqlSlowQueriesTotalRows) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, collectionTimestampAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, queryIDAttributeValue string) {
 	if !m.config.Enabled {
 		return
 	}
-	dp := m.data.Sum().DataPoints().AppendEmpty()
+	dp := m.data.Gauge().DataPoints().AppendEmpty()
 	dp.SetStartTimestamp(start)
 	dp.SetTimestamp(ts)
 	dp.SetIntValue(val)
@@ -10629,14 +10733,14 @@ func (m *metricPostgresqlSlowQueriesTotalRows) recordDataPoint(start pcommon.Tim
 
 // updateCapacity saves max length of data point slices that will be used for the slice capacity.
 func (m *metricPostgresqlSlowQueriesTotalRows) updateCapacity() {
-	if m.data.Sum().DataPoints().Len() > m.capacity {
-		m.capacity = m.data.Sum().DataPoints().Len()
+	if m.data.Gauge().DataPoints().Len() > m.capacity {
+		m.capacity = m.data.Gauge().DataPoints().Len()
 	}
 }
 
 // emit appends recorded metric data to a metrics slice and prepares it for recording another set of data points.
 func (m *metricPostgresqlSlowQueriesTotalRows) emit(metrics pmetric.MetricSlice) {
-	if m.config.Enabled && m.data.Sum().DataPoints().Len() > 0 {
+	if m.config.Enabled && m.data.Gauge().DataPoints().Len() > 0 {
 		m.updateCapacity()
 		m.data.MoveTo(metrics.AppendEmpty())
 		m.init()
@@ -14303,6 +14407,8 @@ type MetricsBuilder struct {
 	metricPostgresqlSlowQueriesAvgPlanTimeMs                metricPostgresqlSlowQueriesAvgPlanTimeMs
 	metricPostgresqlSlowQueriesAvgRowsReturned              metricPostgresqlSlowQueriesAvgRowsReturned
 	metricPostgresqlSlowQueriesExecutionCount               metricPostgresqlSlowQueriesExecutionCount
+	metricPostgresqlSlowQueriesIntervalAvgElapsedTimeMs     metricPostgresqlSlowQueriesIntervalAvgElapsedTimeMs
+	metricPostgresqlSlowQueriesIntervalExecutionCount       metricPostgresqlSlowQueriesIntervalExecutionCount
 	metricPostgresqlSlowQueriesMaxElapsedTimeMs             metricPostgresqlSlowQueriesMaxElapsedTimeMs
 	metricPostgresqlSlowQueriesMinElapsedTimeMs             metricPostgresqlSlowQueriesMinElapsedTimeMs
 	metricPostgresqlSlowQueriesQueryDetails                 metricPostgresqlSlowQueriesQueryDetails
@@ -14573,6 +14679,8 @@ func NewMetricsBuilder(mbc MetricsBuilderConfig, settings receiver.Settings, opt
 		metricPostgresqlSlowQueriesAvgPlanTimeMs:                newMetricPostgresqlSlowQueriesAvgPlanTimeMs(mbc.Metrics.PostgresqlSlowQueriesAvgPlanTimeMs),
 		metricPostgresqlSlowQueriesAvgRowsReturned:              newMetricPostgresqlSlowQueriesAvgRowsReturned(mbc.Metrics.PostgresqlSlowQueriesAvgRowsReturned),
 		metricPostgresqlSlowQueriesExecutionCount:               newMetricPostgresqlSlowQueriesExecutionCount(mbc.Metrics.PostgresqlSlowQueriesExecutionCount),
+		metricPostgresqlSlowQueriesIntervalAvgElapsedTimeMs:     newMetricPostgresqlSlowQueriesIntervalAvgElapsedTimeMs(mbc.Metrics.PostgresqlSlowQueriesIntervalAvgElapsedTimeMs),
+		metricPostgresqlSlowQueriesIntervalExecutionCount:       newMetricPostgresqlSlowQueriesIntervalExecutionCount(mbc.Metrics.PostgresqlSlowQueriesIntervalExecutionCount),
 		metricPostgresqlSlowQueriesMaxElapsedTimeMs:             newMetricPostgresqlSlowQueriesMaxElapsedTimeMs(mbc.Metrics.PostgresqlSlowQueriesMaxElapsedTimeMs),
 		metricPostgresqlSlowQueriesMinElapsedTimeMs:             newMetricPostgresqlSlowQueriesMinElapsedTimeMs(mbc.Metrics.PostgresqlSlowQueriesMinElapsedTimeMs),
 		metricPostgresqlSlowQueriesQueryDetails:                 newMetricPostgresqlSlowQueriesQueryDetails(mbc.Metrics.PostgresqlSlowQueriesQueryDetails),
@@ -14926,6 +15034,8 @@ func (mb *MetricsBuilder) EmitForResource(options ...ResourceMetricsOption) {
 	mb.metricPostgresqlSlowQueriesAvgPlanTimeMs.emit(ils.Metrics())
 	mb.metricPostgresqlSlowQueriesAvgRowsReturned.emit(ils.Metrics())
 	mb.metricPostgresqlSlowQueriesExecutionCount.emit(ils.Metrics())
+	mb.metricPostgresqlSlowQueriesIntervalAvgElapsedTimeMs.emit(ils.Metrics())
+	mb.metricPostgresqlSlowQueriesIntervalExecutionCount.emit(ils.Metrics())
 	mb.metricPostgresqlSlowQueriesMaxElapsedTimeMs.emit(ils.Metrics())
 	mb.metricPostgresqlSlowQueriesMinElapsedTimeMs.emit(ils.Metrics())
 	mb.metricPostgresqlSlowQueriesQueryDetails.emit(ils.Metrics())
@@ -15884,6 +15994,16 @@ func (mb *MetricsBuilder) RecordPostgresqlSlowQueriesAvgRowsReturnedDataPoint(ts
 // RecordPostgresqlSlowQueriesExecutionCountDataPoint adds a data point to postgresql.slow_queries.execution_count metric.
 func (mb *MetricsBuilder) RecordPostgresqlSlowQueriesExecutionCountDataPoint(ts pcommon.Timestamp, val int64, collectionTimestampAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, queryIDAttributeValue string) {
 	mb.metricPostgresqlSlowQueriesExecutionCount.recordDataPoint(mb.startTime, ts, val, collectionTimestampAttributeValue, databaseNameAttributeValue, userNameAttributeValue, queryIDAttributeValue)
+}
+
+// RecordPostgresqlSlowQueriesIntervalAvgElapsedTimeMsDataPoint adds a data point to postgresql.slow_queries.interval_avg_elapsed_time_ms metric.
+func (mb *MetricsBuilder) RecordPostgresqlSlowQueriesIntervalAvgElapsedTimeMsDataPoint(ts pcommon.Timestamp, val float64, collectionTimestampAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, queryIDAttributeValue string) {
+	mb.metricPostgresqlSlowQueriesIntervalAvgElapsedTimeMs.recordDataPoint(mb.startTime, ts, val, collectionTimestampAttributeValue, databaseNameAttributeValue, userNameAttributeValue, queryIDAttributeValue)
+}
+
+// RecordPostgresqlSlowQueriesIntervalExecutionCountDataPoint adds a data point to postgresql.slow_queries.interval_execution_count metric.
+func (mb *MetricsBuilder) RecordPostgresqlSlowQueriesIntervalExecutionCountDataPoint(ts pcommon.Timestamp, val int64, collectionTimestampAttributeValue string, databaseNameAttributeValue string, userNameAttributeValue string, queryIDAttributeValue string) {
+	mb.metricPostgresqlSlowQueriesIntervalExecutionCount.recordDataPoint(mb.startTime, ts, val, collectionTimestampAttributeValue, databaseNameAttributeValue, userNameAttributeValue, queryIDAttributeValue)
 }
 
 // RecordPostgresqlSlowQueriesMaxElapsedTimeMsDataPoint adds a data point to postgresql.slow_queries.max_elapsed_time_ms metric.

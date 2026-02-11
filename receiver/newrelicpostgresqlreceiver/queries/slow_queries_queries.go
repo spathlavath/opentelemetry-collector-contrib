@@ -155,7 +155,7 @@ func GetSlowQueriesPrePG13SQL(sqlRowLimit int) string {
 // GetSlowQueriesPG13SQL returns slow query statistics from pg_stat_statements (PostgreSQL 13+)
 // This query retrieves slowest queries by average execution time with cross-database compatibility
 // Includes mean_plan_time (available in PostgreSQL 13+)
-// 
+//
 // Requires pg_stat_statements extension to be installed and enabled
 // Available in PostgreSQL 13+
 // Parameters:

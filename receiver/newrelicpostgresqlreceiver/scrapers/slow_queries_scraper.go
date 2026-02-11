@@ -333,6 +333,31 @@ func (s *SlowQueriesScraper) recordMetricsForSlowQuery(now pcommon.Timestamp, me
 		queryID,
 	)
 
+	// Record interval-based average elapsed time if available (delta metric)
+	// These are calculated by PgIntervalCalculator between scrapes
+	if metric.IntervalAvgElapsedTimeMS != nil {
+		s.mb.RecordPostgresqlSlowQueriesIntervalAvgElapsedTimeMsDataPoint(
+			now,
+			*metric.IntervalAvgElapsedTimeMS,
+			collectionTimestamp,
+			databaseName,
+			userName,
+			queryID,
+		)
+	}
+
+	// Record interval execution count if available (delta metric)
+	if metric.IntervalExecutionCount != nil {
+		s.mb.RecordPostgresqlSlowQueriesIntervalExecutionCountDataPoint(
+			now,
+			*metric.IntervalExecutionCount,
+			collectionTimestamp,
+			databaseName,
+			userName,
+			queryID,
+		)
+	}
+
 	// Record query details event (similar to Oracle's QueryDetails event)
 	// This contains the full query text and other metadata
 	s.mb.RecordPostgresqlSlowQueriesQueryDetailsDataPoint(
