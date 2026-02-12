@@ -1,6 +1,6 @@
 module github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver
 
-go 1.24.6
+go 1.25.7
 
 require (
 	github.com/godror/godror v0.44.0
