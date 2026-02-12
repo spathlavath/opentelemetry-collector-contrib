@@ -54,54 +54,6 @@ Total capacity of the ASM disk group in MB
 | ---- | ----------- | ------ | -------- |
 | diskgroup.name | ASM disk group name | Any Str | Recommended |
 
-### newrelicoracledb.blocking_queries.wait_time_ms
-
-Wait time in milliseconds for blocked queries
-
-Shows how long a session has been waiting due to blocking by another session in high precision milliseconds.
-Collected alongside wait events in a single optimized query from v$session.
-Includes information about the final blocking session (root cause) and its query.
-Includes wait event details (event name, category, object) to identify the type of contention.
-Only emitted for sessions that are actually blocked (FINAL_BLOCKING_SESSION is not null).
-Source: Same as current_wait_time_ms (WAIT_TIME_MICRO / 1000).
-
-
-| Unit | Metric Type | Value Type | Stability |
-| ---- | ----------- | ---------- | --------- |
-| ms | Gauge | Double | Alpha |
-
-#### Attributes
-
-| Name | Description | Values | Requirement Level |
-| ---- | ----------- | ------ | -------- |
-| collection_timestamp | Timestamp when the query metrics were collected from Oracle | Any Str | Recommended |
-| database_name | Oracle database name | Any Str | Recommended |
-| user_name | Oracle username for slow queries | Any Str | Recommended |
-| session_id | Oracle session ID (SID) | Any Str | Recommended |
-| session_serial | Oracle session serial number | Any Int | Recommended |
-| session_state | Oracle session state (WAITING or not WAITING) | Any Str | Recommended |
-| query_id | SQL query identifier | Any Str | Recommended |
-| sql_child_number | SQL child cursor number | Any Int | Recommended |
-| sql_exec_id | SQL execution identifier | Any Int | Recommended |
-| sql_exec_start | Timestamp when the SQL execution started | Any Str | Recommended |
-| wait_event_name | Oracle wait event name for wait events | Any Str | Recommended |
-| wait_category | Oracle wait event category/class for wait events and active sessions | Any Str | Recommended |
-| wait_object_name | Name of the database object being waited on | Any Str | Recommended |
-| wait_object_owner | Owner of the database object being waited on | Any Str | Recommended |
-| wait_object_type | Type of the database object being waited on (TABLE, INDEX, etc.) | Any Str | Recommended |
-| blocking_session_status | Status of the blocking session (VALID, NO HOLDER, etc.) | Any Str | Recommended |
-| immediate_blocker_sid | Session ID of the immediate blocking session (not necessarily the root cause) | Any Str | Recommended |
-| final_blocking_session_status | Status of the final blocking session (VALID, NO HOLDER, etc.) | Any Str | Recommended |
-| final_blocker_user | Username of the final blocking session (root cause) | Any Str | Recommended |
-| final_blocker_sid | Session ID of the final blocking session (root cause) | Any Str | Recommended |
-| final_blocker_serial | Serial number of the final blocking session (root cause) | Any Str | Recommended |
-| final_blocker_query_id | SQL query ID of the final blocking session's query | Any Str | Recommended |
-| final_blocker_query_text | SQL query text of the final blocking session's query | Any Str | Recommended |
-| nr_service_guid | New Relic Service entity GUID | Any Str | Recommended |
-| normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | Recommended |
-| nr_blocking_service_guid | New Relic Service entity GUID for the blocking query | Any Str | Recommended |
-| normalised_blocking_sql_hash | MD5 hash of normalized blocking SQL query following New Relic Java agent normalization logic | Any Str | Recommended |
-
 ### newrelicoracledb.child_cursors.details
 
 Child cursor details including load times
@@ -4743,11 +4695,12 @@ Used percentage of tablespace
 
 ### newrelicoracledb.wait_events.current_wait_time_ms
 
-Current wait time in milliseconds for active wait events
+Current wait time in milliseconds for active wait events including blocking queries
 
 Captures how long active sessions have been waiting on various database resources in high precision milliseconds.
-Collected alongside blocking information in a single optimized query from v$session.
-Includes detailed wait parameters (p1, p2, p3) and object information for troubleshooting.
+Collected from v$session in a single optimized query that includes both wait events and blocking information.
+Includes detailed wait parameters and object information for troubleshooting.
+For blocked sessions (where FINAL_BLOCKING_SESSION is not null), includes information about the final blocking session (root cause) and its query.
 Only emitted for active sessions with non-idle waits (status='ACTIVE', wait_class<>'Idle', state='WAITING', wait_time_micro>0).
 Source: WAIT_TIME_MICRO / 1000 (rounded to 2 decimal places).
 
@@ -4781,8 +4734,18 @@ Source: WAIT_TIME_MICRO / 1000 (rounded to 2 decimal places).
 | row_wait_obj_id | Object ID of the row being waited on | Any Str | Recommended |
 | row_wait_file_id | File ID of the row being waited on | Any Str | Recommended |
 | row_wait_block_id | Block ID of the row being waited on | Any Str | Recommended |
+| blocking_session_status | Status of the blocking session (VALID, NO HOLDER, etc.) | Any Str | Recommended |
+| immediate_blocker_sid | Session ID of the immediate blocking session (not necessarily the root cause) | Any Str | Recommended |
+| final_blocking_session_status | Status of the final blocking session (VALID, NO HOLDER, etc.) | Any Str | Recommended |
+| final_blocker_user | Username of the final blocking session (root cause) | Any Str | Recommended |
+| final_blocker_sid | Session ID of the final blocking session (root cause) | Any Str | Recommended |
+| final_blocker_serial | Serial number of the final blocking session (root cause) | Any Str | Recommended |
+| final_blocker_query_id | SQL query ID of the final blocking session's query | Any Str | Recommended |
+| final_blocker_query_text | SQL query text of the final blocking session's query | Any Str | Recommended |
 | nr_service_guid | New Relic Service entity GUID | Any Str | Recommended |
 | normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | Recommended |
+| nr_blocking_service_guid | New Relic Service entity GUID for the blocking query | Any Str | Recommended |
+| normalised_blocking_sql_hash | MD5 hash of normalized blocking SQL query following New Relic Java agent normalization logic | Any Str | Recommended |
 
 ## Optional Metrics
 

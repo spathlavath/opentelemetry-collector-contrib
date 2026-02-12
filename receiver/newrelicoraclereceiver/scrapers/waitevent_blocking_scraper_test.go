@@ -289,10 +289,9 @@ func TestEmitWaitEventMetrics_ValidEvents(t *testing.T) {
 		},
 	}
 
-	waitEventCount, blockingCount := scraper.emitWaitEventMetrics(pcommon.NewTimestampFromTime(now), waitEvents, make(map[string]models.SQLIdentifier))
+	waitEventCount := scraper.emitWaitEventMetrics(pcommon.NewTimestampFromTime(now), waitEvents, make(map[string]models.SQLIdentifier))
 
-	assert.Equal(t, 2, waitEventCount)
-	assert.Equal(t, 0, blockingCount) // No blocking sessions in this test
+	assert.Equal(t, 2, waitEventCount) // 2 wait events recorded
 }
 
 func TestEmitWaitEventMetrics_WithBlockedEvents(t *testing.T) {
@@ -321,10 +320,9 @@ func TestEmitWaitEventMetrics_WithBlockedEvents(t *testing.T) {
 		},
 	}
 
-	waitEventCount, blockingCount := scraper.emitWaitEventMetrics(pcommon.NewTimestampFromTime(now), waitEvents, make(map[string]models.SQLIdentifier))
+	waitEventCount := scraper.emitWaitEventMetrics(pcommon.NewTimestampFromTime(now), waitEvents, make(map[string]models.SQLIdentifier))
 
-	assert.Equal(t, 1, waitEventCount)
-	assert.Equal(t, 1, blockingCount)
+	assert.Equal(t, 1, waitEventCount) // 1 blocked session recorded (includes blocking info)
 }
 
 func TestEmitWaitEventMetrics_EmptyList(t *testing.T) {
@@ -339,10 +337,9 @@ func TestEmitWaitEventMetrics_EmptyList(t *testing.T) {
 	now := time.Now()
 	waitEvents := []models.WaitEventWithBlocking{}
 
-	waitEventCount, blockingCount := scraper.emitWaitEventMetrics(pcommon.NewTimestampFromTime(now), waitEvents, make(map[string]models.SQLIdentifier))
+	waitEventCount := scraper.emitWaitEventMetrics(pcommon.NewTimestampFromTime(now), waitEvents, make(map[string]models.SQLIdentifier))
 
-	assert.Equal(t, 0, waitEventCount)
-	assert.Equal(t, 0, blockingCount)
+	assert.Equal(t, 0, waitEventCount) // No events to record
 }
 
 func TestShouldIncludeIdentifier_ValidIdentifier(t *testing.T) {
@@ -568,7 +565,7 @@ func TestRecordBlockingMetrics_ValidBlockedEvent(t *testing.T) {
 	}
 
 	// This should not panic
-	scraper.recordBlockingMetrics(pcommon.NewTimestampFromTime(now), event, make(map[string]models.SQLIdentifier))
+	scraper.recordWaitEventMetrics(pcommon.NewTimestampFromTime(now), event, make(map[string]models.SQLIdentifier))
 }
 
 func TestRecordBlockingMetrics_ZeroWaitTime(t *testing.T) {
@@ -590,7 +587,7 @@ func TestRecordBlockingMetrics_ZeroWaitTime(t *testing.T) {
 	}
 
 	// Should return early and not panic
-	scraper.recordBlockingMetrics(pcommon.NewTimestampFromTime(now), event, make(map[string]models.SQLIdentifier))
+	scraper.recordWaitEventMetrics(pcommon.NewTimestampFromTime(now), event, make(map[string]models.SQLIdentifier))
 }
 
 func TestRecordBlockingMetrics_NegativeWaitTime(t *testing.T) {
@@ -612,5 +609,5 @@ func TestRecordBlockingMetrics_NegativeWaitTime(t *testing.T) {
 	}
 
 	// Should return early and not panic
-	scraper.recordBlockingMetrics(pcommon.NewTimestampFromTime(now), event, make(map[string]models.SQLIdentifier))
+	scraper.recordWaitEventMetrics(pcommon.NewTimestampFromTime(now), event, make(map[string]models.SQLIdentifier))
 }

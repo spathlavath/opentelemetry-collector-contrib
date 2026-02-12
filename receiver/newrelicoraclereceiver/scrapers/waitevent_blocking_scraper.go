@@ -2,7 +2,7 @@ package scrapers
 
 import (
 	"context"
-	"fmt"
+	"errors"
 	"time"
 
 	"go.opentelemetry.io/collector/pdata/pcommon"
@@ -26,13 +26,13 @@ type WaitEventBlockingScraper struct {
 // NewWaitEventBlockingScraper creates a new combined Wait Events and Blocking Scraper instance
 func NewWaitEventBlockingScraper(oracleClient client.OracleClient, mb *metadata.MetricsBuilder, logger *zap.Logger, metricsBuilderConfig metadata.MetricsBuilderConfig, countThreshold int) (*WaitEventBlockingScraper, error) {
 	if oracleClient == nil {
-		return nil, fmt.Errorf("client cannot be nil")
+		return nil, errors.New("client cannot be nil")
 	}
 	if mb == nil {
-		return nil, fmt.Errorf("metrics builder cannot be nil")
+		return nil, errors.New("metrics builder cannot be nil")
 	}
 	if logger == nil {
-		return nil, fmt.Errorf("logger cannot be nil")
+		return nil, errors.New("logger cannot be nil")
 	}
 
 	return &WaitEventBlockingScraper{
@@ -78,7 +78,7 @@ func (s *WaitEventBlockingScraper) ScrapeWaitEventsAndBlocking(ctx context.Conte
 	return sqlIdentifiers, nil
 }
 
-// recordWaitEventMetrics records wait event metrics for a session
+// recordWaitEventMetrics records wait event metrics for a session (including blocking attributes if blocked)
 func (s *WaitEventBlockingScraper) recordWaitEventMetrics(now pcommon.Timestamp, event *models.WaitEventWithBlocking, sqlIDMap map[string]models.SQLIdentifier) {
 	if !event.HasValidCurrentWaitSeconds() {
 		return
@@ -114,6 +114,24 @@ func (s *WaitEventBlockingScraper) recordWaitEventMetrics(now pcommon.Timestamp,
 		normalisedSQLHash = metadata.NormalisedSQLHash
 	}
 
+	// Get blocking attributes (will be empty strings for non-blocked sessions)
+	blockingSessionStatus := event.GetBlockingSessionStatus()
+	immediateBlockerSID := commonutils.FormatInt64(event.GetImmediateBlockerSID())
+	finalBlockingSessionStatus := event.GetFinalBlockingSessionStatus()
+	finalBlockerUser := event.GetFinalBlockerUser()
+	finalBlockerSID := commonutils.FormatInt64(event.GetFinalBlockerSID())
+	finalBlockerSerial := commonutils.FormatInt64(event.GetFinalBlockerSerial())
+	finalBlockerQueryID := event.GetFinalBlockerQueryID()
+	finalBlockerQueryText := commonutils.NormalizeSql(event.GetFinalBlockerQueryText())
+
+	// Extract metadata from final blocker query text (if blocked)
+	var nrBlockingServiceGuid, normalisedBlockingSQLHash string
+	rawFinalBlockerQueryText := event.GetFinalBlockerQueryText()
+	if rawFinalBlockerQueryText != "" {
+		nrBlockingServiceGuid = commonutils.ExtractNewRelicMetadata(rawFinalBlockerQueryText)
+		_, normalisedBlockingSQLHash = commonutils.NormalizeSqlAndHash(rawFinalBlockerQueryText)
+	}
+
 	s.mb.RecordNewrelicoracledbWaitEventsCurrentWaitTimeMsDataPoint(
 		now,
 		event.GetCurrentWaitMs(),
@@ -139,37 +157,46 @@ func (s *WaitEventBlockingScraper) recordWaitEventMetrics(now pcommon.Timestamp,
 		rowWaitFileID,
 		rowWaitBlockID,
 		nrServiceGuid,
-
 		normalisedSQLHash,
+		blockingSessionStatus,
+		immediateBlockerSID,
+		finalBlockingSessionStatus,
+		finalBlockerUser,
+		finalBlockerSID,
+		finalBlockerSerial,
+		finalBlockerQueryID,
+		finalBlockerQueryText,
+		nrBlockingServiceGuid,
+		normalisedBlockingSQLHash,
 	)
 }
 
-// emitWaitEventMetrics emits metrics for wait events and blocking queries
+// emitWaitEventMetrics emits metrics for wait events (including blocking attributes)
 func (s *WaitEventBlockingScraper) emitWaitEventMetrics(
 	now pcommon.Timestamp,
 	waitEvents []models.WaitEventWithBlocking,
 	sqlIDMap map[string]models.SQLIdentifier,
-) (int, int) {
+) int {
 	waitEventMetricCount := 0
-	blockingMetricCount := 0
 
-	for _, event := range waitEvents {
+	for i := range waitEvents {
+		event := &waitEvents[i]
 		if event.IsValidForMetrics() {
-			s.recordWaitEventMetrics(now, &event, sqlIDMap)
+			s.recordWaitEventMetrics(now, event, sqlIDMap)
 			waitEventMetricCount++
-		}
 
-		if event.IsBlocked() {
-			s.recordBlockingMetrics(now, &event, sqlIDMap)
-			blockingMetricCount++
+			// Record final blocker query details if this is a blocked session with valid blocker info
+			if event.IsBlocked() {
+				s.recordFinalBlockerQueryDetails(now, event, sqlIDMap)
+			}
 		}
 	}
 
-	return waitEventMetricCount, blockingMetricCount
+	return waitEventMetricCount
 }
 
 // shouldIncludeIdentifier checks if an event has valid SQL identifier information
-func (s *WaitEventBlockingScraper) shouldIncludeIdentifier(event *models.WaitEventWithBlocking) bool {
+func (*WaitEventBlockingScraper) shouldIncludeIdentifier(event *models.WaitEventWithBlocking) bool {
 	return event.HasValidQueryID() && event.SQLChildNumber.Valid
 }
 
@@ -180,8 +207,9 @@ func (s *WaitEventBlockingScraper) extractSQLIdentifiers(
 ) []models.SQLIdentifier {
 	identifiersMap := make(map[string]models.SQLIdentifier)
 
-	for _, event := range waitEvents {
-		if !event.IsValidForMetrics() || !s.shouldIncludeIdentifier(&event) {
+	for i := range waitEvents {
+		event := &waitEvents[i]
+		if !event.IsValidForMetrics() || !s.shouldIncludeIdentifier(event) {
 			continue
 		}
 
@@ -221,39 +249,22 @@ func (s *WaitEventBlockingScraper) extractSQLIdentifiers(
 	return identifiers
 }
 
-// recordBlockingMetrics records blocking query metrics when a session is blocked
-func (s *WaitEventBlockingScraper) recordBlockingMetrics(now pcommon.Timestamp, event *models.WaitEventWithBlocking, sqlIDMap map[string]models.SQLIdentifier) {
-	blockedWaitMs := event.GetCurrentWaitMs()
-	if blockedWaitMs <= 0 {
+// recordFinalBlockerQueryDetails records query details for the final blocking session
+func (s *WaitEventBlockingScraper) recordFinalBlockerQueryDetails(now pcommon.Timestamp, event *models.WaitEventWithBlocking, sqlIDMap map[string]models.SQLIdentifier) {
+	finalBlockerQueryID := event.GetFinalBlockerQueryID()
+	rawFinalBlockerQueryText := event.GetFinalBlockerQueryText()
+	finalBlockerQueryText := commonutils.NormalizeSql(rawFinalBlockerQueryText)
+
+	// Only record if we have valid query ID and text
+	if finalBlockerQueryID == "" || finalBlockerQueryText == "" {
 		return
 	}
 
 	collectionTimestamp := commonutils.FormatTimestamp(event.GetCollectionTimestamp())
 	dbName := event.GetDatabaseName()
-	blockedUser := event.GetUsername()
 	queryID := event.GetQueryID()
-	sessionID := commonutils.FormatInt64(event.GetSID())
-	blockedSerial := event.GetSerial()
-	state := event.GetState()
-	sqlChildNumber := event.GetSQLChildNumber()
-	sqlExecID := event.GetSQLExecID()
-	sqlExecStart := commonutils.FormatTimestamp(event.GetSQLExecStart())
-	waitEventName := event.GetWaitEventName()
-	waitCategory := event.GetWaitCategory()
-	waitObjectName := event.GetObjectNameWaitedOn()
-	waitObjectOwner := event.GetObjectOwner()
-	waitObjectType := event.GetObjectTypeWaitedOn()
-	blockingSessionStatus := event.GetBlockingSessionStatus()
-	immediateBlockerSID := commonutils.FormatInt64(event.GetImmediateBlockerSID())
-	finalBlockingSessionStatus := event.GetFinalBlockingSessionStatus()
-	finalBlockerSID := commonutils.FormatInt64(event.GetFinalBlockerSID())
-	finalBlockerSerial := commonutils.FormatInt64(event.GetFinalBlockerSerial())
-	finalBlockerUser := event.GetFinalBlockerUser()
-	finalBlockerQueryID := event.GetFinalBlockerQueryID()
-	finalBlockerQueryText := commonutils.NormalizeSql(event.GetFinalBlockerQueryText())
 
-	// Get nr_service_guid and normalised_sql_hash from sqlIDMap for the blocked query
-	// These will be empty strings if not present in the map or if the metadata values were empty
+	// Get nrServiceGuid and normalised_sql_hash from sqlIDMap for the blocked query
 	var nrServiceGuid, normalisedSQLHash string
 	if metadata, exists := sqlIDMap[queryID]; exists {
 		nrServiceGuid = metadata.NRServiceGuid
@@ -262,64 +273,25 @@ func (s *WaitEventBlockingScraper) recordBlockingMetrics(now pcommon.Timestamp, 
 
 	// Extract metadata from final blocker query text
 	var nrBlockingServiceGuid, normalisedBlockingSQLHash string
-	rawFinalBlockerQueryText := event.GetFinalBlockerQueryText()
 	if rawFinalBlockerQueryText != "" {
-		// Extract nr_service_guid from the final blocker query comment
 		nrBlockingServiceGuid = commonutils.ExtractNewRelicMetadata(rawFinalBlockerQueryText)
-
-		// Generate normalized SQL and hash for the final blocker query
 		_, normalisedBlockingSQLHash = commonutils.NormalizeSqlAndHash(rawFinalBlockerQueryText)
 	}
 
-	s.mb.RecordNewrelicoracledbBlockingQueriesWaitTimeMsDataPoint(
+	s.mb.RecordNewrelicoracledbSlowQueriesQueryDetailsDataPoint(
 		now,
-		blockedWaitMs,
+		1,
+		"OracleQueryDetails",
 		collectionTimestamp,
 		dbName,
-		blockedUser,
-		sessionID,
-		blockedSerial,
-		state,
-		queryID,
-		sqlChildNumber,
-		sqlExecID,
-		sqlExecStart,
-		waitEventName,
-		waitCategory,
-		waitObjectName,
-		waitObjectOwner,
-		waitObjectType,
-		blockingSessionStatus,
-		immediateBlockerSID,
-		finalBlockingSessionStatus,
-		finalBlockerUser,
-		finalBlockerSID,
-		finalBlockerSerial,
 		finalBlockerQueryID,
 		finalBlockerQueryText,
-		nrServiceGuid,
-		normalisedSQLHash,
-		nrBlockingServiceGuid,
-		normalisedBlockingSQLHash,
+		"",                        // schema_name
+		"",                        // user_name
+		"",                        // last_active_time
+		normalisedSQLHash,         // normalised_sql_hash
+		nrServiceGuid,             // nr_service_guid
+		normalisedBlockingSQLHash, // normalised_blocking_sql_hash (same - this IS the blocking query)
+		nrBlockingServiceGuid,     // nr_blocking_service_guid (same - this IS the blocking query)
 	)
-
-	// Record the final blocker query details if we have a valid query ID and text
-	if finalBlockerQueryID != "" && finalBlockerQueryText != "" {
-		s.mb.RecordNewrelicoracledbSlowQueriesQueryDetailsDataPoint(
-			now,
-			1,
-			"OracleQueryDetails",
-			collectionTimestamp,
-			dbName,
-			queryID,
-			finalBlockerQueryText,
-			"",                        // schema_name
-			"",                        // user_name
-			"",                        // last_active_time
-			normalisedSQLHash,         // normalised_sql_hash
-			nrServiceGuid,             // nr_service_guid
-			normalisedBlockingSQLHash, // normalised_blocking_sql_hash (same - this IS the blocking query)
-			nrBlockingServiceGuid,     // nr_blocking_service_guid (same - this IS the blocking query)
-		)
-	}
 }

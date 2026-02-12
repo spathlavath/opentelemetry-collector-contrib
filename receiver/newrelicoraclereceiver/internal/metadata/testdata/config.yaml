@@ -7,8 +7,6 @@ all_set:
       enabled: true
     newrelicoracledb.asm.diskgroup.total_mb:
       enabled: true
-    newrelicoracledb.blocking_queries.wait_time_ms:
-      enabled: true
     newrelicoracledb.child_cursors.buffer_gets:
       enabled: true
     newrelicoracledb.child_cursors.cpu_time:
@@ -677,8 +675,6 @@ none_set:
     newrelicoracledb.asm.diskgroup.offline_disks:
       enabled: false
     newrelicoracledb.asm.diskgroup.total_mb:
-      enabled: false
-    newrelicoracledb.blocking_queries.wait_time_ms:
       enabled: false
     newrelicoracledb.child_cursors.buffer_gets:
       enabled: false

@@ -4,9 +4,11 @@ status:
   class: receiver
   stability:
     alpha: [metrics]
-  distributions: [contrib]
+  distributions: [nrdot]
   codeowners:
-    active: [tharun0064,spathlavath,sjyothi54,RamanaReddy8801]
+    active: [newrelic/dbi]
+
+github_project: newrelic/nrdot-collector-components
 
 resource_attributes:
   host.address:
@@ -376,51 +378,6 @@ metrics:
     unit: "MB"
     attributes:
       - diskgroup.name
-
-  newrelicoracledb.blocking_queries.wait_time_ms:
-    description: Wait time in milliseconds for blocked queries
-    extended_documentation: |
-      Shows how long a session has been waiting due to blocking by another session in high precision milliseconds.
-      Collected alongside wait events in a single optimized query from v$session.
-      Includes information about the final blocking session (root cause) and its query.
-      Includes wait event details (event name, category, object) to identify the type of contention.
-      Only emitted for sessions that are actually blocked (FINAL_BLOCKING_SESSION is not null).
-      Source: Same as current_wait_time_ms (WAIT_TIME_MICRO / 1000).
-    enabled: true
-    stability:
-      level: alpha
-    gauge:
-      value_type: double
-    unit: ms
-    attributes:
-      - collection_timestamp
-      - database_name
-      - user_name
-      - session_id
-      - session_serial
-      - session_state
-      - query_id
-      - sql_child_number
-      - sql_exec_id
-      - sql_exec_start
-      - wait_event_name
-      - wait_category
-      - wait_object_name
-      - wait_object_owner
-      - wait_object_type
-      - blocking_session_status
-      - immediate_blocker_sid
-      - final_blocking_session_status
-      - final_blocker_user
-      - final_blocker_sid
-      - final_blocker_serial
-      - final_blocker_query_id
-      - final_blocker_query_text
-      - nr_service_guid
-      - normalised_sql_hash
-      - nr_blocking_service_guid
-      - normalised_blocking_sql_hash
-
 
   # Database Version and Configuration Information
   newrelicoracledb.child_cursors.buffer_gets:
@@ -4324,11 +4281,12 @@ metrics:
 
   # Data file metrics
   newrelicoracledb.wait_events.current_wait_time_ms:
-    description: Current wait time in milliseconds for active wait events
+    description: Current wait time in milliseconds for active wait events including blocking queries
     extended_documentation: |
       Captures how long active sessions have been waiting on various database resources in high precision milliseconds.
-      Collected alongside blocking information in a single optimized query from v$session.
-      Includes detailed wait parameters (p1, p2, p3) and object information for troubleshooting.
+      Collected from v$session in a single optimized query that includes both wait events and blocking information.
+      Includes detailed wait parameters and object information for troubleshooting.
+      For blocked sessions (where FINAL_BLOCKING_SESSION is not null), includes information about the final blocking session (root cause) and its query.
       Only emitted for active sessions with non-idle waits (status='ACTIVE', wait_class<>'Idle', state='WAITING', wait_time_micro>0).
       Source: WAIT_TIME_MICRO / 1000 (rounded to 2 decimal places).
     enabled: true
@@ -4359,8 +4317,18 @@ metrics:
       - row_wait_obj_id
       - row_wait_file_id
       - row_wait_block_id
+      - blocking_session_status
+      - immediate_blocker_sid
+      - final_blocking_session_status
+      - final_blocker_user
+      - final_blocker_sid
+      - final_blocker_serial
+      - final_blocker_query_id
+      - final_blocker_query_text
       - nr_service_guid
       - normalised_sql_hash
+      - nr_blocking_service_guid
+      - normalised_blocking_sql_hash
 
 
 tests:
