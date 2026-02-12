@@ -31,7 +31,6 @@ type MetricsConfig struct {
 	NewrelicoracledbAsmDiskgroupFreeMb                                 MetricConfig `mapstructure:"newrelicoracledb.asm.diskgroup.free_mb"`
 	NewrelicoracledbAsmDiskgroupOfflineDisks                           MetricConfig `mapstructure:"newrelicoracledb.asm.diskgroup.offline_disks"`
 	NewrelicoracledbAsmDiskgroupTotalMb                                MetricConfig `mapstructure:"newrelicoracledb.asm.diskgroup.total_mb"`
-	NewrelicoracledbBlockingQueriesWaitTimeMs                          MetricConfig `mapstructure:"newrelicoracledb.blocking_queries.wait_time_ms"`
 	NewrelicoracledbChildCursorsBufferGets                             MetricConfig `mapstructure:"newrelicoracledb.child_cursors.buffer_gets"`
 	NewrelicoracledbChildCursorsCPUTime                                MetricConfig `mapstructure:"newrelicoracledb.child_cursors.cpu_time"`
 	NewrelicoracledbChildCursorsDetails                                MetricConfig `mapstructure:"newrelicoracledb.child_cursors.details"`
@@ -370,9 +369,6 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		NewrelicoracledbAsmDiskgroupTotalMb: MetricConfig{
-			Enabled: true,
-		},
-		NewrelicoracledbBlockingQueriesWaitTimeMs: MetricConfig{
 			Enabled: true,
 		},
 		NewrelicoracledbChildCursorsBufferGets: MetricConfig{
