@@ -1674,6 +1674,169 @@ Status of the replication SQL thread. 0=No/Stopped, 1=Yes/Running.
 | ---- | ----------- | ---------- | --------- |
 | 1 | Gauge | Int | Development |
 
+### newrelicmysql.slowquery.avg_cpu_time_ms
+
+Average CPU time per execution for slow queries
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| ms | Gauge | Double | Development |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| collection_timestamp | Timestamp when the metric was collected (UTC) | Any Str | Recommended |
+| database_name | The name of the database/schema | Any Str | Recommended |
+| query_id | Unique identifier for the query (digest/hash) | Any Str | Recommended |
+
+### newrelicmysql.slowquery.avg_elapsed_time_ms
+
+Average elapsed time per execution for slow queries (cumulative)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| ms | Gauge | Double | Development |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| collection_timestamp | Timestamp when the metric was collected (UTC) | Any Str | Recommended |
+| database_name | The name of the database/schema | Any Str | Recommended |
+| query_id | Unique identifier for the query (digest/hash) | Any Str | Recommended |
+
+### newrelicmysql.slowquery.avg_lock_time_ms
+
+Average lock wait time per execution for slow queries
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| ms | Gauge | Double | Development |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| collection_timestamp | Timestamp when the metric was collected (UTC) | Any Str | Recommended |
+| database_name | The name of the database/schema | Any Str | Recommended |
+| query_id | Unique identifier for the query (digest/hash) | Any Str | Recommended |
+
+### newrelicmysql.slowquery.avg_rows_examined
+
+Average rows examined per execution for slow queries
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {rows} | Gauge | Double | Development |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| collection_timestamp | Timestamp when the metric was collected (UTC) | Any Str | Recommended |
+| database_name | The name of the database/schema | Any Str | Recommended |
+| query_id | Unique identifier for the query (digest/hash) | Any Str | Recommended |
+
+### newrelicmysql.slowquery.avg_rows_sent
+
+Average rows sent per execution for slow queries
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {rows} | Gauge | Double | Development |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| collection_timestamp | Timestamp when the metric was collected (UTC) | Any Str | Recommended |
+| database_name | The name of the database/schema | Any Str | Recommended |
+| query_id | Unique identifier for the query (digest/hash) | Any Str | Recommended |
+
+### newrelicmysql.slowquery.execution_count
+
+Number of executions for slow queries (cumulative)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {executions} | Gauge | Int | Development |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| collection_timestamp | Timestamp when the metric was collected (UTC) | Any Str | Recommended |
+| database_name | The name of the database/schema | Any Str | Recommended |
+| query_id | Unique identifier for the query (digest/hash) | Any Str | Recommended |
+
+### newrelicmysql.slowquery.interval_avg_elapsed_time_ms
+
+Average elapsed time per execution in the last polling interval (delta metric)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| ms | Gauge | Double | Development |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| collection_timestamp | Timestamp when the metric was collected (UTC) | Any Str | Recommended |
+| database_name | The name of the database/schema | Any Str | Recommended |
+| query_id | Unique identifier for the query (digest/hash) | Any Str | Recommended |
+
+### newrelicmysql.slowquery.interval_execution_count
+
+Execution count in the last polling interval (delta metric)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {executions} | Gauge | Int | Development |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| collection_timestamp | Timestamp when the metric was collected (UTC) | Any Str | Recommended |
+| database_name | The name of the database/schema | Any Str | Recommended |
+| query_id | Unique identifier for the query (digest/hash) | Any Str | Recommended |
+
+### newrelicmysql.slowquery.query_details
+
+Slow Query Details (constant value with full attributes)
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {count} | Gauge | Int | Development |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| collection_timestamp | Timestamp when the metric was collected (UTC) | Any Str | Recommended |
+| database_name | The name of the database/schema | Any Str | Recommended |
+| query_id | Unique identifier for the query (digest/hash) | Any Str | Recommended |
+| query_text | The normalized query text | Any Str | Recommended |
+| first_seen | Timestamp when the query was first seen (UTC) | Any Str | Recommended |
+| last_execution_timestamp | Timestamp of the last query execution (UTC) | Any Str | Recommended |
+
+### newrelicmysql.slowquery.query_errors
+
+Total number of errors for this query
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {errors} | Gauge | Int | Development |
+
+#### Attributes
+
+| Name | Description | Values | Requirement Level |
+| ---- | ----------- | ------ | -------- |
+| collection_timestamp | Timestamp when the metric was collected (UTC) | Any Str | Recommended |
+| database_name | The name of the database/schema | Any Str | Recommended |
+| query_id | Unique identifier for the query (digest/hash) | Any Str | Recommended |
+
 ### newrelicmysql.uptime
 
 The number of seconds that the server has been up.

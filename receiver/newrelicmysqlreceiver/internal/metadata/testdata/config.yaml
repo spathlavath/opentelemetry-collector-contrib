@@ -415,6 +415,26 @@ all_set:
       enabled: true
     newrelicmysql.replication.slave_sql_running:
       enabled: true
+    newrelicmysql.slowquery.avg_cpu_time_ms:
+      enabled: true
+    newrelicmysql.slowquery.avg_elapsed_time_ms:
+      enabled: true
+    newrelicmysql.slowquery.avg_lock_time_ms:
+      enabled: true
+    newrelicmysql.slowquery.avg_rows_examined:
+      enabled: true
+    newrelicmysql.slowquery.avg_rows_sent:
+      enabled: true
+    newrelicmysql.slowquery.execution_count:
+      enabled: true
+    newrelicmysql.slowquery.interval_avg_elapsed_time_ms:
+      enabled: true
+    newrelicmysql.slowquery.interval_execution_count:
+      enabled: true
+    newrelicmysql.slowquery.query_details:
+      enabled: true
+    newrelicmysql.slowquery.query_errors:
+      enabled: true
     newrelicmysql.uptime:
       enabled: true
   resource_attributes:
@@ -835,6 +855,26 @@ none_set:
     newrelicmysql.replication.slave_running:
       enabled: false
     newrelicmysql.replication.slave_sql_running:
+      enabled: false
+    newrelicmysql.slowquery.avg_cpu_time_ms:
+      enabled: false
+    newrelicmysql.slowquery.avg_elapsed_time_ms:
+      enabled: false
+    newrelicmysql.slowquery.avg_lock_time_ms:
+      enabled: false
+    newrelicmysql.slowquery.avg_rows_examined:
+      enabled: false
+    newrelicmysql.slowquery.avg_rows_sent:
+      enabled: false
+    newrelicmysql.slowquery.execution_count:
+      enabled: false
+    newrelicmysql.slowquery.interval_avg_elapsed_time_ms:
+      enabled: false
+    newrelicmysql.slowquery.interval_execution_count:
+      enabled: false
+    newrelicmysql.slowquery.query_details:
+      enabled: false
+    newrelicmysql.slowquery.query_errors:
       enabled: false
     newrelicmysql.uptime:
       enabled: false

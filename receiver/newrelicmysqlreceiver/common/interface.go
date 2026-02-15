@@ -3,6 +3,11 @@
 
 package common
 
+import (
+	"context"
+	"database/sql"
+)
+
 // Client defines the interface for MySQL database operations.
 type Client interface {
 	// Connect establishes the database connection
@@ -15,6 +20,8 @@ type Client interface {
 	GetReplicationStatus() (map[string]string, error)
 	// GetVersion returns the MySQL server version
 	GetVersion() (string, error)
+	// QueryContext executes a query and returns sql.Rows for custom processing
+	QueryContext(ctx context.Context, query string, args ...interface{}) (*sql.Rows, error)
 	// Close closes the database connection
 	Close() error
 }
