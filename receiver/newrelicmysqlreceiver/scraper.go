@@ -91,6 +91,27 @@ func (n *newRelicMySQLScraper) start(_ context.Context, _ component.Host) error 
 			return err
 		}
 		n.scrapers = append(n.scrapers, innodbExtendedScraper)
+		n.logger.Info("Extra InnoDB metrics collection enabled")
+	}
+
+	// Conditionally initialize Slow Query scraper if enabled
+	if n.config.SlowQuery.Enabled {
+		slowQueryScraper := scrapers.NewSlowQueryScraper(
+			n.sqlclient,
+			n.mb,
+			n.logger,
+			n.config.SlowQuery.ResponseTimeThreshold,
+			n.config.SlowQuery.CountThreshold,
+			n.config.SlowQuery.IntervalSeconds,
+			n.config.SlowQuery.EnableIntervalCalculator,
+			n.config.SlowQuery.CacheTTLMinutes,
+		)
+		n.scrapers = append(n.scrapers, slowQueryScraper)
+		n.logger.Info("Slow query metrics collection enabled",
+			zap.Int("response_time_threshold_ms", n.config.SlowQuery.ResponseTimeThreshold),
+			zap.Int("count_threshold", n.config.SlowQuery.CountThreshold),
+			zap.Bool("interval_calculator", n.config.SlowQuery.EnableIntervalCalculator),
+		)
 	}
 
 	return nil

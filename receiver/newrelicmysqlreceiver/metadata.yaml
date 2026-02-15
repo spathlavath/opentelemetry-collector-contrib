@@ -3,7 +3,7 @@ type: newrelicmysql
 status:
   class: receiver
   stability:
-    development: [metrics]
+    alpha: [metrics, logs]
   distributions: [contrib]
   codeowners:
     active: []
@@ -16,10 +16,34 @@ resource_attributes:
     type: string
 
 attributes:
+  collection_timestamp:
+    description: Timestamp when the metric was collected (UTC)
+    type: string
+
   command:
     description: The command types.
     type: string
     enum: [commit, delete, delete_multi, insert, insert_select, load, replace, replace_select, rollback, select, update, update_multi]
+
+  database_name:
+    description: The name of the database/schema
+    type: string
+
+  first_seen:
+    description: Timestamp when the query was first seen (UTC)
+    type: string
+
+  last_execution_timestamp:
+    description: Timestamp of the last query execution (UTC)
+    type: string
+
+  query_id:
+    description: Unique identifier for the query (digest/hash)
+    type: string
+
+  query_text:
+    description: The normalized query text
+    type: string
 
 metrics:
   newrelicmysql.binlog.cache_disk_use:
@@ -2109,6 +2133,140 @@ metrics:
     gauge:
       value_type: int
 
+  newrelicmysql.slowquery.avg_cpu_time_ms:
+    enabled: true
+    description: Average CPU time per execution for slow queries
+    stability:
+      level: development
+    unit: ms
+    gauge:
+      value_type: double
+    attributes:
+      - collection_timestamp
+      - database_name
+      - query_id
+
+  newrelicmysql.slowquery.avg_elapsed_time_ms:
+    enabled: true
+    description: Average elapsed time per execution for slow queries (cumulative)
+    stability:
+      level: development
+    unit: ms
+    gauge:
+      value_type: double
+    attributes:
+      - collection_timestamp
+      - database_name
+      - query_id
+
+  newrelicmysql.slowquery.avg_lock_time_ms:
+    enabled: true
+    description: Average lock wait time per execution for slow queries
+    stability:
+      level: development
+    unit: ms
+    gauge:
+      value_type: double
+    attributes:
+      - collection_timestamp
+      - database_name
+      - query_id
+
+  newrelicmysql.slowquery.avg_rows_examined:
+    enabled: true
+    description: Average rows examined per execution for slow queries
+    stability:
+      level: development
+    unit: "{rows}"
+    gauge:
+      value_type: double
+    attributes:
+      - collection_timestamp
+      - database_name
+      - query_id
+
+  newrelicmysql.slowquery.avg_rows_sent:
+    enabled: true
+    description: Average rows sent per execution for slow queries
+    stability:
+      level: development
+    unit: "{rows}"
+    gauge:
+      value_type: double
+    attributes:
+      - collection_timestamp
+      - database_name
+      - query_id
+
+  newrelicmysql.slowquery.execution_count:
+    enabled: true
+    description: Number of executions for slow queries (cumulative)
+    stability:
+      level: development
+    unit: "{executions}"
+    gauge:
+      value_type: int
+    attributes:
+      - collection_timestamp
+      - database_name
+      - query_id
+
+  newrelicmysql.slowquery.interval_avg_elapsed_time_ms:
+    enabled: true
+    description: Average elapsed time per execution in the last polling interval (delta metric)
+    stability:
+      level: development
+    unit: ms
+    gauge:
+      value_type: double
+    attributes:
+      - collection_timestamp
+      - database_name
+      - query_id
+
+  newrelicmysql.slowquery.interval_execution_count:
+    enabled: true
+    description: Execution count in the last polling interval (delta metric)
+    stability:
+      level: development
+    unit: "{executions}"
+    gauge:
+      value_type: int
+    attributes:
+      - collection_timestamp
+      - database_name
+      - query_id
+
+  newrelicmysql.slowquery.query_details:
+    enabled: true
+    description: Slow Query Details (constant value with full attributes)
+    stability:
+      level: development
+    unit: "{count}"
+    gauge:
+      value_type: int
+    attributes:
+      - collection_timestamp
+      - database_name
+      - query_id
+      - query_text
+      - first_seen
+      - last_execution_timestamp
+
+  newrelicmysql.slowquery.query_errors:
+    enabled: true
+    description: Total number of errors for this query
+    stability:
+      level: development
+    unit: "{errors}"
+    gauge:
+      value_type: int
+    attributes:
+      - collection_timestamp
+      - database_name
+      - query_id
+
+
   newrelicmysql.uptime:
     enabled: true
     description: The number of seconds that the server has been up.
@@ -2120,7 +2278,6 @@ metrics:
       input_type: string
       monotonic: true
       aggregation_temporality: cumulative
-
 tests:
   config:
   goleak:

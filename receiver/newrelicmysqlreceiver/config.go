@@ -26,6 +26,25 @@ type Config struct {
 	confignet.AddrConfig `mapstructure:",squash"`
 	TLS                  configtls.ClientConfig        `mapstructure:"tls,omitempty"`
 	MetricsBuilderConfig metadata.MetricsBuilderConfig `mapstructure:",squash"`
+	// Slow Query monitoring configuration
+	SlowQuery SlowQueryConfig `mapstructure:"slow_query,omitempty"`
+}
+
+// SlowQueryConfig defines configuration for slow query monitoring
+type SlowQueryConfig struct {
+	// Enabled controls whether slow query monitoring is active
+	Enabled bool `mapstructure:"enabled"`
+	// ResponseTimeThreshold is the minimum average elapsed time in milliseconds
+	// Only queries with avg elapsed time >= this value will be collected
+	ResponseTimeThreshold int `mapstructure:"response_time_threshold"`
+	// CountThreshold is the maximum number of slow queries to collect per scrape (top N)
+	CountThreshold int `mapstructure:"count_threshold"`
+	// IntervalSeconds is the time window in seconds for fetching queries from performance_schema
+	IntervalSeconds int `mapstructure:"interval_seconds"`
+	// EnableIntervalCalculator enables delta calculation for interval-based metrics
+	EnableIntervalCalculator bool `mapstructure:"enable_interval_calculator"`
+	// CacheTTLMinutes is the cache TTL in minutes for the interval calculator
+	CacheTTLMinutes int `mapstructure:"cache_ttl_minutes"`
 }
 
 func (cfg *Config) Unmarshal(componentParser *confmap.Conf) error {

@@ -165,6 +165,14 @@ func (c *mySQLClient) GetVersion() (string, error) {
 	return version, err
 }
 
+// QueryContext executes a query and returns sql.Rows for custom processing.
+func (c *mySQLClient) QueryContext(ctx context.Context, query string, args ...interface{}) (*sql.Rows, error) {
+	if c.db == nil {
+		return nil, fmt.Errorf("database connection not established")
+	}
+	return c.db.QueryContext(ctx, query, args...)
+}
+
 // Close closes the database connection.
 func (c *mySQLClient) Close() error {
 	if c.db != nil {

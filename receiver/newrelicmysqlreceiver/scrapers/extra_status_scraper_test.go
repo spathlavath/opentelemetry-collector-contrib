@@ -5,6 +5,7 @@ package scrapers
 
 import (
 	"context"
+	"database/sql"
 	"errors"
 	"testing"
 	"time"
@@ -45,6 +46,10 @@ func (m *mockExtraStatusClient) GetReplicationStatus() (map[string]string, error
 
 func (m *mockExtraStatusClient) GetVersion() (string, error) {
 	return "8.0.0", nil
+}
+
+func (m *mockExtraStatusClient) QueryContext(ctx context.Context, query string, args ...interface{}) (*sql.Rows, error) {
+	return nil, errors.New("QueryContext not implemented in mock")
 }
 
 func (m *mockExtraStatusClient) Close() error {

@@ -5,6 +5,7 @@ package scrapers
 
 import (
 	"context"
+	"database/sql"
 	"errors"
 	"testing"
 	"time"
@@ -47,6 +48,10 @@ func (m *mockInnoDBClient) GetReplicationStatus() (map[string]string, error) {
 
 func (m *mockInnoDBClient) GetVersion() (string, error) {
 	return "8.0.0", nil
+}
+
+func (m *mockInnoDBClient) QueryContext(ctx context.Context, query string, args ...interface{}) (*sql.Rows, error) {
+	return nil, errors.New("QueryContext not implemented in mock")
 }
 
 func (m *mockInnoDBClient) Close() error {
