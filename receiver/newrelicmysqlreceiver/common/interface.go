@@ -18,6 +18,10 @@ type Client interface {
 	GetGlobalVariables() (map[string]string, error)
 	// GetReplicationStatus retrieves slave replication status information
 	GetReplicationStatus() (map[string]string, error)
+	// GetMasterStatus retrieves master/source status information
+	GetMasterStatus() (map[string]string, error)
+	// GetGroupReplicationStats retrieves group replication performance schema stats
+	GetGroupReplicationStats() (map[string]string, error)
 	// GetVersion returns the MySQL server version
 	GetVersion() (string, error)
 	// QueryContext executes a query and returns sql.Rows for custom processing
