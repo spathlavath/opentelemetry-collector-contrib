@@ -1610,6 +1610,70 @@ The position in the current master binary log file to which the replication SQL 
 | ---- | ----------- | ---------- | --------- |
 | 1 | Gauge | Int | Development |
 
+### newrelicmysql.replication.group.conflicts_detected
+
+The number of transaction conflicts detected by the group replication certification process.
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {conflicts} | Sum | Int | Cumulative | true | Development |
+
+### newrelicmysql.replication.group.transactions
+
+The total number of transactions that have been checked for conflicts by the group replication certification process.
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {transactions} | Sum | Int | Cumulative | true | Development |
+
+### newrelicmysql.replication.group.transactions_applied
+
+The number of transactions applied by the group replication applier.
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {transactions} | Sum | Int | Cumulative | true | Development |
+
+### newrelicmysql.replication.group.transactions_check
+
+The number of transactions checked for conflicts in the group replication.
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {transactions} | Sum | Int | Cumulative | true | Development |
+
+### newrelicmysql.replication.group.transactions_in_applier_queue
+
+The number of transactions in the group replication applier queue waiting to be applied.
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {transactions} | Gauge | Int | Development |
+
+### newrelicmysql.replication.group.transactions_proposed
+
+The number of transactions proposed for group replication.
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {transactions} | Sum | Int | Cumulative | true | Development |
+
+### newrelicmysql.replication.group.transactions_rollback
+
+The number of transactions rolled back by group replication.
+
+| Unit | Metric Type | Value Type | Aggregation Temporality | Monotonic | Stability |
+| ---- | ----------- | ---------- | ----------------------- | --------- | --------- |
+| {transactions} | Sum | Int | Cumulative | true | Development |
+
+### newrelicmysql.replication.group.transactions_validating
+
+The number of transactions currently being validated by the group replication.
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {transactions} | Gauge | Int | Development |
+
 ### newrelicmysql.replication.last_io_errno
 
 The error number of the most recent error that caused the replication I/O thread to stop.
@@ -1642,9 +1706,25 @@ The total combined size of all existing relay log files.
 | ---- | ----------- | ---------- | --------- |
 | By | Gauge | Int | Development |
 
+### newrelicmysql.replication.replicas_connected
+
+The number of replicas currently connected to this source (MySQL 8.0.22+).
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {replicas} | Gauge | Int | Development |
+
 ### newrelicmysql.replication.seconds_behind_master
 
 The number of seconds that the replica SQL thread is behind processing the master binary log.
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| s | Gauge | Int | Development |
+
+### newrelicmysql.replication.seconds_behind_source
+
+The number of seconds that the replica SQL thread is behind processing the source binary log (MySQL 8.0.22+).
 
 | Unit | Metric Type | Value Type | Stability |
 | ---- | ----------- | ---------- | --------- |
@@ -1673,6 +1753,14 @@ Status of the replication SQL thread. 0=No/Stopped, 1=Yes/Running.
 | Unit | Metric Type | Value Type | Stability |
 | ---- | ----------- | ---------- | --------- |
 | 1 | Gauge | Int | Development |
+
+### newrelicmysql.replication.slaves_connected
+
+The number of replicas currently connected to this master.
+
+| Unit | Metric Type | Value Type | Stability |
+| ---- | ----------- | ---------- | --------- |
+| {replicas} | Gauge | Int | Development |
 
 ### newrelicmysql.uptime
 
