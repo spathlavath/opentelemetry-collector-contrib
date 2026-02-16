@@ -36,6 +36,7 @@ The following settings are optional:
 - `collection_interval` (default = `10s`): This receiver collects metrics on an interval. Valid time units are `ns`, `us` (or `µs`), `ms`, `s`, `m`, `h`.
 - `initial_delay` (default = `1s`): defines how long this receiver waits before starting.
 - `transport`: (default = `tcp`): Defines the network to use for connecting to the server.
+- `extra_status_metrics`: (default = `false`): When enabled, collects additional MySQL status metrics including binlog cache, handler operations, query cache, select join types, sort operations, table locks, and thread metrics. These metrics are based on Datadog's extra_status_metrics option and provide deeper performance insights.
 
 ### Example Configuration
 
@@ -48,6 +49,7 @@ receivers:
     database: mydb
     collection_interval: 10s
     initial_delay: 1s
+    extra_status_metrics: true
 ```
 
 ## Metrics

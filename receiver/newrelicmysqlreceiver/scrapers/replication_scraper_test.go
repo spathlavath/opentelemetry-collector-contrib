@@ -7,328 +7,436 @@ import (
 	"context"
 	"errors"
 	"testing"
+	"time"
 
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicmysqlreceiver/common"
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicmysqlreceiver/internal/metadata"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.opentelemetry.io/collector/pdata/pcommon"
 	"go.opentelemetry.io/collector/receiver/receivertest"
 	"go.opentelemetry.io/collector/scraper/scrapererror"
 	"go.uber.org/zap"
+
+	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicmysqlreceiver/common"
+	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicmysqlreceiver/internal/metadata"
 )
 
 func TestNewReplicationScraper(t *testing.T) {
-	logger := zap.NewNop()
-	settings := receivertest.NewNopSettings(receivertest.NopType)
-	mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), settings)
+	tests := []struct {
+		name                    string
+		client                  common.Client
+		mb                      *metadata.MetricsBuilder
+		logger                  *zap.Logger
+		enableAdditionalMetrics bool
+		expectError             bool
+		errorMsg                string
+	}{
+		{
+			name:                    "valid_inputs_with_additional_metrics",
+			client:                  common.NewMockClient(),
+			mb:                      metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(receivertest.NopType)),
+			logger:                  zap.NewNop(),
+			enableAdditionalMetrics: true,
+			expectError:             false,
+		},
+		{
+			name:                    "valid_inputs_without_additional_metrics",
+			client:                  common.NewMockClient(),
+			mb:                      metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(receivertest.NopType)),
+			logger:                  zap.NewNop(),
+			enableAdditionalMetrics: false,
+			expectError:             false,
+		},
+		{
+			name:                    "nil_client",
+			client:                  nil,
+			mb:                      metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(receivertest.NopType)),
+			logger:                  zap.NewNop(),
+			enableAdditionalMetrics: true,
+			expectError:             true,
+			errorMsg:                "client cannot be nil",
+		},
+		{
+			name:                    "nil_metrics_builder",
+			client:                  common.NewMockClient(),
+			mb:                      nil,
+			logger:                  zap.NewNop(),
+			enableAdditionalMetrics: true,
+			expectError:             true,
+			errorMsg:                "metrics builder cannot be nil",
+		},
+		{
+			name:                    "nil_logger",
+			client:                  common.NewMockClient(),
+			mb:                      metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(receivertest.NopType)),
+			logger:                  nil,
+			enableAdditionalMetrics: true,
+			expectError:             true,
+			errorMsg:                "logger cannot be nil",
+		},
+	}
 
-	t.Run("successful creation", func(t *testing.T) {
-		client := common.NewMockClient()
-		scraper, err := NewReplicationScraper(client, mb, logger)
-		require.NoError(t, err)
-		assert.NotNil(t, scraper)
-		assert.Equal(t, client, scraper.client)
-		assert.Equal(t, mb, scraper.mb)
-		assert.Equal(t, logger, scraper.logger)
-	})
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			scraper, err := NewReplicationScraper(tt.client, tt.mb, tt.logger, tt.enableAdditionalMetrics)
 
-	t.Run("nil client returns error", func(t *testing.T) {
-		scraper, err := NewReplicationScraper(nil, mb, logger)
-		assert.Error(t, err)
-		assert.Nil(t, scraper)
-		assert.Contains(t, err.Error(), "client cannot be nil")
-	})
-
-	t.Run("nil metrics builder returns error", func(t *testing.T) {
-		client := common.NewMockClient()
-		scraper, err := NewReplicationScraper(client, nil, logger)
-		assert.Error(t, err)
-		assert.Nil(t, scraper)
-		assert.Contains(t, err.Error(), "metrics builder cannot be nil")
-	})
-
-	t.Run("nil logger returns error", func(t *testing.T) {
-		client := common.NewMockClient()
-		scraper, err := NewReplicationScraper(client, mb, nil)
-		assert.Error(t, err)
-		assert.Nil(t, scraper)
-		assert.Contains(t, err.Error(), "logger cannot be nil")
-	})
+			if tt.expectError {
+				require.Error(t, err)
+				assert.Contains(t, err.Error(), tt.errorMsg)
+				assert.Nil(t, scraper)
+			} else {
+				require.NoError(t, err)
+				require.NotNil(t, scraper)
+				assert.Equal(t, tt.enableAdditionalMetrics, scraper.enableAdditionalMetrics)
+			}
+		})
+	}
 }
 
-func TestReplicationScraper_ScrapeMetrics(t *testing.T) {
-	logger := zap.NewNop()
-
-	t.Run("master node - no replication status", func(t *testing.T) {
-		settings := receivertest.NewNopSettings(receivertest.NopType)
-		mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), settings)
-		client := common.NewMockClient()
-		client.GetReplicationStatusFunc = func() (map[string]string, error) {
-			return map[string]string{}, nil
-		}
-
-		scraper, err := NewReplicationScraper(client, mb, logger)
-		require.NoError(t, err)
-
-		errs := &scrapererror.ScrapeErrors{}
-		now := pcommon.NewTimestampFromTime(testTime())
-
-		scraper.ScrapeMetrics(context.Background(), now, errs)
-
-		// Error handling verified by execution
-	})
-
-	t.Run("replica node with MySQL 5.7 field names", func(t *testing.T) {
-		settings := receivertest.NewNopSettings(receivertest.NopType)
-		mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), settings)
-		client := common.NewMockClient()
-		client.GetReplicationStatusFunc = func() (map[string]string, error) {
-			return map[string]string{
+func TestReplicationScraper_ScrapeMetrics_ReplicaNode(t *testing.T) {
+	tests := []struct {
+		name                    string
+		replicationStatus       map[string]string
+		enableAdditionalMetrics bool
+		expectedMetrics         []string
+	}{
+		{
+			name: "replica_with_core_metrics_only",
+			replicationStatus: map[string]string{
 				"Seconds_Behind_Master": "10",
 				"Read_Master_Log_Pos":   "12345",
 				"Exec_Master_Log_Pos":   "12340",
 				"Last_IO_Errno":         "0",
 				"Last_SQL_Errno":        "0",
-				"Relay_Log_Space":       "1024000",
+				"Relay_Log_Space":       "4096",
 				"Slave_IO_Running":      "Yes",
 				"Slave_SQL_Running":     "Yes",
-			}, nil
-		}
-
-		scraper, err := NewReplicationScraper(client, mb, logger)
-		require.NoError(t, err)
-
-		errs := &scrapererror.ScrapeErrors{}
-		now := pcommon.NewTimestampFromTime(testTime())
-
-		scraper.ScrapeMetrics(context.Background(), now, errs)
-
-		// Error handling verified by execution
-	})
-
-	t.Run("replica node with MySQL 8.0+ field names", func(t *testing.T) {
-		settings := receivertest.NewNopSettings(receivertest.NopType)
-		mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), settings)
-		client := common.NewMockClient()
-		client.GetReplicationStatusFunc = func() (map[string]string, error) {
-			return map[string]string{
+			},
+			enableAdditionalMetrics: false,
+			expectedMetrics: []string{
+				"newrelicmysql.replication.read_master_log_pos",
+				"newrelicmysql.replication.exec_master_log_pos",
+				"newrelicmysql.replication.last_io_errno",
+				"newrelicmysql.replication.last_sql_errno",
+				"newrelicmysql.replication.relay_log_space",
+				"newrelicmysql.replication.slave_io_running",
+				"newrelicmysql.replication.slave_sql_running",
+				"newrelicmysql.replication.slave_running",
+			},
+		},
+		{
+			name: "replica_with_additional_metrics",
+			replicationStatus: map[string]string{
+				"Seconds_Behind_Master": "10",
+				"Seconds_Behind_Source": "10",
+				"Read_Master_Log_Pos":   "12345",
+				"Exec_Master_Log_Pos":   "12340",
+				"Last_IO_Errno":         "0",
+				"Last_SQL_Errno":        "0",
+				"Relay_Log_Space":       "4096",
+				"Slave_IO_Running":      "Yes",
+				"Slave_SQL_Running":     "Yes",
+			},
+			enableAdditionalMetrics: true,
+			expectedMetrics: []string{
+				"newrelicmysql.replication.seconds_behind_master",
+				"newrelicmysql.replication.seconds_behind_source",
+				"newrelicmysql.replication.read_master_log_pos",
+				"newrelicmysql.replication.exec_master_log_pos",
+				"newrelicmysql.replication.slave_io_running",
+				"newrelicmysql.replication.slave_sql_running",
+				"newrelicmysql.replication.slave_running",
+			},
+		},
+		{
+			name: "replica_with_null_seconds_behind",
+			replicationStatus: map[string]string{
+				"Seconds_Behind_Master": "NULL",
+				"Slave_IO_Running":      "Yes",
+				"Slave_SQL_Running":     "No",
+			},
+			enableAdditionalMetrics: false,
+			expectedMetrics: []string{
+				"newrelicmysql.replication.slave_io_running",
+				"newrelicmysql.replication.slave_sql_running",
+				"newrelicmysql.replication.slave_running",
+			},
+		},
+		{
+			name: "replica_with_mysql8_names",
+			replicationStatus: map[string]string{
 				"Seconds_Behind_Source": "5",
 				"Read_Source_Log_Pos":   "54321",
 				"Exec_Source_Log_Pos":   "54320",
-				"Last_IO_Errno":         "0",
-				"Last_Errno":            "0",
-				"Relay_Log_Space":       "2048000",
 				"Replica_IO_Running":    "Yes",
 				"Replica_SQL_Running":   "Yes",
-			}, nil
-		}
+			},
+			enableAdditionalMetrics: true,
+			expectedMetrics: []string{
+				"newrelicmysql.replication.seconds_behind_source",
+				"newrelicmysql.replication.read_master_log_pos",
+				"newrelicmysql.replication.exec_master_log_pos",
+				"newrelicmysql.replication.slave_io_running",
+				"newrelicmysql.replication.slave_sql_running",
+				"newrelicmysql.replication.slave_running",
+			},
+		},
+	}
 
-		scraper, err := NewReplicationScraper(client, mb, logger)
-		require.NoError(t, err)
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			mockClient := common.NewMockClient()
+			mockClient.ReplicationStatus = tt.replicationStatus
 
-		errs := &scrapererror.ScrapeErrors{}
-		now := pcommon.NewTimestampFromTime(testTime())
+			// Use default metrics config (metrics are enabled by default now)
+			mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(receivertest.NopType))
+			scraper, err := NewReplicationScraper(mockClient, mb, zap.NewNop(), tt.enableAdditionalMetrics)
+			require.NoError(t, err)
 
-		scraper.ScrapeMetrics(context.Background(), now, errs)
+			errs := &scrapererror.ScrapeErrors{}
+			scraper.ScrapeMetrics(context.Background(), pcommon.NewTimestampFromTime(time.Now()), errs)
 
-		// Error handling verified by execution
-	})
+			assert.Nil(t, errs.Combine(), "Expected no errors")
 
-	t.Run("replica with IO thread not running", func(t *testing.T) {
-		settings := receivertest.NewNopSettings(receivertest.NopType)
-		mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), settings)
-		client := common.NewMockClient()
-		client.GetReplicationStatusFunc = func() (map[string]string, error) {
-			return map[string]string{
-				"Seconds_Behind_Master": "NULL",
-				"Read_Master_Log_Pos":   "12345",
-				"Exec_Master_Log_Pos":   "12340",
-				"Last_IO_Errno":         "2003",
-				"Last_SQL_Errno":        "0",
-				"Relay_Log_Space":       "1024000",
-				"Slave_IO_Running":      "No",
-				"Slave_SQL_Running":     "Yes",
-			}, nil
-		}
+			metrics := mb.Emit()
+			rm := metrics.ResourceMetrics()
+			require.Equal(t, 1, rm.Len())
 
-		scraper, err := NewReplicationScraper(client, mb, logger)
-		require.NoError(t, err)
+			sm := rm.At(0).ScopeMetrics()
+			require.Equal(t, 1, sm.Len())
 
-		errs := &scrapererror.ScrapeErrors{}
-		now := pcommon.NewTimestampFromTime(testTime())
+			metricSlice := sm.At(0).Metrics()
+			collectedMetricNames := make(map[string]bool)
+			for i := 0; i < metricSlice.Len(); i++ {
+				collectedMetricNames[metricSlice.At(i).Name()] = true
+			}
 
-		scraper.ScrapeMetrics(context.Background(), now, errs)
-
-		// Error handling verified by execution
-	})
-
-	t.Run("replica with SQL thread not running", func(t *testing.T) {
-		settings := receivertest.NewNopSettings(receivertest.NopType)
-		mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), settings)
-		client := common.NewMockClient()
-		client.GetReplicationStatusFunc = func() (map[string]string, error) {
-			return map[string]string{
-				"Seconds_Behind_Master": "NULL",
-				"Read_Master_Log_Pos":   "12345",
-				"Exec_Master_Log_Pos":   "12340",
-				"Last_IO_Errno":         "0",
-				"Last_SQL_Errno":        "1050",
-				"Relay_Log_Space":       "1024000",
-				"Slave_IO_Running":      "Yes",
-				"Slave_SQL_Running":     "No",
-			}, nil
-		}
-
-		scraper, err := NewReplicationScraper(client, mb, logger)
-		require.NoError(t, err)
-
-		errs := &scrapererror.ScrapeErrors{}
-		now := pcommon.NewTimestampFromTime(testTime())
-
-		scraper.ScrapeMetrics(context.Background(), now, errs)
-
-		// Error handling verified by execution
-	})
-
-	t.Run("replica with IO thread connecting", func(t *testing.T) {
-		settings := receivertest.NewNopSettings(receivertest.NopType)
-		mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), settings)
-		client := common.NewMockClient()
-		client.GetReplicationStatusFunc = func() (map[string]string, error) {
-			return map[string]string{
-				"Seconds_Behind_Master": "NULL",
-				"Read_Master_Log_Pos":   "12345",
-				"Exec_Master_Log_Pos":   "12340",
-				"Last_IO_Errno":         "0",
-				"Last_SQL_Errno":        "0",
-				"Relay_Log_Space":       "1024000",
-				"Slave_IO_Running":      "Connecting",
-				"Slave_SQL_Running":     "Yes",
-			}, nil
-		}
-
-		scraper, err := NewReplicationScraper(client, mb, logger)
-		require.NoError(t, err)
-
-		errs := &scrapererror.ScrapeErrors{}
-		now := pcommon.NewTimestampFromTime(testTime())
-
-		scraper.ScrapeMetrics(context.Background(), now, errs)
-
-		// Error handling verified by execution
-	})
-
-	t.Run("replication status fetch error", func(t *testing.T) {
-		settings := receivertest.NewNopSettings(receivertest.NopType)
-		mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), settings)
-		client := common.NewMockClient()
-		client.GetReplicationStatusFunc = func() (map[string]string, error) {
-			return nil, errors.New("replication status error")
-		}
-
-		scraper, err := NewReplicationScraper(client, mb, logger)
-		require.NoError(t, err)
-
-		errs := &scrapererror.ScrapeErrors{}
-		now := pcommon.NewTimestampFromTime(testTime())
-
-		scraper.ScrapeMetrics(context.Background(), now, errs)
-
-		// Error handling verified by execution
-	})
-
-	t.Run("empty seconds behind master", func(t *testing.T) {
-		settings := receivertest.NewNopSettings(receivertest.NopType)
-		mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), settings)
-		client := common.NewMockClient()
-		client.GetReplicationStatusFunc = func() (map[string]string, error) {
-			return map[string]string{
-				"Seconds_Behind_Master": "",
-				"Slave_IO_Running":      "Yes",
-				"Slave_SQL_Running":     "Yes",
-			}, nil
-		}
-
-		scraper, err := NewReplicationScraper(client, mb, logger)
-		require.NoError(t, err)
-
-		errs := &scrapererror.ScrapeErrors{}
-		now := pcommon.NewTimestampFromTime(testTime())
-
-		scraper.ScrapeMetrics(context.Background(), now, errs)
-
-		// Error handling verified by execution
-	})
-
-	t.Run("invalid numeric values are ignored", func(t *testing.T) {
-		settings := receivertest.NewNopSettings(receivertest.NopType)
-		mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), settings)
-		client := common.NewMockClient()
-		client.GetReplicationStatusFunc = func() (map[string]string, error) {
-			return map[string]string{
-				"Read_Master_Log_Pos": "not_a_number",
-				"Exec_Master_Log_Pos": "invalid",
-				"Last_IO_Errno":       "abc",
-				"Last_SQL_Errno":      "xyz",
-				"Relay_Log_Space":     "NaN",
-				"Slave_IO_Running":    "Yes",
-				"Slave_SQL_Running":   "Yes",
-			}, nil
-		}
-
-		scraper, err := NewReplicationScraper(client, mb, logger)
-		require.NoError(t, err)
-
-		errs := &scrapererror.ScrapeErrors{}
-		now := pcommon.NewTimestampFromTime(testTime())
-
-		assert.NotPanics(t, func() {
-			scraper.ScrapeMetrics(context.Background(), now, errs)
+			for _, expectedMetric := range tt.expectedMetrics {
+				assert.True(t, collectedMetricNames[expectedMetric], "Expected metric %s not found", expectedMetric)
+			}
 		})
-	})
+	}
+}
 
-	t.Run("both threads running sets slave_running to 1", func(t *testing.T) {
-		settings := receivertest.NewNopSettings(receivertest.NopType)
-		mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), settings)
-		client := common.NewMockClient()
-		client.GetReplicationStatusFunc = func() (map[string]string, error) {
-			return map[string]string{
-				"Slave_IO_Running":  "Yes",
-				"Slave_SQL_Running": "Yes",
-			}, nil
-		}
+func TestReplicationScraper_ScrapeMetrics_MasterNode(t *testing.T) {
+	tests := []struct {
+		name                    string
+		masterStatus            map[string]string
+		enableAdditionalMetrics bool
+		expectMasterMetrics     bool
+	}{
+		{
+			name: "master_with_additional_metrics_enabled",
+			masterStatus: map[string]string{
+				"Slaves_Connected":   "3",
+				"Replicas_Connected": "3",
+			},
+			enableAdditionalMetrics: true,
+			expectMasterMetrics:     true,
+		},
+		{
+			name: "master_with_additional_metrics_disabled",
+			masterStatus: map[string]string{
+				"Slaves_Connected":   "3",
+				"Replicas_Connected": "3",
+			},
+			enableAdditionalMetrics: false,
+			expectMasterMetrics:     false,
+		},
+		{
+			name:                    "master_no_slaves_connected",
+			masterStatus:            map[string]string{},
+			enableAdditionalMetrics: true,
+			expectMasterMetrics:     false,
+		},
+	}
 
-		scraper, err := NewReplicationScraper(client, mb, logger)
-		require.NoError(t, err)
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			mockClient := common.NewMockClient()
+			mockClient.ReplicationStatus = map[string]string{} // Empty - not a replica
+			mockClient.MasterStatus = tt.masterStatus
 
-		errs := &scrapererror.ScrapeErrors{}
-		now := pcommon.NewTimestampFromTime(testTime())
+			// Use default metrics config (metrics are enabled by default now)
+			mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(receivertest.NopType))
+			scraper, err := NewReplicationScraper(mockClient, mb, zap.NewNop(), tt.enableAdditionalMetrics)
+			require.NoError(t, err)
 
-		scraper.ScrapeMetrics(context.Background(), now, errs)
+			errs := &scrapererror.ScrapeErrors{}
+			scraper.ScrapeMetrics(context.Background(), pcommon.NewTimestampFromTime(time.Now()), errs)
 
-		// Error handling verified by execution
-	})
+			assert.Nil(t, errs.Combine(), "Expected no errors")
 
-	t.Run("one thread not running sets slave_running to 0", func(t *testing.T) {
-		settings := receivertest.NewNopSettings(receivertest.NopType)
-		mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), settings)
-		client := common.NewMockClient()
-		client.GetReplicationStatusFunc = func() (map[string]string, error) {
-			return map[string]string{
-				"Slave_IO_Running":  "No",
-				"Slave_SQL_Running": "Yes",
-			}, nil
-		}
+			metrics := mb.Emit()
+			rm := metrics.ResourceMetrics()
 
-		scraper, err := NewReplicationScraper(client, mb, logger)
-		require.NoError(t, err)
+			if tt.expectMasterMetrics {
+				require.Equal(t, 1, rm.Len())
+			}
+		})
+	}
+}
 
-		errs := &scrapererror.ScrapeErrors{}
-		now := pcommon.NewTimestampFromTime(testTime())
+func TestReplicationScraper_ScrapeMetrics_GroupReplication(t *testing.T) {
+	tests := []struct {
+		name                    string
+		groupReplicationStats   map[string]string
+		enableAdditionalMetrics bool
+		expectedMetrics         []string
+	}{
+		{
+			name: "group_replication_with_additional_metrics",
+			groupReplicationStats: map[string]string{
+				"group_replication_transactions":                  "1000",
+				"group_replication_conflicts_detected":            "5",
+				"group_replication_transactions_validating":       "2",
+				"group_replication_transactions_in_applier_queue": "3",
+				"group_replication_transactions_applied":          "995",
+				"group_replication_transactions_proposed":         "1000",
+				"group_replication_transactions_rollback":         "5",
+				"group_replication_transactions_check":            "1000",
+			},
+			enableAdditionalMetrics: true,
+			expectedMetrics: []string{
+				"newrelicmysql.replication.group.transactions",
+				"newrelicmysql.replication.group.conflicts_detected",
+				"newrelicmysql.replication.group.transactions_validating",
+				"newrelicmysql.replication.group.transactions_in_applier_queue",
+				"newrelicmysql.replication.group.transactions_applied",
+				"newrelicmysql.replication.group.transactions_proposed",
+				"newrelicmysql.replication.group.transactions_rollback",
+				"newrelicmysql.replication.group.transactions_check",
+			},
+		},
+		{
+			name: "group_replication_with_additional_metrics_disabled",
+			groupReplicationStats: map[string]string{
+				"group_replication_transactions": "1000",
+			},
+			enableAdditionalMetrics: false,
+			expectedMetrics:         []string{},
+		},
+	}
 
-		scraper.ScrapeMetrics(context.Background(), now, errs)
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			mockClient := common.NewMockClient()
+			mockClient.ReplicationStatus = map[string]string{}
+			mockClient.GroupReplicationStats = tt.groupReplicationStats
 
-		// Error handling verified by execution
-	})
+			// Use default metrics config (metrics are enabled by default now)
+			mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(receivertest.NopType))
+			scraper, err := NewReplicationScraper(mockClient, mb, zap.NewNop(), tt.enableAdditionalMetrics)
+			require.NoError(t, err)
+
+			errs := &scrapererror.ScrapeErrors{}
+			scraper.ScrapeMetrics(context.Background(), pcommon.NewTimestampFromTime(time.Now()), errs)
+
+			assert.Nil(t, errs.Combine(), "Expected no errors")
+
+			metrics := mb.Emit()
+
+			if len(tt.expectedMetrics) > 0 {
+				rm := metrics.ResourceMetrics()
+				require.Equal(t, 1, rm.Len())
+
+				sm := rm.At(0).ScopeMetrics()
+				require.Equal(t, 1, sm.Len())
+
+				metricSlice := sm.At(0).Metrics()
+				collectedMetricNames := make(map[string]bool)
+				for i := 0; i < metricSlice.Len(); i++ {
+					collectedMetricNames[metricSlice.At(i).Name()] = true
+				}
+
+				for _, expectedMetric := range tt.expectedMetrics {
+					assert.True(t, collectedMetricNames[expectedMetric], "Expected metric %s not found", expectedMetric)
+				}
+			}
+		})
+	}
+}
+
+func TestReplicationScraper_ScrapeMetrics_Errors(t *testing.T) {
+	tests := []struct {
+		name                    string
+		replicationStatusErr    error
+		masterStatusErr         error
+		groupReplicationErr     error
+		enableAdditionalMetrics bool
+		expectedPartialErrors   int
+	}{
+		{
+			name:                    "replication_status_error",
+			replicationStatusErr:    errors.New("failed to fetch replication status"),
+			enableAdditionalMetrics: false,
+			expectedPartialErrors:   1,
+		},
+		{
+			name:                    "master_status_error_with_additional_metrics",
+			masterStatusErr:         errors.New("failed to fetch master status"),
+			enableAdditionalMetrics: true,
+			expectedPartialErrors:   1,
+		},
+		{
+			name:                    "group_replication_error_with_additional_metrics",
+			groupReplicationErr:     errors.New("failed to fetch group replication stats"),
+			enableAdditionalMetrics: true,
+			expectedPartialErrors:   1,
+		},
+		{
+			name:                    "master_status_error_without_additional_metrics",
+			masterStatusErr:         errors.New("failed to fetch master status"),
+			enableAdditionalMetrics: false,
+			expectedPartialErrors:   0, // Master metrics not collected
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			mockClient := common.NewMockClient()
+			mockClient.ReplicationStatus = map[string]string{}
+			mockClient.ReplicationStatusErr = tt.replicationStatusErr
+			mockClient.MasterStatus = map[string]string{}
+			mockClient.MasterStatusErr = tt.masterStatusErr
+			mockClient.GroupReplicationStats = map[string]string{}
+			mockClient.GroupReplicationStatsErr = tt.groupReplicationErr
+
+			mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(receivertest.NopType))
+			scraper, err := NewReplicationScraper(mockClient, mb, zap.NewNop(), tt.enableAdditionalMetrics)
+			require.NoError(t, err)
+
+			errs := &scrapererror.ScrapeErrors{}
+			scraper.ScrapeMetrics(context.Background(), pcommon.NewTimestampFromTime(time.Now()), errs)
+
+			if tt.expectedPartialErrors > 0 {
+				assert.NotNil(t, errs.Combine(), "Expected partial scrape error")
+			} else {
+				assert.Nil(t, errs.Combine(), "Expected no errors")
+			}
+		})
+	}
+}
+
+func TestReplicationScraper_ScrapeMetrics_StandaloneNode(t *testing.T) {
+	mockClient := common.NewMockClient()
+	mockClient.ReplicationStatus = map[string]string{} // Empty - not a replica
+	mockClient.MasterStatus = map[string]string{
+		"Slaves_Connected": "0",
+	}
+
+	// Use default metrics config (metrics are enabled by default now)
+	mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(receivertest.NopType))
+	scraper, err := NewReplicationScraper(mockClient, mb, zap.NewNop(), true)
+	require.NoError(t, err)
+
+	errs := &scrapererror.ScrapeErrors{}
+	scraper.ScrapeMetrics(context.Background(), pcommon.NewTimestampFromTime(time.Now()), errs)
+
+	assert.Nil(t, errs.Combine(), "Expected no errors")
+
+	metrics := mb.Emit()
+	rm := metrics.ResourceMetrics()
+
+	// Should have metrics for slaves_connected: 0
+	require.Equal(t, 1, rm.Len())
 }

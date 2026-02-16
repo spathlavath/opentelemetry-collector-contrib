@@ -3,92 +3,91 @@
 
 package common
 
-// MockClient is a mock implementation of Client for testing.
-// It supports both direct field assignment and function callbacks for flexibility.
+import (
+	"context"
+	"database/sql"
+)
+
+// MockClient is a shared mock implementation of common.Client for testing.
+// It can be configured to return different data or errors for different test scenarios.
 type MockClient struct {
-	// Direct value fields
-	GlobalStats       map[string]string
-	GlobalVariables   map[string]string
-	ReplicationStatus map[string]string
-	Version           string
+	// Global stats
+	GlobalStats    map[string]string
+	GlobalStatsErr error
 
-	// Error fields
-	ConnectErr        error
-	GetGlobalStatsErr error
-	GetGlobalVarsErr  error
-	GetReplicationErr error
-	GetVersionErr     error
-	CloseErr          error
+	// Global variables
+	GlobalVariables    map[string]string
+	GlobalVariablesErr error
 
-	// Function callback fields (optional, take precedence over direct fields)
-	ConnectFunc              func() error
-	GetGlobalStatsFunc       func() (map[string]string, error)
-	GetGlobalVariablesFunc   func() (map[string]string, error)
-	GetReplicationStatusFunc func() (map[string]string, error)
-	GetVersionFunc           func() (string, error)
-	CloseFunc                func() error
+	// Replication status
+	ReplicationStatus    map[string]string
+	ReplicationStatusErr error
+
+	// Master status
+	MasterStatus    map[string]string
+	MasterStatusErr error
+
+	// Group replication stats
+	GroupReplicationStats    map[string]string
+	GroupReplicationStatsErr error
+
+	// Version
+	Version    string
+	VersionErr error
+
+	// Optional: custom function for GetGlobalStats to support complex scenarios
+	GetGlobalStatsFunc func() (map[string]string, error)
 }
 
-// NewMockClient creates a new mock client for testing.
+// NewMockClient creates a new MockClient with default values.
 func NewMockClient() *MockClient {
 	return &MockClient{
-		GlobalStats:       make(map[string]string),
-		GlobalVariables:   make(map[string]string),
-		ReplicationStatus: make(map[string]string),
-		Version:           "",
+		GlobalStats:           make(map[string]string),
+		GlobalVariables:       make(map[string]string),
+		ReplicationStatus:     make(map[string]string),
+		MasterStatus:          make(map[string]string),
+		GroupReplicationStats: make(map[string]string),
+		Version:               "8.0.0",
 	}
 }
 
+var _ Client = (*MockClient)(nil)
+
 func (m *MockClient) Connect() error {
-	if m.ConnectFunc != nil {
-		return m.ConnectFunc()
-	}
-	return m.ConnectErr
+	return nil
 }
 
 func (m *MockClient) GetGlobalStats() (map[string]string, error) {
 	if m.GetGlobalStatsFunc != nil {
 		return m.GetGlobalStatsFunc()
 	}
-	if m.GetGlobalStatsErr != nil {
-		return nil, m.GetGlobalStatsErr
-	}
-	return m.GlobalStats, nil
+	return m.GlobalStats, m.GlobalStatsErr
 }
 
 func (m *MockClient) GetGlobalVariables() (map[string]string, error) {
-	if m.GetGlobalVariablesFunc != nil {
-		return m.GetGlobalVariablesFunc()
-	}
-	if m.GetGlobalVarsErr != nil {
-		return nil, m.GetGlobalVarsErr
-	}
-	return m.GlobalVariables, nil
+	return m.GlobalVariables, m.GlobalVariablesErr
 }
 
 func (m *MockClient) GetReplicationStatus() (map[string]string, error) {
-	if m.GetReplicationStatusFunc != nil {
-		return m.GetReplicationStatusFunc()
-	}
-	if m.GetReplicationErr != nil {
-		return nil, m.GetReplicationErr
-	}
-	return m.ReplicationStatus, nil
+	return m.ReplicationStatus, m.ReplicationStatusErr
+}
+
+func (m *MockClient) GetMasterStatus() (map[string]string, error) {
+	return m.MasterStatus, m.MasterStatusErr
+}
+
+func (m *MockClient) GetGroupReplicationStats() (map[string]string, error) {
+	return m.GroupReplicationStats, m.GroupReplicationStatsErr
 }
 
 func (m *MockClient) GetVersion() (string, error) {
-	if m.GetVersionFunc != nil {
-		return m.GetVersionFunc()
-	}
-	if m.GetVersionErr != nil {
-		return "", m.GetVersionErr
-	}
-	return m.Version, nil
+	return m.Version, m.VersionErr
+}
+
+func (m *MockClient) QueryContext(ctx context.Context, query string, args ...interface{}) (*sql.Rows, error) {
+	return nil, nil
 }
 
 func (m *MockClient) Close() error {
-	if m.CloseFunc != nil {
-		return m.CloseFunc()
-	}
-	return m.CloseErr
+	return nil
 }

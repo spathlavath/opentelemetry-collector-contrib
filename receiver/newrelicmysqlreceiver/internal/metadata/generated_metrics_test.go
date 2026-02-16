@@ -70,6 +70,14 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
+			mb.RecordNewrelicmysqlBinlogCacheDiskUseDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlBinlogCacheUseDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
 			mb.RecordNewrelicmysqlCommandsDataPoint(ts, "1", AttributeCommandCommit)
 
 			defaultMetricsCount++
@@ -86,11 +94,91 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbActiveTransactionsDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbAdaptiveHashHashSearchesDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbAdaptiveHashNonHashSearchesDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbAdaptiveHashPagesAddedDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbAdaptiveHashPagesRemovedDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbAvailableUndoLogsDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbBufferPoolBytesDataDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbBufferPoolBytesDirtyDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
 			mb.RecordNewrelicmysqlInnodbBufferPoolDirtyDataPoint(ts, 1)
 
 			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicmysqlInnodbBufferPoolFreeDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbBufferPoolPagesDataDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbBufferPoolPagesFlushedDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbBufferPoolPagesFreeDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbBufferPoolPagesLruFlushedDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbBufferPoolPagesMadeNotYoungDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbBufferPoolPagesMadeYoungDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbBufferPoolPagesMiscDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbBufferPoolPagesOldDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbBufferPoolPagesTotalDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbBufferPoolReadAheadDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbBufferPoolReadAheadEvictedDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbBufferPoolReadAheadRndDataPoint(ts, 1)
 
 			defaultMetricsCount++
 			allMetricsCount++
@@ -114,7 +202,43 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbBufferPoolWaitFreeDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbBufferPoolWriteRequestsDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbCheckpointAgeDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
 			mb.RecordNewrelicmysqlInnodbCurrentRowLocksDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbCurrentTransactionsDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbDataFsyncsDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbDataPendingFsyncsDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbDataPendingReadsDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbDataPendingWritesDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbDataReadDataPoint(ts, 1)
 
 			defaultMetricsCount++
 			allMetricsCount++
@@ -130,7 +254,131 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbDblwrPagesWrittenDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbDblwrWritesDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbHashIndexCellsTotalDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbHashIndexCellsUsedDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbHistoryListLengthDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbIbufFreeListDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbIbufMergedDeleteMarksDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbIbufMergedDeletesDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbIbufMergedInsertsDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbIbufMergesDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbIbufSegmentSizeDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbIbufSizeDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbLockStructsDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbLockedTablesDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbLockedTransactionsDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
 			mb.RecordNewrelicmysqlInnodbLogWaitsDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbLogWriteRequestsDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbLogWritesDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbLsnCurrentDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbLsnFlushedDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbLsnLastCheckpointDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbMasterThreadActiveLoopsDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbMasterThreadIdleLoopsDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbMemAdaptiveHashDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbMemAdditionalPoolDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbMemDictionaryDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbMemFileSystemDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbMemLockSystemDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbMemPageHashDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbMemRecoverySystemDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbMemThreadHashDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbMemTotalDataPoint(ts, 1)
 
 			defaultMetricsCount++
 			allMetricsCount++
@@ -146,7 +394,111 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbNumOpenFilesDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbOsFileFsyncsDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbOsFileReadsDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbOsFileWritesDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
 			mb.RecordNewrelicmysqlInnodbOsLogFsyncsDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbOsLogPendingFsyncsDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbOsLogPendingWritesDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbOsLogWrittenDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbPageSizeDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbPagesCreatedDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbPagesReadDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbPagesWrittenDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbPendingAioLogIosDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbPendingAioSyncIosDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbPendingBufferPoolFlushesDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbPendingCheckpointWritesDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbPendingIbufAioReadsDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbPendingLogFlushesDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbPendingLogWritesDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbPendingNormalAioReadsDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbPendingNormalAioWritesDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbPurgeTrxIDDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbPurgeUndoNoDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbQueriesInsideDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbQueriesQueuedDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbReadViewsDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbRedoLogEnabledDataPoint(ts, 1)
 
 			defaultMetricsCount++
 			allMetricsCount++
@@ -158,7 +510,87 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbRowLockTimeAvgDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbRowLockTimeMaxDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
 			mb.RecordNewrelicmysqlInnodbRowLockWaitsDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbRowsDeletedDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbRowsInsertedDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbRowsReadDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbRowsUpdatedDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbSLockOsWaitsDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbSLockSpinRoundsDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbSLockSpinWaitsDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbSemaphoreWaitTimeDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbSemaphoreWaitsDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbTablesInUseDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbTruncatedStatusWritesDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbUndoTablespacesActiveDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbUndoTablespacesExplicitDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbUndoTablespacesImplicitDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbUndoTablespacesTotalDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbXLockOsWaitsDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbXLockSpinRoundsDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlInnodbXLockSpinWaitsDataPoint(ts, 1)
 
 			defaultMetricsCount++
 			allMetricsCount++
@@ -234,6 +666,54 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
+			mb.RecordNewrelicmysqlPerformanceHandlerCommitDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlPerformanceHandlerDeleteDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlPerformanceHandlerPrepareDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlPerformanceHandlerReadFirstDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlPerformanceHandlerReadKeyDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlPerformanceHandlerReadNextDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlPerformanceHandlerReadPrevDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlPerformanceHandlerReadRndDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlPerformanceHandlerReadRndNextDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlPerformanceHandlerRollbackDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlPerformanceHandlerUpdateDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlPerformanceHandlerWriteDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
 			mb.RecordNewrelicmysqlPerformanceKeyCacheUtilizationDataPoint(ts, 1)
 
 			defaultMetricsCount++
@@ -250,11 +730,23 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
+			mb.RecordNewrelicmysqlPerformanceOpenedTablesDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
 			mb.RecordNewrelicmysqlPerformancePerformanceSchemaDigestLostDataPoint(ts, 1)
 
 			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicmysqlPerformancePreparedStmtCountDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlPerformanceQcacheFreeBlocksDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlPerformanceQcacheFreeMemoryDataPoint(ts, 1)
 
 			defaultMetricsCount++
 			allMetricsCount++
@@ -274,7 +766,15 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
+			mb.RecordNewrelicmysqlPerformanceQcacheQueriesInCacheDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
 			mb.RecordNewrelicmysqlPerformanceQcacheSizeDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlPerformanceQcacheTotalBlocksDataPoint(ts, 1)
 
 			defaultMetricsCount++
 			allMetricsCount++
@@ -282,7 +782,51 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
+			mb.RecordNewrelicmysqlPerformanceSelectFullJoinDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlPerformanceSelectFullRangeJoinDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlPerformanceSelectRangeDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlPerformanceSelectRangeCheckDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlPerformanceSelectScanDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
 			mb.RecordNewrelicmysqlPerformanceSlowQueriesDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlPerformanceSortMergePassesDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlPerformanceSortRangeDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlPerformanceSortRowsDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlPerformanceSortScanDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlPerformanceTableLocksImmediateDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlPerformanceTableLocksImmediateRateDataPoint(ts, 1)
 
 			defaultMetricsCount++
 			allMetricsCount++
@@ -298,7 +842,15 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
+			mb.RecordNewrelicmysqlPerformanceThreadsCachedDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
 			mb.RecordNewrelicmysqlPerformanceThreadsConnectedDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlPerformanceThreadsCreatedDataPoint(ts, 1)
 
 			defaultMetricsCount++
 			allMetricsCount++
@@ -311,6 +863,38 @@ func TestMetricsBuilder(t *testing.T) {
 			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicmysqlReplicationExecMasterLogPosDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlReplicationGroupConflictsDetectedDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlReplicationGroupTransactionsDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlReplicationGroupTransactionsAppliedDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlReplicationGroupTransactionsCheckDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlReplicationGroupTransactionsInApplierQueueDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlReplicationGroupTransactionsProposedDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlReplicationGroupTransactionsRollbackDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlReplicationGroupTransactionsValidatingDataPoint(ts, 1)
 
 			defaultMetricsCount++
 			allMetricsCount++
@@ -330,7 +914,15 @@ func TestMetricsBuilder(t *testing.T) {
 
 			defaultMetricsCount++
 			allMetricsCount++
+			mb.RecordNewrelicmysqlReplicationReplicasConnectedDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
 			mb.RecordNewrelicmysqlReplicationSecondsBehindMasterDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlReplicationSecondsBehindSourceDataPoint(ts, 1)
 
 			defaultMetricsCount++
 			allMetricsCount++
@@ -343,6 +935,10 @@ func TestMetricsBuilder(t *testing.T) {
 			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicmysqlReplicationSlaveSQLRunningDataPoint(ts, 1)
+
+			defaultMetricsCount++
+			allMetricsCount++
+			mb.RecordNewrelicmysqlReplicationSlavesConnectedDataPoint(ts, 1)
 
 			defaultMetricsCount++
 			allMetricsCount++
@@ -372,6 +968,30 @@ func TestMetricsBuilder(t *testing.T) {
 			validatedMetrics := make(map[string]bool)
 			for i := 0; i < ms.Len(); i++ {
 				switch ms.At(i).Name() {
+				case "newrelicmysql.binlog.cache_disk_use":
+					assert.False(t, validatedMetrics["newrelicmysql.binlog.cache_disk_use"], "Found a duplicate in the metrics slice: newrelicmysql.binlog.cache_disk_use")
+					validatedMetrics["newrelicmysql.binlog.cache_disk_use"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "The number of transactions that used the temporary binary log cache but exceeded binlog_cache_size and used a temporary file.", ms.At(i).Description())
+					assert.Equal(t, "{transactions}", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.binlog.cache_use":
+					assert.False(t, validatedMetrics["newrelicmysql.binlog.cache_use"], "Found a duplicate in the metrics slice: newrelicmysql.binlog.cache_use")
+					validatedMetrics["newrelicmysql.binlog.cache_use"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "The number of transactions that used the binary log cache.", ms.At(i).Description())
+					assert.Equal(t, "{transactions}", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
 				case "newrelicmysql.commands":
 					assert.False(t, validatedMetrics["newrelicmysql.commands"], "Found a duplicate in the metrics slice: newrelicmysql.commands")
 					validatedMetrics["newrelicmysql.commands"] = true
@@ -431,6 +1051,110 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
 					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.active_transactions":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.active_transactions"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.active_transactions")
+					validatedMetrics["newrelicmysql.innodb.active_transactions"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "The number of currently active transactions.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.adaptive_hash_hash_searches":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.adaptive_hash_hash_searches"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.adaptive_hash_hash_searches")
+					validatedMetrics["newrelicmysql.innodb.adaptive_hash_hash_searches"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "The number of successful hash searches in the adaptive hash index.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.adaptive_hash_non_hash_searches":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.adaptive_hash_non_hash_searches"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.adaptive_hash_non_hash_searches")
+					validatedMetrics["newrelicmysql.innodb.adaptive_hash_non_hash_searches"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "The number of unsuccessful hash searches that fell back to B-tree searches.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.adaptive_hash_pages_added":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.adaptive_hash_pages_added"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.adaptive_hash_pages_added")
+					validatedMetrics["newrelicmysql.innodb.adaptive_hash_pages_added"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "The number of pages added to the adaptive hash index.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.adaptive_hash_pages_removed":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.adaptive_hash_pages_removed"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.adaptive_hash_pages_removed")
+					validatedMetrics["newrelicmysql.innodb.adaptive_hash_pages_removed"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "The number of pages removed from the adaptive hash index.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.available_undo_logs":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.available_undo_logs"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.available_undo_logs")
+					validatedMetrics["newrelicmysql.innodb.available_undo_logs"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "The number of available undo logs.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.buffer_pool_bytes_data":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.buffer_pool_bytes_data"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.buffer_pool_bytes_data")
+					validatedMetrics["newrelicmysql.innodb.buffer_pool_bytes_data"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "The total number of bytes in the InnoDB buffer pool containing data.", ms.At(i).Description())
+					assert.Equal(t, "By", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.buffer_pool_bytes_dirty":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.buffer_pool_bytes_dirty"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.buffer_pool_bytes_dirty")
+					validatedMetrics["newrelicmysql.innodb.buffer_pool_bytes_dirty"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "The total size in bytes of dirty pages in the InnoDB buffer pool.", ms.At(i).Description())
+					assert.Equal(t, "By", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
 				case "newrelicmysql.innodb.buffer_pool_dirty":
 					assert.False(t, validatedMetrics["newrelicmysql.innodb.buffer_pool_dirty"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.buffer_pool_dirty")
 					validatedMetrics["newrelicmysql.innodb.buffer_pool_dirty"] = true
@@ -451,6 +1175,164 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, "The number of free pages in the InnoDB buffer pool.", ms.At(i).Description())
 					assert.Equal(t, "1", ms.At(i).Unit())
 					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.buffer_pool_pages_data":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.buffer_pool_pages_data"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.buffer_pool_pages_data")
+					validatedMetrics["newrelicmysql.innodb.buffer_pool_pages_data"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "The number of pages in the InnoDB buffer pool containing data.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.buffer_pool_pages_flushed":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.buffer_pool_pages_flushed"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.buffer_pool_pages_flushed")
+					validatedMetrics["newrelicmysql.innodb.buffer_pool_pages_flushed"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "The number of requests to flush pages from the InnoDB buffer pool.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.buffer_pool_pages_free":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.buffer_pool_pages_free"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.buffer_pool_pages_free")
+					validatedMetrics["newrelicmysql.innodb.buffer_pool_pages_free"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "The number of free pages in the InnoDB buffer pool.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.buffer_pool_pages_lru_flushed":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.buffer_pool_pages_lru_flushed"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.buffer_pool_pages_lru_flushed")
+					validatedMetrics["newrelicmysql.innodb.buffer_pool_pages_lru_flushed"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "The number of pages flushed from the LRU list.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.buffer_pool_pages_made_not_young":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.buffer_pool_pages_made_not_young"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.buffer_pool_pages_made_not_young")
+					validatedMetrics["newrelicmysql.innodb.buffer_pool_pages_made_not_young"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "The number of pages not made young in the buffer pool LRU list.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.buffer_pool_pages_made_young":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.buffer_pool_pages_made_young"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.buffer_pool_pages_made_young")
+					validatedMetrics["newrelicmysql.innodb.buffer_pool_pages_made_young"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "The number of pages made young in the buffer pool LRU list.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.buffer_pool_pages_misc":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.buffer_pool_pages_misc"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.buffer_pool_pages_misc")
+					validatedMetrics["newrelicmysql.innodb.buffer_pool_pages_misc"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "The number of pages in the InnoDB buffer pool used for miscellaneous purposes.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.buffer_pool_pages_old":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.buffer_pool_pages_old"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.buffer_pool_pages_old")
+					validatedMetrics["newrelicmysql.innodb.buffer_pool_pages_old"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "The number of old pages in the buffer pool LRU list.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.buffer_pool_pages_total":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.buffer_pool_pages_total"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.buffer_pool_pages_total")
+					validatedMetrics["newrelicmysql.innodb.buffer_pool_pages_total"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "The total number of pages in the InnoDB buffer pool.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.buffer_pool_read_ahead":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.buffer_pool_read_ahead"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.buffer_pool_read_ahead")
+					validatedMetrics["newrelicmysql.innodb.buffer_pool_read_ahead"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "The number of pages read into the InnoDB buffer pool by the read-ahead background thread.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.buffer_pool_read_ahead_evicted":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.buffer_pool_read_ahead_evicted"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.buffer_pool_read_ahead_evicted")
+					validatedMetrics["newrelicmysql.innodb.buffer_pool_read_ahead_evicted"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "The number of pages read by read-ahead that were evicted without being accessed.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.buffer_pool_read_ahead_rnd":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.buffer_pool_read_ahead_rnd"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.buffer_pool_read_ahead_rnd")
+					validatedMetrics["newrelicmysql.innodb.buffer_pool_read_ahead_rnd"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "The number of random read-aheads initiated by InnoDB.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
 					assert.Equal(t, start, dp.StartTimestamp())
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
@@ -519,6 +1401,46 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeDouble, dp.ValueType())
 					assert.InDelta(t, float64(1), dp.DoubleValue(), 0.01)
+				case "newrelicmysql.innodb.buffer_pool_wait_free":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.buffer_pool_wait_free"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.buffer_pool_wait_free")
+					validatedMetrics["newrelicmysql.innodb.buffer_pool_wait_free"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "The number of times InnoDB waited for a free page in the buffer pool.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.buffer_pool_write_requests":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.buffer_pool_write_requests"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.buffer_pool_write_requests")
+					validatedMetrics["newrelicmysql.innodb.buffer_pool_write_requests"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "The number of write requests to the InnoDB buffer pool.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.checkpoint_age":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.checkpoint_age"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.checkpoint_age")
+					validatedMetrics["newrelicmysql.innodb.checkpoint_age"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "The age of the checkpoint (difference between current LSN and checkpoint LSN).", ms.At(i).Description())
+					assert.Equal(t, "By", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
 				case "newrelicmysql.innodb.current_row_locks":
 					assert.False(t, validatedMetrics["newrelicmysql.innodb.current_row_locks"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.current_row_locks")
 					validatedMetrics["newrelicmysql.innodb.current_row_locks"] = true
@@ -527,6 +1449,82 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, "The number of current row locks.", ms.At(i).Description())
 					assert.Equal(t, "1", ms.At(i).Unit())
 					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.current_transactions":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.current_transactions"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.current_transactions")
+					validatedMetrics["newrelicmysql.innodb.current_transactions"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "The current number of transactions.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.data_fsyncs":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.data_fsyncs"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.data_fsyncs")
+					validatedMetrics["newrelicmysql.innodb.data_fsyncs"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "The number of fsync() operations performed by InnoDB.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.data_pending_fsyncs":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.data_pending_fsyncs"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.data_pending_fsyncs")
+					validatedMetrics["newrelicmysql.innodb.data_pending_fsyncs"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "The current number of pending fsync operations.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.data_pending_reads":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.data_pending_reads"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.data_pending_reads")
+					validatedMetrics["newrelicmysql.innodb.data_pending_reads"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "The current number of pending read operations.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.data_pending_writes":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.data_pending_writes"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.data_pending_writes")
+					validatedMetrics["newrelicmysql.innodb.data_pending_writes"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "The current number of pending write operations.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.data_read":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.data_read"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.data_read")
+					validatedMetrics["newrelicmysql.innodb.data_read"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "The total amount of data read by InnoDB.", ms.At(i).Description())
+					assert.Equal(t, "By", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
 					assert.Equal(t, start, dp.StartTimestamp())
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
@@ -573,6 +1571,198 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
 					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.dblwr_pages_written":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.dblwr_pages_written"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.dblwr_pages_written")
+					validatedMetrics["newrelicmysql.innodb.dblwr_pages_written"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "The number of pages written to the doublewrite buffer.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.dblwr_writes":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.dblwr_writes"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.dblwr_writes")
+					validatedMetrics["newrelicmysql.innodb.dblwr_writes"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "The number of doublewrite operations performed.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.hash_index_cells_total":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.hash_index_cells_total"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.hash_index_cells_total")
+					validatedMetrics["newrelicmysql.innodb.hash_index_cells_total"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "The total number of cells in the adaptive hash index.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.hash_index_cells_used":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.hash_index_cells_used"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.hash_index_cells_used")
+					validatedMetrics["newrelicmysql.innodb.hash_index_cells_used"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "The number of used cells in the adaptive hash index.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.history_list_length":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.history_list_length"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.history_list_length")
+					validatedMetrics["newrelicmysql.innodb.history_list_length"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "The length of the InnoDB history list (undo log entries).", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.ibuf_free_list":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.ibuf_free_list"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.ibuf_free_list")
+					validatedMetrics["newrelicmysql.innodb.ibuf_free_list"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "The number of pages in the change buffer free list.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.ibuf_merged_delete_marks":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.ibuf_merged_delete_marks"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.ibuf_merged_delete_marks")
+					validatedMetrics["newrelicmysql.innodb.ibuf_merged_delete_marks"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "The number of delete mark operations merged by the change buffer.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.ibuf_merged_deletes":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.ibuf_merged_deletes"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.ibuf_merged_deletes")
+					validatedMetrics["newrelicmysql.innodb.ibuf_merged_deletes"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "The number of delete operations merged by the change buffer.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.ibuf_merged_inserts":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.ibuf_merged_inserts"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.ibuf_merged_inserts")
+					validatedMetrics["newrelicmysql.innodb.ibuf_merged_inserts"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "The number of insert operations merged by the change buffer.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.ibuf_merges":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.ibuf_merges"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.ibuf_merges")
+					validatedMetrics["newrelicmysql.innodb.ibuf_merges"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "The number of merge operations performed by the change buffer.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.ibuf_segment_size":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.ibuf_segment_size"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.ibuf_segment_size")
+					validatedMetrics["newrelicmysql.innodb.ibuf_segment_size"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "The size of the change buffer segment.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.ibuf_size":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.ibuf_size"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.ibuf_size")
+					validatedMetrics["newrelicmysql.innodb.ibuf_size"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "The size of the change buffer in pages.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.lock_structs":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.lock_structs"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.lock_structs")
+					validatedMetrics["newrelicmysql.innodb.lock_structs"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "The number of lock structures allocated.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.locked_tables":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.locked_tables"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.locked_tables")
+					validatedMetrics["newrelicmysql.innodb.locked_tables"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "The number of locked tables.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.locked_transactions":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.locked_transactions"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.locked_transactions")
+					validatedMetrics["newrelicmysql.innodb.locked_transactions"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "The number of locked transactions.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
 				case "newrelicmysql.innodb.log_waits":
 					assert.False(t, validatedMetrics["newrelicmysql.innodb.log_waits"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.log_waits")
 					validatedMetrics["newrelicmysql.innodb.log_waits"] = true
@@ -583,6 +1773,206 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.True(t, ms.At(i).Sum().IsMonotonic())
 					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
 					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.log_write_requests":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.log_write_requests"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.log_write_requests")
+					validatedMetrics["newrelicmysql.innodb.log_write_requests"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "The number of write requests to the InnoDB log.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.log_writes":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.log_writes"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.log_writes")
+					validatedMetrics["newrelicmysql.innodb.log_writes"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "The number of physical writes to the InnoDB log file.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.lsn_current":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.lsn_current"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.lsn_current")
+					validatedMetrics["newrelicmysql.innodb.lsn_current"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "The current log sequence number.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.lsn_flushed":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.lsn_flushed"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.lsn_flushed")
+					validatedMetrics["newrelicmysql.innodb.lsn_flushed"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "The log sequence number up to which all changes have been flushed to disk.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.lsn_last_checkpoint":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.lsn_last_checkpoint"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.lsn_last_checkpoint")
+					validatedMetrics["newrelicmysql.innodb.lsn_last_checkpoint"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "The log sequence number of the last checkpoint.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.master_thread_active_loops":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.master_thread_active_loops"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.master_thread_active_loops")
+					validatedMetrics["newrelicmysql.innodb.master_thread_active_loops"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "The number of times the master thread has gone through its active loop.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.master_thread_idle_loops":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.master_thread_idle_loops"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.master_thread_idle_loops")
+					validatedMetrics["newrelicmysql.innodb.master_thread_idle_loops"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "The number of times the master thread has gone through its idle loop.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.mem_adaptive_hash":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.mem_adaptive_hash"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.mem_adaptive_hash")
+					validatedMetrics["newrelicmysql.innodb.mem_adaptive_hash"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "The total memory allocated for the adaptive hash index.", ms.At(i).Description())
+					assert.Equal(t, "By", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.mem_additional_pool":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.mem_additional_pool"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.mem_additional_pool")
+					validatedMetrics["newrelicmysql.innodb.mem_additional_pool"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "The size of the additional memory pool in bytes.", ms.At(i).Description())
+					assert.Equal(t, "By", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.mem_dictionary":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.mem_dictionary"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.mem_dictionary")
+					validatedMetrics["newrelicmysql.innodb.mem_dictionary"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "The memory allocated for the InnoDB data dictionary in bytes.", ms.At(i).Description())
+					assert.Equal(t, "By", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.mem_file_system":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.mem_file_system"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.mem_file_system")
+					validatedMetrics["newrelicmysql.innodb.mem_file_system"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "The memory allocated for the file system in bytes.", ms.At(i).Description())
+					assert.Equal(t, "By", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.mem_lock_system":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.mem_lock_system"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.mem_lock_system")
+					validatedMetrics["newrelicmysql.innodb.mem_lock_system"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "The memory allocated for the lock system in bytes.", ms.At(i).Description())
+					assert.Equal(t, "By", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.mem_page_hash":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.mem_page_hash"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.mem_page_hash")
+					validatedMetrics["newrelicmysql.innodb.mem_page_hash"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "The memory allocated for the page hash in bytes.", ms.At(i).Description())
+					assert.Equal(t, "By", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.mem_recovery_system":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.mem_recovery_system"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.mem_recovery_system")
+					validatedMetrics["newrelicmysql.innodb.mem_recovery_system"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "The memory allocated for the recovery system in bytes.", ms.At(i).Description())
+					assert.Equal(t, "By", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.mem_thread_hash":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.mem_thread_hash"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.mem_thread_hash")
+					validatedMetrics["newrelicmysql.innodb.mem_thread_hash"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "The memory allocated for the thread hash in bytes.", ms.At(i).Description())
+					assert.Equal(t, "By", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.mem_total":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.mem_total"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.mem_total")
+					validatedMetrics["newrelicmysql.innodb.mem_total"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "The total memory allocated by InnoDB in bytes.", ms.At(i).Description())
+					assert.Equal(t, "By", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
 					assert.Equal(t, start, dp.StartTimestamp())
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
@@ -629,6 +2019,60 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
 					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.num_open_files":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.num_open_files"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.num_open_files")
+					validatedMetrics["newrelicmysql.innodb.num_open_files"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "The number of files InnoDB currently holds open.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.os_file_fsyncs":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.os_file_fsyncs"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.os_file_fsyncs")
+					validatedMetrics["newrelicmysql.innodb.os_file_fsyncs"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "The number of fsync calls to files.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.os_file_reads":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.os_file_reads"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.os_file_reads")
+					validatedMetrics["newrelicmysql.innodb.os_file_reads"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "The number of file reads performed by InnoDB.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.os_file_writes":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.os_file_writes"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.os_file_writes")
+					validatedMetrics["newrelicmysql.innodb.os_file_writes"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "The number of file writes performed by InnoDB.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
 				case "newrelicmysql.innodb.os_log_fsyncs":
 					assert.False(t, validatedMetrics["newrelicmysql.innodb.os_log_fsyncs"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.os_log_fsyncs")
 					validatedMetrics["newrelicmysql.innodb.os_log_fsyncs"] = true
@@ -639,6 +2083,278 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.True(t, ms.At(i).Sum().IsMonotonic())
 					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
 					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.os_log_pending_fsyncs":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.os_log_pending_fsyncs"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.os_log_pending_fsyncs")
+					validatedMetrics["newrelicmysql.innodb.os_log_pending_fsyncs"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "The number of pending fsync operations for the redo log.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.os_log_pending_writes":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.os_log_pending_writes"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.os_log_pending_writes")
+					validatedMetrics["newrelicmysql.innodb.os_log_pending_writes"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "The number of pending write operations for the redo log.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.os_log_written":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.os_log_written"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.os_log_written")
+					validatedMetrics["newrelicmysql.innodb.os_log_written"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "The total amount of data written to the redo log files.", ms.At(i).Description())
+					assert.Equal(t, "By", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.page_size":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.page_size"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.page_size")
+					validatedMetrics["newrelicmysql.innodb.page_size"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "The compiled-in InnoDB page size.", ms.At(i).Description())
+					assert.Equal(t, "By", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.pages_created":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.pages_created"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.pages_created")
+					validatedMetrics["newrelicmysql.innodb.pages_created"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "The number of pages created by InnoDB.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.pages_read":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.pages_read"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.pages_read")
+					validatedMetrics["newrelicmysql.innodb.pages_read"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "The number of pages read by InnoDB.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.pages_written":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.pages_written"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.pages_written")
+					validatedMetrics["newrelicmysql.innodb.pages_written"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "The number of pages written by InnoDB.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.pending_aio_log_ios":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.pending_aio_log_ios"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.pending_aio_log_ios")
+					validatedMetrics["newrelicmysql.innodb.pending_aio_log_ios"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "The number of pending asynchronous I/O operations for log files.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.pending_aio_sync_ios":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.pending_aio_sync_ios"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.pending_aio_sync_ios")
+					validatedMetrics["newrelicmysql.innodb.pending_aio_sync_ios"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "The number of pending synchronous I/O operations.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.pending_buffer_pool_flushes":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.pending_buffer_pool_flushes"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.pending_buffer_pool_flushes")
+					validatedMetrics["newrelicmysql.innodb.pending_buffer_pool_flushes"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "The number of pending buffer pool flush operations.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.pending_checkpoint_writes":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.pending_checkpoint_writes"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.pending_checkpoint_writes")
+					validatedMetrics["newrelicmysql.innodb.pending_checkpoint_writes"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "The number of pending checkpoint write operations.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.pending_ibuf_aio_reads":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.pending_ibuf_aio_reads"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.pending_ibuf_aio_reads")
+					validatedMetrics["newrelicmysql.innodb.pending_ibuf_aio_reads"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "The number of pending asynchronous change buffer read operations.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.pending_log_flushes":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.pending_log_flushes"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.pending_log_flushes")
+					validatedMetrics["newrelicmysql.innodb.pending_log_flushes"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "The number of pending log flush operations.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.pending_log_writes":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.pending_log_writes"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.pending_log_writes")
+					validatedMetrics["newrelicmysql.innodb.pending_log_writes"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "The number of pending log write operations.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.pending_normal_aio_reads":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.pending_normal_aio_reads"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.pending_normal_aio_reads")
+					validatedMetrics["newrelicmysql.innodb.pending_normal_aio_reads"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "The number of pending normal asynchronous read operations.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.pending_normal_aio_writes":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.pending_normal_aio_writes"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.pending_normal_aio_writes")
+					validatedMetrics["newrelicmysql.innodb.pending_normal_aio_writes"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "The number of pending normal asynchronous write operations.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.purge_trx_id":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.purge_trx_id"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.purge_trx_id")
+					validatedMetrics["newrelicmysql.innodb.purge_trx_id"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "The transaction ID that the purge system is currently processing.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.purge_undo_no":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.purge_undo_no"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.purge_undo_no")
+					validatedMetrics["newrelicmysql.innodb.purge_undo_no"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "The undo number that the purge system is currently processing.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.queries_inside":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.queries_inside"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.queries_inside")
+					validatedMetrics["newrelicmysql.innodb.queries_inside"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "The number of queries currently being executed inside InnoDB.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.queries_queued":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.queries_queued"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.queries_queued")
+					validatedMetrics["newrelicmysql.innodb.queries_queued"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "The number of queries queued inside InnoDB.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.read_views":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.read_views"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.read_views")
+					validatedMetrics["newrelicmysql.innodb.read_views"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "The number of read views currently open.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.redo_log_enabled":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.redo_log_enabled"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.redo_log_enabled")
+					validatedMetrics["newrelicmysql.innodb.redo_log_enabled"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "Whether redo logging is enabled (1) or disabled (0).", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
 					assert.Equal(t, start, dp.StartTimestamp())
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
@@ -669,12 +2385,278 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
 					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.row_lock_time_avg":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.row_lock_time_avg"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.row_lock_time_avg")
+					validatedMetrics["newrelicmysql.innodb.row_lock_time_avg"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "The average time to acquire a row lock.", ms.At(i).Description())
+					assert.Equal(t, "ms", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.row_lock_time_max":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.row_lock_time_max"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.row_lock_time_max")
+					validatedMetrics["newrelicmysql.innodb.row_lock_time_max"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "The maximum time to acquire a row lock.", ms.At(i).Description())
+					assert.Equal(t, "ms", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
 				case "newrelicmysql.innodb.row_lock_waits":
 					assert.False(t, validatedMetrics["newrelicmysql.innodb.row_lock_waits"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.row_lock_waits")
 					validatedMetrics["newrelicmysql.innodb.row_lock_waits"] = true
 					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
 					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
 					assert.Equal(t, "The number of times operations had to wait for a row lock.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.rows_deleted":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.rows_deleted"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.rows_deleted")
+					validatedMetrics["newrelicmysql.innodb.rows_deleted"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "The number of rows deleted from InnoDB tables.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.rows_inserted":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.rows_inserted"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.rows_inserted")
+					validatedMetrics["newrelicmysql.innodb.rows_inserted"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "The number of rows inserted into InnoDB tables.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.rows_read":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.rows_read"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.rows_read")
+					validatedMetrics["newrelicmysql.innodb.rows_read"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "The number of rows read from InnoDB tables.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.rows_updated":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.rows_updated"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.rows_updated")
+					validatedMetrics["newrelicmysql.innodb.rows_updated"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "The number of rows updated in InnoDB tables.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.s_lock_os_waits":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.s_lock_os_waits"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.s_lock_os_waits")
+					validatedMetrics["newrelicmysql.innodb.s_lock_os_waits"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "The number of OS waits for S-locks.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.s_lock_spin_rounds":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.s_lock_spin_rounds"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.s_lock_spin_rounds")
+					validatedMetrics["newrelicmysql.innodb.s_lock_spin_rounds"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "The number of spin rounds for S-locks.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.s_lock_spin_waits":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.s_lock_spin_waits"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.s_lock_spin_waits")
+					validatedMetrics["newrelicmysql.innodb.s_lock_spin_waits"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "The number of spin waits for S-locks.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.semaphore_wait_time":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.semaphore_wait_time"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.semaphore_wait_time")
+					validatedMetrics["newrelicmysql.innodb.semaphore_wait_time"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "The total time spent waiting for semaphores in milliseconds.", ms.At(i).Description())
+					assert.Equal(t, "ms", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.semaphore_waits":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.semaphore_waits"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.semaphore_waits")
+					validatedMetrics["newrelicmysql.innodb.semaphore_waits"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "The number of times a semaphore wait occurred.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.tables_in_use":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.tables_in_use"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.tables_in_use")
+					validatedMetrics["newrelicmysql.innodb.tables_in_use"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "The number of tables currently in use by transactions.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.truncated_status_writes":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.truncated_status_writes"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.truncated_status_writes")
+					validatedMetrics["newrelicmysql.innodb.truncated_status_writes"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "The number of times output from SHOW ENGINE INNODB STATUS has been truncated.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.undo_tablespaces_active":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.undo_tablespaces_active"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.undo_tablespaces_active")
+					validatedMetrics["newrelicmysql.innodb.undo_tablespaces_active"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "The number of active undo tablespaces.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.undo_tablespaces_explicit":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.undo_tablespaces_explicit"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.undo_tablespaces_explicit")
+					validatedMetrics["newrelicmysql.innodb.undo_tablespaces_explicit"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "The number of user-created undo tablespaces.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.undo_tablespaces_implicit":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.undo_tablespaces_implicit"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.undo_tablespaces_implicit")
+					validatedMetrics["newrelicmysql.innodb.undo_tablespaces_implicit"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "The number of implicit undo tablespaces.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.undo_tablespaces_total":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.undo_tablespaces_total"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.undo_tablespaces_total")
+					validatedMetrics["newrelicmysql.innodb.undo_tablespaces_total"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "The total number of undo tablespaces.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.x_lock_os_waits":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.x_lock_os_waits"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.x_lock_os_waits")
+					validatedMetrics["newrelicmysql.innodb.x_lock_os_waits"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "The number of OS waits for X-locks.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.x_lock_spin_rounds":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.x_lock_spin_rounds"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.x_lock_spin_rounds")
+					validatedMetrics["newrelicmysql.innodb.x_lock_spin_rounds"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "The number of spin rounds for X-locks.", ms.At(i).Description())
+					assert.Equal(t, "1", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.innodb.x_lock_spin_waits":
+					assert.False(t, validatedMetrics["newrelicmysql.innodb.x_lock_spin_waits"], "Found a duplicate in the metrics slice: newrelicmysql.innodb.x_lock_spin_waits")
+					validatedMetrics["newrelicmysql.innodb.x_lock_spin_waits"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "The number of spin waits for X-locks.", ms.At(i).Description())
 					assert.Equal(t, "1", ms.At(i).Unit())
 					assert.True(t, ms.At(i).Sum().IsMonotonic())
 					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
@@ -923,6 +2905,174 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
 					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.performance.handler_commit":
+					assert.False(t, validatedMetrics["newrelicmysql.performance.handler_commit"], "Found a duplicate in the metrics slice: newrelicmysql.performance.handler_commit")
+					validatedMetrics["newrelicmysql.performance.handler_commit"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "The number of internal COMMIT statements.", ms.At(i).Description())
+					assert.Equal(t, "{operations}", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.performance.handler_delete":
+					assert.False(t, validatedMetrics["newrelicmysql.performance.handler_delete"], "Found a duplicate in the metrics slice: newrelicmysql.performance.handler_delete")
+					validatedMetrics["newrelicmysql.performance.handler_delete"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "The number of times that rows have been deleted from tables.", ms.At(i).Description())
+					assert.Equal(t, "{operations}", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.performance.handler_prepare":
+					assert.False(t, validatedMetrics["newrelicmysql.performance.handler_prepare"], "Found a duplicate in the metrics slice: newrelicmysql.performance.handler_prepare")
+					validatedMetrics["newrelicmysql.performance.handler_prepare"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "A counter for the prepare phase of two-phase commit operations.", ms.At(i).Description())
+					assert.Equal(t, "{operations}", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.performance.handler_read_first":
+					assert.False(t, validatedMetrics["newrelicmysql.performance.handler_read_first"], "Found a duplicate in the metrics slice: newrelicmysql.performance.handler_read_first")
+					validatedMetrics["newrelicmysql.performance.handler_read_first"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "The number of times the first entry in an index was read.", ms.At(i).Description())
+					assert.Equal(t, "{operations}", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.performance.handler_read_key":
+					assert.False(t, validatedMetrics["newrelicmysql.performance.handler_read_key"], "Found a duplicate in the metrics slice: newrelicmysql.performance.handler_read_key")
+					validatedMetrics["newrelicmysql.performance.handler_read_key"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "The number of requests to read a row based on a key.", ms.At(i).Description())
+					assert.Equal(t, "{operations}", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.performance.handler_read_next":
+					assert.False(t, validatedMetrics["newrelicmysql.performance.handler_read_next"], "Found a duplicate in the metrics slice: newrelicmysql.performance.handler_read_next")
+					validatedMetrics["newrelicmysql.performance.handler_read_next"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "The number of requests to read the next row in key order.", ms.At(i).Description())
+					assert.Equal(t, "{operations}", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.performance.handler_read_prev":
+					assert.False(t, validatedMetrics["newrelicmysql.performance.handler_read_prev"], "Found a duplicate in the metrics slice: newrelicmysql.performance.handler_read_prev")
+					validatedMetrics["newrelicmysql.performance.handler_read_prev"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "The number of requests to read the previous row in key order.", ms.At(i).Description())
+					assert.Equal(t, "{operations}", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.performance.handler_read_rnd":
+					assert.False(t, validatedMetrics["newrelicmysql.performance.handler_read_rnd"], "Found a duplicate in the metrics slice: newrelicmysql.performance.handler_read_rnd")
+					validatedMetrics["newrelicmysql.performance.handler_read_rnd"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "The number of requests to read a row based on a fixed position.", ms.At(i).Description())
+					assert.Equal(t, "{operations}", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.performance.handler_read_rnd_next":
+					assert.False(t, validatedMetrics["newrelicmysql.performance.handler_read_rnd_next"], "Found a duplicate in the metrics slice: newrelicmysql.performance.handler_read_rnd_next")
+					validatedMetrics["newrelicmysql.performance.handler_read_rnd_next"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "The number of requests to read the next row in the data file.", ms.At(i).Description())
+					assert.Equal(t, "{operations}", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.performance.handler_rollback":
+					assert.False(t, validatedMetrics["newrelicmysql.performance.handler_rollback"], "Found a duplicate in the metrics slice: newrelicmysql.performance.handler_rollback")
+					validatedMetrics["newrelicmysql.performance.handler_rollback"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "The number of requests for a storage engine to perform a rollback operation.", ms.At(i).Description())
+					assert.Equal(t, "{operations}", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.performance.handler_update":
+					assert.False(t, validatedMetrics["newrelicmysql.performance.handler_update"], "Found a duplicate in the metrics slice: newrelicmysql.performance.handler_update")
+					validatedMetrics["newrelicmysql.performance.handler_update"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "The number of requests to update a row in a table.", ms.At(i).Description())
+					assert.Equal(t, "{operations}", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.performance.handler_write":
+					assert.False(t, validatedMetrics["newrelicmysql.performance.handler_write"], "Found a duplicate in the metrics slice: newrelicmysql.performance.handler_write")
+					validatedMetrics["newrelicmysql.performance.handler_write"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "The number of requests to insert a row in a table.", ms.At(i).Description())
+					assert.Equal(t, "{operations}", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
 				case "newrelicmysql.performance.key_cache_utilization":
 					assert.False(t, validatedMetrics["newrelicmysql.performance.key_cache_utilization"], "Found a duplicate in the metrics slice: newrelicmysql.performance.key_cache_utilization")
 					validatedMetrics["newrelicmysql.performance.key_cache_utilization"] = true
@@ -971,6 +3121,20 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
 					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.performance.opened_tables":
+					assert.False(t, validatedMetrics["newrelicmysql.performance.opened_tables"], "Found a duplicate in the metrics slice: newrelicmysql.performance.opened_tables")
+					validatedMetrics["newrelicmysql.performance.opened_tables"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "The number of tables that have been opened. If this value is large, your table_open_cache value is probably too small.", ms.At(i).Description())
+					assert.Equal(t, "{tables}", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
 				case "newrelicmysql.performance.performance_schema_digest_lost":
 					assert.False(t, validatedMetrics["newrelicmysql.performance.performance_schema_digest_lost"], "Found a duplicate in the metrics slice: newrelicmysql.performance.performance_schema_digest_lost")
 					validatedMetrics["newrelicmysql.performance.performance_schema_digest_lost"] = true
@@ -992,6 +3156,30 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
 					assert.Equal(t, "Current number of prepared statements.", ms.At(i).Description())
 					assert.Equal(t, "1", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.performance.qcache_free_blocks":
+					assert.False(t, validatedMetrics["newrelicmysql.performance.qcache_free_blocks"], "Found a duplicate in the metrics slice: newrelicmysql.performance.qcache_free_blocks")
+					validatedMetrics["newrelicmysql.performance.qcache_free_blocks"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "The number of free memory blocks in the query cache.", ms.At(i).Description())
+					assert.Equal(t, "{blocks}", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.performance.qcache_free_memory":
+					assert.False(t, validatedMetrics["newrelicmysql.performance.qcache_free_memory"], "Found a duplicate in the metrics slice: newrelicmysql.performance.qcache_free_memory")
+					validatedMetrics["newrelicmysql.performance.qcache_free_memory"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "The amount of free memory for the query cache.", ms.At(i).Description())
+					assert.Equal(t, "By", ms.At(i).Unit())
 					dp := ms.At(i).Gauge().DataPoints().At(0)
 					assert.Equal(t, start, dp.StartTimestamp())
 					assert.Equal(t, ts, dp.Timestamp())
@@ -1053,6 +3241,18 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
 					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.performance.qcache_queries_in_cache":
+					assert.False(t, validatedMetrics["newrelicmysql.performance.qcache_queries_in_cache"], "Found a duplicate in the metrics slice: newrelicmysql.performance.qcache_queries_in_cache")
+					validatedMetrics["newrelicmysql.performance.qcache_queries_in_cache"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "The number of queries registered in the query cache.", ms.At(i).Description())
+					assert.Equal(t, "{queries}", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
 				case "newrelicmysql.performance.qcache_size":
 					assert.False(t, validatedMetrics["newrelicmysql.performance.qcache_size"], "Found a duplicate in the metrics slice: newrelicmysql.performance.qcache_size")
 					validatedMetrics["newrelicmysql.performance.qcache_size"] = true
@@ -1060,6 +3260,18 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
 					assert.Equal(t, "The amount of memory allocated for the query cache.", ms.At(i).Description())
 					assert.Equal(t, "By", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.performance.qcache_total_blocks":
+					assert.False(t, validatedMetrics["newrelicmysql.performance.qcache_total_blocks"], "Found a duplicate in the metrics slice: newrelicmysql.performance.qcache_total_blocks")
+					validatedMetrics["newrelicmysql.performance.qcache_total_blocks"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "The total number of blocks in the query cache.", ms.At(i).Description())
+					assert.Equal(t, "{blocks}", ms.At(i).Unit())
 					dp := ms.At(i).Gauge().DataPoints().At(0)
 					assert.Equal(t, start, dp.StartTimestamp())
 					assert.Equal(t, ts, dp.Timestamp())
@@ -1079,6 +3291,76 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
 					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.performance.select_full_join":
+					assert.False(t, validatedMetrics["newrelicmysql.performance.select_full_join"], "Found a duplicate in the metrics slice: newrelicmysql.performance.select_full_join")
+					validatedMetrics["newrelicmysql.performance.select_full_join"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "The number of joins that perform table scans because they do not use indexes. If this value is not 0, you should carefully check the indexes of your tables.", ms.At(i).Description())
+					assert.Equal(t, "{operations}", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.performance.select_full_range_join":
+					assert.False(t, validatedMetrics["newrelicmysql.performance.select_full_range_join"], "Found a duplicate in the metrics slice: newrelicmysql.performance.select_full_range_join")
+					validatedMetrics["newrelicmysql.performance.select_full_range_join"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "The number of joins that used a range search on a reference table.", ms.At(i).Description())
+					assert.Equal(t, "{operations}", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.performance.select_range":
+					assert.False(t, validatedMetrics["newrelicmysql.performance.select_range"], "Found a duplicate in the metrics slice: newrelicmysql.performance.select_range")
+					validatedMetrics["newrelicmysql.performance.select_range"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "The number of joins that used ranges on the first table.", ms.At(i).Description())
+					assert.Equal(t, "{operations}", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.performance.select_range_check":
+					assert.False(t, validatedMetrics["newrelicmysql.performance.select_range_check"], "Found a duplicate in the metrics slice: newrelicmysql.performance.select_range_check")
+					validatedMetrics["newrelicmysql.performance.select_range_check"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "The number of joins without keys that check for key usage after each row. If this is not 0, you should carefully check the indexes of your tables.", ms.At(i).Description())
+					assert.Equal(t, "{operations}", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.performance.select_scan":
+					assert.False(t, validatedMetrics["newrelicmysql.performance.select_scan"], "Found a duplicate in the metrics slice: newrelicmysql.performance.select_scan")
+					validatedMetrics["newrelicmysql.performance.select_scan"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "The number of joins that did a full scan of the first table.", ms.At(i).Description())
+					assert.Equal(t, "{operations}", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
 				case "newrelicmysql.performance.slow_queries":
 					assert.False(t, validatedMetrics["newrelicmysql.performance.slow_queries"], "Found a duplicate in the metrics slice: newrelicmysql.performance.slow_queries")
 					validatedMetrics["newrelicmysql.performance.slow_queries"] = true
@@ -1086,6 +3368,88 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
 					assert.Equal(t, "The number of queries that have taken more than long_query_time seconds.", ms.At(i).Description())
 					assert.Equal(t, "1", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.performance.sort_merge_passes":
+					assert.False(t, validatedMetrics["newrelicmysql.performance.sort_merge_passes"], "Found a duplicate in the metrics slice: newrelicmysql.performance.sort_merge_passes")
+					validatedMetrics["newrelicmysql.performance.sort_merge_passes"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "The number of merge passes that the sort algorithm has had to do. If this value is large, you should consider increasing the value of the sort_buffer_size system variable.", ms.At(i).Description())
+					assert.Equal(t, "{operations}", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.performance.sort_range":
+					assert.False(t, validatedMetrics["newrelicmysql.performance.sort_range"], "Found a duplicate in the metrics slice: newrelicmysql.performance.sort_range")
+					validatedMetrics["newrelicmysql.performance.sort_range"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "The number of sorts that were done using ranges.", ms.At(i).Description())
+					assert.Equal(t, "{operations}", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.performance.sort_rows":
+					assert.False(t, validatedMetrics["newrelicmysql.performance.sort_rows"], "Found a duplicate in the metrics slice: newrelicmysql.performance.sort_rows")
+					validatedMetrics["newrelicmysql.performance.sort_rows"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "The number of sorted rows.", ms.At(i).Description())
+					assert.Equal(t, "{rows}", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.performance.sort_scan":
+					assert.False(t, validatedMetrics["newrelicmysql.performance.sort_scan"], "Found a duplicate in the metrics slice: newrelicmysql.performance.sort_scan")
+					validatedMetrics["newrelicmysql.performance.sort_scan"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "The number of sorts that were done by scanning the table.", ms.At(i).Description())
+					assert.Equal(t, "{operations}", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.performance.table_locks_immediate":
+					assert.False(t, validatedMetrics["newrelicmysql.performance.table_locks_immediate"], "Found a duplicate in the metrics slice: newrelicmysql.performance.table_locks_immediate")
+					validatedMetrics["newrelicmysql.performance.table_locks_immediate"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "The number of times that a request for a table lock could be granted immediately.", ms.At(i).Description())
+					assert.Equal(t, "{locks}", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.performance.table_locks_immediate.rate":
+					assert.False(t, validatedMetrics["newrelicmysql.performance.table_locks_immediate.rate"], "Found a duplicate in the metrics slice: newrelicmysql.performance.table_locks_immediate.rate")
+					validatedMetrics["newrelicmysql.performance.table_locks_immediate.rate"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "The rate of times that a request for a table lock could be granted immediately.", ms.At(i).Description())
+					assert.Equal(t, "{locks}", ms.At(i).Unit())
 					assert.True(t, ms.At(i).Sum().IsMonotonic())
 					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
 					dp := ms.At(i).Sum().DataPoints().At(0)
@@ -1131,6 +3495,18 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
 					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.performance.threads_cached":
+					assert.False(t, validatedMetrics["newrelicmysql.performance.threads_cached"], "Found a duplicate in the metrics slice: newrelicmysql.performance.threads_cached")
+					validatedMetrics["newrelicmysql.performance.threads_cached"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "The number of threads in the thread cache.", ms.At(i).Description())
+					assert.Equal(t, "{threads}", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
 				case "newrelicmysql.performance.threads_connected":
 					assert.False(t, validatedMetrics["newrelicmysql.performance.threads_connected"], "Found a duplicate in the metrics slice: newrelicmysql.performance.threads_connected")
 					validatedMetrics["newrelicmysql.performance.threads_connected"] = true
@@ -1139,6 +3515,20 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, "The number of currently open connections.", ms.At(i).Description())
 					assert.Equal(t, "1", ms.At(i).Unit())
 					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.performance.threads_created":
+					assert.False(t, validatedMetrics["newrelicmysql.performance.threads_created"], "Found a duplicate in the metrics slice: newrelicmysql.performance.threads_created")
+					validatedMetrics["newrelicmysql.performance.threads_created"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "The number of threads created to handle connections. If this value is large, you may want to increase the thread_cache_size value.", ms.At(i).Description())
+					assert.Equal(t, "{threads}", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
 					assert.Equal(t, start, dp.StartTimestamp())
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
@@ -1176,6 +3566,114 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
 					assert.Equal(t, "The position in the current master binary log file to which the replication SQL thread has read and executed.", ms.At(i).Description())
 					assert.Equal(t, "1", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.replication.group.conflicts_detected":
+					assert.False(t, validatedMetrics["newrelicmysql.replication.group.conflicts_detected"], "Found a duplicate in the metrics slice: newrelicmysql.replication.group.conflicts_detected")
+					validatedMetrics["newrelicmysql.replication.group.conflicts_detected"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "The number of transaction conflicts detected by the group replication certification process.", ms.At(i).Description())
+					assert.Equal(t, "{conflicts}", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.replication.group.transactions":
+					assert.False(t, validatedMetrics["newrelicmysql.replication.group.transactions"], "Found a duplicate in the metrics slice: newrelicmysql.replication.group.transactions")
+					validatedMetrics["newrelicmysql.replication.group.transactions"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "The total number of transactions that have been checked for conflicts by the group replication certification process.", ms.At(i).Description())
+					assert.Equal(t, "{transactions}", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.replication.group.transactions_applied":
+					assert.False(t, validatedMetrics["newrelicmysql.replication.group.transactions_applied"], "Found a duplicate in the metrics slice: newrelicmysql.replication.group.transactions_applied")
+					validatedMetrics["newrelicmysql.replication.group.transactions_applied"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "The number of transactions applied by the group replication applier.", ms.At(i).Description())
+					assert.Equal(t, "{transactions}", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.replication.group.transactions_check":
+					assert.False(t, validatedMetrics["newrelicmysql.replication.group.transactions_check"], "Found a duplicate in the metrics slice: newrelicmysql.replication.group.transactions_check")
+					validatedMetrics["newrelicmysql.replication.group.transactions_check"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "The number of transactions checked for conflicts in the group replication.", ms.At(i).Description())
+					assert.Equal(t, "{transactions}", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.replication.group.transactions_in_applier_queue":
+					assert.False(t, validatedMetrics["newrelicmysql.replication.group.transactions_in_applier_queue"], "Found a duplicate in the metrics slice: newrelicmysql.replication.group.transactions_in_applier_queue")
+					validatedMetrics["newrelicmysql.replication.group.transactions_in_applier_queue"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "The number of transactions in the group replication applier queue waiting to be applied.", ms.At(i).Description())
+					assert.Equal(t, "{transactions}", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.replication.group.transactions_proposed":
+					assert.False(t, validatedMetrics["newrelicmysql.replication.group.transactions_proposed"], "Found a duplicate in the metrics slice: newrelicmysql.replication.group.transactions_proposed")
+					validatedMetrics["newrelicmysql.replication.group.transactions_proposed"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "The number of transactions proposed for group replication.", ms.At(i).Description())
+					assert.Equal(t, "{transactions}", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.replication.group.transactions_rollback":
+					assert.False(t, validatedMetrics["newrelicmysql.replication.group.transactions_rollback"], "Found a duplicate in the metrics slice: newrelicmysql.replication.group.transactions_rollback")
+					validatedMetrics["newrelicmysql.replication.group.transactions_rollback"] = true
+					assert.Equal(t, pmetric.MetricTypeSum, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Sum().DataPoints().Len())
+					assert.Equal(t, "The number of transactions rolled back by group replication.", ms.At(i).Description())
+					assert.Equal(t, "{transactions}", ms.At(i).Unit())
+					assert.True(t, ms.At(i).Sum().IsMonotonic())
+					assert.Equal(t, pmetric.AggregationTemporalityCumulative, ms.At(i).Sum().AggregationTemporality())
+					dp := ms.At(i).Sum().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.replication.group.transactions_validating":
+					assert.False(t, validatedMetrics["newrelicmysql.replication.group.transactions_validating"], "Found a duplicate in the metrics slice: newrelicmysql.replication.group.transactions_validating")
+					validatedMetrics["newrelicmysql.replication.group.transactions_validating"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "The number of transactions currently being validated by the group replication.", ms.At(i).Description())
+					assert.Equal(t, "{transactions}", ms.At(i).Unit())
 					dp := ms.At(i).Gauge().DataPoints().At(0)
 					assert.Equal(t, start, dp.StartTimestamp())
 					assert.Equal(t, ts, dp.Timestamp())
@@ -1229,12 +3727,36 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, ts, dp.Timestamp())
 					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
 					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.replication.replicas_connected":
+					assert.False(t, validatedMetrics["newrelicmysql.replication.replicas_connected"], "Found a duplicate in the metrics slice: newrelicmysql.replication.replicas_connected")
+					validatedMetrics["newrelicmysql.replication.replicas_connected"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "The number of replicas currently connected to this source (MySQL 8.0.22+).", ms.At(i).Description())
+					assert.Equal(t, "{replicas}", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
 				case "newrelicmysql.replication.seconds_behind_master":
 					assert.False(t, validatedMetrics["newrelicmysql.replication.seconds_behind_master"], "Found a duplicate in the metrics slice: newrelicmysql.replication.seconds_behind_master")
 					validatedMetrics["newrelicmysql.replication.seconds_behind_master"] = true
 					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
 					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
 					assert.Equal(t, "The number of seconds that the replica SQL thread is behind processing the master binary log.", ms.At(i).Description())
+					assert.Equal(t, "s", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.replication.seconds_behind_source":
+					assert.False(t, validatedMetrics["newrelicmysql.replication.seconds_behind_source"], "Found a duplicate in the metrics slice: newrelicmysql.replication.seconds_behind_source")
+					validatedMetrics["newrelicmysql.replication.seconds_behind_source"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "The number of seconds that the replica SQL thread is behind processing the source binary log (MySQL 8.0.22+).", ms.At(i).Description())
 					assert.Equal(t, "s", ms.At(i).Unit())
 					dp := ms.At(i).Gauge().DataPoints().At(0)
 					assert.Equal(t, start, dp.StartTimestamp())
@@ -1272,6 +3794,18 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
 					assert.Equal(t, "Status of the replication SQL thread. 0=No/Stopped, 1=Yes/Running.", ms.At(i).Description())
 					assert.Equal(t, "1", ms.At(i).Unit())
+					dp := ms.At(i).Gauge().DataPoints().At(0)
+					assert.Equal(t, start, dp.StartTimestamp())
+					assert.Equal(t, ts, dp.Timestamp())
+					assert.Equal(t, pmetric.NumberDataPointValueTypeInt, dp.ValueType())
+					assert.Equal(t, int64(1), dp.IntValue())
+				case "newrelicmysql.replication.slaves_connected":
+					assert.False(t, validatedMetrics["newrelicmysql.replication.slaves_connected"], "Found a duplicate in the metrics slice: newrelicmysql.replication.slaves_connected")
+					validatedMetrics["newrelicmysql.replication.slaves_connected"] = true
+					assert.Equal(t, pmetric.MetricTypeGauge, ms.At(i).Type())
+					assert.Equal(t, 1, ms.At(i).Gauge().DataPoints().Len())
+					assert.Equal(t, "The number of replicas currently connected to this master.", ms.At(i).Description())
+					assert.Equal(t, "{replicas}", ms.At(i).Unit())
 					dp := ms.At(i).Gauge().DataPoints().At(0)
 					assert.Equal(t, start, dp.StartTimestamp())
 					assert.Equal(t, ts, dp.Timestamp())
