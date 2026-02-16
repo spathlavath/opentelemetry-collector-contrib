@@ -35,8 +35,10 @@ type MockClient struct {
 	Version    string
 	VersionErr error
 
-	// Optional: custom function for GetGlobalStats to support complex scenarios
-	GetGlobalStatsFunc func() (map[string]string, error)
+	// Optional: custom functions to support complex scenarios
+	GetGlobalStatsFunc     func() (map[string]string, error)
+	GetGlobalVariablesFunc func() (map[string]string, error)
+	GetVersionFunc         func() (string, error)
 }
 
 // NewMockClient creates a new MockClient with default values.
@@ -65,6 +67,9 @@ func (m *MockClient) GetGlobalStats() (map[string]string, error) {
 }
 
 func (m *MockClient) GetGlobalVariables() (map[string]string, error) {
+	if m.GetGlobalVariablesFunc != nil {
+		return m.GetGlobalVariablesFunc()
+	}
 	return m.GlobalVariables, m.GlobalVariablesErr
 }
 
@@ -81,6 +86,9 @@ func (m *MockClient) GetGroupReplicationStats() (map[string]string, error) {
 }
 
 func (m *MockClient) GetVersion() (string, error) {
+	if m.GetVersionFunc != nil {
+		return m.GetVersionFunc()
+	}
 	return m.Version, m.VersionErr
 }
 
