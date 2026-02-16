@@ -54,6 +54,7 @@ func (s *ReplicationScraper) ScrapeMetrics(_ context.Context, now pcommon.Timest
 
 	// Only scrape additional metrics if flag is enabled
 	if s.enableAdditionalMetrics {
+		s.logger.Debug("Additional replication metrics collection enabled")
 		// Scrape master/source metrics
 		s.scrapeMasterMetrics(now, errs)
 
@@ -161,21 +162,15 @@ func (s *ReplicationScraper) scrapeMasterMetrics(now pcommon.Timestamp, errs *sc
 
 	// Record number of connected slaves/replicas
 	if slavesConnected, ok := masterStatus["Slaves_Connected"]; ok && slavesConnected != "" {
-		s.logger.Info("Recording slaves_connected metric", zap.String("value", slavesConnected))
 		if intVal, err := strconv.ParseInt(slavesConnected, 10, 64); err == nil {
 			s.mb.RecordNewrelicmysqlReplicationSlavesConnectedDataPoint(now, intVal)
 		}
-	} else {
-		s.logger.Debug("Slaves_Connected not found in master status")
 	}
 
 	if replicasConnected, ok := masterStatus["Replicas_Connected"]; ok && replicasConnected != "" {
-		s.logger.Info("Recording replicas_connected metric", zap.String("value", replicasConnected))
 		if intVal, err := strconv.ParseInt(replicasConnected, 10, 64); err == nil {
 			s.mb.RecordNewrelicmysqlReplicationReplicasConnectedDataPoint(now, intVal)
 		}
-	} else {
-		s.logger.Debug("Replicas_Connected not found in master status")
 	}
 }
 
@@ -196,23 +191,35 @@ func (s *ReplicationScraper) scrapeGroupReplicationMetrics(now pcommon.Timestamp
 
 	s.logger.Debug("Collecting group replication metrics")
 
-	// Map group replication status variables to metrics
-	metricMapping := map[string]func(pcommon.Timestamp, int64){
-		"group_replication_transactions":                  s.mb.RecordNewrelicmysqlReplicationGroupTransactionsDataPoint,
-		"group_replication_transactions_check":            s.mb.RecordNewrelicmysqlReplicationGroupTransactionsCheckDataPoint,
-		"group_replication_conflicts_detected":            s.mb.RecordNewrelicmysqlReplicationGroupConflictsDetectedDataPoint,
-		"group_replication_transactions_validating":       s.mb.RecordNewrelicmysqlReplicationGroupTransactionsValidatingDataPoint,
-		"group_replication_transactions_in_applier_queue": s.mb.RecordNewrelicmysqlReplicationGroupTransactionsInApplierQueueDataPoint,
-		"group_replication_transactions_applied":          s.mb.RecordNewrelicmysqlReplicationGroupTransactionsAppliedDataPoint,
-		"group_replication_transactions_proposed":         s.mb.RecordNewrelicmysqlReplicationGroupTransactionsProposedDataPoint,
-		"group_replication_transactions_rollback":         s.mb.RecordNewrelicmysqlReplicationGroupTransactionsRollbackDataPoint,
-	}
+	// Parse and record group replication metrics
+	for key, value := range groupStats {
+		if value == "" {
+			continue
+		}
 
-	for statusVar, recordFunc := range metricMapping {
-		if value, ok := groupStats[statusVar]; ok && value != "" {
-			if intVal, err := strconv.ParseInt(value, 10, 64); err == nil {
-				recordFunc(now, intVal)
-			}
+		intVal, err := strconv.ParseInt(value, 10, 64)
+		if err != nil {
+			s.logger.Debug("Failed to parse group replication metric", zap.String("key", key), zap.String("value", value), zap.Error(err))
+			continue
+		}
+
+		switch key {
+		case "group_replication_transactions":
+			s.mb.RecordNewrelicmysqlReplicationGroupTransactionsDataPoint(now, intVal)
+		case "group_replication_transactions_check":
+			s.mb.RecordNewrelicmysqlReplicationGroupTransactionsCheckDataPoint(now, intVal)
+		case "group_replication_conflicts_detected":
+			s.mb.RecordNewrelicmysqlReplicationGroupConflictsDetectedDataPoint(now, intVal)
+		case "group_replication_transactions_validating":
+			s.mb.RecordNewrelicmysqlReplicationGroupTransactionsValidatingDataPoint(now, intVal)
+		case "group_replication_transactions_in_applier_queue":
+			s.mb.RecordNewrelicmysqlReplicationGroupTransactionsInApplierQueueDataPoint(now, intVal)
+		case "group_replication_transactions_applied":
+			s.mb.RecordNewrelicmysqlReplicationGroupTransactionsAppliedDataPoint(now, intVal)
+		case "group_replication_transactions_proposed":
+			s.mb.RecordNewrelicmysqlReplicationGroupTransactionsProposedDataPoint(now, intVal)
+		case "group_replication_transactions_rollback":
+			s.mb.RecordNewrelicmysqlReplicationGroupTransactionsRollbackDataPoint(now, intVal)
 		}
 	}
 }

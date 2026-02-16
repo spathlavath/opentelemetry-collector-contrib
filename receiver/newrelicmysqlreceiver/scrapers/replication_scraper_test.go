@@ -20,47 +20,6 @@ import (
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicmysqlreceiver/internal/metadata"
 )
 
-type mockReplicationClient struct {
-	replicationStatus     map[string]string
-	replicationStatusErr  error
-	masterStatus          map[string]string
-	masterStatusErr       error
-	groupReplicationStats map[string]string
-	groupReplicationErr   error
-}
-
-func (m *mockReplicationClient) Connect() error {
-	return nil
-}
-
-func (m *mockReplicationClient) GetGlobalStats() (map[string]string, error) {
-	return nil, nil
-}
-
-func (m *mockReplicationClient) GetGlobalVariables() (map[string]string, error) {
-	return nil, nil
-}
-
-func (m *mockReplicationClient) GetReplicationStatus() (map[string]string, error) {
-	return m.replicationStatus, m.replicationStatusErr
-}
-
-func (m *mockReplicationClient) GetMasterStatus() (map[string]string, error) {
-	return m.masterStatus, m.masterStatusErr
-}
-
-func (m *mockReplicationClient) GetGroupReplicationStats() (map[string]string, error) {
-	return m.groupReplicationStats, m.groupReplicationErr
-}
-
-func (m *mockReplicationClient) GetVersion() (string, error) {
-	return "8.0.0", nil
-}
-
-func (m *mockReplicationClient) Close() error {
-	return nil
-}
-
 func TestNewReplicationScraper(t *testing.T) {
 	tests := []struct {
 		name                    string
@@ -73,7 +32,7 @@ func TestNewReplicationScraper(t *testing.T) {
 	}{
 		{
 			name:                    "valid_inputs_with_additional_metrics",
-			client:                  &mockReplicationClient{},
+			client:                  common.NewMockClient(),
 			mb:                      metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(receivertest.NopType)),
 			logger:                  zap.NewNop(),
 			enableAdditionalMetrics: true,
@@ -81,7 +40,7 @@ func TestNewReplicationScraper(t *testing.T) {
 		},
 		{
 			name:                    "valid_inputs_without_additional_metrics",
-			client:                  &mockReplicationClient{},
+			client:                  common.NewMockClient(),
 			mb:                      metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(receivertest.NopType)),
 			logger:                  zap.NewNop(),
 			enableAdditionalMetrics: false,
@@ -98,7 +57,7 @@ func TestNewReplicationScraper(t *testing.T) {
 		},
 		{
 			name:                    "nil_metrics_builder",
-			client:                  &mockReplicationClient{},
+			client:                  common.NewMockClient(),
 			mb:                      nil,
 			logger:                  zap.NewNop(),
 			enableAdditionalMetrics: true,
@@ -107,7 +66,7 @@ func TestNewReplicationScraper(t *testing.T) {
 		},
 		{
 			name:                    "nil_logger",
-			client:                  &mockReplicationClient{},
+			client:                  common.NewMockClient(),
 			mb:                      metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(receivertest.NopType)),
 			logger:                  nil,
 			enableAdditionalMetrics: true,
@@ -154,9 +113,11 @@ func TestReplicationScraper_ScrapeMetrics_ReplicaNode(t *testing.T) {
 			},
 			enableAdditionalMetrics: false,
 			expectedMetrics: []string{
-				"newrelicmysql.replication.seconds_behind_master",
 				"newrelicmysql.replication.read_master_log_pos",
 				"newrelicmysql.replication.exec_master_log_pos",
+				"newrelicmysql.replication.last_io_errno",
+				"newrelicmysql.replication.last_sql_errno",
+				"newrelicmysql.replication.relay_log_space",
 				"newrelicmysql.replication.slave_io_running",
 				"newrelicmysql.replication.slave_sql_running",
 				"newrelicmysql.replication.slave_running",
@@ -223,9 +184,8 @@ func TestReplicationScraper_ScrapeMetrics_ReplicaNode(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			mockClient := &mockReplicationClient{
-				replicationStatus: tt.replicationStatus,
-			}
+			mockClient := common.NewMockClient()
+			mockClient.ReplicationStatus = tt.replicationStatus
 
 			// Use default metrics config (metrics are enabled by default now)
 			mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(receivertest.NopType))
@@ -292,10 +252,9 @@ func TestReplicationScraper_ScrapeMetrics_MasterNode(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			mockClient := &mockReplicationClient{
-				replicationStatus: map[string]string{}, // Empty - not a replica
-				masterStatus:      tt.masterStatus,
-			}
+			mockClient := common.NewMockClient()
+			mockClient.ReplicationStatus = map[string]string{} // Empty - not a replica
+			mockClient.MasterStatus = tt.masterStatus
 
 			// Use default metrics config (metrics are enabled by default now)
 			mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(receivertest.NopType))
@@ -327,14 +286,14 @@ func TestReplicationScraper_ScrapeMetrics_GroupReplication(t *testing.T) {
 		{
 			name: "group_replication_with_additional_metrics",
 			groupReplicationStats: map[string]string{
-				"group_replication_transactions_certified":                "1000",
-				"group_replication_transactions_conflicts_detected":       "5",
-				"group_replication_transactions_in_validation_queue":      "2",
-				"group_replication_transactions_in_applier_queue":         "3",
-				"group_replication_transactions_committed":                "995",
-				"group_replication_transactions_proposed":                 "1000",
-				"group_replication_transactions_rollback":                 "5",
-				"group_replication_certification_db_transactions_checked": "1000",
+				"group_replication_transactions":                  "1000",
+				"group_replication_conflicts_detected":            "5",
+				"group_replication_transactions_validating":       "2",
+				"group_replication_transactions_in_applier_queue": "3",
+				"group_replication_transactions_applied":          "995",
+				"group_replication_transactions_proposed":         "1000",
+				"group_replication_transactions_rollback":         "5",
+				"group_replication_transactions_check":            "1000",
 			},
 			enableAdditionalMetrics: true,
 			expectedMetrics: []string{
@@ -351,7 +310,7 @@ func TestReplicationScraper_ScrapeMetrics_GroupReplication(t *testing.T) {
 		{
 			name: "group_replication_with_additional_metrics_disabled",
 			groupReplicationStats: map[string]string{
-				"group_replication_transactions_certified": "1000",
+				"group_replication_transactions": "1000",
 			},
 			enableAdditionalMetrics: false,
 			expectedMetrics:         []string{},
@@ -360,10 +319,9 @@ func TestReplicationScraper_ScrapeMetrics_GroupReplication(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			mockClient := &mockReplicationClient{
-				replicationStatus:     map[string]string{},
-				groupReplicationStats: tt.groupReplicationStats,
-			}
+			mockClient := common.NewMockClient()
+			mockClient.ReplicationStatus = map[string]string{}
+			mockClient.GroupReplicationStats = tt.groupReplicationStats
 
 			// Use default metrics config (metrics are enabled by default now)
 			mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(receivertest.NopType))
@@ -435,14 +393,13 @@ func TestReplicationScraper_ScrapeMetrics_Errors(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			mockClient := &mockReplicationClient{
-				replicationStatus:     map[string]string{},
-				replicationStatusErr:  tt.replicationStatusErr,
-				masterStatus:          map[string]string{},
-				masterStatusErr:       tt.masterStatusErr,
-				groupReplicationStats: map[string]string{},
-				groupReplicationErr:   tt.groupReplicationErr,
-			}
+			mockClient := common.NewMockClient()
+			mockClient.ReplicationStatus = map[string]string{}
+			mockClient.ReplicationStatusErr = tt.replicationStatusErr
+			mockClient.MasterStatus = map[string]string{}
+			mockClient.MasterStatusErr = tt.masterStatusErr
+			mockClient.GroupReplicationStats = map[string]string{}
+			mockClient.GroupReplicationStatsErr = tt.groupReplicationErr
 
 			mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(receivertest.NopType))
 			scraper, err := NewReplicationScraper(mockClient, mb, zap.NewNop(), tt.enableAdditionalMetrics)
@@ -461,11 +418,10 @@ func TestReplicationScraper_ScrapeMetrics_Errors(t *testing.T) {
 }
 
 func TestReplicationScraper_ScrapeMetrics_StandaloneNode(t *testing.T) {
-	mockClient := &mockReplicationClient{
-		replicationStatus: map[string]string{}, // Empty - not a replica
-		masterStatus: map[string]string{
-			"Slaves_Connected": "0",
-		},
+	mockClient := common.NewMockClient()
+	mockClient.ReplicationStatus = map[string]string{} // Empty - not a replica
+	mockClient.MasterStatus = map[string]string{
+		"Slaves_Connected": "0",
 	}
 
 	// Use default metrics config (metrics are enabled by default now)
