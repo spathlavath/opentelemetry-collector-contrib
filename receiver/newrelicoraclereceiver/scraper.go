@@ -207,6 +207,8 @@ func (s *newRelicOracleScraper) initializeCoreScrapers() error {
 }
 
 func (s *newRelicOracleScraper) initializeQPMScrapers() error {
+	// QPM scrapers are always initialized to collect essential metrics
+	// The EnableQueryMonitoring flag controls whether detailed metrics are also collected
 	s.slowQueriesScraper = scrapers.NewSlowQueriesScraper(
 		s.client, s.mb, s.logger, s.metricsBuilderConfig,
 		s.config.QueryMonitoringResponseTimeThreshold,
@@ -214,6 +216,7 @@ func (s *newRelicOracleScraper) initializeQPMScrapers() error {
 		s.config.QueryMonitoringIntervalSeconds,
 		s.config.EnableIntervalBasedAveraging,
 		s.config.IntervalCalculatorCacheTTLMinutes,
+		s.config.EnableQueryMonitoring, // Pass flag to control detailed metrics
 	)
 
 	s.executionPlanScraper = scrapers.NewExecutionPlanScraper(s.client, s.mb, s.logger, s.metricsBuilderConfig)
@@ -222,12 +225,16 @@ func (s *newRelicOracleScraper) initializeQPMScrapers() error {
 	s.waitEventBlockingScraper, err = scrapers.NewWaitEventBlockingScraper(
 		s.client, s.mb, s.logger, s.metricsBuilderConfig,
 		s.config.QueryMonitoringCountThreshold,
+		s.config.EnableQueryMonitoring, // Pass flag to control detailed metrics
 	)
 	if err != nil {
 		return fmt.Errorf("failed to create wait event blocking scraper: %w", err)
 	}
 
-	s.childCursorsScraper = scrapers.NewChildCursorsScraper(s.client, s.mb, s.logger, s.metricsBuilderConfig)
+	s.childCursorsScraper = scrapers.NewChildCursorsScraper(
+		s.client, s.mb, s.logger, s.metricsBuilderConfig,
+		s.config.EnableQueryMonitoring, // Pass flag to control detailed metrics
+	)
 
 	return nil
 }
@@ -276,13 +283,11 @@ func (s *newRelicOracleScraper) createScrapeContext(ctx context.Context) context
 }
 
 // executeQPMScrapers executes Query Performance Monitoring scrapers sequentially
+// QPM scrapers always run to collect essential metrics
+// When EnableQueryMonitoring=true, detailed metrics are also collected
 func (s *newRelicOracleScraper) executeQPMScrapers(ctx context.Context, errChan chan<- error) {
-	if !s.config.EnableQueryMonitoring {
-		s.logger.Debug("Query Performance Monitoring disabled, skipping QPM scrapers")
-		return
-	}
-
-	s.logger.Debug("Starting slow queries scraper")
+	s.logger.Debug("Starting slow queries scraper",
+		zap.Bool("detailed_metrics", s.config.EnableQueryMonitoring))
 	slowQueryIdentifiers, slowQueryErrs := s.slowQueriesScraper.ScrapeSlowQueries(ctx)
 
 	s.sendErrorsToChannel(errChan, slowQueryErrs, "slow query")
@@ -298,11 +303,11 @@ func (s *newRelicOracleScraper) executeQPMScrapers(ctx context.Context, errChan 
 	s.sendErrorsToChannel(errChan, waitEventErrs, "wait events & blocking")
 
 	if len(waitEventSQLIdentifiers) > 0 {
-		// First scrape child cursors to get plan hash values
+		// First scrape child cursors to get plan hash values (always runs for essential metrics)
 		waitEventSQLIdentifiers, childCursorErrs := s.childCursorsScraper.ScrapeChildCursorsForIdentifiers(ctx, waitEventSQLIdentifiers, s.config.ChildCursorsPerSQLID)
 		s.sendErrorsToChannel(errChan, childCursorErrs, "child cursors")
 
-		// Then scrape execution plans using the plan hash values for caching
+		// Execution plans always run (essential metrics)
 		executionPlanErrs := s.executionPlanScraper.ScrapeExecutionPlans(ctx, waitEventSQLIdentifiers)
 		s.sendErrorsToChannel(errChan, executionPlanErrs, "execution plans")
 	} else {

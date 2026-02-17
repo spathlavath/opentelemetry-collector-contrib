@@ -26,9 +26,10 @@ type SlowQueriesScraper struct {
 	queryMonitoringCountThreshold        int
 	queryMonitoringIntervalSeconds       int                       // Time window for fetching queries (in seconds)
 	intervalCalculator                   *OracleIntervalCalculator // Delta-based interval calculator
+	collectDetailedMetrics               bool                      // Flag to control collection of detailed metrics (cpu_time, disk_reads, etc.)
 }
 
-func NewSlowQueriesScraper(oracleClient client.OracleClient, mb *metadata.MetricsBuilder, logger *zap.Logger, metricsBuilderConfig metadata.MetricsBuilderConfig, responseTimeThreshold, countThreshold, intervalSeconds int, enableIntervalCalculator bool, intervalCalculatorCacheTTLMinutes int) *SlowQueriesScraper {
+func NewSlowQueriesScraper(oracleClient client.OracleClient, mb *metadata.MetricsBuilder, logger *zap.Logger, metricsBuilderConfig metadata.MetricsBuilderConfig, responseTimeThreshold, countThreshold, intervalSeconds int, enableIntervalCalculator bool, intervalCalculatorCacheTTLMinutes int, collectDetailedMetrics bool) *SlowQueriesScraper {
 	var intervalCalc *OracleIntervalCalculator
 
 	// Initialize interval-based calculator if enabled
@@ -40,6 +41,12 @@ func NewSlowQueriesScraper(oracleClient client.OracleClient, mb *metadata.Metric
 		logger.Info("Oracle interval-based delta calculator disabled - using cumulative averages")
 	}
 
+	if collectDetailedMetrics {
+		logger.Info("Slow queries scraper initialized with DETAILED metrics collection enabled")
+	} else {
+		logger.Info("Slow queries scraper initialized with ESSENTIAL metrics only")
+	}
+
 	return &SlowQueriesScraper{
 		client:                               oracleClient,
 		mb:                                   mb,
@@ -49,6 +56,7 @@ func NewSlowQueriesScraper(oracleClient client.OracleClient, mb *metadata.Metric
 		queryMonitoringCountThreshold:        countThreshold,
 		queryMonitoringIntervalSeconds:       intervalSeconds,
 		intervalCalculator:                   intervalCalc,
+		collectDetailedMetrics:               collectDetailedMetrics,
 	}
 }
 
@@ -210,6 +218,20 @@ func (s *SlowQueriesScraper) recordMetrics(now pcommon.Timestamp, slowQuery *mod
 		s.logger.Warn("Attempted to record metrics for nil slow query")
 		return fmt.Errorf("slow query is nil")
 	}
+
+	// Always record essential metrics
+	s.recordEssentialMetrics(now, slowQuery, collectionTimestamp, dbName, qID, qText, userName, schName, lastActiveTime, queryHash, nrServiceGuid)
+
+	// Record detailed metrics only when flag is enabled
+	if s.collectDetailedMetrics {
+		s.recordDetailedMetrics(now, slowQuery, collectionTimestamp, dbName, qID, userName, queryHash, nrServiceGuid)
+	}
+
+	return nil
+}
+
+// recordEssentialMetrics records essential slow query metrics (always collected)
+func (s *SlowQueriesScraper) recordEssentialMetrics(now pcommon.Timestamp, slowQuery *models.SlowQuery, collectionTimestamp, dbName, qID, qText, userName, schName, lastActiveTime, queryHash, nrServiceGuid string) {
 	if slowQuery.ExecutionCount.Valid {
 		s.mb.RecordNewrelicoracledbSlowQueriesExecutionCountDataPoint(
 			now,
@@ -223,91 +245,6 @@ func (s *SlowQueriesScraper) recordMetrics(now pcommon.Timestamp, slowQuery *mod
 		)
 	}
 
-	// Record historical (cumulative) total elapsed time - raw value from V$SQLAREA
-	if slowQuery.TotalElapsedTimeMS.Valid {
-		s.mb.RecordNewrelicoracledbSlowQueriesTotalElapsedTimeDataPoint(
-			now,
-			slowQuery.TotalElapsedTimeMS.Float64,
-			collectionTimestamp,
-			dbName,
-			qID,
-			userName,
-			queryHash,
-			nrServiceGuid,
-		)
-	}
-
-	// Record historical (cumulative) total CPU time - raw value from V$SQLAREA
-	if slowQuery.TotalCPUTimeMS.Valid {
-		s.mb.RecordNewrelicoracledbSlowQueriesTotalCPUTimeDataPoint(
-			now,
-			slowQuery.TotalCPUTimeMS.Float64,
-			collectionTimestamp,
-			dbName,
-			qID,
-			userName,
-			queryHash,
-			nrServiceGuid,
-		)
-	}
-
-	// Record historical (cumulative) total disk reads - raw value from V$SQLAREA
-	if slowQuery.TotalDiskReads.Valid {
-		s.mb.RecordNewrelicoracledbSlowQueriesTotalDiskReadsDataPoint(
-			now,
-			float64(slowQuery.TotalDiskReads.Int64),
-			collectionTimestamp,
-			dbName,
-			qID,
-			userName,
-			queryHash,
-			nrServiceGuid,
-		)
-	}
-
-	// Record historical (cumulative) total direct writes - raw value from V$SQLAREA
-	if slowQuery.TotalDiskWrites.Valid {
-		s.mb.RecordNewrelicoracledbSlowQueriesTotalDiskWritesDataPoint(
-			now,
-			float64(slowQuery.TotalDiskWrites.Int64),
-			collectionTimestamp,
-			dbName,
-			qID,
-			userName,
-			queryHash,
-			nrServiceGuid,
-		)
-	}
-
-	// Record historical (cumulative) total rows examined (buffer gets) - raw value from V$SQLAREA
-	if slowQuery.TotalBufferGets.Valid {
-		s.mb.RecordNewrelicoracledbSlowQueriesTotalRowsExaminedDataPoint(
-			now,
-			float64(slowQuery.TotalBufferGets.Int64),
-			collectionTimestamp,
-			dbName,
-			qID,
-			userName,
-			queryHash,
-			nrServiceGuid,
-		)
-	}
-
-	// Record historical (cumulative) total rows returned (rows processed) - raw value from V$SQLAREA
-	if slowQuery.TotalRowsProcessed.Valid {
-		s.mb.RecordNewrelicoracledbSlowQueriesTotalRowsReturnedDataPoint(
-			now,
-			float64(slowQuery.TotalRowsProcessed.Int64),
-			collectionTimestamp,
-			dbName,
-			qID,
-			userName,
-			queryHash,
-			nrServiceGuid,
-		)
-	}
-
-	// Record interval-based average elapsed time if available (delta metric)
 	if slowQuery.IntervalAvgElapsedTimeMS != nil {
 		s.mb.RecordNewrelicoracledbSlowQueriesIntervalAvgElapsedTimeDataPoint(
 			now,
@@ -321,7 +258,6 @@ func (s *SlowQueriesScraper) recordMetrics(now pcommon.Timestamp, slowQuery *mod
 		)
 	}
 
-	// Record interval execution count if available (delta metric)
 	if slowQuery.IntervalExecutionCount != nil {
 		s.mb.RecordNewrelicoracledbSlowQueriesIntervalExecutionCountDataPoint(
 			now,
@@ -335,7 +271,104 @@ func (s *SlowQueriesScraper) recordMetrics(now pcommon.Timestamp, slowQuery *mod
 		)
 	}
 
-	// Record interval CPU time if available (delta metric)
+	s.mb.RecordNewrelicoracledbSlowQueriesQueryDetailsDataPoint(
+		now,
+		1,
+		"OracleQueryDetails",
+		collectionTimestamp,
+		dbName,
+		qID,
+		qText,
+		schName,
+		userName,
+		lastActiveTime,
+		queryHash,
+		nrServiceGuid,
+		"",
+		"",
+	)
+}
+
+// recordDetailedMetrics records detailed slow query metrics (only when detailed monitoring enabled)
+func (s *SlowQueriesScraper) recordDetailedMetrics(now pcommon.Timestamp, slowQuery *models.SlowQuery, collectionTimestamp, dbName, qID, userName, queryHash, nrServiceGuid string) {
+	if slowQuery.TotalElapsedTimeMS.Valid {
+		s.mb.RecordNewrelicoracledbSlowQueriesTotalElapsedTimeDataPoint(
+			now,
+			slowQuery.TotalElapsedTimeMS.Float64,
+			collectionTimestamp,
+			dbName,
+			qID,
+			userName,
+			queryHash,
+			nrServiceGuid,
+		)
+	}
+
+	if slowQuery.TotalCPUTimeMS.Valid {
+		s.mb.RecordNewrelicoracledbSlowQueriesTotalCPUTimeDataPoint(
+			now,
+			slowQuery.TotalCPUTimeMS.Float64,
+			collectionTimestamp,
+			dbName,
+			qID,
+			userName,
+			queryHash,
+			nrServiceGuid,
+		)
+	}
+
+	if slowQuery.TotalDiskReads.Valid {
+		s.mb.RecordNewrelicoracledbSlowQueriesTotalDiskReadsDataPoint(
+			now,
+			float64(slowQuery.TotalDiskReads.Int64),
+			collectionTimestamp,
+			dbName,
+			qID,
+			userName,
+			queryHash,
+			nrServiceGuid,
+		)
+	}
+
+	if slowQuery.TotalDiskWrites.Valid {
+		s.mb.RecordNewrelicoracledbSlowQueriesTotalDiskWritesDataPoint(
+			now,
+			float64(slowQuery.TotalDiskWrites.Int64),
+			collectionTimestamp,
+			dbName,
+			qID,
+			userName,
+			queryHash,
+			nrServiceGuid,
+		)
+	}
+
+	if slowQuery.TotalBufferGets.Valid {
+		s.mb.RecordNewrelicoracledbSlowQueriesTotalRowsExaminedDataPoint(
+			now,
+			float64(slowQuery.TotalBufferGets.Int64),
+			collectionTimestamp,
+			dbName,
+			qID,
+			userName,
+			queryHash,
+			nrServiceGuid,
+		)
+	}
+
+	if slowQuery.TotalRowsProcessed.Valid {
+		s.mb.RecordNewrelicoracledbSlowQueriesTotalRowsReturnedDataPoint(
+			now,
+			float64(slowQuery.TotalRowsProcessed.Int64),
+			collectionTimestamp,
+			dbName,
+			qID,
+			userName,
+			queryHash,
+			nrServiceGuid,
+		)
+	}
+
 	if slowQuery.IntervalAvgCPUTimeMS != nil {
 		s.mb.RecordNewrelicoracledbSlowQueriesIntervalAvgCPUTimeDataPoint(
 			now,
@@ -349,7 +382,6 @@ func (s *SlowQueriesScraper) recordMetrics(now pcommon.Timestamp, slowQuery *mod
 		)
 	}
 
-	// Record interval disk reads if available (delta metric)
 	if slowQuery.IntervalAvgDiskReads != nil {
 		s.mb.RecordNewrelicoracledbSlowQueriesIntervalAvgDiskReadsDataPoint(
 			now,
@@ -363,7 +395,6 @@ func (s *SlowQueriesScraper) recordMetrics(now pcommon.Timestamp, slowQuery *mod
 		)
 	}
 
-	// Record interval direct writes if available (delta metric)
 	if slowQuery.IntervalAvgDiskWrites != nil {
 		s.mb.RecordNewrelicoracledbSlowQueriesIntervalAvgDiskWritesDataPoint(
 			now,
@@ -377,7 +408,6 @@ func (s *SlowQueriesScraper) recordMetrics(now pcommon.Timestamp, slowQuery *mod
 		)
 	}
 
-	// Record interval buffer gets if available (delta metric)
 	if slowQuery.IntervalAvgBufferGets != nil {
 		s.mb.RecordNewrelicoracledbSlowQueriesIntervalAvgBufferGetsDataPoint(
 			now,
@@ -391,7 +421,6 @@ func (s *SlowQueriesScraper) recordMetrics(now pcommon.Timestamp, slowQuery *mod
 		)
 	}
 
-	// Record interval rows processed if available (delta metric)
 	if slowQuery.IntervalAvgRowsProcessed != nil {
 		s.mb.RecordNewrelicoracledbSlowQueriesIntervalAvgRowsProcessedDataPoint(
 			now,
@@ -405,7 +434,6 @@ func (s *SlowQueriesScraper) recordMetrics(now pcommon.Timestamp, slowQuery *mod
 		)
 	}
 
-	// Record interval total metrics (delta values without averaging)
 	if slowQuery.IntervalElapsedTimeMS != nil {
 		s.mb.RecordNewrelicoracledbSlowQueriesIntervalElapsedTimeDataPoint(
 			now,
@@ -497,7 +525,6 @@ func (s *SlowQueriesScraper) recordMetrics(now pcommon.Timestamp, slowQuery *mod
 		)
 	}
 
-	// Record historical (cumulative) total wait time - raw value from V$SQLAREA
 	if slowQuery.TotalWaitTimeMS.Valid {
 		s.mb.RecordNewrelicoracledbSlowQueriesTotalWaitTimeDataPoint(
 			now,
@@ -511,24 +538,6 @@ func (s *SlowQueriesScraper) recordMetrics(now pcommon.Timestamp, slowQuery *mod
 		)
 	}
 
-	s.mb.RecordNewrelicoracledbSlowQueriesQueryDetailsDataPoint(
-		now,
-		1,
-		"OracleQueryDetails",
-		collectionTimestamp,
-		dbName,
-		qID,
-		qText,
-		schName,
-		userName,
-		lastActiveTime,
-		queryHash,
-		nrServiceGuid,
-		"", // normalised_blocking_sql_hash - not applicable for slow queries
-		"", // nr_blocking_service_guid - not applicable for slow queries
-	)
-
-	return nil
 }
 
 // GetSlowQueryIDs returns only the query IDs without emitting metrics

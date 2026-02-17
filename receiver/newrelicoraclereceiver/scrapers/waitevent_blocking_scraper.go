@@ -21,10 +21,11 @@ type WaitEventBlockingScraper struct {
 	logger                        *zap.Logger
 	metricsBuilderConfig          metadata.MetricsBuilderConfig
 	queryMonitoringCountThreshold int
+	collectDetailedMetrics        bool // Flag for consistency (all wait event metrics are essential)
 }
 
 // NewWaitEventBlockingScraper creates a new combined Wait Events and Blocking Scraper instance
-func NewWaitEventBlockingScraper(oracleClient client.OracleClient, mb *metadata.MetricsBuilder, logger *zap.Logger, metricsBuilderConfig metadata.MetricsBuilderConfig, countThreshold int) (*WaitEventBlockingScraper, error) {
+func NewWaitEventBlockingScraper(oracleClient client.OracleClient, mb *metadata.MetricsBuilder, logger *zap.Logger, metricsBuilderConfig metadata.MetricsBuilderConfig, countThreshold int, collectDetailedMetrics bool) (*WaitEventBlockingScraper, error) {
 	if oracleClient == nil {
 		return nil, errors.New("client cannot be nil")
 	}
@@ -35,12 +36,17 @@ func NewWaitEventBlockingScraper(oracleClient client.OracleClient, mb *metadata.
 		return nil, errors.New("logger cannot be nil")
 	}
 
+	// All wait event and blocking metrics are essential, so the flag doesn't affect this scraper
+	// But we accept it for consistency with other QPM scrapers
+	logger.Info("Wait event & blocking scraper initialized (all metrics are essential)")
+
 	return &WaitEventBlockingScraper{
 		client:                        oracleClient,
 		mb:                            mb,
 		logger:                        logger,
 		metricsBuilderConfig:          metricsBuilderConfig,
 		queryMonitoringCountThreshold: countThreshold,
+		collectDetailedMetrics:        collectDetailedMetrics,
 	}, nil
 }
 
@@ -131,6 +137,7 @@ func (s *WaitEventBlockingScraper) recordWaitEventMetrics(now pcommon.Timestamp,
 		_, normalisedBlockingSQLHash = commonutils.NormalizeSqlAndHash(rawFinalBlockerQueryText)
 	}
 
+	// ESSENTIAL METRIC: Always record wait events (includes blocking information)
 	s.mb.RecordNewrelicoracledbWaitEventsCurrentWaitTimeMsDataPoint(
 		now,
 		event.GetCurrentWaitMs(),
