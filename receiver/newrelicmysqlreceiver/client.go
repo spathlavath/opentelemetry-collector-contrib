@@ -59,12 +59,6 @@ func (c *mySQLClient) Connect() error {
 	if err != nil {
 		return fmt.Errorf("failed to open database: %w", err)
 	}
-
-	if err := clientDB.Ping(); err != nil {
-		clientDB.Close()
-		return fmt.Errorf("failed to ping database: %w", err)
-	}
-
 	c.db = clientDB
 	return nil
 }

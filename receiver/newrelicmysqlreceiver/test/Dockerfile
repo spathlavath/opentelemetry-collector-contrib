@@ -17,14 +17,16 @@ WORKDIR /workspace
 # Copy the entire repository
 COPY ../../.. .
 
-RUN make otelcontribcol
+# Remove any pre-built tools from the host (macOS binaries won't work in Linux)
+RUN rm -rf .tools
 
 # Build the collector using the standard make command
 # This will:
-# 1. Install builder tool to .tools/builder
+# 1. Install builder tool to .tools/builder (Linux version)
 # 2. Run builder with builder-config.yaml
 # 3. Generate code in cmd/otelcontribcol/
 # 4. Build the binary
+RUN make otelcontribcol
 
 # Runtime stage
 FROM alpine:latest

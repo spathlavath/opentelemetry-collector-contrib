@@ -1,0 +1,52 @@
+receivers:
+  # Monitor Galera Node
+  newrelicmysql/galera:
+    endpoint: galera1:3306
+    username: root
+    password: galerapass
+    collection_interval: 10s
+    initial_delay: 10s
+    extra_status_metrics: true
+    galera_cluster: true
+
+processors:
+  batch:
+    timeout: 10s
+    send_batch_size: 1024
+  
+  # Add node-specific resource attributes
+  resource/galera:
+    attributes:
+      - key: mysql.service.name
+        value: galera-cluster-node1
+        action: upsert
+      - key: galera.node.name
+        value: galera1
+        action: upsert
+      - key: galera.cluster.name
+        value: galera-cluster
+        action: upsert
+
+exporters:
+  debug:
+    verbosity: detailed
+    sampling_initial: 5
+    sampling_thereafter: 200
+  
+  otlphttp:
+    endpoint: "newrelic-otlp-endpoint:443"
+    headers:
+      api-key: "your_new_relic_api_key_here"
+    compression: gzip
+
+service:
+  pipelines:
+    # Pipeline for Galera node
+    metrics/galera:
+      receivers: [newrelicmysql/galera]
+      processors: [batch, resource/galera]
+      exporters: [debug, otlphttp]
+  
+  telemetry:
+    logs:
+      level: debug

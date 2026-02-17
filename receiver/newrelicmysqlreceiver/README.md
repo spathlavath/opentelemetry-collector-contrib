@@ -37,6 +37,7 @@ The following settings are optional:
 - `initial_delay` (default = `1s`): defines how long this receiver waits before starting.
 - `transport`: (default = `tcp`): Defines the network to use for connecting to the server.
 - `extra_status_metrics`: (default = `false`): When enabled, collects additional MySQL status metrics including binlog cache, handler operations, query cache, select join types, sort operations, table locks, and thread metrics. These metrics are based on Datadog's extra_status_metrics option and provide deeper performance insights.
+- `galera_cluster`: (default = `false`): When enabled, collects Galera cluster-specific metrics such as cluster size, flow control status, replication queue sizes, and data transfer statistics. These metrics are specific to MariaDB Galera Cluster and MySQL Galera Cluster deployments and provide insights into cluster health and performance.
 
 ### Example Configuration
 
@@ -50,8 +51,124 @@ receivers:
     collection_interval: 10s
     initial_delay: 1s
     extra_status_metrics: true
+    galera_cluster: false
+```
+
+### Galera Cluster Configuration
+
+For MariaDB Galera Cluster or MySQL Galera Cluster deployments, enable `galera_cluster` to collect additional cluster metrics:
+
+```yaml
+receivers:
+  newrelicmysql:
+    endpoint: galera-node:3306
+    username: otel
+    password: ${env:MYSQL_PASSWORD}
+    collection_interval: 10s
+    galera_cluster: true
 ```
 
 ## Metrics
 
 Details about the metrics produced by this receiver can be found in [metadata.yaml](./metadata.yaml)
+
+## Development
+
+### Building the Receiver
+
+To build the OpenTelemetry Collector with the New Relic MySQL receiver:
+
+```bash
+# From the repository root
+make otelcontribcol
+```
+
+This will build the collector binary with the newrelicmysql receiver included. The binary will be located at `bin/otelcontribcol_<os>_<arch>`.
+
+### Generating Code
+
+After modifying `metadata.yaml`, regenerate auto-generated files:
+
+```bash
+# From the repository root (first time setup)
+make install-tools
+
+# From the receiver directory
+cd receiver/newrelicmysqlreceiver
+../../.tools/mdatagen metadata.yaml
+```
+
+This generates:
+- `internal/metadata/generated_*.go` - Metrics, resource attributes, and telemetry builders
+- `generated_component_test.go` - Component lifecycle tests
+- `documentation.md` - Auto-generated metrics documentation
+
+### Running Unit Tests
+
+To run unit tests for the receiver:
+
+```bash
+# From the receiver directory
+cd receiver/newrelicmysqlreceiver
+go test ./... -v
+```
+
+Or from the repository root:
+
+```bash
+# Run tests for the newrelicmysql receiver only
+go test ./receiver/newrelicmysqlreceiver/... -v
+```
+
+### Running Integration Tests
+
+Integration tests require Docker to be running as they use testcontainers-go to spin up MySQL and MariaDB Galera Cluster instances.
+
+```bash
+# From the receiver directory
+cd receiver/newrelicmysqlreceiver
+go test -tags=integration ./... -v
+```
+
+The integration tests will:
+- Start a MySQL 8.4 container
+- Start a MariaDB 11.3 Galera Cluster container
+- Test metric collection from both standard MySQL and Galera cluster configurations
+- Validate collected metrics match expected values
+
+Integration tests take 30-40 seconds to complete due to container startup time.
+
+### Docker Test Environment
+
+A Docker Compose setup is available in the `test/` directory for manual testing:
+
+```bash
+cd receiver/newrelicmysqlreceiver/test
+docker compose up -d
+```
+
+This starts:
+- MySQL 8.4 container on port 3306
+- MariaDB Galera Cluster node on port 3307
+- Two OpenTelemetry collectors monitoring each database
+
+View logs:
+
+```bash
+docker logs otelcol-newrelicmysql
+docker logs otelcol-galera
+```
+
+Query databases directly:
+
+```bash
+docker exec -it newrelicmysql-test mysql -u monitor -pmonitorpass -e "SHOW GLOBAL STATUS;"
+docker exec -it galera-node1 mariadb -u root -pgalerapass -e "SHOW GLOBAL STATUS LIKE 'wsrep_%';"
+```
+
+Stop the environment:
+
+```bash
+docker compose down
+```
+

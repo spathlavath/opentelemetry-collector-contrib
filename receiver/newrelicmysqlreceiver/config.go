@@ -24,6 +24,7 @@ type Config struct {
 	ExtraInnoDBMetrics   bool `mapstructure:"extra_innodb_metrics,omitempty"`
 	ExtraStatusMetrics   bool `mapstructure:"extra_status_metrics,omitempty"`
 	Replication          bool `mapstructure:"replication,omitempty"`
+	GaleraCluster        bool `mapstructure:"galera_cluster,omitempty"`
 	confignet.AddrConfig `mapstructure:",squash"`
 	TLS                  configtls.ClientConfig        `mapstructure:"tls,omitempty"`
 	MetricsBuilderConfig metadata.MetricsBuilderConfig `mapstructure:",squash"`

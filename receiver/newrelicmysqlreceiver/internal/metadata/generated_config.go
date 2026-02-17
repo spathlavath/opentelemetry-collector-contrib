@@ -34,6 +34,21 @@ type MetricsConfig struct {
 	NewrelicmysqlConnectionCount                            MetricConfig `mapstructure:"newrelicmysql.connection.count"`
 	NewrelicmysqlDbHandlerRollback                          MetricConfig `mapstructure:"newrelicmysql.db.handler_rollback"`
 	NewrelicmysqlDbOpenedTables                             MetricConfig `mapstructure:"newrelicmysql.db.opened_tables"`
+	NewrelicmysqlGaleraWsrepCertDepsDistance                MetricConfig `mapstructure:"newrelicmysql.galera.wsrep_cert_deps_distance"`
+	NewrelicmysqlGaleraWsrepClusterSize                     MetricConfig `mapstructure:"newrelicmysql.galera.wsrep_cluster_size"`
+	NewrelicmysqlGaleraWsrepFlowControlPaused               MetricConfig `mapstructure:"newrelicmysql.galera.wsrep_flow_control_paused"`
+	NewrelicmysqlGaleraWsrepFlowControlPausedNs             MetricConfig `mapstructure:"newrelicmysql.galera.wsrep_flow_control_paused_ns"`
+	NewrelicmysqlGaleraWsrepFlowControlRecv                 MetricConfig `mapstructure:"newrelicmysql.galera.wsrep_flow_control_recv"`
+	NewrelicmysqlGaleraWsrepFlowControlSent                 MetricConfig `mapstructure:"newrelicmysql.galera.wsrep_flow_control_sent"`
+	NewrelicmysqlGaleraWsrepLocalCertFailures               MetricConfig `mapstructure:"newrelicmysql.galera.wsrep_local_cert_failures"`
+	NewrelicmysqlGaleraWsrepLocalRecvQueue                  MetricConfig `mapstructure:"newrelicmysql.galera.wsrep_local_recv_queue"`
+	NewrelicmysqlGaleraWsrepLocalRecvQueueAvg               MetricConfig `mapstructure:"newrelicmysql.galera.wsrep_local_recv_queue_avg"`
+	NewrelicmysqlGaleraWsrepLocalSendQueue                  MetricConfig `mapstructure:"newrelicmysql.galera.wsrep_local_send_queue"`
+	NewrelicmysqlGaleraWsrepLocalSendQueueAvg               MetricConfig `mapstructure:"newrelicmysql.galera.wsrep_local_send_queue_avg"`
+	NewrelicmysqlGaleraWsrepLocalState                      MetricConfig `mapstructure:"newrelicmysql.galera.wsrep_local_state"`
+	NewrelicmysqlGaleraWsrepReceived                        MetricConfig `mapstructure:"newrelicmysql.galera.wsrep_received"`
+	NewrelicmysqlGaleraWsrepReceivedBytes                   MetricConfig `mapstructure:"newrelicmysql.galera.wsrep_received_bytes"`
+	NewrelicmysqlGaleraWsrepReplicatedBytes                 MetricConfig `mapstructure:"newrelicmysql.galera.wsrep_replicated_bytes"`
 	NewrelicmysqlInnodbActiveTransactions                   MetricConfig `mapstructure:"newrelicmysql.innodb.active_transactions"`
 	NewrelicmysqlInnodbAdaptiveHashHashSearches             MetricConfig `mapstructure:"newrelicmysql.innodb.adaptive_hash_hash_searches"`
 	NewrelicmysqlInnodbAdaptiveHashNonHashSearches          MetricConfig `mapstructure:"newrelicmysql.innodb.adaptive_hash_non_hash_searches"`
@@ -267,6 +282,51 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		NewrelicmysqlDbOpenedTables: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlGaleraWsrepCertDepsDistance: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlGaleraWsrepClusterSize: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlGaleraWsrepFlowControlPaused: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlGaleraWsrepFlowControlPausedNs: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlGaleraWsrepFlowControlRecv: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlGaleraWsrepFlowControlSent: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlGaleraWsrepLocalCertFailures: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlGaleraWsrepLocalRecvQueue: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlGaleraWsrepLocalRecvQueueAvg: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlGaleraWsrepLocalSendQueue: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlGaleraWsrepLocalSendQueueAvg: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlGaleraWsrepLocalState: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlGaleraWsrepReceived: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlGaleraWsrepReceivedBytes: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlGaleraWsrepReplicatedBytes: MetricConfig{
 			Enabled: true,
 		},
 		NewrelicmysqlInnodbActiveTransactions: MetricConfig{

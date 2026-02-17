@@ -1,0 +1,20 @@
+receivers:
+  newrelicmysql:
+    endpoint: localhost:3306
+    username: root
+    password: galerapass
+    database: employees
+    allow_native_passwords: true
+    galera_cluster: true
+    collection_interval: 10s
+    tls:
+      insecure: true
+
+exporters:
+  nop:
+
+service:
+  pipelines:
+    metrics:
+      receivers: [newrelicmysql]
+      exporters: [nop]
