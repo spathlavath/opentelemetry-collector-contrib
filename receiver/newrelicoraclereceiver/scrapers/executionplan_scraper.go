@@ -5,6 +5,7 @@ package scrapers
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"strconv"
 	"sync"
@@ -60,7 +61,7 @@ func (s *ExecutionPlanScraper) ScrapeExecutionPlans(ctx context.Context, sqlIden
 	for _, identifier := range sqlIdentifiers {
 		select {
 		case <-queryCtx.Done():
-			errs = append(errs, fmt.Errorf("context cancelled/timed out, stopping execution plan scraping"))
+			errs = append(errs, errors.New("context cancelled/timed out, stopping execution plan scraping"))
 			return errs
 		default:
 			// Continue processing
@@ -88,17 +89,13 @@ func (s *ExecutionPlanScraper) ScrapeExecutionPlans(ctx context.Context, sqlIden
 		if len(planRows) == 0 {
 			continue
 		}
-		for _, row := range planRows {
+		for i := range planRows {
+			row := &planRows[i]
 			if !row.SQLID.Valid || row.SQLID.String == "" {
 				s.logger.Debug("Skipping row with invalid SQL_ID")
 				continue
 			}
-			if err := s.buildExecutionPlanMetrics(&row, identifier.Timestamp); err != nil {
-				s.logger.Warn("Failed to build metrics for execution plan row",
-					zap.String("sql_id", row.SQLID.String),
-					zap.Error(err))
-				errs = append(errs, err)
-			}
+			s.buildExecutionPlanMetrics(row, identifier.Timestamp)
 		}
 
 		// Validate plan hash and child number before caching
@@ -123,9 +120,9 @@ func (s *ExecutionPlanScraper) ScrapeExecutionPlans(ctx context.Context, sqlIden
 }
 
 // buildExecutionPlanMetrics converts an execution plan row to a metric data point with all attributes.
-func (s *ExecutionPlanScraper) buildExecutionPlanMetrics(row *models.ExecutionPlanRow, queryTimestamp time.Time) error {
+func (s *ExecutionPlanScraper) buildExecutionPlanMetrics(row *models.ExecutionPlanRow, queryTimestamp time.Time) {
 	if !s.metricsBuilderConfig.Metrics.NewrelicoracledbExecutionPlan.Enabled {
-		return nil
+		return
 	}
 
 	// Extract values with defaults for null fields
@@ -266,8 +263,6 @@ func (s *ExecutionPlanScraper) buildExecutionPlanMetrics(row *models.ExecutionPl
 		timeVal,
 		filterPredicates,
 	)
-
-	return nil
 }
 
 func (s *ExecutionPlanScraper) parseIntSafe(value string) int64 {

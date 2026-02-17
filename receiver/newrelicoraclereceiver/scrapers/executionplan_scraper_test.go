@@ -221,9 +221,7 @@ func TestBuildExecutionPlanMetrics_EventDisabled(t *testing.T) {
 		SQLID: sql.NullString{String: "test_sql_id", Valid: true},
 	}
 
-	err := scraper.buildExecutionPlanMetrics(row, time.Now())
-
-	assert.NoError(t, err)
+	scraper.buildExecutionPlanMetrics(row, time.Now())
 }
 
 func TestBuildExecutionPlanMetrics_AllFields(t *testing.T) {
@@ -261,9 +259,7 @@ func TestBuildExecutionPlanMetrics_AllFields(t *testing.T) {
 		FilterPredicates:       sql.NullString{String: "STATUS='ACTIVE'", Valid: true},
 	}
 
-	err := scraper.buildExecutionPlanMetrics(row, time.Now())
-
-	assert.NoError(t, err)
+	scraper.buildExecutionPlanMetrics(row, time.Now())
 }
 
 func TestBuildExecutionPlanMetrics_NullFields(t *testing.T) {
@@ -297,9 +293,7 @@ func TestBuildExecutionPlanMetrics_NullFields(t *testing.T) {
 		TempSpace:              sql.NullString{Valid: false},
 	}
 
-	err := scraper.buildExecutionPlanMetrics(row, time.Now())
-
-	assert.NoError(t, err)
+	scraper.buildExecutionPlanMetrics(row, time.Now())
 }
 
 func TestBuildExecutionPlanMetrics_EmptyStrings(t *testing.T) {
@@ -323,9 +317,7 @@ func TestBuildExecutionPlanMetrics_EmptyStrings(t *testing.T) {
 		Time:        sql.NullString{String: "", Valid: true},
 	}
 
-	err := scraper.buildExecutionPlanMetrics(row, time.Now())
-
-	assert.NoError(t, err)
+	scraper.buildExecutionPlanMetrics(row, time.Now())
 }
 
 func TestParseIntSafe_ValidNumbers(t *testing.T) {
@@ -434,9 +426,7 @@ func TestBuildExecutionPlanMetrics_WithPredicates(t *testing.T) {
 		FilterPredicates: sql.NullString{String: "CREATED_DATE > TO_DATE('2024-01-01')", Valid: true},
 	}
 
-	err := scraper.buildExecutionPlanMetrics(row, time.Now())
-
-	assert.NoError(t, err)
+	scraper.buildExecutionPlanMetrics(row, time.Now())
 }
 
 func TestScrapeExecutionPlans_CachedPlans(t *testing.T) {
