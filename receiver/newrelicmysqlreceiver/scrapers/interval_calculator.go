@@ -13,14 +13,6 @@ import (
 )
 
 // MySQLIntervalCalculator calculates interval-based (delta) metrics for MySQL slow queries.
-// This follows the Oracle receiver pattern for simplicity and proven stability.
-//
-// Key Features:
-// - Delta calculation: Compares current vs. previous scrape to get interval metrics
-// - TTL-based cache eviction: Automatically removes stale entries
-// - Handles edge cases: First scrape, no new executions, cache misses
-//
-// Design Decision: Following Oracle's OracleIntervalCalculator pattern for simplicity
 type MySQLIntervalCalculator struct {
 	mu       sync.RWMutex
 	cache    map[string]*QuerySnapshot // Key: query_id (DIGEST)

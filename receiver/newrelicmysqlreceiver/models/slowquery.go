@@ -6,8 +6,6 @@ package models
 import "database/sql"
 
 // SlowQuery represents a slow query record from MySQL performance_schema
-// Data source: performance_schema.events_statements_summary_by_digest
-// Phase 1: 10 core metrics (aligned with Oracle receiver pattern)
 type SlowQuery struct {
 	// Query identification
 	CollectionTimestamp sql.NullString // When the query was collected

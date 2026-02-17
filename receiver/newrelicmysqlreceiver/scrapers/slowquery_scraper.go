@@ -19,7 +19,6 @@ import (
 )
 
 // SlowQueryScraper collects slow query metrics from MySQL performance_schema
-// Following Oracle receiver pattern: simple architecture with interval calculator
 type SlowQueryScraper struct {
 	client             common.Client
 	mb                 *metadata.MetricsBuilder
