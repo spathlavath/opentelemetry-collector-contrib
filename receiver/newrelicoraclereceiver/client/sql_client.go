@@ -55,7 +55,7 @@ func (c *SQLClient) QueryExecutionPlanForChild(ctx context.Context, sqlID string
 
 		err := rows.Scan(
 			&row.SQLID,
-			&row.Timestamp,
+			&row.PlanGeneratedTimestamp,
 			&row.TempSpace,
 			&row.AccessPredicates,
 			&row.Projection,

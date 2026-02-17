@@ -536,7 +536,6 @@ Oracle SQL execution plan details including operation costs, cardinality, and re
 | bytes | Estimated number of bytes the operation will return | Any Int | Recommended |
 | cpu_cost | Estimated CPU cost of the operation | Any Int | Recommended |
 | io_cost | Estimated I/O cost of the operation | Any Int | Recommended |
-| timestamp | Timestamp when the query was captured/observed (from wait event or slow query) | Any Str | Recommended |
 | plan_generated_timestamp | Timestamp when the execution plan was created by Oracle (from V$SQL_PLAN.TIMESTAMP) | Any Str | Recommended |
 | temp_space | Estimated temporary space required for the operation (in bytes) | Any Int | Recommended |
 | access_predicates | Access predicates used to locate rows in an access structure | Any Str | Recommended |
@@ -4741,7 +4740,6 @@ Source: WAIT_TIME_MICRO / 1000 (rounded to 2 decimal places).
 | final_blocker_sid | Session ID of the final blocking session (root cause) | Any Str | Recommended |
 | final_blocker_serial | Serial number of the final blocking session (root cause) | Any Str | Recommended |
 | final_blocker_query_id | SQL query ID of the final blocking session's query | Any Str | Recommended |
-| final_blocker_query_text | SQL query text of the final blocking session's query | Any Str | Recommended |
 | nr_service_guid | New Relic Service entity GUID | Any Str | Recommended |
 | normalised_sql_hash | MD5 hash of normalized SQL query following New Relic Java agent normalization logic | Any Str | Recommended |
 | nr_blocking_service_guid | New Relic Service entity GUID for the blocking query | Any Str | Recommended |

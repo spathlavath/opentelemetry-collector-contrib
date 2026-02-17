@@ -5,12 +5,11 @@ package models
 
 import (
 	"database/sql"
-	"time"
 )
 
 // ChildCursor represents a child cursor from V$SQL with average execution statistics
 type ChildCursor struct {
-	CollectionTimestamp sql.NullTime
+	CollectionTimestamp sql.NullString // Changed from sql.NullTime to sql.NullString for consistent formatting
 	DatabaseName        sql.NullString // PDB (Pluggable Database) name
 	SQLID               sql.NullString
 	ChildNumber         sql.NullInt64
@@ -26,12 +25,12 @@ type ChildCursor struct {
 	LastLoadTime        sql.NullString
 }
 
-// GetCollectionTimestamp returns the collection timestamp as time.Time
-func (cc *ChildCursor) GetCollectionTimestamp() time.Time {
+// GetCollectionTimestamp returns the collection timestamp as string
+func (cc *ChildCursor) GetCollectionTimestamp() string {
 	if cc.CollectionTimestamp.Valid {
-		return cc.CollectionTimestamp.Time
+		return cc.CollectionTimestamp.String
 	}
-	return time.Time{}
+	return ""
 }
 
 // GetDatabaseName returns the database name as a string, empty if null

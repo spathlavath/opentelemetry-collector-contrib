@@ -29,7 +29,7 @@ type ExecutionPlanScraper struct {
 	mb                   *metadata.MetricsBuilder
 	logger               *zap.Logger
 	metricsBuilderConfig metadata.MetricsBuilderConfig
-	cache                map[string]*planHashCacheEntry // key: plan_hash_value
+	cache                map[string]*planHashCacheEntry // key: sql_id_childnumber
 	cacheMutex           sync.RWMutex
 	cacheTTL             time.Duration
 }
@@ -55,12 +55,12 @@ func (s *ExecutionPlanScraper) ScrapeExecutionPlans(ctx context.Context, sqlIden
 	planHashIdentifier := make(map[string]models.SQLIdentifier)
 	s.cacheMutex.RLock()
 	for _, identifier := range sqlIdentifiers {
-		cacheKey := fmt.Sprintf("%s_%d", identifier.PlanHash, identifier.ChildNumber)
+		cacheKey := fmt.Sprintf("%s_%d", identifier.SQLID, identifier.ChildNumber)
 		if _, exists := s.cache[cacheKey]; exists {
-			s.logger.Debug("skipping execution plan scrape for cached plan hash",
-				zap.String("plan_hash", identifier.PlanHash),
+			s.logger.Debug("skipping execution plan scrape for cached SQL_ID",
+				zap.String("sql_id", identifier.SQLID),
 				zap.Int64("child_number", identifier.ChildNumber),
-				zap.String("sql_id", identifier.SQLID))
+				zap.String("plan_hash", identifier.PlanHash))
 			continue
 		}
 		planHashIdentifier[cacheKey] = identifier
@@ -202,12 +202,9 @@ func (s *ExecutionPlanScraper) buildExecutionPlanMetrics(row *models.ExecutionPl
 	}
 
 	planGeneratedTimestamp := ""
-	if row.Timestamp.Valid {
-		planGeneratedTimestamp = row.Timestamp.String
+	if row.PlanGeneratedTimestamp.Valid {
+		planGeneratedTimestamp = row.PlanGeneratedTimestamp.String
 	}
-
-	// Convert queryTimestamp to string for the timestamp attribute
-	queryTimestampStr := queryTimestamp.Format(time.RFC3339)
 
 	tempSpace := int64(-1)
 	if row.TempSpace.Valid && row.TempSpace.String != "" {
@@ -254,7 +251,6 @@ func (s *ExecutionPlanScraper) buildExecutionPlanMetrics(row *models.ExecutionPl
 		bytes,
 		cpuCost,
 		ioCost,
-		queryTimestampStr,
 		planGeneratedTimestamp,
 		tempSpace,
 		accessPredicates,

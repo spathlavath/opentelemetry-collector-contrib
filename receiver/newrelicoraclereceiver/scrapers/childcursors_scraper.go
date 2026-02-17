@@ -70,7 +70,7 @@ func (s *ChildCursorsScraper) ScrapeChildCursorsForIdentifiers(ctx context.Conte
 
 // recordChildCursorMetrics records all metrics for a single child cursor
 func (s *ChildCursorsScraper) recordChildCursorMetrics(now pcommon.Timestamp, cursor *models.ChildCursor) {
-	collectionTimestamp := cursor.GetCollectionTimestamp().Format("2006-01-02 15:04:05")
+	collectionTimestamp := cursor.GetCollectionTimestamp() // Already formatted as string in query
 	sqlID := cursor.GetSQLID()
 	childNumber := cursor.GetChildNumber()
 	planHashValue := fmt.Sprintf("%d", cursor.GetPlanHashValue())
