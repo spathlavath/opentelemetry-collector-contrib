@@ -119,9 +119,6 @@ attributes:
   final_blocker_query_id:
     description: SQL query ID of the final blocking session's query
     type: string
-  final_blocker_query_text:
-    description: SQL query text of the final blocking session's query
-    type: string
   final_blocker_serial:
     description: Serial number of the final blocking session (root cause)
     type: string
@@ -320,9 +317,6 @@ attributes:
   time:
     description: Estimated elapsed time for the operation (in seconds)
     type: int
-  timestamp:
-    description: Timestamp when the query was captured/observed (from wait event or slow query)
-    type: string
   user_name:
     description: Oracle username for slow queries
     type: string
@@ -942,7 +936,6 @@ metrics:
       - bytes
       - cpu_cost
       - io_cost
-      - timestamp
       - plan_generated_timestamp
       - temp_space
       - access_predicates
@@ -4324,7 +4317,6 @@ metrics:
       - final_blocker_sid
       - final_blocker_serial
       - final_blocker_query_id
-      - final_blocker_query_text
       - nr_service_guid
       - normalised_sql_hash
       - nr_blocking_service_guid

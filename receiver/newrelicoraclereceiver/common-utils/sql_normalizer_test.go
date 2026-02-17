@@ -366,7 +366,7 @@ func TestPrintNormalizedQueries(t *testing.T) {
 		"/* text */SELECT D.DEPARTMENT_NAME FROM DEPARTMENTS",
 		"/* nr_service_guid=\"ABC\" */SELECT * FROM users WHERE id = 5",
 	}
-	
+
 	for _, query := range queries {
 		normalized := NormalizeSql(query)
 		t.Logf("Input:      %s", query)
