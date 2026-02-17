@@ -6,6 +6,8 @@ package common
 import (
 	"context"
 	"database/sql"
+
+	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicmysqlreceiver/models"
 )
 
 // MockClient is a shared mock implementation of common.Client for testing.
@@ -34,6 +36,10 @@ type MockClient struct {
 	// Version
 	Version    string
 	VersionErr error
+
+	// Slow queries
+	SlowQueries    []models.SlowQuery
+	SlowQueriesErr error
 
 	// Optional: custom function for GetGlobalStats to support complex scenarios
 	GetGlobalStatsFunc func() (map[string]string, error)
@@ -86,6 +92,10 @@ func (m *MockClient) GetVersion() (string, error) {
 
 func (m *MockClient) QueryContext(ctx context.Context, query string, args ...interface{}) (*sql.Rows, error) {
 	return nil, nil
+}
+
+func (m *MockClient) GetSlowQueries(ctx context.Context, intervalSeconds int) ([]models.SlowQuery, error) {
+	return m.SlowQueries, m.SlowQueriesErr
 }
 
 func (m *MockClient) Close() error {

@@ -16,7 +16,6 @@ import (
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicmysqlreceiver/common"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicmysqlreceiver/internal/metadata"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicmysqlreceiver/models"
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicmysqlreceiver/queries"
 )
 
 // SlowQueryScraper collects slow query metrics from MySQL performance_schema
@@ -113,46 +112,12 @@ func (s *SlowQueryScraper) ScrapeMetrics(ctx context.Context, now pcommon.Timest
 
 // fetchSlowQueries fetches slow queries from performance_schema
 func (s *SlowQueryScraper) fetchSlowQueries(ctx context.Context) ([]models.SlowQuery, error) {
-	query := queries.GetSlowQueriesSQL(s.intervalSeconds)
-
-	s.logger.Debug("Executing slow query SQL",
+	s.logger.Debug("Fetching slow queries from database",
 		zap.Int("interval_seconds", s.intervalSeconds))
 
-	var slowQueries []models.SlowQuery
-	rows, err := s.client.QueryContext(ctx, query)
+	slowQueries, err := s.client.GetSlowQueries(ctx, s.intervalSeconds)
 	if err != nil {
-		return nil, fmt.Errorf("failed to execute slow query: %w", err)
-	}
-	defer rows.Close()
-
-	for rows.Next() {
-		var sq models.SlowQuery
-		err := rows.Scan(
-			&sq.CollectionTimestamp,
-			&sq.QueryID,
-			&sq.QueryText,
-			&sq.DatabaseName,
-			&sq.ExecutionCount,
-			&sq.TotalElapsedTimeMS,
-			&sq.AvgElapsedTimeMS,
-			&sq.AvgCPUTimeMS,
-			&sq.AvgLockTimeMS,
-			&sq.AvgRowsExamined,
-			&sq.AvgRowsSent,
-			&sq.TotalErrors,
-			&sq.FirstSeen,
-			&sq.LastExecutionTimestamp,
-		)
-		if err != nil {
-			s.logger.Warn("Failed to scan slow query row", zap.Error(err))
-			continue
-		}
-
-		slowQueries = append(slowQueries, sq)
-	}
-
-	if err := rows.Err(); err != nil {
-		return nil, fmt.Errorf("error iterating slow query results: %w", err)
+		return nil, fmt.Errorf("failed to fetch slow queries: %w", err)
 	}
 
 	return slowQueries, nil
