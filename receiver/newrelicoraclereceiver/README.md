@@ -105,7 +105,7 @@ You must provide either `datasource` OR all individual parameters.
 | `username` | Oracle database username | No* | |
 | `password` | Oracle database password (supports ${env:VAR} syntax) | No* | |
 | `service` | Oracle service name or SID | No* | |
-| `datasource` | Alternative: Complete connection string (oracle://user:pass@host:port/service) | No* | |
+| `datasource` | Alternative: Complete connection string (`oracle://user:pass@host:port/service`) | No* | |
 
 *Either all of `endpoint`, `username`, `password`, `service` OR `datasource` must be provided.
 

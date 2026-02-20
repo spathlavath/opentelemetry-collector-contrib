@@ -1,7 +1,7 @@
 // Copyright New Relic, Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package scrapers
+package scrapers // import "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/scrapers"
 
 import (
 	"context"
@@ -12,11 +12,10 @@ import (
 	"sync"
 	"time"
 
-	"go.opentelemetry.io/collector/pdata/pcommon"
-	"go.uber.org/zap"
-
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/client"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/internal/metadata"
+	"go.opentelemetry.io/collector/pdata/pcommon"
+	"go.uber.org/zap"
 )
 
 type RacScraper struct {
@@ -58,13 +57,14 @@ func (s *RacScraper) isRacEnabled(ctx context.Context) (bool, error) {
 		return false, err
 	}
 
-	racEnabled := detection.ClusterDB.Valid && strings.ToUpper(detection.ClusterDB.String) == "TRUE"
+	racEnabled := detection.ClusterDB.Valid && strings.EqualFold(detection.ClusterDB.String, "TRUE")
 	s.isRacMode = &racEnabled
 	s.logger.Debug("RAC mode detection", zap.Bool("enabled", racEnabled))
 
 	return racEnabled, nil
 }
 
+//nolint:unparam // error return is kept for future use and API consistency
 func (s *RacScraper) isASMAvailable(ctx context.Context) (bool, error) {
 	detection, err := s.client.QueryASMDetection(ctx)
 	if err != nil {
@@ -166,7 +166,7 @@ func nullStringToString(ns sql.NullString) string {
 }
 
 func stringStatusToBinary(status, expectedValue string) int64 {
-	if strings.ToUpper(status) == strings.ToUpper(expectedValue) {
+	if strings.EqualFold(status, expectedValue) {
 		return 1
 	}
 	return 0
@@ -259,7 +259,8 @@ func (s *RacScraper) scrapeInstanceStatus(ctx context.Context) []error {
 		return []error{err}
 	}
 
-	for _, instance := range instances {
+	for i := range instances {
+		instance := &instances[i]
 		if !instance.InstID.Valid || !instance.Status.Valid {
 			continue
 		}
@@ -327,7 +328,8 @@ func (s *RacScraper) scrapeActiveServices(ctx context.Context) []error {
 		return []error{err}
 	}
 
-	for _, service := range services {
+	for i := range services {
+		service := &services[i]
 		if !service.ServiceName.Valid || !service.InstID.Valid {
 			continue
 		}

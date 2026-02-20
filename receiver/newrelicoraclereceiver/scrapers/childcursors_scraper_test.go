@@ -10,15 +10,14 @@ import (
 	"testing"
 	"time"
 
+	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/client"
+	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/internal/metadata"
+	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/models"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.opentelemetry.io/collector/pdata/pcommon"
 	"go.opentelemetry.io/collector/receiver/receivertest"
 	"go.uber.org/zap"
-
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/client"
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/internal/metadata"
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/models"
 )
 
 func TestNewChildCursorsScraper(t *testing.T) {
@@ -82,12 +81,12 @@ func TestChildCursorsScraper_ScrapeWithValidData(t *testing.T) {
 		},
 	}
 
-	_, errs := scraper.ScrapeChildCursorsForIdentifiers(context.Background(), identifiers, 10)
+	_, errs := scraper.ScrapeChildCursorsForIdentifiers(t.Context(), identifiers)
 	require.Empty(t, errs)
 
 	// Verify metrics were collected
 	metrics := mb.Emit()
-	assert.Greater(t, metrics.ResourceMetrics().Len(), 0)
+	assert.Positive(t, metrics.ResourceMetrics().Len())
 }
 
 func TestChildCursorsScraper_ScrapeWithMultipleIdentifiers(t *testing.T) {
@@ -130,11 +129,11 @@ func TestChildCursorsScraper_ScrapeWithMultipleIdentifiers(t *testing.T) {
 		{SQLID: "sql_id_2", ChildNumber: 1, Timestamp: now},
 	}
 
-	_, errs := scraper.ScrapeChildCursorsForIdentifiers(context.Background(), identifiers, 10)
+	_, errs := scraper.ScrapeChildCursorsForIdentifiers(t.Context(), identifiers)
 	require.Empty(t, errs)
 
 	metrics := mb.Emit()
-	assert.Greater(t, metrics.ResourceMetrics().Len(), 0)
+	assert.Positive(t, metrics.ResourceMetrics().Len())
 }
 
 func TestChildCursorsScraper_ScrapeWithEmptyIdentifiers(t *testing.T) {
@@ -146,7 +145,7 @@ func TestChildCursorsScraper_ScrapeWithEmptyIdentifiers(t *testing.T) {
 
 	identifiers := []models.SQLIdentifier{}
 
-	_, errs := scraper.ScrapeChildCursorsForIdentifiers(context.Background(), identifiers, 10)
+	_, errs := scraper.ScrapeChildCursorsForIdentifiers(t.Context(), identifiers)
 	require.Empty(t, errs)
 
 	// Should not have emitted any metrics
@@ -170,7 +169,7 @@ func TestChildCursorsScraper_ScrapeWithQueryError(t *testing.T) {
 		{SQLID: "test_sql_1", ChildNumber: 0, Timestamp: now},
 	}
 
-	_, errs := scraper.ScrapeChildCursorsForIdentifiers(context.Background(), identifiers, 10)
+	_, errs := scraper.ScrapeChildCursorsForIdentifiers(t.Context(), identifiers)
 	require.NotEmpty(t, errs)
 	assert.Len(t, errs, 1)
 	assert.Contains(t, errs[0].Error(), "database connection error")
@@ -204,7 +203,7 @@ func TestChildCursorsScraper_ScrapeWithPartialErrors(t *testing.T) {
 	}
 
 	// First will succeed, second won't find data but shouldn't error
-	_, errs := scraper.ScrapeChildCursorsForIdentifiers(context.Background(), identifiers, 10)
+	_, errs := scraper.ScrapeChildCursorsForIdentifiers(t.Context(), identifiers)
 	// No errors expected as missing data is not treated as error
 	require.Empty(t, errs)
 }
@@ -234,7 +233,7 @@ func TestChildCursorsScraper_ScrapeWithInvalidIdentifier(t *testing.T) {
 		{SQLID: "", ChildNumber: 0, Timestamp: now},
 	}
 
-	_, errs := scraper.ScrapeChildCursorsForIdentifiers(context.Background(), identifiers, 10)
+	_, errs := scraper.ScrapeChildCursorsForIdentifiers(t.Context(), identifiers)
 	// Should complete without errors, but won't emit metrics for invalid identifiers
 	require.Empty(t, errs)
 }
@@ -281,11 +280,11 @@ func TestChildCursorsScraper_RecordMetricsAllEnabled(t *testing.T) {
 		{SQLID: "test_sql_1", ChildNumber: 0, Timestamp: now},
 	}
 
-	_, errs := scraper.ScrapeChildCursorsForIdentifiers(context.Background(), identifiers, 10)
+	_, errs := scraper.ScrapeChildCursorsForIdentifiers(t.Context(), identifiers)
 	require.Empty(t, errs)
 
 	metrics := mb.Emit()
-	assert.Greater(t, metrics.ResourceMetrics().Len(), 0)
+	assert.Positive(t, metrics.ResourceMetrics().Len())
 }
 
 func TestChildCursorsScraper_RecordMetricsAllDisabled(t *testing.T) {
@@ -322,7 +321,7 @@ func TestChildCursorsScraper_RecordMetricsAllDisabled(t *testing.T) {
 		{SQLID: "test_sql_1", ChildNumber: 0, Timestamp: now},
 	}
 
-	_, errs := scraper.ScrapeChildCursorsForIdentifiers(context.Background(), identifiers, 10)
+	_, errs := scraper.ScrapeChildCursorsForIdentifiers(t.Context(), identifiers)
 	require.Empty(t, errs)
 }
 
@@ -363,7 +362,7 @@ func TestChildCursorsScraper_RecordMetricsWithNullValues(t *testing.T) {
 		{SQLID: "test_sql_1", ChildNumber: 0, Timestamp: now},
 	}
 
-	_, errs := scraper.ScrapeChildCursorsForIdentifiers(context.Background(), identifiers, 10)
+	_, errs := scraper.ScrapeChildCursorsForIdentifiers(t.Context(), identifiers)
 	require.Empty(t, errs)
 
 	// Should handle null values gracefully by using 0 or empty string defaults
@@ -373,6 +372,7 @@ func TestChildCursorsScraper_RecordMetricsWithNullValues(t *testing.T) {
 
 func TestChildCursorsScraper_RecordChildCursorMetrics(t *testing.T) {
 	mockClient := client.NewMockClient()
+	now := time.Now()
 	config := metadata.DefaultMetricsBuilderConfig()
 	config.Metrics.NewrelicoracledbChildCursorsCPUTime.Enabled = true
 	config.Metrics.NewrelicoracledbChildCursorsElapsedTime.Enabled = true
@@ -381,7 +381,7 @@ func TestChildCursorsScraper_RecordChildCursorMetrics(t *testing.T) {
 	mb := metadata.NewMetricsBuilder(config, settings)
 	scraper := NewChildCursorsScraper(mockClient, mb, zap.NewNop(), config)
 
-	now := pcommon.NewTimestampFromTime(time.Now())
+	timestamp := pcommon.NewTimestampFromTime(now)
 	cursor := &models.ChildCursor{
 		CollectionTimestamp: sql.NullString{String: "2024-01-01 10:00:00", Valid: true},
 		DatabaseName:        sql.NullString{String: "TESTDB", Valid: true},
@@ -393,7 +393,7 @@ func TestChildCursorsScraper_RecordChildCursorMetrics(t *testing.T) {
 	}
 
 	// This should not panic or error
-	scraper.recordChildCursorMetrics(now, cursor)
+	scraper.recordChildCursorMetrics(timestamp, cursor)
 
 	metrics := mb.Emit()
 	assert.NotNil(t, metrics)
@@ -418,7 +418,7 @@ func TestChildCursorsScraper_ContextCancellation(t *testing.T) {
 	mb := metadata.NewMetricsBuilder(config, settings)
 	scraper := NewChildCursorsScraper(mockClient, mb, zap.NewNop(), config)
 
-	ctx, cancel := context.WithCancel(context.Background())
+	ctx, cancel := context.WithCancel(t.Context())
 	cancel() // Cancel immediately
 
 	identifiers := []models.SQLIdentifier{
@@ -426,6 +426,6 @@ func TestChildCursorsScraper_ContextCancellation(t *testing.T) {
 	}
 
 	// Should handle cancelled context gracefully
-	_, _ = scraper.ScrapeChildCursorsForIdentifiers(ctx, identifiers, 10)
+	_, _ = scraper.ScrapeChildCursorsForIdentifiers(ctx, identifiers)
 	// The function doesn't explicitly check context, but it's passed through to the client
 }

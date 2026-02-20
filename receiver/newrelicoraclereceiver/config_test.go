@@ -141,7 +141,7 @@ func TestConfig_SetDefaults(t *testing.T) {
 	config.SetDefaults()
 
 	assert.Equal(t, defaultMaxOpenConnections, config.MaxOpenConnections)
-	assert.Equal(t, defaultCollectionInterval, config.ControllerConfig.CollectionInterval)
+	assert.Equal(t, defaultCollectionInterval, config.CollectionInterval)
 }
 
 func TestConfig_ValidateEnhanced(t *testing.T) {

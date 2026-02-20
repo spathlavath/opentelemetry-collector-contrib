@@ -1,4 +1,7 @@
-package models
+// Copyright New Relic, Inc. All rights reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+package models // import "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/models"
 
 import (
 	"database/sql"
@@ -8,7 +11,7 @@ import (
 // This model is populated by the combined GetWaitEventsAndBlockingSQL query
 // Field order matches SQL column order from GetWaitEventsAndBlockingSQL
 type WaitEventWithBlocking struct {
-	CollectionTimestamp        sql.NullString // Changed from sql.NullTime to sql.NullString for consistent formatting
+	CollectionTimestamp        sql.NullString // Changed from sql.NullTime for consistent formatting
 	DatabaseName               sql.NullString
 	Username                   sql.NullString
 	SID                        sql.NullInt64
@@ -20,7 +23,7 @@ type WaitEventWithBlocking struct {
 	WaitClass                  sql.NullString
 	Event                      sql.NullString
 	WaitTimeMs                 sql.NullFloat64
-	SQLExecStart               sql.NullString // Changed from sql.NullTime to sql.NullString for consistent formatting
+	SQLExecStart               sql.NullString // Changed from sql.NullTime for consistent formatting
 	SQLExecID                  sql.NullInt64
 	Program                    sql.NullString
 	Machine                    sql.NullString

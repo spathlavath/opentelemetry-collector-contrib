@@ -1,7 +1,7 @@
 // Copyright New Relic, Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package queries
+package queries // import "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/queries"
 
 import (
 	"fmt"
@@ -30,7 +30,6 @@ func GetSlowQueriesSQL(intervalSeconds int) string {
 			au.username AS user_name,
 			sa.executions AS execution_count,
 			sa.sql_fulltext AS query_text,
-			-- Database timezone timestamp (consistent with other timestamp fields)
 			TO_CHAR(sa.last_active_time, 'YYYY-MM-DD HH24:MI:SS') AS last_active_timestamp,
 			sa.elapsed_time / 1000 AS total_elapsed_time_ms,
 			sa.cpu_time / 1000 AS total_cpu_time_ms,
@@ -173,13 +172,13 @@ func GetSpecificChildCursorQuery(sqlID string, childNumber int64) string {
 			CASE WHEN s.executions > 0 THEN s.buffer_gets / s.executions ELSE 0 END AS avg_buffer_gets,
 			s.executions,
 			s.invalidations,
-			TO_CHAR(s.first_load_time, 'YYYY-MM-DD HH24:MI:SS') AS first_load_time,
-			TO_CHAR(s.last_load_time, 'YYYY-MM-DD HH24:MI:SS') AS last_load_time
+			TO_CHAR(TO_DATE(s.first_load_time, 'YYYY/MM/DD HH24:MI:SS'), 'YYYY-MM-DD HH24:MI:SS') AS first_load_time,
+			TO_CHAR(TO_DATE(s.last_load_time, 'YYYY/MM/DD HH24:MI:SS'), 'YYYY-MM-DD HH24:MI:SS') AS last_load_time
 		FROM
 			v$sql s
 		-- Use LEFT JOIN for Non-CDB compatibility
 		LEFT JOIN
-    		v$pdbs p ON s.con_id = p.con_id	
+    		v$pdbs p ON s.con_id = p.con_id
 		CROSS JOIN
 			v$database d
 		WHERE
