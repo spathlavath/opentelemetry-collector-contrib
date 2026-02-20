@@ -302,7 +302,7 @@ func (s *newRelicOracleScraper) executeQPMScrapers(ctx context.Context, errChan 
 		// s.sendErrorsToChannel(errChan, childCursorErrs, "child cursors")
 
 		// Then scrape execution plans using the plan hash values for caching
-		executionPlanErrs := s.executionPlanScraper.ScrapeExecutionPlans(ctx, updatedIdentifiers)
+		executionPlanErrs := s.executionPlanScraper.ScrapeExecutionPlans(ctx, waitEventSQLIdentifiers)
 		s.sendErrorsToChannel(errChan, executionPlanErrs, "execution plans")
 	} else {
 		s.logger.Debug("No SQL identifiers from wait events, skipping execution plan and child cursor scraping")
