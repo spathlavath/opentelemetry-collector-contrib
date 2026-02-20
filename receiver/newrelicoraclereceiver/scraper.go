@@ -282,31 +282,31 @@ func (s *newRelicOracleScraper) executeQPMScrapers(ctx context.Context, errChan 
 	}
 
 	s.logger.Debug("Starting slow queries scraper")
-	slowQueryIdentifiers, slowQueryErrs := s.slowQueriesScraper.ScrapeSlowQueries(ctx)
+	// slowQueryIdentifiers, slowQueryErrs := s.slowQueriesScraper.ScrapeSlowQueries(ctx)
 
-	s.sendErrorsToChannel(errChan, slowQueryErrs, "slow query")
+	// s.sendErrorsToChannel(errChan, slowQueryErrs, "slow query")
 
-	// Wait events & blocking scraper with child cursors and execution plans
-	s.logger.Debug("Starting wait events & blocking scraper for slow query SQL_IDs",
-		zap.Int("slow_query_ids", len(slowQueryIdentifiers)))
-	waitEventSQLIdentifiers, waitEventErrs := s.waitEventBlockingScraper.ScrapeWaitEventsAndBlocking(ctx, slowQueryIdentifiers)
-	s.logger.Info("Wait events & blocking scraper completed",
-		zap.Int("unique_sql_identifiers", len(waitEventSQLIdentifiers)),
-		zap.Int("errors", len(waitEventErrs)))
+	// // Wait events & blocking scraper with child cursors and execution plans
+	// s.logger.Debug("Starting wait events & blocking scraper for slow query SQL_IDs",
+	// 	zap.Int("slow_query_ids", len(slowQueryIdentifiers)))
+	// waitEventSQLIdentifiers, waitEventErrs := s.waitEventBlockingScraper.ScrapeWaitEventsAndBlocking(ctx, slowQueryIdentifiers)
+	// s.logger.Info("Wait events & blocking scraper completed",
+	// 	zap.Int("unique_sql_identifiers", len(waitEventSQLIdentifiers)),
+	// 	zap.Int("errors", len(waitEventErrs)))
 
-	s.sendErrorsToChannel(errChan, waitEventErrs, "wait events & blocking")
+	// s.sendErrorsToChannel(errChan, waitEventErrs, "wait events & blocking")
 
-	if len(waitEventSQLIdentifiers) > 0 {
-		// First scrape child cursors to get plan hash values
-		updatedIdentifiers, childCursorErrs := s.childCursorsScraper.ScrapeChildCursorsForIdentifiers(ctx, waitEventSQLIdentifiers)
-		s.sendErrorsToChannel(errChan, childCursorErrs, "child cursors")
+	// if len(waitEventSQLIdentifiers) > 0 {
+	// 	// First scrape child cursors to get plan hash values
+	// 	updatedIdentifiers, childCursorErrs := s.childCursorsScraper.ScrapeChildCursorsForIdentifiers(ctx, waitEventSQLIdentifiers)
+	// 	s.sendErrorsToChannel(errChan, childCursorErrs, "child cursors")
 
-		// Then scrape execution plans using the plan hash values for caching
-		executionPlanErrs := s.executionPlanScraper.ScrapeExecutionPlans(ctx, updatedIdentifiers)
-		s.sendErrorsToChannel(errChan, executionPlanErrs, "execution plans")
-	} else {
-		s.logger.Debug("No SQL identifiers from wait events, skipping execution plan and child cursor scraping")
-	}
+	// 	// Then scrape execution plans using the plan hash values for caching
+	// 	executionPlanErrs := s.executionPlanScraper.ScrapeExecutionPlans(ctx, updatedIdentifiers)
+	// 	s.sendErrorsToChannel(errChan, executionPlanErrs, "execution plans")
+	// } else {
+	// 	s.logger.Debug("No SQL identifiers from wait events, skipping execution plan and child cursor scraping")
+	// }
 }
 
 // executeIndependentScrapers launches concurrent scrapers for independent metrics
