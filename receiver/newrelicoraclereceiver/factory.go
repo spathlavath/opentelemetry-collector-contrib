@@ -87,7 +87,7 @@ func createMetricsReceiverFunc(sqlOpenerFunc sqlOpenerFunc) receiver.CreateMetri
 			zap.Bool("disable_connection_pool", sqlCfg.DisableConnectionPool),
 			zap.Int("max_open_connections", sqlCfg.MaxOpenConnections),
 			zap.Bool("enable_query_monitoring", sqlCfg.EnableQueryMonitoring),
-			zap.Int("query_monitoring_response_time_threshold_ms", sqlCfg.QueryMonitoringResponseTimeThreshold),
+			zap.Int("query_monitoring_response_time_threshold_ms", *sqlCfg.QueryMonitoringResponseTimeThreshold),
 			zap.Int("query_monitoring_count_threshold", sqlCfg.QueryMonitoringCountThreshold),
 			zap.Int("query_monitoring_interval_seconds", sqlCfg.QueryMonitoringIntervalSeconds),
 			zap.Int("child_cursors_per_sql_id", sqlCfg.ChildCursorsPerSQLID),

@@ -54,9 +54,8 @@ const (
 	minMaxOpenConnections                   = 1
 	maxMaxOpenConnections                   = 1000
 	maxUsernameLength                       = 128
-	maxServiceLength                        = 128
-	minQueryMonitoringResponseTimeThreshold = queries.MinQueryMonitoringResponseTimeThreshold
-	minQueryMonitoringCountThreshold        = queries.MinQueryMonitoringCountThreshold
+	maxServiceLength                 = 128
+	minQueryMonitoringCountThreshold = queries.MinQueryMonitoringCountThreshold
 	maxQueryMonitoringCountThreshold        = queries.MaxQueryMonitoringCountThreshold
 	minChildCursorsPerSQLID                 = 3  // Minimum child cursors to fetch per SQL_ID
 	maxChildCursorsPerSQLID                 = 20 // Maximum child cursors to fetch per SQL_ID
@@ -95,7 +94,7 @@ type Config struct {
 
 	// Query Performance Monitoring Configuration
 	EnableQueryMonitoring                bool `mapstructure:"enable_query_monitoring"`
-	QueryMonitoringResponseTimeThreshold int  `mapstructure:"query_monitoring_response_time_threshold"`
+	QueryMonitoringResponseTimeThreshold *int `mapstructure:"query_monitoring_response_time_threshold"`
 	QueryMonitoringCountThreshold        int  `mapstructure:"query_monitoring_count_threshold"`
 	QueryMonitoringIntervalSeconds       int  `mapstructure:"query_monitoring_interval_seconds"`
 	ChildCursorsPerSQLID                 int  `mapstructure:"child_cursors_per_sql_id"`
@@ -139,9 +138,9 @@ func (c *Config) SetDefaults() {
 		c.CollectionInterval = defaultCollectionInterval
 	}
 
-	// Set Query Performance Monitoring defaults if not set
-	if c.QueryMonitoringResponseTimeThreshold < minQueryMonitoringResponseTimeThreshold {
-		c.QueryMonitoringResponseTimeThreshold = defaultQueryMonitoringResponseTimeThreshold
+	if c.QueryMonitoringResponseTimeThreshold == nil || *c.QueryMonitoringResponseTimeThreshold < 0 {
+		threshold := defaultQueryMonitoringResponseTimeThreshold
+		c.QueryMonitoringResponseTimeThreshold = &threshold
 	}
 	if c.QueryMonitoringCountThreshold == 0 || c.QueryMonitoringCountThreshold < minQueryMonitoringCountThreshold ||
 		c.QueryMonitoringCountThreshold > maxQueryMonitoringCountThreshold {
@@ -339,8 +338,8 @@ func (c Config) validateQueryPerformanceMonitoring() error {
 	var allErrs error
 
 	// Only validate for negative values since SetDefaults() handles range correction
-	if c.QueryMonitoringResponseTimeThreshold < 0 {
-		allErrs = multierr.Append(allErrs, fmt.Errorf("query_monitoring_response_time_threshold cannot be negative: got %d", c.QueryMonitoringResponseTimeThreshold))
+	if c.QueryMonitoringResponseTimeThreshold != nil && *c.QueryMonitoringResponseTimeThreshold < 0 {
+		allErrs = multierr.Append(allErrs, fmt.Errorf("query_monitoring_response_time_threshold cannot be negative: got %d", *c.QueryMonitoringResponseTimeThreshold))
 	}
 
 	if c.QueryMonitoringCountThreshold < 0 {

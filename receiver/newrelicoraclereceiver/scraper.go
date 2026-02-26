@@ -200,7 +200,7 @@ func (s *newRelicOracleScraper) initializeCoreScrapers() error {
 func (s *newRelicOracleScraper) initializeQPMScrapers() error {
 	s.slowQueriesScraper = scrapers.NewSlowQueriesScraper(
 		s.client, s.mb, s.logger, s.metricsBuilderConfig,
-		s.config.QueryMonitoringResponseTimeThreshold,
+		*s.config.QueryMonitoringResponseTimeThreshold,
 		s.config.QueryMonitoringCountThreshold,
 		s.config.QueryMonitoringIntervalSeconds,
 		s.config.EnableIntervalBasedAveraging,
