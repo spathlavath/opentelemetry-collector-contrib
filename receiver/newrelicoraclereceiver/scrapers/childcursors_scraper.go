@@ -111,11 +111,11 @@ func (s *ChildCursorsScraper) recordChildCursorMetrics(now pcommon.Timestamp, cu
 	}
 
 	if s.enableAdvancedMetrics {
-		s.recordOptionalChildCursorMetrics(now, cursor, collectionTimestamp, databaseName, sqlID, childNumber, planHashValue)
+		s.recordAdvancedChildCursorMetrics(now, cursor, collectionTimestamp, databaseName, sqlID, childNumber, planHashValue)
 	}
 }
 
-func (s *ChildCursorsScraper) recordOptionalChildCursorMetrics(now pcommon.Timestamp, cursor *models.ChildCursor, collectionTimestamp, databaseName, sqlID string, childNumber int64, planHashValue string) {
+func (s *ChildCursorsScraper) recordAdvancedChildCursorMetrics(now pcommon.Timestamp, cursor *models.ChildCursor, collectionTimestamp, databaseName, sqlID string, childNumber int64, planHashValue string) {
 	if s.metricsBuilderConfig.Metrics.NewrelicoracledbChildCursorsCPUTime.Enabled {
 		s.mb.RecordNewrelicoracledbChildCursorsCPUTimeDataPoint(
 			now,

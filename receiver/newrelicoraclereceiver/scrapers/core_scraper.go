@@ -67,6 +67,7 @@ func (s *CoreScraper) ScrapeCoreMetrics(ctx context.Context) []error {
 func (s *CoreScraper) scrapeAdvancedCoreMetrics(ctx context.Context, now pcommon.Timestamp) []error {
 	var errors []error
 
+	errors = append(errors, s.scrapeAdvancedPGAMetrics(ctx, now)...)
 	errors = append(errors, s.scrapeLockedAccountsMetrics(ctx, now)...)
 	errors = append(errors, s.scrapeReadWriteMetrics(ctx, now)...)
 	errors = append(errors, s.scrapeGlobalNameInstanceMetrics(ctx, now)...)

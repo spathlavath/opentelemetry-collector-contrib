@@ -27,7 +27,7 @@ type SlowQueriesScraper struct {
 	queryMonitoringCountThreshold        int
 	queryMonitoringIntervalSeconds       int                       // Time window for fetching queries (in seconds)
 	intervalCalculator                   *OracleIntervalCalculator // Delta-based interval calculator
-	enableAdvancedMetrics                bool                      // Controls emission of advanced/optional metrics
+	enableAdvancedMetrics                bool                      // Controls emission of advanced metrics
 }
 
 func NewSlowQueriesScraper(oracleClient client.OracleClient, mb *metadata.MetricsBuilder, logger *zap.Logger, metricsBuilderConfig metadata.MetricsBuilderConfig, responseTimeThreshold, countThreshold, intervalSeconds int, enableIntervalCalculator bool, intervalCalculatorCacheTTLMinutes int, enableAdvancedMetrics bool) *SlowQueriesScraper {
@@ -427,13 +427,13 @@ func (s *SlowQueriesScraper) recordMetrics(now pcommon.Timestamp, slowQuery *mod
 	)
 
 	if s.enableAdvancedMetrics {
-		s.recordOptionalMetrics(now, slowQuery, collectionTimestamp, dbName, qID, userName, queryHash, nrServiceGUID)
+		s.recordAdvancedMetrics(now, slowQuery, collectionTimestamp, dbName, qID, userName, queryHash, nrServiceGUID)
 	}
 
 	return nil
 }
 
-func (s *SlowQueriesScraper) recordOptionalMetrics(now pcommon.Timestamp, slowQuery *models.SlowQuery, collectionTimestamp, dbName, qID, userName, queryHash, nrServiceGUID string) {
+func (s *SlowQueriesScraper) recordAdvancedMetrics(now pcommon.Timestamp, slowQuery *models.SlowQuery, collectionTimestamp, dbName, qID, userName, queryHash, nrServiceGUID string) {
 	if slowQuery.TotalDiskReads.Valid {
 		s.mb.RecordNewrelicoracledbSlowQueriesTotalDiskReadsDataPoint(
 			now,

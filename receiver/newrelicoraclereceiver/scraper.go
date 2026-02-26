@@ -269,7 +269,7 @@ func (s *newRelicOracleScraper) createScrapeContext(ctx context.Context) context
 
 // executeQPMScrapers executes Query Performance Monitoring scrapers sequentially
 // QPM scrapers always run to provide UI-critical metrics. The EnableQueryMonitoring flag
-// controls optional/advanced metrics within each scraper.
+// controls advanced metrics within each scraper.
 func (s *newRelicOracleScraper) executeQPMScrapers(ctx context.Context, errChan chan<- error) {
 	s.logger.Debug("Starting slow queries scraper")
 	slowQueryIdentifiers, slowQueryErrs := s.slowQueriesScraper.ScrapeSlowQueries(ctx)
@@ -327,7 +327,7 @@ func (s *newRelicOracleScraper) getIndependentScraperFunctions() []ScraperFunc {
 		scraperFuncs = append(scraperFuncs, s.connectionScraper.ScrapeConnectionMetrics)
 	}
 
-	// Optional scrapers (controlled by flags)
+	// Advanced scrapers (controlled by flags)
 	if s.config.EnableTablespaceScraper && s.tablespaceScraper != nil {
 		scraperFuncs = append(scraperFuncs, s.tablespaceScraper.ScrapeTablespaceMetrics)
 	}
