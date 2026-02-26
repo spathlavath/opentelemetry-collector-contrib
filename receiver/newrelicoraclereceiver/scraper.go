@@ -10,6 +10,9 @@ import (
 	"sync"
 	"time"
 
+	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/client"
+	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/internal/metadata"
+	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/scrapers"
 	"go.opentelemetry.io/collector/component"
 	"go.opentelemetry.io/collector/pdata/pcommon"
 	"go.opentelemetry.io/collector/pdata/pmetric"
@@ -18,10 +21,6 @@ import (
 	"go.opentelemetry.io/collector/scraper/scraperhelper"
 	"go.uber.org/multierr"
 	"go.uber.org/zap"
-
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/client"
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/internal/metadata"
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/scrapers"
 )
 
 // Constants for scraper configuration
@@ -158,34 +157,26 @@ func (s *newRelicOracleScraper) initializeScrapers() error {
 func (s *newRelicOracleScraper) initializeCoreScrapers() error {
 	var err error
 
-	if s.config.EnableSessionScraper {
-		s.sessionScraper = scrapers.NewSessionScraper(s.client, s.mb, s.logger, s.metricsBuilderConfig)
-	}
+	s.sessionScraper = scrapers.NewSessionScraper(s.client, s.mb, s.logger, s.metricsBuilderConfig)
 
 	if s.config.EnableTablespaceScraper {
 		s.tablespaceScraper = scrapers.NewTablespaceScraper(s.client, s.mb, s.logger, s.metricsBuilderConfig, s.config.TablespaceFilter.IncludeTablespaces, s.config.TablespaceFilter.ExcludeTablespaces)
 	}
 
-	if s.config.EnableCoreScraper {
-		s.coreScraper, err = scrapers.NewCoreScraper(s.client, s.mb, s.logger, s.metricsBuilderConfig)
-		if err != nil {
-			return fmt.Errorf("failed to create core scraper: %w", err)
-		}
+	s.coreScraper, err = scrapers.NewCoreScraper(s.client, s.mb, s.logger, s.metricsBuilderConfig, s.config.EnableCoreScraper)
+	if err != nil {
+		return fmt.Errorf("failed to create core scraper: %w", err)
 	}
 
 	if s.config.EnablePdbScraper {
 		s.pdbScraper = scrapers.NewPdbScraper(s.client, s.mb, s.logger, s.metricsBuilderConfig)
 	}
 
-	if s.config.EnableSystemScraper {
-		s.systemScraper = scrapers.NewSystemScraper(s.client, s.mb, s.logger, s.metricsBuilderConfig)
-	}
+	s.systemScraper = scrapers.NewSystemScraper(s.client, s.mb, s.logger, s.metricsBuilderConfig, s.config.EnableSystemScraper)
 
-	if s.config.EnableConnectionScraper {
-		s.connectionScraper, err = scrapers.NewConnectionScraper(s.client, s.mb, s.logger, s.metricsBuilderConfig)
-		if err != nil {
-			return fmt.Errorf("failed to create connection scraper: %w", err)
-		}
+	s.connectionScraper, err = scrapers.NewConnectionScraper(s.client, s.mb, s.logger, s.metricsBuilderConfig, s.config.EnableConnectionScraper)
+	if err != nil {
+		return fmt.Errorf("failed to create connection scraper: %w", err)
 	}
 
 	if s.config.EnableContainerScraper {
@@ -214,6 +205,7 @@ func (s *newRelicOracleScraper) initializeQPMScrapers() error {
 		s.config.QueryMonitoringIntervalSeconds,
 		s.config.EnableIntervalBasedAveraging,
 		s.config.IntervalCalculatorCacheTTLMinutes,
+		s.config.EnableQueryMonitoring,
 	)
 
 	s.executionPlanScraper = scrapers.NewExecutionPlanScraper(s.client, s.mb, s.logger, s.metricsBuilderConfig)
@@ -227,7 +219,7 @@ func (s *newRelicOracleScraper) initializeQPMScrapers() error {
 		return fmt.Errorf("failed to create wait event blocking scraper: %w", err)
 	}
 
-	s.childCursorsScraper = scrapers.NewChildCursorsScraper(s.client, s.mb, s.logger, s.metricsBuilderConfig)
+	s.childCursorsScraper = scrapers.NewChildCursorsScraper(s.client, s.mb, s.logger, s.metricsBuilderConfig, s.config.EnableQueryMonitoring)
 
 	return nil
 }
@@ -276,34 +268,28 @@ func (s *newRelicOracleScraper) createScrapeContext(ctx context.Context) context
 }
 
 // executeQPMScrapers executes Query Performance Monitoring scrapers sequentially
+// QPM scrapers always run to provide UI-critical metrics. The EnableQueryMonitoring flag
+// controls optional/advanced metrics within each scraper.
 func (s *newRelicOracleScraper) executeQPMScrapers(ctx context.Context, errChan chan<- error) {
-	if !s.config.EnableQueryMonitoring {
-		s.logger.Debug("Query Performance Monitoring disabled, skipping QPM scrapers")
-		return
-	}
-
 	s.logger.Debug("Starting slow queries scraper")
 	slowQueryIdentifiers, slowQueryErrs := s.slowQueriesScraper.ScrapeSlowQueries(ctx)
 
 	s.sendErrorsToChannel(errChan, slowQueryErrs, "slow query")
 
 	// Wait events & blocking scraper with child cursors and execution plans
-	s.logger.Debug("Starting wait events & blocking scraper for slow query SQL_IDs",
-		zap.Int("slow_query_ids", len(slowQueryIdentifiers)))
+	s.logger.Debug("Starting wait events & blocking scraper for slow query SQL_IDs", zap.Int("slow_query_ids", len(slowQueryIdentifiers)))
 	waitEventSQLIdentifiers, waitEventErrs := s.waitEventBlockingScraper.ScrapeWaitEventsAndBlocking(ctx, slowQueryIdentifiers)
-	s.logger.Info("Wait events & blocking scraper completed",
-		zap.Int("unique_sql_identifiers", len(waitEventSQLIdentifiers)),
-		zap.Int("errors", len(waitEventErrs)))
+	s.logger.Info("Wait events & blocking scraper completed",zap.Int("unique_sql_identifiers", len(waitEventSQLIdentifiers)),zap.Int("errors", len(waitEventErrs)))
 
 	s.sendErrorsToChannel(errChan, waitEventErrs, "wait events & blocking")
 
 	if len(waitEventSQLIdentifiers) > 0 {
 		// First scrape child cursors to get plan hash values
-		waitEventSQLIdentifiers, childCursorErrs := s.childCursorsScraper.ScrapeChildCursorsForIdentifiers(ctx, waitEventSQLIdentifiers, s.config.ChildCursorsPerSQLID)
+		updatedIdentifiers, childCursorErrs := s.childCursorsScraper.ScrapeChildCursorsForIdentifiers(ctx, waitEventSQLIdentifiers)
 		s.sendErrorsToChannel(errChan, childCursorErrs, "child cursors")
 
 		// Then scrape execution plans using the plan hash values for caching
-		executionPlanErrs := s.executionPlanScraper.ScrapeExecutionPlans(ctx, waitEventSQLIdentifiers)
+		executionPlanErrs := s.executionPlanScraper.ScrapeExecutionPlans(ctx, updatedIdentifiers)
 		s.sendErrorsToChannel(errChan, executionPlanErrs, "execution plans")
 	} else {
 		s.logger.Debug("No SQL identifiers from wait events, skipping execution plan and child cursor scraping")
@@ -324,28 +310,30 @@ func (s *newRelicOracleScraper) executeIndependentScrapers(ctx context.Context, 
 func (s *newRelicOracleScraper) getIndependentScraperFunctions() []ScraperFunc {
 	var scraperFuncs []ScraperFunc
 
-	if s.config.EnableSessionScraper && s.sessionScraper != nil {
+	// UI-critical scrapers always run (regardless of flags) to provide metrics for New Relic dashboards
+	if s.sessionScraper != nil {
 		scraperFuncs = append(scraperFuncs, s.sessionScraper.ScrapeSessionCount)
 	}
 
+	if s.coreScraper != nil {
+		scraperFuncs = append(scraperFuncs, s.coreScraper.ScrapeCoreMetrics)
+	}
+
+	if s.systemScraper != nil {
+		scraperFuncs = append(scraperFuncs, s.systemScraper.ScrapeSystemMetrics)
+	}
+
+	if s.connectionScraper != nil {
+		scraperFuncs = append(scraperFuncs, s.connectionScraper.ScrapeConnectionMetrics)
+	}
+
+	// Optional scrapers (controlled by flags)
 	if s.config.EnableTablespaceScraper && s.tablespaceScraper != nil {
 		scraperFuncs = append(scraperFuncs, s.tablespaceScraper.ScrapeTablespaceMetrics)
 	}
 
-	if s.config.EnableCoreScraper && s.coreScraper != nil {
-		scraperFuncs = append(scraperFuncs, s.coreScraper.ScrapeCoreMetrics)
-	}
-
 	if s.config.EnablePdbScraper && s.pdbScraper != nil {
 		scraperFuncs = append(scraperFuncs, s.pdbScraper.ScrapePdbMetrics)
-	}
-
-	if s.config.EnableSystemScraper && s.systemScraper != nil {
-		scraperFuncs = append(scraperFuncs, s.systemScraper.ScrapeSystemMetrics)
-	}
-
-	if s.config.EnableConnectionScraper && s.connectionScraper != nil {
-		scraperFuncs = append(scraperFuncs, s.connectionScraper.ScrapeConnectionMetrics)
 	}
 
 	if s.config.EnableContainerScraper && s.containerScraper != nil {
@@ -357,9 +345,11 @@ func (s *newRelicOracleScraper) getIndependentScraperFunctions() []ScraperFunc {
 	}
 
 	if s.config.EnableDatabaseInfoScraper && s.databaseInfoScraper != nil {
-		scraperFuncs = append(scraperFuncs, s.databaseInfoScraper.ScrapeDatabaseInfo)
-		scraperFuncs = append(scraperFuncs, s.databaseInfoScraper.ScrapeHostingInfo)
-		scraperFuncs = append(scraperFuncs, s.databaseInfoScraper.ScrapeDatabaseRole)
+		scraperFuncs = append(scraperFuncs,
+			s.databaseInfoScraper.ScrapeDatabaseInfo,
+			s.databaseInfoScraper.ScrapeHostingInfo,
+			s.databaseInfoScraper.ScrapeDatabaseRole,
+		)
 	}
 
 	return scraperFuncs

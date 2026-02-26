@@ -13,15 +13,14 @@ import (
 	"strings"
 	"time"
 
-	_ "github.com/godror/godror"
+	_ "github.com/godror/godror" // Register Oracle driver
+	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/internal/metadata"
+	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/queries"
 	"go.opentelemetry.io/collector/component"
 	"go.opentelemetry.io/collector/consumer"
 	"go.opentelemetry.io/collector/receiver"
 	"go.opentelemetry.io/collector/scraper/scraperhelper"
 	"go.uber.org/zap"
-
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/internal/metadata"
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/queries"
 )
 
 // NewFactory creates a new New Relic Oracle receiver factory.
@@ -101,12 +100,12 @@ func createMetricsReceiverFunc(sqlOpenerFunc sqlOpenerFunc) receiver.CreateMetri
 		// Create scrapers for each service (CDB or PDB)
 		var opts []scraperhelper.ControllerOption
 		for _, service := range monitoredServices {
-			serviceName := service // Capture loop variable
+			svcName := service // Capture loop variable
 			mp, err := newScraper(metricsBuilder, sqlCfg.MetricsBuilderConfig, sqlCfg.ControllerConfig, sqlCfg, settings.Logger,
-				createDBProviderFunc(sqlOpenerFunc, *sqlCfg, serviceName),
-				hostAddress, hostPort, serviceName)
+				createDBProviderFunc(sqlOpenerFunc, *sqlCfg, svcName),
+				hostAddress, hostPort, svcName)
 			if err != nil {
-				return nil, fmt.Errorf("failed to create scraper for service %s: %w", serviceName, err)
+				return nil, fmt.Errorf("failed to create scraper for service %s: %w", svcName, err)
 			}
 			opts = append(opts, scraperhelper.AddScraper(metadata.Type, mp))
 		}

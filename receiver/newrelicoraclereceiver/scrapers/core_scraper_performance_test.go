@@ -4,20 +4,18 @@
 package scrapers
 
 import (
-	"context"
 	"database/sql"
 	"errors"
 	"testing"
 	"time"
 
+	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/client"
+	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/internal/metadata"
+	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/models"
 	"github.com/stretchr/testify/require"
 	"go.opentelemetry.io/collector/pdata/pcommon"
 	"go.opentelemetry.io/collector/receiver/receivertest"
 	"go.uber.org/zap"
-
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/client"
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/internal/metadata"
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/models"
 )
 
 func testTS() pcommon.Timestamp {
@@ -43,7 +41,7 @@ func TestScrapeSysstatMetrics_Success(t *testing.T) {
 		config: metadata.DefaultMetricsBuilderConfig(),
 	}
 
-	ctx := context.Background()
+	ctx := t.Context()
 	errs := scraper.scrapeSysstatMetrics(ctx, testTS())
 	require.Empty(t, errs)
 }
@@ -59,7 +57,7 @@ func TestScrapeSysstatMetrics_QueryError(t *testing.T) {
 		config: metadata.DefaultMetricsBuilderConfig(),
 	}
 
-	ctx := context.Background()
+	ctx := t.Context()
 	errs := scraper.scrapeSysstatMetrics(ctx, testTS())
 	require.Len(t, errs, 1)
 }
@@ -78,7 +76,7 @@ func TestScrapeSysstatMetrics_NullValues(t *testing.T) {
 		config: metadata.DefaultMetricsBuilderConfig(),
 	}
 
-	ctx := context.Background()
+	ctx := t.Context()
 	errs := scraper.scrapeSysstatMetrics(ctx, testTS())
 	require.Empty(t, errs)
 }
@@ -104,7 +102,7 @@ func TestScrapeRollbackSegmentsMetrics_Success(t *testing.T) {
 		config: metadata.DefaultMetricsBuilderConfig(),
 	}
 
-	ctx := context.Background()
+	ctx := t.Context()
 	errs := scraper.scrapeRollbackSegmentsMetrics(ctx, testTS())
 	require.Empty(t, errs)
 }
@@ -120,7 +118,7 @@ func TestScrapeRollbackSegmentsMetrics_QueryError(t *testing.T) {
 		config: metadata.DefaultMetricsBuilderConfig(),
 	}
 
-	ctx := context.Background()
+	ctx := t.Context()
 	errs := scraper.scrapeRollbackSegmentsMetrics(ctx, testTS())
 	require.Len(t, errs, 1)
 }
@@ -142,7 +140,7 @@ func TestScrapeRedoLogWaitsMetrics_Success(t *testing.T) {
 		config: metadata.DefaultMetricsBuilderConfig(),
 	}
 
-	ctx := context.Background()
+	ctx := t.Context()
 	errs := scraper.scrapeRedoLogWaitsMetrics(ctx, testTS())
 	require.Empty(t, errs)
 }
@@ -158,7 +156,7 @@ func TestScrapeRedoLogWaitsMetrics_QueryError(t *testing.T) {
 		config: metadata.DefaultMetricsBuilderConfig(),
 	}
 
-	ctx := context.Background()
+	ctx := t.Context()
 	errs := scraper.scrapeRedoLogWaitsMetrics(ctx, testTS())
 	require.Len(t, errs, 1)
 }
@@ -183,7 +181,7 @@ func TestScrapeRedoLogWaitsMetrics_AllEventTypes(t *testing.T) {
 		mb:     metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
 	}
 
-	ctx := context.Background()
+	ctx := t.Context()
 	errs := scraper.scrapeRedoLogWaitsMetrics(ctx, testTS())
 	require.Empty(t, errs)
 }
@@ -201,7 +199,7 @@ func TestScrapeRedoLogWaitsMetrics_NullValues(t *testing.T) {
 		mb:     metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
 	}
 
-	ctx := context.Background()
+	ctx := t.Context()
 	errs := scraper.scrapeRedoLogWaitsMetrics(ctx, testTS())
 	require.Empty(t, errs)
 }
@@ -217,7 +215,7 @@ func TestScrapeRedoLogWaitsMetrics_EmptyResult(t *testing.T) {
 		mb:     metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
 	}
 
-	ctx := context.Background()
+	ctx := t.Context()
 	errs := scraper.scrapeRedoLogWaitsMetrics(ctx, testTS())
 	require.Empty(t, errs)
 }
@@ -237,7 +235,7 @@ func TestScrapeRedoLogWaitsMetrics_MultipleInstances(t *testing.T) {
 		mb:     metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
 	}
 
-	ctx := context.Background()
+	ctx := t.Context()
 	errs := scraper.scrapeRedoLogWaitsMetrics(ctx, testTS())
 	require.Empty(t, errs)
 }
@@ -255,7 +253,7 @@ func TestScrapeSysstatMetrics_UnknownMetric(t *testing.T) {
 		mb:     metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
 	}
 
-	ctx := context.Background()
+	ctx := t.Context()
 	errs := scraper.scrapeSysstatMetrics(ctx, testTS())
 	require.Empty(t, errs)
 }
@@ -271,7 +269,7 @@ func TestScrapeSysstatMetrics_EmptyResult(t *testing.T) {
 		mb:     metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
 	}
 
-	ctx := context.Background()
+	ctx := t.Context()
 	errs := scraper.scrapeSysstatMetrics(ctx, testTS())
 	require.Empty(t, errs)
 }
@@ -291,7 +289,7 @@ func TestScrapeSysstatMetrics_MultipleInstances(t *testing.T) {
 		mb:     metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
 	}
 
-	ctx := context.Background()
+	ctx := t.Context()
 	errs := scraper.scrapeSysstatMetrics(ctx, testTS())
 	require.Empty(t, errs)
 }
@@ -310,7 +308,7 @@ func TestScrapeSysstatMetrics_ZeroValues(t *testing.T) {
 		mb:     metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
 	}
 
-	ctx := context.Background()
+	ctx := t.Context()
 	errs := scraper.scrapeSysstatMetrics(ctx, testTS())
 	require.Empty(t, errs)
 }
@@ -333,7 +331,7 @@ func TestScrapeRollbackSegmentsMetrics_NullValues(t *testing.T) {
 		mb:     metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
 	}
 
-	ctx := context.Background()
+	ctx := t.Context()
 	errs := scraper.scrapeRollbackSegmentsMetrics(ctx, testTS())
 	require.Empty(t, errs)
 }
@@ -349,7 +347,7 @@ func TestScrapeRollbackSegmentsMetrics_EmptyResult(t *testing.T) {
 		mb:     metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
 	}
 
-	ctx := context.Background()
+	ctx := t.Context()
 	errs := scraper.scrapeRollbackSegmentsMetrics(ctx, testTS())
 	require.Empty(t, errs)
 }
@@ -384,7 +382,7 @@ func TestScrapeRollbackSegmentsMetrics_MultipleInstances(t *testing.T) {
 		mb:     metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
 	}
 
-	ctx := context.Background()
+	ctx := t.Context()
 	errs := scraper.scrapeRollbackSegmentsMetrics(ctx, testTS())
 	require.Empty(t, errs)
 }
@@ -407,7 +405,7 @@ func TestScrapeRollbackSegmentsMetrics_ZeroRatio(t *testing.T) {
 		mb:     metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
 	}
 
-	ctx := context.Background()
+	ctx := t.Context()
 	errs := scraper.scrapeRollbackSegmentsMetrics(ctx, testTS())
 	require.Empty(t, errs)
 }

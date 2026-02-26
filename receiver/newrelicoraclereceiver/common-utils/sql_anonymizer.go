@@ -1,4 +1,7 @@
-package commonutils
+// Copyright New Relic, Inc. All rights reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+package commonutils // import "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/common-utils"
 
 import (
 	"regexp"

@@ -1,7 +1,7 @@
 // Copyright New Relic, Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package models
+package models // import "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/models"
 
 import (
 	"database/sql"
@@ -9,7 +9,7 @@ import (
 
 // ChildCursor represents a child cursor from V$SQL with average execution statistics
 type ChildCursor struct {
-	CollectionTimestamp sql.NullString // Changed from sql.NullTime to sql.NullString for consistent formatting
+	CollectionTimestamp sql.NullString // Changed from sql.NullTime for consistent formatting
 	DatabaseName        sql.NullString // PDB (Pluggable Database) name
 	SQLID               sql.NullString
 	ChildNumber         sql.NullInt64

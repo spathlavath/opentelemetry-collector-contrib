@@ -190,7 +190,7 @@ func TestConfigRequiredFields(t *testing.T) {
 	}{
 		{
 			name:     "all required fields present",
-			modifier: func(c *Config) {}, // No changes
+			modifier: func(_ *Config) {}, // No changes
 			valid:    true,
 		},
 		{

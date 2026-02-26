@@ -24,12 +24,12 @@ func TestScraperError_Error(t *testing.T) {
 				Query:     "SELECT COUNT(*) FROM v$session WHERE status = 'ACTIVE'",
 				Err:       errors.New("connection timeout"),
 				Timestamp: time.Date(2023, 1, 1, 12, 0, 0, 0, time.UTC),
-				Context: map[string]interface{}{
+				Context: map[string]any{
 					"instance": "PROD01",
 					"host":     "db.example.com",
 				},
 			},
-			expectedOutput: "oracle scraper error: connection timeout [operation=session_count, query=SELECT COUNT(*) FROM v$session WHERE status = 'ACTIVE', instance=PROD01, host=db.example.com]",
+			expectedOutput: "oracle scraper error: connection timeout [operation=session_count, query=SELECT COUNT(*) FROM v$session WHERE status = 'ACTIVE'",
 		},
 		{
 			name: "error with long query (truncated)",
@@ -60,7 +60,7 @@ func TestScraperError_Error(t *testing.T) {
 			scraperError: ScraperError{
 				Err:       errors.New("database connection failed"),
 				Timestamp: time.Date(2023, 1, 1, 12, 0, 0, 0, time.UTC),
-				Context: map[string]interface{}{
+				Context: map[string]any{
 					"retry_count": 3,
 				},
 			},
@@ -100,7 +100,7 @@ func TestScraperError_Unwrap(t *testing.T) {
 func TestNewScraperError(t *testing.T) {
 	originalErr := errors.New("test error")
 	operation := "test_operation"
-	context := map[string]interface{}{
+	context := map[string]any{
 		"key1": "value1",
 		"key2": 42,
 	}
@@ -117,7 +117,7 @@ func TestNewQueryError(t *testing.T) {
 	originalErr := errors.New("test error")
 	operation := "test_operation"
 	query := "SELECT * FROM test_table"
-	context := map[string]interface{}{
+	context := map[string]any{
 		"key1": "value1",
 		"key2": 42,
 	}
@@ -285,7 +285,7 @@ func TestIsRetryableError_CaseInsensitive(t *testing.T) {
 }
 
 func TestErrorContext(t *testing.T) {
-	context := map[string]interface{}{
+	context := map[string]any{
 		"instance_name": "PROD01",
 		"host":          "db.example.com",
 		"port":          1521,

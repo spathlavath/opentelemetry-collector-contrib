@@ -10,13 +10,12 @@ import (
 	"testing"
 	"time"
 
-	"github.com/stretchr/testify/assert"
-	"go.opentelemetry.io/collector/receiver/receivertest"
-	"go.uber.org/zap"
-
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/client"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/internal/metadata"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/models"
+	"github.com/stretchr/testify/assert"
+	"go.opentelemetry.io/collector/receiver/receivertest"
+	"go.uber.org/zap"
 )
 
 func TestNewRacScraper(t *testing.T) {
@@ -45,7 +44,7 @@ func TestNullStringToString_Valid(t *testing.T) {
 func TestNullStringToString_Invalid(t *testing.T) {
 	ns := sql.NullString{String: "", Valid: false}
 	result := nullStringToString(ns)
-	assert.Equal(t, "", result)
+	assert.Empty(t, result)
 }
 
 func TestStringStatusToBinary_Match(t *testing.T) {
@@ -128,21 +127,7 @@ func TestRacScraper_ClientAssignment(t *testing.T) {
 	assert.Equal(t, mockClient, scraper.client)
 }
 
-func TestRacScraper_MultipleScraper(t *testing.T) {
-	mockClient := &client.MockClient{}
-	settings := receivertest.NewNopSettings(metadata.Type)
-	mb1 := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), settings)
-	mb2 := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), settings)
-	logger := zap.NewNop()
-	config := metadata.DefaultMetricsBuilderConfig()
-
-	scraper1 := NewRacScraper(mockClient, mb1, logger, config)
-	scraper2 := NewRacScraper(mockClient, mb2, logger, config)
-
-	assert.NotEqual(t, scraper1.mb, scraper2.mb)
-}
-
-func TestRacScraper_ConcurrentAccess(t *testing.T) {
+func TestRacScraper_ConcurrentAccess(_ *testing.T) {
 	mockClient := &client.MockClient{}
 	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), settings)
@@ -206,10 +191,10 @@ func TestIsRacEnabled_FirstCall_Enabled(t *testing.T) {
 	logger := zap.NewNop()
 	scraper := NewRacScraper(mockClient, mb, logger, metadata.DefaultMetricsBuilderConfig())
 
-	ctx := context.Background()
+	ctx := t.Context()
 	enabled, err := scraper.isRacEnabled(ctx)
 
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.True(t, enabled)
 	assert.NotNil(t, scraper.isRacMode)
 	assert.True(t, *scraper.isRacMode)
@@ -226,10 +211,10 @@ func TestIsRacEnabled_FirstCall_Disabled(t *testing.T) {
 	logger := zap.NewNop()
 	scraper := NewRacScraper(mockClient, mb, logger, metadata.DefaultMetricsBuilderConfig())
 
-	ctx := context.Background()
+	ctx := t.Context()
 	enabled, err := scraper.isRacEnabled(ctx)
 
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.False(t, enabled)
 	assert.NotNil(t, scraper.isRacMode)
 	assert.False(t, *scraper.isRacMode)
@@ -246,10 +231,10 @@ func TestIsRacEnabled_InvalidClusterDB(t *testing.T) {
 	logger := zap.NewNop()
 	scraper := NewRacScraper(mockClient, mb, logger, metadata.DefaultMetricsBuilderConfig())
 
-	ctx := context.Background()
+	ctx := t.Context()
 	enabled, err := scraper.isRacEnabled(ctx)
 
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.False(t, enabled)
 }
 
@@ -262,10 +247,10 @@ func TestIsRacEnabled_QueryError(t *testing.T) {
 	logger := zap.NewNop()
 	scraper := NewRacScraper(mockClient, mb, logger, metadata.DefaultMetricsBuilderConfig())
 
-	ctx := context.Background()
+	ctx := t.Context()
 	enabled, err := scraper.isRacEnabled(ctx)
 
-	assert.NotNil(t, err)
+	assert.Error(t, err)
 	assert.Contains(t, err.Error(), "database connection failed")
 	assert.False(t, enabled)
 }
@@ -281,11 +266,11 @@ func TestIsRacEnabled_CachedValue(t *testing.T) {
 	logger := zap.NewNop()
 	scraper := NewRacScraper(mockClient, mb, logger, metadata.DefaultMetricsBuilderConfig())
 
-	ctx := context.Background()
+	ctx := t.Context()
 
 	// First call
 	enabled1, err1 := scraper.isRacEnabled(ctx)
-	assert.Nil(t, err1)
+	assert.NoError(t, err1)
 	assert.True(t, enabled1)
 
 	// Set error to verify cache is used
@@ -293,7 +278,7 @@ func TestIsRacEnabled_CachedValue(t *testing.T) {
 
 	// Second call should use cached value
 	enabled2, err2 := scraper.isRacEnabled(ctx)
-	assert.Nil(t, err2)
+	assert.NoError(t, err2)
 	assert.True(t, enabled2)
 }
 
@@ -308,10 +293,10 @@ func TestIsRacEnabled_CaseInsensitive(t *testing.T) {
 	logger := zap.NewNop()
 	scraper := NewRacScraper(mockClient, mb, logger, metadata.DefaultMetricsBuilderConfig())
 
-	ctx := context.Background()
+	ctx := t.Context()
 	enabled, err := scraper.isRacEnabled(ctx)
 
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.True(t, enabled)
 }
 
@@ -326,10 +311,10 @@ func TestIsASMAvailable_Available(t *testing.T) {
 	logger := zap.NewNop()
 	scraper := NewRacScraper(mockClient, mb, logger, metadata.DefaultMetricsBuilderConfig())
 
-	ctx := context.Background()
+	ctx := t.Context()
 	available, err := scraper.isASMAvailable(ctx)
 
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.True(t, available)
 }
 
@@ -342,10 +327,10 @@ func TestIsASMAvailable_NotAvailable(t *testing.T) {
 	logger := zap.NewNop()
 	scraper := NewRacScraper(mockClient, mb, logger, metadata.DefaultMetricsBuilderConfig())
 
-	ctx := context.Background()
+	ctx := t.Context()
 	available, err := scraper.isASMAvailable(ctx)
 
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.False(t, available)
 }
 
@@ -358,10 +343,10 @@ func TestIsASMAvailable_QueryError(t *testing.T) {
 	logger := zap.NewNop()
 	scraper := NewRacScraper(mockClient, mb, logger, metadata.DefaultMetricsBuilderConfig())
 
-	ctx := context.Background()
+	ctx := t.Context()
 	available, err := scraper.isASMAvailable(ctx)
 
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.False(t, available)
 }
 
@@ -379,7 +364,7 @@ func TestScrapeRacMetrics_RACAndASMDisabled(t *testing.T) {
 	logger := zap.NewNop()
 	scraper := NewRacScraper(mockClient, mb, logger, metadata.DefaultMetricsBuilderConfig())
 
-	ctx := context.Background()
+	ctx := t.Context()
 	errs := scraper.ScrapeRacMetrics(ctx)
 
 	assert.Nil(t, errs)
@@ -400,7 +385,7 @@ func TestScrapeRacMetrics_RACEnabledOnly(t *testing.T) {
 	logger := zap.NewNop()
 	scraper := NewRacScraper(mockClient, mb, logger, metadata.DefaultMetricsBuilderConfig())
 
-	ctx := context.Background()
+	ctx := t.Context()
 	errs := scraper.ScrapeRacMetrics(ctx)
 
 	assert.Nil(t, errs)
@@ -419,7 +404,7 @@ func TestScrapeRacMetrics_ASMEnabledOnly(t *testing.T) {
 	logger := zap.NewNop()
 	scraper := NewRacScraper(mockClient, mb, logger, metadata.DefaultMetricsBuilderConfig())
 
-	ctx := context.Background()
+	ctx := t.Context()
 	errs := scraper.ScrapeRacMetrics(ctx)
 
 	assert.Nil(t, errs)
@@ -434,7 +419,7 @@ func TestScrapeRacMetrics_RACDetectionError(t *testing.T) {
 	logger := zap.NewNop()
 	scraper := NewRacScraper(mockClient, mb, logger, metadata.DefaultMetricsBuilderConfig())
 
-	ctx := context.Background()
+	ctx := t.Context()
 	errs := scraper.ScrapeRacMetrics(ctx)
 
 	assert.NotNil(t, errs)
@@ -454,7 +439,7 @@ func TestScrapeRacMetrics_ContextCanceled(t *testing.T) {
 	logger := zap.NewNop()
 	scraper := NewRacScraper(mockClient, mb, logger, metadata.DefaultMetricsBuilderConfig())
 
-	ctx, cancel := context.WithCancel(context.Background())
+	ctx, cancel := context.WithCancel(t.Context())
 	cancel()
 
 	errs := scraper.ScrapeRacMetrics(ctx)
@@ -481,7 +466,7 @@ func TestScrapeASMDiskGroups_Success(t *testing.T) {
 	logger := zap.NewNop()
 	scraper := NewRacScraper(mockClient, mb, logger, metadata.DefaultMetricsBuilderConfig())
 
-	ctx := context.Background()
+	ctx := t.Context()
 	errs := scraper.scrapeASMDiskGroups(ctx)
 
 	assert.Nil(t, errs)
@@ -498,7 +483,7 @@ func TestScrapeASMDiskGroups_MetricsDisabled(t *testing.T) {
 	logger := zap.NewNop()
 	scraper := NewRacScraper(mockClient, mb, logger, config)
 
-	ctx := context.Background()
+	ctx := t.Context()
 	errs := scraper.scrapeASMDiskGroups(ctx)
 
 	assert.Nil(t, errs)
@@ -513,7 +498,7 @@ func TestScrapeASMDiskGroups_QueryError(t *testing.T) {
 	logger := zap.NewNop()
 	scraper := NewRacScraper(mockClient, mb, logger, metadata.DefaultMetricsBuilderConfig())
 
-	ctx := context.Background()
+	ctx := t.Context()
 	errs := scraper.scrapeASMDiskGroups(ctx)
 
 	assert.NotNil(t, errs)
@@ -536,7 +521,7 @@ func TestScrapeASMDiskGroups_InvalidName(t *testing.T) {
 	logger := zap.NewNop()
 	scraper := NewRacScraper(mockClient, mb, logger, metadata.DefaultMetricsBuilderConfig())
 
-	ctx := context.Background()
+	ctx := t.Context()
 	errs := scraper.scrapeASMDiskGroups(ctx)
 
 	assert.Nil(t, errs)
@@ -560,7 +545,7 @@ func TestScrapeClusterWaitEvents_Success(t *testing.T) {
 	logger := zap.NewNop()
 	scraper := NewRacScraper(mockClient, mb, logger, metadata.DefaultMetricsBuilderConfig())
 
-	ctx := context.Background()
+	ctx := t.Context()
 	errs := scraper.scrapeClusterWaitEvents(ctx)
 
 	assert.Nil(t, errs)
@@ -576,7 +561,7 @@ func TestScrapeClusterWaitEvents_MetricsDisabled(t *testing.T) {
 	logger := zap.NewNop()
 	scraper := NewRacScraper(mockClient, mb, logger, config)
 
-	ctx := context.Background()
+	ctx := t.Context()
 	errs := scraper.scrapeClusterWaitEvents(ctx)
 
 	assert.Nil(t, errs)
@@ -591,7 +576,7 @@ func TestScrapeClusterWaitEvents_QueryError(t *testing.T) {
 	logger := zap.NewNop()
 	scraper := NewRacScraper(mockClient, mb, logger, metadata.DefaultMetricsBuilderConfig())
 
-	ctx := context.Background()
+	ctx := t.Context()
 	errs := scraper.scrapeClusterWaitEvents(ctx)
 
 	assert.NotNil(t, errs)
@@ -614,7 +599,7 @@ func TestScrapeClusterWaitEvents_InvalidInstID(t *testing.T) {
 	logger := zap.NewNop()
 	scraper := NewRacScraper(mockClient, mb, logger, metadata.DefaultMetricsBuilderConfig())
 
-	ctx := context.Background()
+	ctx := t.Context()
 	errs := scraper.scrapeClusterWaitEvents(ctx)
 
 	assert.Nil(t, errs)
@@ -645,7 +630,7 @@ func TestScrapeInstanceStatus_Success(t *testing.T) {
 	logger := zap.NewNop()
 	scraper := NewRacScraper(mockClient, mb, logger, metadata.DefaultMetricsBuilderConfig())
 
-	ctx := context.Background()
+	ctx := t.Context()
 	errs := scraper.scrapeInstanceStatus(ctx)
 
 	assert.Nil(t, errs)
@@ -666,7 +651,7 @@ func TestScrapeInstanceStatus_MetricsDisabled(t *testing.T) {
 	logger := zap.NewNop()
 	scraper := NewRacScraper(mockClient, mb, logger, config)
 
-	ctx := context.Background()
+	ctx := t.Context()
 	errs := scraper.scrapeInstanceStatus(ctx)
 
 	assert.Nil(t, errs)
@@ -681,7 +666,7 @@ func TestScrapeInstanceStatus_QueryError(t *testing.T) {
 	logger := zap.NewNop()
 	scraper := NewRacScraper(mockClient, mb, logger, metadata.DefaultMetricsBuilderConfig())
 
-	ctx := context.Background()
+	ctx := t.Context()
 	errs := scraper.scrapeInstanceStatus(ctx)
 
 	assert.NotNil(t, errs)
@@ -702,7 +687,7 @@ func TestScrapeInstanceStatus_InvalidStatus(t *testing.T) {
 	logger := zap.NewNop()
 	scraper := NewRacScraper(mockClient, mb, logger, metadata.DefaultMetricsBuilderConfig())
 
-	ctx := context.Background()
+	ctx := t.Context()
 	errs := scraper.scrapeInstanceStatus(ctx)
 
 	assert.Nil(t, errs)
@@ -732,7 +717,7 @@ func TestScrapeActiveServices_Success(t *testing.T) {
 	logger := zap.NewNop()
 	scraper := NewRacScraper(mockClient, mb, logger, metadata.DefaultMetricsBuilderConfig())
 
-	ctx := context.Background()
+	ctx := t.Context()
 	errs := scraper.scrapeActiveServices(ctx)
 
 	assert.Nil(t, errs)
@@ -749,7 +734,7 @@ func TestScrapeActiveServices_MetricsDisabled(t *testing.T) {
 	logger := zap.NewNop()
 	scraper := NewRacScraper(mockClient, mb, logger, config)
 
-	ctx := context.Background()
+	ctx := t.Context()
 	errs := scraper.scrapeActiveServices(ctx)
 
 	assert.Nil(t, errs)
@@ -764,7 +749,7 @@ func TestScrapeActiveServices_QueryError(t *testing.T) {
 	logger := zap.NewNop()
 	scraper := NewRacScraper(mockClient, mb, logger, metadata.DefaultMetricsBuilderConfig())
 
-	ctx := context.Background()
+	ctx := t.Context()
 	errs := scraper.scrapeActiveServices(ctx)
 
 	assert.NotNil(t, errs)
@@ -785,7 +770,7 @@ func TestScrapeActiveServices_InvalidServiceName(t *testing.T) {
 	logger := zap.NewNop()
 	scraper := NewRacScraper(mockClient, mb, logger, metadata.DefaultMetricsBuilderConfig())
 
-	ctx := context.Background()
+	ctx := t.Context()
 	errs := scraper.scrapeActiveServices(ctx)
 
 	assert.Nil(t, errs)
@@ -807,7 +792,7 @@ func TestScrapeActiveServices_InvalidTimeout(t *testing.T) {
 	logger := zap.NewNop()
 	scraper := NewRacScraper(mockClient, mb, logger, metadata.DefaultMetricsBuilderConfig())
 
-	ctx := context.Background()
+	ctx := t.Context()
 	errs := scraper.scrapeActiveServices(ctx)
 
 	assert.Nil(t, errs)

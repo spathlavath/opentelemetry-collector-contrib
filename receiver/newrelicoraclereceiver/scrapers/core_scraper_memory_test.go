@@ -4,20 +4,18 @@
 package scrapers
 
 import (
-	"context"
 	"database/sql"
 	"errors"
 	"testing"
 	"time"
 
+	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/client"
+	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/internal/metadata"
+	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/models"
 	"github.com/stretchr/testify/require"
 	"go.opentelemetry.io/collector/pdata/pcommon"
 	"go.opentelemetry.io/collector/receiver/receivertest"
 	"go.uber.org/zap"
-
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/client"
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/internal/metadata"
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/models"
 )
 
 func testTimestamp() pcommon.Timestamp {
@@ -39,7 +37,7 @@ func TestScrapePGAMetrics_Success(t *testing.T) {
 		config: metadata.DefaultMetricsBuilderConfig(),
 	}
 
-	ctx := context.Background()
+	ctx := t.Context()
 	errs := scraper.scrapePGAMetrics(ctx, testTimestamp())
 	require.Empty(t, errs)
 }
@@ -55,7 +53,7 @@ func TestScrapePGAMetrics_QueryError(t *testing.T) {
 		config: metadata.DefaultMetricsBuilderConfig(),
 	}
 
-	ctx := context.Background()
+	ctx := t.Context()
 	errs := scraper.scrapePGAMetrics(ctx, testTimestamp())
 	require.Len(t, errs, 1)
 }
@@ -74,7 +72,7 @@ func TestScrapeSGAMetrics_Success(t *testing.T) {
 		config: metadata.DefaultMetricsBuilderConfig(),
 	}
 
-	ctx := context.Background()
+	ctx := t.Context()
 	errs := scraper.scrapeSGAMetrics(ctx, testTimestamp())
 	require.Empty(t, errs)
 }
@@ -89,7 +87,7 @@ func TestScrapeSGAMetrics_QueryError(t *testing.T) {
 		mb:     metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
 	}
 
-	ctx := context.Background()
+	ctx := t.Context()
 	errs := scraper.scrapeSGAMetrics(ctx, testTimestamp())
 	require.Len(t, errs, 1)
 }
@@ -109,7 +107,7 @@ func TestScrapeSGAMetrics_AllMetricTypes(t *testing.T) {
 		mb:     metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
 	}
 
-	ctx := context.Background()
+	ctx := t.Context()
 	errs := scraper.scrapeSGAMetrics(ctx, testTimestamp())
 	require.Empty(t, errs)
 }
@@ -127,7 +125,7 @@ func TestScrapeSGAMetrics_NullValue(t *testing.T) {
 		mb:     metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
 	}
 
-	ctx := context.Background()
+	ctx := t.Context()
 	errs := scraper.scrapeSGAMetrics(ctx, testTimestamp())
 	require.Empty(t, errs)
 }
@@ -143,7 +141,7 @@ func TestScrapeSGAMetrics_EmptyResult(t *testing.T) {
 		mb:     metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
 	}
 
-	ctx := context.Background()
+	ctx := t.Context()
 	errs := scraper.scrapeSGAMetrics(ctx, testTimestamp())
 	require.Empty(t, errs)
 }
@@ -164,7 +162,7 @@ func TestScrapePGAMetrics_AllMetricTypes(t *testing.T) {
 		mb:     metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
 	}
 
-	ctx := context.Background()
+	ctx := t.Context()
 	errs := scraper.scrapePGAMetrics(ctx, testTimestamp())
 	require.Empty(t, errs)
 }
@@ -180,7 +178,7 @@ func TestScrapePGAMetrics_EmptyResult(t *testing.T) {
 		mb:     metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
 	}
 
-	ctx := context.Background()
+	ctx := t.Context()
 	errs := scraper.scrapePGAMetrics(ctx, testTimestamp())
 	require.Empty(t, errs)
 }
@@ -201,7 +199,7 @@ func TestScrapePGAMetrics_MultipleInstances(t *testing.T) {
 		mb:     metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
 	}
 
-	ctx := context.Background()
+	ctx := t.Context()
 	errs := scraper.scrapePGAMetrics(ctx, testTimestamp())
 	require.Empty(t, errs)
 }
@@ -221,7 +219,7 @@ func TestScrapeSGAUGATotalMemoryMetrics_Success(t *testing.T) {
 		mb:     metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
 	}
 
-	ctx := context.Background()
+	ctx := t.Context()
 	errs := scraper.scrapeSGAUGATotalMemoryMetrics(ctx, testTimestamp())
 	require.Empty(t, errs)
 }
@@ -236,7 +234,7 @@ func TestScrapeSGAUGATotalMemoryMetrics_QueryError(t *testing.T) {
 		mb:     metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
 	}
 
-	ctx := context.Background()
+	ctx := t.Context()
 	errs := scraper.scrapeSGAUGATotalMemoryMetrics(ctx, testTimestamp())
 	require.Len(t, errs, 1)
 	require.Contains(t, errs[0].Error(), "database connection failed")
@@ -253,7 +251,7 @@ func TestScrapeSGAUGATotalMemoryMetrics_EmptyResult(t *testing.T) {
 		mb:     metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
 	}
 
-	ctx := context.Background()
+	ctx := t.Context()
 	errs := scraper.scrapeSGAUGATotalMemoryMetrics(ctx, testTimestamp())
 	require.Empty(t, errs)
 }
@@ -271,7 +269,7 @@ func TestScrapeSGAUGATotalMemoryMetrics_ZeroValue(t *testing.T) {
 		mb:     metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
 	}
 
-	ctx := context.Background()
+	ctx := t.Context()
 	errs := scraper.scrapeSGAUGATotalMemoryMetrics(ctx, testTimestamp())
 	require.Empty(t, errs)
 }
@@ -289,7 +287,7 @@ func TestScrapeSGAUGATotalMemoryMetrics_NilInstanceID(t *testing.T) {
 		mb:     metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
 	}
 
-	ctx := context.Background()
+	ctx := t.Context()
 	errs := scraper.scrapeSGAUGATotalMemoryMetrics(ctx, testTimestamp())
 	require.Empty(t, errs)
 }
@@ -309,7 +307,7 @@ func TestScrapeSGASharedPoolLibraryCacheMetrics_Success(t *testing.T) {
 		mb:     metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
 	}
 
-	ctx := context.Background()
+	ctx := t.Context()
 	errs := scraper.scrapeSGASharedPoolLibraryCacheMetrics(ctx, testTimestamp())
 	require.Empty(t, errs)
 }
@@ -324,7 +322,7 @@ func TestScrapeSGASharedPoolLibraryCacheMetrics_QueryError(t *testing.T) {
 		mb:     metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
 	}
 
-	ctx := context.Background()
+	ctx := t.Context()
 	errs := scraper.scrapeSGASharedPoolLibraryCacheMetrics(ctx, testTimestamp())
 	require.Len(t, errs, 1)
 	require.Contains(t, errs[0].Error(), "query execution failed")
@@ -341,7 +339,7 @@ func TestScrapeSGASharedPoolLibraryCacheMetrics_EmptyResult(t *testing.T) {
 		mb:     metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
 	}
 
-	ctx := context.Background()
+	ctx := t.Context()
 	errs := scraper.scrapeSGASharedPoolLibraryCacheMetrics(ctx, testTimestamp())
 	require.Empty(t, errs)
 }
@@ -361,7 +359,7 @@ func TestScrapeSGASharedPoolLibraryCacheMetrics_MultipleInstances(t *testing.T) 
 		mb:     metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
 	}
 
-	ctx := context.Background()
+	ctx := t.Context()
 	errs := scraper.scrapeSGASharedPoolLibraryCacheMetrics(ctx, testTimestamp())
 	require.Empty(t, errs)
 }
@@ -381,7 +379,7 @@ func TestScrapeSGASharedPoolLibraryCacheUserMetrics_Success(t *testing.T) {
 		mb:     metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
 	}
 
-	ctx := context.Background()
+	ctx := t.Context()
 	errs := scraper.scrapeSGASharedPoolLibraryCacheUserMetrics(ctx, testTimestamp())
 	require.Empty(t, errs)
 }
@@ -396,7 +394,7 @@ func TestScrapeSGASharedPoolLibraryCacheUserMetrics_QueryError(t *testing.T) {
 		mb:     metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
 	}
 
-	ctx := context.Background()
+	ctx := t.Context()
 	errs := scraper.scrapeSGASharedPoolLibraryCacheUserMetrics(ctx, testTimestamp())
 	require.Len(t, errs, 1)
 	require.Contains(t, errs[0].Error(), "connection timeout")
@@ -413,7 +411,7 @@ func TestScrapeSGASharedPoolLibraryCacheUserMetrics_EmptyResult(t *testing.T) {
 		mb:     metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
 	}
 
-	ctx := context.Background()
+	ctx := t.Context()
 	errs := scraper.scrapeSGASharedPoolLibraryCacheUserMetrics(ctx, testTimestamp())
 	require.Empty(t, errs)
 }
@@ -431,7 +429,7 @@ func TestScrapeSGASharedPoolLibraryCacheUserMetrics_LargeValue(t *testing.T) {
 		mb:     metadata.NewMetricsBuilder(metadata.DefaultMetricsBuilderConfig(), receivertest.NewNopSettings(metadata.Type)),
 	}
 
-	ctx := context.Background()
+	ctx := t.Context()
 	errs := scraper.scrapeSGASharedPoolLibraryCacheUserMetrics(ctx, testTimestamp())
 	require.Empty(t, errs)
 }

@@ -10,13 +10,12 @@ import (
 	"testing"
 	"time"
 
-	"github.com/stretchr/testify/assert"
-	"go.opentelemetry.io/collector/receiver/receivertest"
-	"go.uber.org/zap"
-
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/client"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/internal/metadata"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/models"
+	"github.com/stretchr/testify/assert"
+	"go.opentelemetry.io/collector/receiver/receivertest"
+	"go.uber.org/zap"
 )
 
 func TestNewExecutionPlanScraper(t *testing.T) {
@@ -43,7 +42,7 @@ func TestScrapeExecutionPlans_EmptyIdentifiers(t *testing.T) {
 	mb := metadata.NewMetricsBuilder(config, settings)
 
 	scraper := NewExecutionPlanScraper(mockClient, mb, logger, config)
-	ctx := context.Background()
+	ctx := t.Context()
 
 	errs := scraper.ScrapeExecutionPlans(ctx, []models.SQLIdentifier{})
 
@@ -81,7 +80,7 @@ func TestScrapeExecutionPlans_Success(t *testing.T) {
 	mb := metadata.NewMetricsBuilder(config, settings)
 
 	scraper := NewExecutionPlanScraper(mockClient, mb, logger, config)
-	ctx := context.Background()
+	ctx := t.Context()
 
 	identifiers := []models.SQLIdentifier{
 		{
@@ -106,7 +105,7 @@ func TestScrapeExecutionPlans_QueryError(t *testing.T) {
 	mb := metadata.NewMetricsBuilder(config, settings)
 
 	scraper := NewExecutionPlanScraper(mockClient, mb, logger, config)
-	ctx := context.Background()
+	ctx := t.Context()
 
 	identifiers := []models.SQLIdentifier{
 		{
@@ -133,7 +132,7 @@ func TestScrapeExecutionPlans_ContextTimeout(t *testing.T) {
 	scraper := NewExecutionPlanScraper(mockClient, mb, logger, config)
 
 	// Create already-cancelled context
-	ctx, cancel := context.WithCancel(context.Background())
+	ctx, cancel := context.WithCancel(t.Context())
 	cancel()
 
 	identifiers := []models.SQLIdentifier{
@@ -167,7 +166,7 @@ func TestScrapeExecutionPlans_MultipleIdentifiers(t *testing.T) {
 	mb := metadata.NewMetricsBuilder(config, settings)
 
 	scraper := NewExecutionPlanScraper(mockClient, mb, logger, config)
-	ctx := context.Background()
+	ctx := t.Context()
 
 	identifiers := []models.SQLIdentifier{
 		{SQLID: "sql_1", ChildNumber: 0, Timestamp: time.Now()},
@@ -196,7 +195,7 @@ func TestScrapeExecutionPlans_InvalidSQLID(t *testing.T) {
 	mb := metadata.NewMetricsBuilder(config, settings)
 
 	scraper := NewExecutionPlanScraper(mockClient, mb, logger, config)
-	ctx := context.Background()
+	ctx := t.Context()
 
 	identifiers := []models.SQLIdentifier{
 		{SQLID: "test_sql_id", ChildNumber: 0, Timestamp: time.Now()},
@@ -207,7 +206,7 @@ func TestScrapeExecutionPlans_InvalidSQLID(t *testing.T) {
 	assert.Empty(t, errs)
 }
 
-func TestBuildExecutionPlanMetrics_EventDisabled(t *testing.T) {
+func TestBuildExecutionPlanMetrics_EventDisabled(_ *testing.T) {
 	mockClient := client.NewMockClient()
 	logger := zap.NewNop()
 	config := metadata.DefaultMetricsBuilderConfig()
@@ -224,7 +223,7 @@ func TestBuildExecutionPlanMetrics_EventDisabled(t *testing.T) {
 	scraper.buildExecutionPlanMetrics(row, time.Now())
 }
 
-func TestBuildExecutionPlanMetrics_AllFields(t *testing.T) {
+func TestBuildExecutionPlanMetrics_AllFields(_ *testing.T) {
 	mockClient := client.NewMockClient()
 	logger := zap.NewNop()
 	config := metadata.DefaultMetricsBuilderConfig()
@@ -262,7 +261,7 @@ func TestBuildExecutionPlanMetrics_AllFields(t *testing.T) {
 	scraper.buildExecutionPlanMetrics(row, time.Now())
 }
 
-func TestBuildExecutionPlanMetrics_NullFields(t *testing.T) {
+func TestBuildExecutionPlanMetrics_NullFields(_ *testing.T) {
 	mockClient := client.NewMockClient()
 	logger := zap.NewNop()
 	config := metadata.DefaultMetricsBuilderConfig()
@@ -296,7 +295,7 @@ func TestBuildExecutionPlanMetrics_NullFields(t *testing.T) {
 	scraper.buildExecutionPlanMetrics(row, time.Now())
 }
 
-func TestBuildExecutionPlanMetrics_EmptyStrings(t *testing.T) {
+func TestBuildExecutionPlanMetrics_EmptyStrings(_ *testing.T) {
 	mockClient := client.NewMockClient()
 	logger := zap.NewNop()
 	config := metadata.DefaultMetricsBuilderConfig()
@@ -396,7 +395,7 @@ func TestScrapeExecutionPlans_PartialFailure(t *testing.T) {
 	mb := metadata.NewMetricsBuilder(config, settings)
 
 	scraper := NewExecutionPlanScraper(mockClient, mb, logger, config)
-	ctx := context.Background()
+	ctx := t.Context()
 
 	identifiers := []models.SQLIdentifier{
 		{SQLID: "sql_1", ChildNumber: 0, Timestamp: time.Now()},
@@ -410,7 +409,7 @@ func TestScrapeExecutionPlans_PartialFailure(t *testing.T) {
 	assert.Empty(t, errs)
 }
 
-func TestBuildExecutionPlanMetrics_WithPredicates(t *testing.T) {
+func TestBuildExecutionPlanMetrics_WithPredicates(_ *testing.T) {
 	mockClient := client.NewMockClient()
 	logger := zap.NewNop()
 	config := metadata.DefaultMetricsBuilderConfig()
@@ -446,7 +445,7 @@ func TestScrapeExecutionPlans_CachedPlans(t *testing.T) {
 	mb := metadata.NewMetricsBuilder(config, settings)
 
 	scraper := NewExecutionPlanScraper(mockClient, mb, logger, config)
-	ctx := context.Background()
+	ctx := t.Context()
 
 	identifiers := []models.SQLIdentifier{
 		{SQLID: "test_sql_id", ChildNumber: 0, PlanHash: "12345", Timestamp: time.Now()},
@@ -478,7 +477,7 @@ func TestScrapeExecutionPlans_BuildMetricsError(t *testing.T) {
 	mb := metadata.NewMetricsBuilder(config, settings)
 
 	scraper := NewExecutionPlanScraper(mockClient, mb, logger, config)
-	ctx := context.Background()
+	ctx := t.Context()
 
 	identifiers := []models.SQLIdentifier{
 		{SQLID: "test_sql_id", ChildNumber: 0, PlanHash: "12345", Timestamp: time.Now()},

@@ -202,7 +202,7 @@ func TestGetInstanceIDString_ByteSlice(t *testing.T) {
 func TestGetInstanceIDString_DefaultCase(t *testing.T) {
 	tests := []struct {
 		name     string
-		input    interface{}
+		input    any
 		expected string
 	}{
 		{
@@ -251,7 +251,7 @@ func TestGetInstanceIDString_DefaultCase(t *testing.T) {
 func TestGetInstanceIDString_EdgeCases(t *testing.T) {
 	tests := []struct {
 		name     string
-		input    interface{}
+		input    any
 		expected string
 	}{
 		{
@@ -266,7 +266,7 @@ func TestGetInstanceIDString_EdgeCases(t *testing.T) {
 		},
 		{
 			name:     "nil slice",
-			input:    ([]byte)(nil),
+			input:    []byte(nil),
 			expected: "",
 		},
 	}
@@ -282,7 +282,7 @@ func TestGetInstanceIDString_EdgeCases(t *testing.T) {
 func TestGetInstanceIDString_LargeNumbers(t *testing.T) {
 	tests := []struct {
 		name     string
-		input    interface{}
+		input    any
 		expected string
 	}{
 		{

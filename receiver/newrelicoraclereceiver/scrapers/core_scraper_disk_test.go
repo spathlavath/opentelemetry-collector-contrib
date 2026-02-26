@@ -4,20 +4,18 @@
 package scrapers
 
 import (
-	"context"
 	"errors"
 	"testing"
 	"time"
 
+	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/client"
+	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/internal/metadata"
+	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/models"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.opentelemetry.io/collector/pdata/pcommon"
 	"go.opentelemetry.io/collector/receiver/receivertest"
 	"go.uber.org/zap"
-
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/client"
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/internal/metadata"
-	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/models"
 )
 
 // Test constructor validation
@@ -27,7 +25,7 @@ func TestNewCoreScraper_ValidInputs(t *testing.T) {
 	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(config, settings)
 
-	scraper, err := NewCoreScraper(mockClient, mb, zap.NewNop(), config)
+	scraper, err := NewCoreScraper(mockClient, mb, zap.NewNop(), config, true)
 
 	require.NoError(t, err)
 	assert.NotNil(t, scraper)
@@ -38,7 +36,7 @@ func TestNewCoreScraper_NilClient(t *testing.T) {
 	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(config, settings)
 
-	scraper, err := NewCoreScraper(nil, mb, zap.NewNop(), config)
+	scraper, err := NewCoreScraper(nil, mb, zap.NewNop(), config, true)
 
 	assert.Error(t, err)
 	assert.Nil(t, scraper)
@@ -49,7 +47,7 @@ func TestNewCoreScraper_NilMetricsBuilder(t *testing.T) {
 	mockClient := client.NewMockClient()
 	config := metadata.DefaultMetricsBuilderConfig()
 
-	scraper, err := NewCoreScraper(mockClient, nil, zap.NewNop(), config)
+	scraper, err := NewCoreScraper(mockClient, nil, zap.NewNop(), config, true)
 
 	assert.Error(t, err)
 	assert.Nil(t, scraper)
@@ -62,7 +60,7 @@ func TestNewCoreScraper_NilLogger(t *testing.T) {
 	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(config, settings)
 
-	scraper, err := NewCoreScraper(mockClient, mb, nil, config)
+	scraper, err := NewCoreScraper(mockClient, mb, nil, config, true)
 
 	assert.Error(t, err)
 	assert.Nil(t, scraper)
@@ -75,7 +73,7 @@ func TestNewCoreScraper_EmptyInstanceName(t *testing.T) {
 	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(config, settings)
 
-	scraper, err := NewCoreScraper(mockClient, mb, zap.NewNop(), config)
+	scraper, err := NewCoreScraper(mockClient, mb, zap.NewNop(), config, true)
 
 	require.NoError(t, err)
 	assert.NotNil(t, scraper)
@@ -94,10 +92,10 @@ func TestScrapeReadWriteMetrics_AllMetricsDisabled(t *testing.T) {
 	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(config, settings)
 
-	scraper, err := NewCoreScraper(mockClient, mb, zap.NewNop(), config)
+	scraper, err := NewCoreScraper(mockClient, mb, zap.NewNop(), config, true)
 	require.NoError(t, err)
 
-	ctx := context.Background()
+	ctx := t.Context()
 	now := pcommon.NewTimestampFromTime(time.Now())
 
 	errors := scraper.scrapeReadWriteMetrics(ctx, now)
@@ -139,10 +137,10 @@ func TestScrapeReadWriteMetrics_Success_AllMetricsEnabled(t *testing.T) {
 	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(config, settings)
 
-	scraper, err := NewCoreScraper(mockClient, mb, zap.NewNop(), config)
+	scraper, err := NewCoreScraper(mockClient, mb, zap.NewNop(), config, true)
 	require.NoError(t, err)
 
-	ctx := context.Background()
+	ctx := t.Context()
 	now := pcommon.NewTimestampFromTime(time.Now())
 
 	errors := scraper.scrapeReadWriteMetrics(ctx, now)
@@ -175,10 +173,10 @@ func TestScrapeReadWriteMetrics_Success_PartialMetricsEnabled(t *testing.T) {
 	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(config, settings)
 
-	scraper, err := NewCoreScraper(mockClient, mb, zap.NewNop(), config)
+	scraper, err := NewCoreScraper(mockClient, mb, zap.NewNop(), config, true)
 	require.NoError(t, err)
 
-	ctx := context.Background()
+	ctx := t.Context()
 	now := pcommon.NewTimestampFromTime(time.Now())
 
 	errors := scraper.scrapeReadWriteMetrics(ctx, now)
@@ -196,10 +194,10 @@ func TestScrapeReadWriteMetrics_QueryError(t *testing.T) {
 	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(config, settings)
 
-	scraper, err := NewCoreScraper(mockClient, mb, zap.NewNop(), config)
+	scraper, err := NewCoreScraper(mockClient, mb, zap.NewNop(), config, true)
 	require.NoError(t, err)
 
-	ctx := context.Background()
+	ctx := t.Context()
 	now := pcommon.NewTimestampFromTime(time.Now())
 
 	errors := scraper.scrapeReadWriteMetrics(ctx, now)
@@ -220,10 +218,10 @@ func TestScrapeReadWriteMetrics_EmptyResultSet(t *testing.T) {
 	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(config, settings)
 
-	scraper, err := NewCoreScraper(mockClient, mb, zap.NewNop(), config)
+	scraper, err := NewCoreScraper(mockClient, mb, zap.NewNop(), config, true)
 	require.NoError(t, err)
 
-	ctx := context.Background()
+	ctx := t.Context()
 	now := pcommon.NewTimestampFromTime(time.Now())
 
 	errors := scraper.scrapeReadWriteMetrics(ctx, now)
@@ -251,10 +249,10 @@ func TestScrapeReadWriteMetrics_StringInstanceID(t *testing.T) {
 	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(config, settings)
 
-	scraper, err := NewCoreScraper(mockClient, mb, zap.NewNop(), config)
+	scraper, err := NewCoreScraper(mockClient, mb, zap.NewNop(), config, true)
 	require.NoError(t, err)
 
-	ctx := context.Background()
+	ctx := t.Context()
 	now := pcommon.NewTimestampFromTime(time.Now())
 
 	errors := scraper.scrapeReadWriteMetrics(ctx, now)
@@ -282,10 +280,10 @@ func TestScrapeReadWriteMetrics_NilInstanceID(t *testing.T) {
 	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(config, settings)
 
-	scraper, err := NewCoreScraper(mockClient, mb, zap.NewNop(), config)
+	scraper, err := NewCoreScraper(mockClient, mb, zap.NewNop(), config, true)
 	require.NoError(t, err)
 
-	ctx := context.Background()
+	ctx := t.Context()
 	now := pcommon.NewTimestampFromTime(time.Now())
 
 	errors := scraper.scrapeReadWriteMetrics(ctx, now)
@@ -318,10 +316,10 @@ func TestScrapeReadWriteMetrics_ZeroValues(t *testing.T) {
 	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(config, settings)
 
-	scraper, err := NewCoreScraper(mockClient, mb, zap.NewNop(), config)
+	scraper, err := NewCoreScraper(mockClient, mb, zap.NewNop(), config, true)
 	require.NoError(t, err)
 
-	ctx := context.Background()
+	ctx := t.Context()
 	now := pcommon.NewTimestampFromTime(time.Now())
 
 	errors := scraper.scrapeReadWriteMetrics(ctx, now)
@@ -354,10 +352,10 @@ func TestScrapeReadWriteMetrics_LargeValues(t *testing.T) {
 	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(config, settings)
 
-	scraper, err := NewCoreScraper(mockClient, mb, zap.NewNop(), config)
+	scraper, err := NewCoreScraper(mockClient, mb, zap.NewNop(), config, true)
 	require.NoError(t, err)
 
-	ctx := context.Background()
+	ctx := t.Context()
 	now := pcommon.NewTimestampFromTime(time.Now())
 
 	errors := scraper.scrapeReadWriteMetrics(ctx, now)
@@ -408,10 +406,10 @@ func TestScrapeReadWriteMetrics_MultipleInstances(t *testing.T) {
 	settings := receivertest.NewNopSettings(metadata.Type)
 	mb := metadata.NewMetricsBuilder(config, settings)
 
-	scraper, err := NewCoreScraper(mockClient, mb, zap.NewNop(), config)
+	scraper, err := NewCoreScraper(mockClient, mb, zap.NewNop(), config, true)
 	require.NoError(t, err)
 
-	ctx := context.Background()
+	ctx := t.Context()
 	now := pcommon.NewTimestampFromTime(time.Now())
 
 	errors := scraper.scrapeReadWriteMetrics(ctx, now)
