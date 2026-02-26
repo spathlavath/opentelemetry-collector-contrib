@@ -80,6 +80,31 @@ func createMetricsReceiverFunc(sqlOpenerFunc sqlOpenerFunc) receiver.CreateMetri
 			return nil, fmt.Errorf("invalid configuration: %w", err)
 		}
 
+		// Log all configuration values (including defaults) for validation
+		settings.Logger.Info("New Relic Oracle Receiver Configuration",
+			zap.Duration("collection_interval", sqlCfg.ControllerConfig.CollectionInterval),
+			zap.Duration("timeout", sqlCfg.ControllerConfig.Timeout),
+			zap.Bool("disable_connection_pool", sqlCfg.DisableConnectionPool),
+			zap.Int("max_open_connections", sqlCfg.MaxOpenConnections),
+			zap.Bool("enable_query_monitoring", sqlCfg.EnableQueryMonitoring),
+			zap.Int("query_monitoring_response_time_threshold_ms", sqlCfg.QueryMonitoringResponseTimeThreshold),
+			zap.Int("query_monitoring_count_threshold", sqlCfg.QueryMonitoringCountThreshold),
+			zap.Int("query_monitoring_interval_seconds", sqlCfg.QueryMonitoringIntervalSeconds),
+			zap.Int("child_cursors_per_sql_id", sqlCfg.ChildCursorsPerSQLID),
+			zap.Bool("enable_interval_based_averaging", sqlCfg.EnableIntervalBasedAveraging),
+			zap.Int("interval_calculator_cache_ttl_minutes", sqlCfg.IntervalCalculatorCacheTTLMinutes),
+			zap.Bool("enable_session_scraper", sqlCfg.EnableSessionScraper),
+			zap.Bool("enable_tablespace_scraper", sqlCfg.EnableTablespaceScraper),
+			zap.Bool("enable_core_scraper", sqlCfg.EnableCoreScraper),
+			zap.Bool("enable_pdb_scraper", sqlCfg.EnablePdbScraper),
+			zap.Bool("enable_system_scraper", sqlCfg.EnableSystemScraper),
+			zap.Bool("enable_connection_scraper", sqlCfg.EnableConnectionScraper),
+			zap.Bool("enable_container_scraper", sqlCfg.EnableContainerScraper),
+			zap.Bool("enable_rac_scraper", sqlCfg.EnableRacScraper),
+			zap.Bool("enable_database_info_scraper", sqlCfg.EnableDatabaseInfoScraper),
+			zap.Strings("pdb_services", sqlCfg.PdbServices),
+		)
+
 		metricsBuilder := metadata.NewMetricsBuilder(sqlCfg.MetricsBuilderConfig, settings)
 
 		hostAddress, hostPort, err := getHostAndPort(getDataSource(*sqlCfg))

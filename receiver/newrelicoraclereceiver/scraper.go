@@ -279,7 +279,7 @@ func (s *newRelicOracleScraper) executeQPMScrapers(ctx context.Context, errChan 
 	// Wait events & blocking scraper with child cursors and execution plans
 	s.logger.Debug("Starting wait events & blocking scraper for slow query SQL_IDs", zap.Int("slow_query_ids", len(slowQueryIdentifiers)))
 	waitEventSQLIdentifiers, waitEventErrs := s.waitEventBlockingScraper.ScrapeWaitEventsAndBlocking(ctx, slowQueryIdentifiers)
-	s.logger.Info("Wait events & blocking scraper completed",zap.Int("unique_sql_identifiers", len(waitEventSQLIdentifiers)),zap.Int("errors", len(waitEventErrs)))
+	s.logger.Info("Wait events & blocking scraper completed", zap.Int("unique_sql_identifiers", len(waitEventSQLIdentifiers)), zap.Int("errors", len(waitEventErrs)))
 
 	s.sendErrorsToChannel(errChan, waitEventErrs, "wait events & blocking")
 

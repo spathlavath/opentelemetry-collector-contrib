@@ -372,28 +372,28 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		NewrelicoracledbChildCursorsBufferGets: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		NewrelicoracledbChildCursorsCPUTime: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		NewrelicoracledbChildCursorsDetails: MetricConfig{
 			Enabled: true,
 		},
 		NewrelicoracledbChildCursorsDiskReads: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		NewrelicoracledbChildCursorsElapsedTime: MetricConfig{
 			Enabled: true,
 		},
 		NewrelicoracledbChildCursorsExecutions: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		NewrelicoracledbChildCursorsInvalidations: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		NewrelicoracledbChildCursorsUserIoWaitTime: MetricConfig{
-			Enabled: false,
+			Enabled: true,
 		},
 		NewrelicoracledbConnectionActiveSessions: MetricConfig{
 			Enabled: true,

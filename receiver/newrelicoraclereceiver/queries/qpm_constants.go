@@ -6,7 +6,7 @@ package queries // import "github.com/open-telemetry/opentelemetry-collector-con
 // QPM (Query Performance Monitoring) configuration constants
 const (
 	// Default values used when configuration is not specified
-	DefaultQueryMonitoringResponseTimeThreshold = 100 // milliseconds
+	DefaultQueryMonitoringResponseTimeThreshold = 500 // milliseconds
 	DefaultQueryMonitoringCountThreshold        = 20
 
 	// Validation ranges for configuration values

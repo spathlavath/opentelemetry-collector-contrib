@@ -50,7 +50,7 @@ func (s *CoreScraper) ScrapeCoreMetrics(ctx context.Context) []error {
 	s.logger.Debug("Scraping Oracle core database metrics")
 	now := pcommon.NewTimestampFromTime(time.Now())
 
-	// Always emit UI-critical metrics
+	// Always emit UI-critical metrics (scrapePGAMetrics handles both mandatory and advanced based on flag)
 	errors = append(errors, s.scrapePGAMetrics(ctx, now)...)
 	errors = append(errors, s.scrapeSGAHitRatioMetrics(ctx, now)...)
 	errors = append(errors, s.scrapeSGASharedPoolLibraryCacheHitRatioMetrics(ctx, now)...)
@@ -67,7 +67,6 @@ func (s *CoreScraper) ScrapeCoreMetrics(ctx context.Context) []error {
 func (s *CoreScraper) scrapeAdvancedCoreMetrics(ctx context.Context, now pcommon.Timestamp) []error {
 	var errors []error
 
-	errors = append(errors, s.scrapeAdvancedPGAMetrics(ctx, now)...)
 	errors = append(errors, s.scrapeLockedAccountsMetrics(ctx, now)...)
 	errors = append(errors, s.scrapeReadWriteMetrics(ctx, now)...)
 	errors = append(errors, s.scrapeGlobalNameInstanceMetrics(ctx, now)...)

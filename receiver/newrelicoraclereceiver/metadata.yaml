@@ -376,7 +376,7 @@ metrics:
   # Database Version and Configuration Information
   newrelicoracledb.child_cursors.buffer_gets:
     description: Average number of buffer gets per execution for this child cursor
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     gauge:
@@ -391,7 +391,7 @@ metrics:
 
   newrelicoracledb.child_cursors.cpu_time:
     description: Average CPU time per execution for this child cursor (in milliseconds)
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     gauge:
@@ -423,7 +423,7 @@ metrics:
 
   newrelicoracledb.child_cursors.disk_reads:
     description: Average number of disk reads per execution for this child cursor
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     gauge:
@@ -453,7 +453,7 @@ metrics:
 
   newrelicoracledb.child_cursors.executions:
     description: Total number of executions of this child cursor
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     gauge:
@@ -468,7 +468,7 @@ metrics:
 
   newrelicoracledb.child_cursors.invalidations:
     description: Number of times this child cursor was invalidated
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     gauge:
@@ -483,7 +483,7 @@ metrics:
 
   newrelicoracledb.child_cursors.user_io_wait_time:
     description: Average user I/O wait time per execution for this child cursor (in milliseconds)
-    enabled: false
+    enabled: true
     stability:
       level: alpha
     gauge:

@@ -80,9 +80,11 @@ func TestMetricsBuilder(t *testing.T) {
 			allMetricsCount++
 			mb.RecordNewrelicoracledbAsmDiskgroupTotalMbDataPoint(ts, 1, "diskgroup.name-val")
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicoracledbChildCursorsBufferGetsDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", 12, "plan_hash_value-val")
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicoracledbChildCursorsCPUTimeDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", 12, "plan_hash_value-val")
 
@@ -90,6 +92,7 @@ func TestMetricsBuilder(t *testing.T) {
 			allMetricsCount++
 			mb.RecordNewrelicoracledbChildCursorsDetailsDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", 12, "plan_hash_value-val", "first_load_time-val", "last_load_time-val")
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicoracledbChildCursorsDiskReadsDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", 12, "plan_hash_value-val")
 
@@ -97,12 +100,15 @@ func TestMetricsBuilder(t *testing.T) {
 			allMetricsCount++
 			mb.RecordNewrelicoracledbChildCursorsElapsedTimeDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", 12, "plan_hash_value-val")
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicoracledbChildCursorsExecutionsDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", 12, "plan_hash_value-val")
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicoracledbChildCursorsInvalidationsDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", 12, "plan_hash_value-val")
 
+			defaultMetricsCount++
 			allMetricsCount++
 			mb.RecordNewrelicoracledbChildCursorsUserIoWaitTimeDataPoint(ts, 1, "collection_timestamp-val", "database_name-val", "query_id-val", 12, "plan_hash_value-val")
 

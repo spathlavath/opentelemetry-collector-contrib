@@ -256,7 +256,6 @@ func (s *SlowQueriesScraper) recordMetrics(now pcommon.Timestamp, slowQuery *mod
 		)
 	}
 
-
 	// Record historical (cumulative) total rows examined (buffer gets) - raw value from V$SQLAREA
 	if slowQuery.TotalBufferGets.Valid {
 		s.mb.RecordNewrelicoracledbSlowQueriesTotalRowsExaminedDataPoint(
@@ -327,7 +326,6 @@ func (s *SlowQueriesScraper) recordMetrics(now pcommon.Timestamp, slowQuery *mod
 		)
 	}
 
-
 	// Record interval total metrics (delta values without averaging)
 	if slowQuery.IntervalElapsedTimeMS != nil {
 		s.mb.RecordNewrelicoracledbSlowQueriesIntervalElapsedTimeDataPoint(
@@ -367,7 +365,6 @@ func (s *SlowQueriesScraper) recordMetrics(now pcommon.Timestamp, slowQuery *mod
 			nrServiceGUID,
 		)
 	}
-
 
 	if slowQuery.IntervalBufferGets != nil {
 		s.mb.RecordNewrelicoracledbSlowQueriesIntervalBufferGetsDataPoint(

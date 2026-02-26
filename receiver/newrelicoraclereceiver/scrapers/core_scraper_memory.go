@@ -30,54 +30,28 @@ func (s *CoreScraper) scrapePGAMetrics(ctx context.Context, now pcommon.Timestam
 
 	metricCount := 0
 	for instanceID, metricVals := range instanceMetrics {
-		// Only emit UI-critical mandatory metric: pga_max_size_bytes
+
 		if val, exists := metricVals["global memory bound"]; exists {
 			s.mb.RecordNewrelicoracledbMemoryPgaMaxSizeBytesDataPoint(now, val, instanceID)
+		}
+
+		// Emit advanced PGA metrics only when flag is enabled
+		if s.enableAdvancedMetrics {
+			if val, exists := metricVals["total PGA inuse"]; exists {
+				s.mb.RecordNewrelicoracledbMemoryPgaInUseBytesDataPoint(now, val, instanceID)
+			}
+			if val, exists := metricVals["total PGA allocated"]; exists {
+				s.mb.RecordNewrelicoracledbMemoryPgaAllocatedBytesDataPoint(now, val, instanceID)
+			}
+			if val, exists := metricVals["total freeable PGA memory"]; exists {
+				s.mb.RecordNewrelicoracledbMemoryPgaFreeableBytesDataPoint(now, val, instanceID)
+			}
 		}
 
 		metricCount++
 	}
 
 	s.logger.Debug("PGA mandatory metrics scrape completed")
-
-	return nil
-}
-
-func (s *CoreScraper) scrapeAdvancedPGAMetrics(ctx context.Context, now pcommon.Timestamp) []error {
-	metrics, err := s.client.QueryPGAMetrics(ctx)
-	if err != nil {
-		s.logger.Error("Failed to query advanced PGA metrics", zap.Error(err))
-		return []error{err}
-	}
-
-	instanceMetrics := make(map[string]map[string]int64)
-	for _, metric := range metrics {
-		instanceID := getInstanceIDString(metric.InstID)
-
-		if instanceMetrics[instanceID] == nil {
-			instanceMetrics[instanceID] = make(map[string]int64)
-		}
-
-		instanceMetrics[instanceID][metric.Name] = int64(metric.Value)
-	}
-
-	metricCount := 0
-	for instanceID, metricVals := range instanceMetrics {
-		// Emit advanced PGA metrics
-		if val, exists := metricVals["total PGA inuse"]; exists {
-			s.mb.RecordNewrelicoracledbMemoryPgaInUseBytesDataPoint(now, val, instanceID)
-		}
-		if val, exists := metricVals["total PGA allocated"]; exists {
-			s.mb.RecordNewrelicoracledbMemoryPgaAllocatedBytesDataPoint(now, val, instanceID)
-		}
-		if val, exists := metricVals["total freeable PGA memory"]; exists {
-			s.mb.RecordNewrelicoracledbMemoryPgaFreeableBytesDataPoint(now, val, instanceID)
-		}
-
-		metricCount++
-	}
-
-	s.logger.Debug("PGA advanced metrics scrape completed")
 
 	return nil
 }
