@@ -60,7 +60,6 @@ func GetSlowQueriesSQL(intervalSeconds int) string {
 			AND sa.sql_fulltext NOT LIKE '%%GV$INSTANCE%%'
 			AND au.username NOT IN ('SYS', 'SYSTEM', 'DBSNMP', 'SYSMAN', 'OUTLN', 'MDSYS', 'ORDSYS', 'EXFSYS', 'WMSYS', 'APPQOSSYS', 'APEX_030200', 'OWBSYS', 'GSMADMIN_INTERNAL', 'OLAPSYS', 'XDB', 'ANONYMOUS', 'CTXSYS', 'SI_INFORMTN_SCHEMA', 'ORDDATA', 'DVSYS', 'LBACSYS', 'OJVMSYS')
 			AND sa.last_active_time >= SYSDATE - INTERVAL '%d' SECOND
-			AND sa.sql_id = '0aux55x3fnrhm' -- Temporary filter for testing - remove or replace with parameter as needed
 		ORDER BY
 			sa.elapsed_time DESC`, intervalSeconds)
 }
