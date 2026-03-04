@@ -7,8 +7,8 @@ package queries // import "github.com/open-telemetry/opentelemetry-collector-con
 
 // System Performance Metrics
 const (
-	// SystemSysMetricsSQL returns system metrics from gv$sysmetric
-	SystemSysMetricsSQL = "SELECT INST_ID, METRIC_NAME, VALUE FROM gv$sysmetric"
+	// SystemSysMetricsSQL returns system metrics from GV$SYSMETRIC
+	SystemSysMetricsSQL = "SELECT INST_ID, METRIC_NAME, VALUE FROM GV$SYSMETRIC"
 
 	// PDBSysMetricsSQL returns PDB-specific system metrics
 	PDBSysMetricsSQL = `
@@ -17,8 +17,8 @@ const (
 			pd.NAME AS PDB_NAME,
 			csm.METRIC_NAME,
 			csm.VALUE
-		FROM gv$con_sysmetric csm
-		JOIN gv$pdbs pd ON csm.CON_ID = pd.CON_ID AND csm.INST_ID = pd.INST_ID`
+		FROM GV$CON_SYSMETRIC csm
+		JOIN GV$PDBS pd ON csm.CON_ID = pd.CON_ID AND csm.INST_ID = pd.INST_ID`
 
 	// ReadWriteMetricsSQL returns database I/O statistics
 	ReadWriteMetricsSQL = `
@@ -30,14 +30,14 @@ const (
 			SUM(PHYBLKWRT) AS PhysicalBlockWrites,
 			SUM(READTIM) * 10 AS ReadTime,
 			SUM(WRITETIM) * 10 AS WriteTime
-		FROM gv$filestat
+		FROM GV$SYSSTAT
 		GROUP BY INST_ID`
 
 	// LongRunningQueriesSQL returns count of long-running queries per instance
 	LongRunningQueriesSQL = `
 		SELECT i.inst_id, COUNT(s.sid) AS total
-		FROM gv$instance i
-		LEFT JOIN gv$session s ON i.inst_id = s.inst_id
+		FROM GV$INSTANCE i
+		LEFT JOIN GV$SESSION s ON i.inst_id = s.inst_id
 			AND s.status = 'ACTIVE'
 			AND s.type <> 'BACKGROUND'
 			AND s.last_call_et > 60
@@ -66,7 +66,7 @@ const (
 		SELECT
 			t1.INST_ID,
 			t2.GLOBAL_NAME
-		FROM (SELECT INST_ID FROM gv$instance) t1,
+		FROM (SELECT INST_ID FROM GV$INSTANCE) t1,
 			 (SELECT GLOBAL_NAME FROM global_name) t2`
 
 	// DBIDInstanceSQL returns instance info with database ID
@@ -74,8 +74,8 @@ const (
 		SELECT
 			t1.INST_ID,
 			t2.DBID
-		FROM (SELECT INST_ID FROM gv$instance) t1,
-			 (SELECT DBID FROM v$database) t2`
+		FROM (SELECT INST_ID FROM GV$INSTANCE) t1,
+			 (SELECT DBID FROM V$DATABASE) t2`
 )
 
 // Wait Events and Lock Queries
@@ -122,7 +122,7 @@ const (
 			WHERE a.con_id = b.con_id
 				AND a.account_status != 'OPEN'
 		) l,
-		gv$instance i`
+		GV$INSTANCE i`
 
 	// LockedAccountsCurrentContainerSQL returns locked accounts for current container
 	LockedAccountsCurrentContainerSQL = `
@@ -134,5 +134,5 @@ const (
 			FROM dba_users
 			WHERE account_status != 'OPEN'
 		) l,
-		gv$instance i`
+		GV$INSTANCE i`
 )

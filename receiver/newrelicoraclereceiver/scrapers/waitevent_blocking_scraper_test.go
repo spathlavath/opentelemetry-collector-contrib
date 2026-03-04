@@ -96,9 +96,8 @@ func TestFetchWaitEvents_Success(t *testing.T) {
 	scraper, _ := NewWaitEventBlockingScraper(mockClient, mb, logger, config, 10)
 
 	ctx := t.Context()
-	slowQuerySQLIDs := []string{"sql1", "sql2"}
 
-	waitEvents, err := scraper.fetchWaitEvents(ctx, slowQuerySQLIDs)
+	waitEvents, err := scraper.fetchWaitEvents(ctx, nil)
 
 	assert.NoError(t, err)
 	assert.Len(t, waitEvents, 1)
@@ -117,9 +116,8 @@ func TestFetchWaitEvents_QueryError(t *testing.T) {
 	scraper, _ := NewWaitEventBlockingScraper(mockClient, mb, logger, config, 10)
 
 	ctx := t.Context()
-	slowQuerySQLIDs := []string{"sql1"}
 
-	waitEvents, err := scraper.fetchWaitEvents(ctx, slowQuerySQLIDs)
+	waitEvents, err := scraper.fetchWaitEvents(ctx, nil)
 
 	assert.Error(t, err)
 	assert.Nil(t, waitEvents)

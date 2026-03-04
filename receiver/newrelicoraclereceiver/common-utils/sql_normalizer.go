@@ -47,12 +47,12 @@ func GenerateMD5Hash(normalizedSQL string) string {
 	return hex.EncodeToString(hash[:])
 }
 
-// ExtractNewRelicMetadata extracts nrServiceGUID from New Relic query comments
-// Only supports quoted format: /* nrServiceGUID="VALUE" */
-// Returns: nrServiceGUID value or empty string if not found
+// ExtractNewRelicMetadata extracts nr_service_guid from New Relic query comments
+// Supports format: /* nr_service_guid="VALUE" */ (injected by NR Java agent)
+// Returns: nr_service_guid value or empty string if not found
 func ExtractNewRelicMetadata(sql string) string {
-	quotedGUIDRegex := regexp.MustCompile(`nrServiceGUID="([^"]*)"`)
-	if match := quotedGUIDRegex.FindStringSubmatch(sql); len(match) > 1 {
+	serviceGuidRegex := regexp.MustCompile(`nr_service_guid\s*=\s*"([^"]+)"`)
+	if match := serviceGuidRegex.FindStringSubmatch(sql); len(match) > 1 {
 		return match[1]
 	}
 	return ""
@@ -174,11 +174,11 @@ func isPrecededByIn(result *strings.Builder) bool {
 
 // isIdentifierChar checks if a character is valid in an identifier
 func isIdentifierChar(c rune) bool {
-	// Added backtick (`) to match isNumericLiteral logic
-	return unicode.IsLetter(c) || unicode.IsDigit(c) || c == '_' || c == '`'
+	return unicode.IsLetter(c) || unicode.IsDigit(c) || c == '_'
 }
 
-// isPlaceholder checks if current position is a parameter placeholder
+// isPlaceholder checks if current position is a parameter placeholder.
+// Supports Oracle-specific placeholders: ? (JDBC), :name, :1 (Oracle bind variables)
 func isPlaceholder(state *sqlNormalizerState) bool {
 	c := state.current()
 
@@ -361,6 +361,10 @@ func tryNormalizeInClause(state *sqlNormalizerState) string {
 			// Not a list, bail
 			allParametersOrLiterals = false
 		}
+
+		if !allParametersOrLiterals {
+			break
+		}
 	}
 
 	// Check if we found a closing paren and have multiple items
@@ -376,33 +380,65 @@ func tryNormalizeInClause(state *sqlNormalizerState) string {
 	return "("
 }
 
-// removeCommentsAndNormalizeWhitespace strips comments and normalizes whitespace
+// removeCommentsAndNormalizeWhitespace strips all comments (single-line --, multi-line /* */, hash #)
+// and normalizes whitespace (collapses multiple spaces into single space).
+// Prefix comments (before any SQL content) are replaced with '?' to match NR APM agent behavior.
+// Inline comments (after SQL content has started) are silently removed.
+// processStringLiteral is dead code in practice since literals are replaced in pass 1,
+// but included for defensive completeness matching Java reference behavior.
 func removeCommentsAndNormalizeWhitespace(sql string) string {
 	var result strings.Builder
 	result.Grow(len(sql))
 	state := newSQLNormalizerState(sql)
+	seenSQLContent := false // tracks whether any actual SQL content has been written
 
 	for state.hasMore() {
 		current := state.current()
 
 		switch {
 		case current == '\'':
+			// Dead code in practice: string literals were already replaced in pass 1
+			seenSQLContent = true
 			processStringLiteral(&result, state)
 		case isMultilineCommentStart(state):
-			processMultilineComment(state)
-			result.WriteByte('?')
-			state.lastWasWhitespace = false
+			if !seenSQLContent {
+				// Prefix comment: replace with ? (matches NR APM agent behavior)
+				skipMultilineComment(state)
+				result.WriteByte('?')
+				state.lastWasWhitespace = false
+				seenSQLContent = true
+			} else {
+				// Inline comment: silently remove
+				skipMultilineComment(state)
+			}
 		case isSingleLineCommentStart(state):
-			processSingleLineComment(state)
-			result.WriteByte('?')
-			state.lastWasWhitespace = false
+			if !seenSQLContent {
+				// Prefix comment: replace with ?
+				state.advanceBy(2) // skip --
+				skipToEndOfLine(state)
+				result.WriteByte('?')
+				state.lastWasWhitespace = false
+				seenSQLContent = true
+			} else {
+				state.advanceBy(2) // skip --
+				skipToEndOfLine(state)
+			}
 		case current == '#':
-			processHashComment(state)
-			result.WriteByte('?')
-			state.lastWasWhitespace = false
+			if !seenSQLContent {
+				// Prefix comment: replace with ?
+				state.advance() // skip #
+				skipToEndOfLine(state)
+				result.WriteByte('?')
+				state.lastWasWhitespace = false
+				seenSQLContent = true
+			} else {
+				state.advance() // skip #
+				skipToEndOfLine(state)
+			}
 		case unicode.IsSpace(rune(current)):
 			processWhitespace(&result, state)
 		default:
+			seenSQLContent = true
 			processRegularCharacter(&result, state)
 		}
 	}
@@ -420,7 +456,6 @@ func processStringLiteral(result *strings.Builder, state *sqlNormalizerState) {
 		result.WriteByte(c)
 
 		if c == '\'' {
-			// Escaped quote '' check
 			//nolint:revive // early-return pattern is more readable here
 			if state.hasNext() && state.peek() == '\'' {
 				result.WriteByte('\'')
@@ -440,49 +475,34 @@ func isMultilineCommentStart(state *sqlNormalizerState) bool {
 	return state.current() == '/' && state.hasNext() && state.peek() == '*'
 }
 
-func processMultilineComment(state *sqlNormalizerState) {
-	state.advanceBy(2) // Skip /*
-
-	for state.idx < state.length-1 {
-		if state.current() == '*' && state.peek() == '/' {
-			state.advanceBy(2)
-			break
-		}
-		state.advance()
-	}
-
-	// Handle unclosed comment
-	if state.idx == state.length-1 {
-		state.idx = state.length
-	}
-}
-
 func isSingleLineCommentStart(state *sqlNormalizerState) bool {
 	return state.current() == '-' && state.hasNext() && state.peek() == '-'
 }
 
-func processSingleLineComment(state *sqlNormalizerState) {
-	state.advanceBy(2) // Skip --
-	skipToEndOfLine(state)
-}
-
-func processHashComment(state *sqlNormalizerState) {
-	state.advance() // Skip #
-	skipToEndOfLine(state)
+func skipMultilineComment(state *sqlNormalizerState) {
+	state.advanceBy(2) // skip /*
+	for state.idx < state.length-1 {
+		if state.current() == '*' && state.peek() == '/' {
+			state.advanceBy(2)
+			return
+		}
+		state.advance()
+	}
+	// Handle unclosed comment
+	if state.hasMore() {
+		state.advance()
+	}
 }
 
 func skipToEndOfLine(state *sqlNormalizerState) {
-	// Skip until newline
 	for state.hasMore() && state.current() != '\n' && state.current() != '\r' {
 		state.advance()
 	}
-	// Skip the newline character(s)
 	for state.hasMore() && (state.current() == '\n' || state.current() == '\r') {
 		state.advance()
 	}
 }
 
-// IMPORTANT: Ensure your processWhitespace matches the Java trim logic
 func processWhitespace(result *strings.Builder, state *sqlNormalizerState) {
 	if !state.lastWasWhitespace && result.Len() > 0 {
 		result.WriteByte(' ')

@@ -41,6 +41,7 @@ type WaitEventWithBlocking struct {
 	FinalBlockerSerial         sql.NullInt64
 	FinalBlockerQueryID        sql.NullString
 	FinalBlockerQueryText      sql.NullString
+	QueryText                  sql.NullString // Active session's own query text from V$SQLAREA
 }
 
 // ========================================
@@ -258,6 +259,13 @@ func (w *WaitEventWithBlocking) GetFinalBlockerQueryID() string {
 func (w *WaitEventWithBlocking) GetFinalBlockerQueryText() string {
 	if w.FinalBlockerQueryText.Valid {
 		return w.FinalBlockerQueryText.String
+	}
+	return ""
+}
+
+func (w *WaitEventWithBlocking) GetQueryText() string {
+	if w.QueryText.Valid {
+		return w.QueryText.String
 	}
 	return ""
 }

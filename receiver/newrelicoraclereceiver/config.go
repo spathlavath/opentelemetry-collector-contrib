@@ -28,8 +28,7 @@ const (
 	defaultEnableQueryMonitoring                = false
 	defaultQueryMonitoringResponseTimeThreshold = queries.DefaultQueryMonitoringResponseTimeThreshold
 	defaultQueryMonitoringCountThreshold        = queries.DefaultQueryMonitoringCountThreshold
-	defaultChildCursorsPerSQLID                 = 5 // Default to 5 (optimized flow with wait events covers edge cases)
-
+	defaultActiveQueryCountThreshold            = queries.DefaultActiveQueryCountThreshold
 	// Interval Calculator defaults
 	defaultEnableIntervalBasedAveraging      = true // Enable by default for better slow query detection
 	defaultIntervalCalculatorCacheTTLMinutes = 10   // 10 minutes cache TTL
@@ -38,7 +37,6 @@ const (
 
 	// Feature-level scraper defaults (all disabled by default)
 	// Note: UI-critical metrics always emit regardless of these flags
-	defaultEnableSessionScraper      = false
 	defaultEnableTablespaceScraper   = false
 	defaultEnableCoreScraper         = false
 	defaultEnablePdbScraper          = false
@@ -49,16 +47,14 @@ const (
 	defaultEnableDatabaseInfoScraper = false
 
 	// Validation ranges
-	minCollectionInterval                   = 10 * time.Second
-	maxCollectionInterval                   = 3600 * time.Second
-	minMaxOpenConnections                   = 1
-	maxMaxOpenConnections                   = 1000
-	maxUsernameLength                       = 128
+	minCollectionInterval            = 10 * time.Second
+	maxCollectionInterval            = 3600 * time.Second
+	minMaxOpenConnections            = 1
+	maxMaxOpenConnections            = 1000
+	maxUsernameLength                = 128
 	maxServiceLength                 = 128
 	minQueryMonitoringCountThreshold = queries.MinQueryMonitoringCountThreshold
-	maxQueryMonitoringCountThreshold        = queries.MaxQueryMonitoringCountThreshold
-	minChildCursorsPerSQLID                 = 3  // Minimum child cursors to fetch per SQL_ID
-	maxChildCursorsPerSQLID                 = 20 // Maximum child cursors to fetch per SQL_ID
+	maxQueryMonitoringCountThreshold = queries.MaxQueryMonitoringCountThreshold
 )
 
 var (
@@ -96,8 +92,10 @@ type Config struct {
 	EnableQueryMonitoring                bool `mapstructure:"enable_query_monitoring"`
 	QueryMonitoringResponseTimeThreshold *int `mapstructure:"query_monitoring_response_time_threshold"`
 	QueryMonitoringCountThreshold        int  `mapstructure:"query_monitoring_count_threshold"`
-	QueryMonitoringIntervalSeconds       int  `mapstructure:"query_monitoring_interval_seconds"`
-	ChildCursorsPerSQLID                 int  `mapstructure:"child_cursors_per_sql_id"`
+	// ActiveQueryCountThreshold controls the FETCH FIRST N row limit for the active-session
+	// snapshot query (Phase 2 / Call 2). Defaults to MaxQueryMonitoringCountThreshold (50).
+	ActiveQueryCountThreshold      int `mapstructure:"active_query_count_threshold"`
+	QueryMonitoringIntervalSeconds int `mapstructure:"query_monitoring_interval_seconds"`
 
 	// Interval Calculator Configuration
 	EnableIntervalBasedAveraging      bool `mapstructure:"enable_interval_based_averaging"`
@@ -107,13 +105,12 @@ type Config struct {
 	TablespaceFilter TablespaceFilterConfig `mapstructure:"tablespace_filter"`
 
 	// PDB Services Configuration
-	// - Empty or nil: Collect only CDB service data
-	// - ["ALL"]: Collect all PDB services (excluding CDB)
-	// - ["pdb1", "pdb2"]: Collect only specified PDB services
+	// - Empty or nil: Collect only the configured service (from 'service' field)
+	// - ["ALL"]: Query database and collect all available PDB services 
+	// - ["pdb1", "pdb2"]: Use the specified service names directly
 	PdbServices []string `mapstructure:"pdb_services"`
 
 	// Feature-level flags for enabling/disabling individual scrapers
-	EnableSessionScraper      bool `mapstructure:"enable_session_scraper"`
 	EnableTablespaceScraper   bool `mapstructure:"enable_tablespace_scraper"`
 	EnableCoreScraper         bool `mapstructure:"enable_core_scraper"`
 	EnablePdbScraper          bool `mapstructure:"enable_pdb_scraper"`
@@ -146,11 +143,10 @@ func (c *Config) SetDefaults() {
 		c.QueryMonitoringCountThreshold > maxQueryMonitoringCountThreshold {
 		c.QueryMonitoringCountThreshold = defaultQueryMonitoringCountThreshold
 	}
-	if c.ChildCursorsPerSQLID == 0 || c.ChildCursorsPerSQLID < minChildCursorsPerSQLID ||
-		c.ChildCursorsPerSQLID > maxChildCursorsPerSQLID {
-		c.ChildCursorsPerSQLID = defaultChildCursorsPerSQLID
+	if c.ActiveQueryCountThreshold == 0 || c.ActiveQueryCountThreshold < minQueryMonitoringCountThreshold ||
+		c.ActiveQueryCountThreshold > maxQueryMonitoringCountThreshold {
+		c.ActiveQueryCountThreshold = defaultActiveQueryCountThreshold
 	}
-
 	// Set QueryMonitoringIntervalSeconds default based on collection_interval
 	// IMPORTANT: This should be >= collection_interval to avoid missing queries between scrapes
 	// Default: Use collection_interval converted to seconds (rounded up)
@@ -346,12 +342,12 @@ func (c Config) validateQueryPerformanceMonitoring() error {
 		allErrs = multierr.Append(allErrs, fmt.Errorf("query_monitoring_count_threshold cannot be negative: got %d", c.QueryMonitoringCountThreshold))
 	}
 
-	if c.QueryMonitoringIntervalSeconds < 0 {
-		allErrs = multierr.Append(allErrs, fmt.Errorf("query_monitoring_interval_seconds cannot be negative: got %d", c.QueryMonitoringIntervalSeconds))
+	if c.ActiveQueryCountThreshold < 0 {
+		allErrs = multierr.Append(allErrs, fmt.Errorf("active_query_count_threshold cannot be negative: got %d", c.ActiveQueryCountThreshold))
 	}
 
-	if c.ChildCursorsPerSQLID < 0 {
-		allErrs = multierr.Append(allErrs, fmt.Errorf("child_cursors_per_sql_id cannot be negative: got %d", c.ChildCursorsPerSQLID))
+	if c.QueryMonitoringIntervalSeconds < 0 {
+		allErrs = multierr.Append(allErrs, fmt.Errorf("query_monitoring_interval_seconds cannot be negative: got %d", c.QueryMonitoringIntervalSeconds))
 	}
 
 	// Note: We don't validate that interval_seconds >= collection_interval here because

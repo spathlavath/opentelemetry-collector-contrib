@@ -75,7 +75,10 @@ const (
 
 	// PDBServiceNamesSQL returns all PDB service names (excluding seed PDB)
 	PDBServiceNamesSQL = `
-		SELECT LOWER(p.NAME) || '.' || (SELECT value FROM v$parameter WHERE name = 'db_domain') AS FQDN
+		SELECT LOWER(p.NAME) || 
+			NVL2((SELECT value FROM v$parameter WHERE name = 'db_domain'), 
+					'.' || (SELECT value FROM v$parameter WHERE name = 'db_domain'), 
+					'') AS FQDN
 		FROM V$PDBS p
 		WHERE p.NAME != 'PDB$SEED'`
 )

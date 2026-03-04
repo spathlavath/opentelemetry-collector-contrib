@@ -39,52 +39,42 @@ func GetSlowQueriesSQL(intervalSeconds int) string {
 			sa.direct_writes AS total_disk_writes,
 			(sa.elapsed_time - sa.cpu_time) / 1000 AS total_wait_time_ms
 		FROM
-			v$sqlarea sa
+			V$SQLAREA sa
 		INNER JOIN
 			ALL_USERS au ON sa.parsing_user_id = au.user_id
 		-- Use LEFT JOIN for Non-CDB compatibility
 		LEFT JOIN
-			v$pdbs p ON sa.con_id = p.con_id
+			V$PDBS p ON sa.con_id = p.con_id
 		CROSS JOIN
-			v$database d
+			V$DATABASE d
 		WHERE
 			sa.executions > 0
-			AND sa.sql_text NOT LIKE '%%ALL_USERS%%'
-			AND sa.sql_text NOT LIKE '%%V$SQL_PLAN%%'
-			AND sa.sql_text NOT LIKE '%%V$SQLAREA%%'
-			AND sa.sql_text NOT LIKE '%%V$SESSION%%'
-			AND sa.sql_text NOT LIKE '%%V$ACTIVE_SESSION_HISTORY%%'
-			AND sa.sql_text NOT LIKE '%%gv$sqlarea%%'
-			AND sa.sql_text NOT LIKE '%%v$lock%%'
-			AND sa.sql_text NOT LIKE '%%gv$instance%%'
+			AND sa.sql_fulltext NOT LIKE '%%ALL_USERS%%'
+			AND sa.sql_fulltext NOT LIKE '%%V$SQL_PLAN%%'
+			AND sa.sql_fulltext NOT LIKE '%%V$SQL%%'
+			AND sa.sql_fulltext NOT LIKE '%%V$PDBS%%'
+			AND sa.sql_fulltext NOT LIKE '%%GV$PDBS%%'
+			AND sa.sql_fulltext NOT LIKE '%%V$SQLAREA%%'
+			AND sa.sql_fulltext NOT LIKE '%%V$SESSION%%'
+			AND sa.sql_fulltext NOT LIKE '%%GV$sqlarea%%'
+			AND sa.sql_fulltext NOT LIKE '%%GV$INSTANCE%%'
 			AND au.username NOT IN ('SYS', 'SYSTEM', 'DBSNMP', 'SYSMAN', 'OUTLN', 'MDSYS', 'ORDSYS', 'EXFSYS', 'WMSYS', 'APPQOSSYS', 'APEX_030200', 'OWBSYS', 'GSMADMIN_INTERNAL', 'OLAPSYS', 'XDB', 'ANONYMOUS', 'CTXSYS', 'SI_INFORMTN_SCHEMA', 'ORDDATA', 'DVSYS', 'LBACSYS', 'OJVMSYS')
 			AND sa.last_active_time >= SYSDATE - INTERVAL '%d' SECOND
 		ORDER BY
 			sa.elapsed_time DESC`, intervalSeconds)
 }
 
-// GetWaitEventsAndBlockingSQL returns SQL for wait events with optional blocking information
-// This combines both wait events and blocking queries into a single query to reduce overhead
-// High cardinality mitigation:
-// - FETCH FIRST limits total rows returned to configured rowLimit
-// - Filters active sessions capturing both CPU activity and actual waits (status='ACTIVE', excludes Idle waits and BACKGROUND processes)
-// - Optional SQL_ID filter (slowQuerySQLIDs) for database-level filtering
-// - Orders by time in state (CPU or wait time) to get most impactful sessions first
-//
-// Key improvements:
-// - Captures CPU activity (state != 'WAITING') in addition to wait events
-// - Correctly labels activity as 'ON CPU' or actual wait event name
-// - Uses proper timer: wait_time_micro for WAITING state, time_since_last_wait_micro for CPU
-// - Excludes background processes to match ASH behavior
-func GetWaitEventsAndBlockingSQL(rowLimit int, slowQuerySQLIDs []string) string {
-	sqlIDFilter := ""
-	if len(slowQuerySQLIDs) > 0 {
-		quotedIDs := make([]string, len(slowQuerySQLIDs))
-		for i, id := range slowQuerySQLIDs {
-			quotedIDs[i] = fmt.Sprintf("'%s'", id)
+func GetWaitEventsAndBlockingSQL(rowLimit int, excludeSQLIDs []string) string {
+	// Build the exclusion list - if empty, use a dummy value that won't match any real sql_id
+	exclusionList := "'__DUMMY__'"
+	if len(excludeSQLIDs) > 0 {
+		quoted := make([]string, len(excludeSQLIDs))
+		for i, id := range excludeSQLIDs {
+			quoted[i] = "'" + id + "'"
 		}
-		sqlIDFilter = fmt.Sprintf("AND s.sql_id IN (%s)", strings.Join(quotedIDs, ", "))
+		exclusionList = strings.Join(quoted, ", ")
 	}
+
 	return fmt.Sprintf(`
 		SELECT
 			TO_CHAR(SYSTIMESTAMP, 'YYYY-MM-DD HH24:MI:SS') AS COLLECTION_TIMESTAMP,
@@ -122,38 +112,127 @@ func GetWaitEventsAndBlockingSQL(rowLimit int, slowQuerySQLIDs []string) string 
 			final_blocker.serial# AS final_blocker_serial,
 			-- Enhanced: Prioritize SQL_ID, fallback to PREV_SQL_ID
 			COALESCE(final_blocker.sql_id, final_blocker.prev_sql_id) AS final_blocker_query_id,
-			COALESCE(final_blocker_sql.sql_fulltext, prev_final_blocker_sql.sql_fulltext) AS final_blocker_query_text
+			COALESCE(final_blocker_sql.sql_fulltext, prev_final_blocker_sql.sql_fulltext) AS final_blocker_query_text,
+			active_sql.sql_fulltext AS query_text
 		FROM
-			v$session s
+			V$SESSION s
 		LEFT JOIN
 			DBA_OBJECTS o ON s.ROW_WAIT_OBJ# = o.OBJECT_ID
 		LEFT JOIN
-			v$session final_blocker ON s.FINAL_BLOCKING_SESSION = final_blocker.sid
+			V$SESSION final_blocker ON s.FINAL_BLOCKING_SESSION = final_blocker.sid
 		LEFT JOIN
-			v$sqlarea final_blocker_sql ON final_blocker.sql_id = final_blocker_sql.sql_id
-		-- NEW JOIN: Join to V$SQLAREA using the FINAL BLOCKER'S PREV_SQL_ID
+			V$SQLAREA final_blocker_sql ON final_blocker.sql_id = final_blocker_sql.sql_id
+		-- Join to V$SQLAREA using the FINAL BLOCKER'S PREV_SQL_ID
 		LEFT JOIN
-			v$sqlarea prev_final_blocker_sql ON final_blocker.prev_sql_id = prev_final_blocker_sql.sql_id
+			V$SQLAREA prev_final_blocker_sql ON final_blocker.prev_sql_id = prev_final_blocker_sql.sql_id
+		-- Join to V$SQLAREA for the active session's own query text
+		LEFT JOIN
+			V$SQLAREA active_sql ON s.sql_id = active_sql.sql_id
 		-- Use LEFT JOIN for Non-CDB compatibility
 		LEFT JOIN
-    		v$pdbs p ON s.con_id = p.con_id
+    		V$PDBS p ON s.con_id = p.con_id
 		CROSS JOIN
-			v$database d
+			V$DATABASE d
 		WHERE
 			s.status = 'ACTIVE'
 			AND s.type != 'BACKGROUND'
 			AND s.sql_id IS NOT NULL
+			AND s.sql_id NOT IN (%s)
 			AND (
 				s.state != 'WAITING'
 				OR s.wait_class <> 'Idle'
 			)
-			%s
 		ORDER BY
 			CASE
 				WHEN s.state = 'WAITING' THEN s.WAIT_TIME_MICRO
 				ELSE s.TIME_SINCE_LAST_WAIT_MICRO
 			END DESC
-		FETCH FIRST %d ROWS ONLY`, sqlIDFilter, rowLimit)
+		FETCH FIRST %d ROWS ONLY`, exclusionList, rowLimit)
+}
+
+func GetActiveSessionsForMonitoredQueriesSQL(slowQueryIDs []string) string {
+	if len(slowQueryIDs) == 0 {
+		return ""
+	}
+
+	quoted := make([]string, len(slowQueryIDs))
+	for i, id := range slowQueryIDs {
+		quoted[i] = "'" + id + "'"
+	}
+	inList := strings.Join(quoted, ", ")
+
+	return fmt.Sprintf(`
+		SELECT
+			TO_CHAR(SYSTIMESTAMP, 'YYYY-MM-DD HH24:MI:SS') AS COLLECTION_TIMESTAMP,
+			COALESCE(p.name, d.name) AS database_name,
+			s.username,
+			s.sid,
+			s.serial#,
+			s.status,
+			s.state,
+			s.sql_id,
+			s.SQL_CHILD_NUMBER,
+			s.wait_class,
+			s.event,
+			ROUND(
+				CASE
+					WHEN s.state = 'WAITING' THEN s.WAIT_TIME_MICRO
+					ELSE s.TIME_SINCE_LAST_WAIT_MICRO
+				END / 1000, 2
+			) AS wait_time_ms,
+			TO_CHAR(s.SQL_EXEC_START, 'YYYY-MM-DD HH24:MI:SS') AS SQL_EXEC_START,
+			s.SQL_EXEC_ID,
+			s.PROGRAM,
+			s.MACHINE,
+			s.ROW_WAIT_OBJ#,
+			o.OWNER,
+			o.OBJECT_NAME,
+			o.OBJECT_TYPE,
+			s.ROW_WAIT_FILE#,
+			s.ROW_WAIT_BLOCK#,
+			s.BLOCKING_SESSION_STATUS,
+			s.BLOCKING_SESSION AS immediate_blocker_sid,
+			s.FINAL_BLOCKING_SESSION_STATUS,
+			s.FINAL_BLOCKING_SESSION AS final_blocker_sid,
+			final_blocker.username AS final_blocker_user,
+			final_blocker.serial# AS final_blocker_serial,
+			-- Enhanced: Prioritize SQL_ID, fallback to PREV_SQL_ID
+			COALESCE(final_blocker.sql_id, final_blocker.prev_sql_id) AS final_blocker_query_id,
+			COALESCE(final_blocker_sql.sql_fulltext, prev_final_blocker_sql.sql_fulltext) AS final_blocker_query_text,
+			active_sql.sql_fulltext AS query_text
+		FROM
+			V$SESSION s
+		LEFT JOIN
+			DBA_OBJECTS o ON s.ROW_WAIT_OBJ# = o.OBJECT_ID
+		LEFT JOIN
+			V$SESSION final_blocker ON s.FINAL_BLOCKING_SESSION = final_blocker.sid
+		LEFT JOIN
+			V$SQLAREA final_blocker_sql ON final_blocker.sql_id = final_blocker_sql.sql_id
+		-- Join to V$SQLAREA using the FINAL BLOCKER'S PREV_SQL_ID
+		LEFT JOIN
+			V$SQLAREA prev_final_blocker_sql ON final_blocker.prev_sql_id = prev_final_blocker_sql.sql_id
+		-- Join to V$SQLAREA for the active session's own query text
+		LEFT JOIN
+			V$SQLAREA active_sql ON s.sql_id = active_sql.sql_id
+		-- Use LEFT JOIN for Non-CDB compatibility
+		LEFT JOIN
+    		V$PDBS p ON s.con_id = p.con_id
+		CROSS JOIN
+			V$DATABASE d
+		WHERE
+			s.status = 'ACTIVE'
+			AND s.type != 'BACKGROUND'
+			AND s.sql_id IS NOT NULL
+			AND s.sql_id IN (%s)
+			AND (
+				s.state != 'WAITING'
+				OR s.wait_class <> 'Idle'
+			)
+		ORDER BY
+			CASE
+				WHEN s.state = 'WAITING' THEN s.WAIT_TIME_MICRO
+				ELSE s.TIME_SINCE_LAST_WAIT_MICRO
+			END DESC`, inList)
 }
 
 // GetSpecificChildCursorQuery returns SQL to get a SPECIFIC child cursor by sql_id and child_number
@@ -175,12 +254,12 @@ func GetSpecificChildCursorQuery(sqlID string, childNumber int64) string {
 			TO_CHAR(TO_DATE(s.first_load_time, 'YYYY/MM/DD HH24:MI:SS'), 'YYYY-MM-DD HH24:MI:SS') AS first_load_time,
 			TO_CHAR(TO_DATE(s.last_load_time, 'YYYY/MM/DD HH24:MI:SS'), 'YYYY-MM-DD HH24:MI:SS') AS last_load_time
 		FROM
-			v$sql s
+			V$SQL s
 		-- Use LEFT JOIN for Non-CDB compatibility
 		LEFT JOIN
-    		v$pdbs p ON s.con_id = p.con_id
+    		V$PDBS p ON s.con_id = p.con_id
 		CROSS JOIN
-			v$database d
+			V$DATABASE d
 		WHERE
 			s.sql_id = '%s'
 			AND s.child_number = %d`, sqlID, childNumber)

@@ -29,10 +29,11 @@ type OracleClient interface {
 	// Child cursors (V$SQL)
 	QuerySpecificChildCursor(ctx context.Context, sqlID string, childNumber int64) (*models.ChildCursor, error)
 
-	// Combined wait events with blocking information
-	// This replaces the separate QueryBlockingQueries and QueryWaitEvents methods
-	// slowQuerySQLIDs: Optional list of SQL_IDs to filter by (empty slice returns all)
-	QueryWaitEventsWithBlocking(ctx context.Context, countThreshold int, slowQuerySQLIDs []string) ([]models.WaitEventWithBlocking, error)
+	// Combined wait events with blocking information for all active non-idle sessions.
+	// slowQueryIDs is the list of sql_ids from Phase 1 slow queries; when non-empty the query
+	// prioritizes those sessions so they are not cut off by the FETCH FIRST limit.
+	// Metadata (nrServiceGUID, normalisedSQLHash) is attached in Go from the slow-query sqlIDMap.
+	QueryWaitEventsWithBlocking(ctx context.Context, countThreshold int, slowQueryIDs []string) ([]models.WaitEventWithBlocking, error)
 
 	// Connection metrics - simple counts
 	QueryTotalSessions(ctx context.Context) (int64, error)

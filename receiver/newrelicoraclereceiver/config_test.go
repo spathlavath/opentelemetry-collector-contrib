@@ -142,6 +142,33 @@ func TestConfig_SetDefaults(t *testing.T) {
 
 	assert.Equal(t, defaultMaxOpenConnections, config.MaxOpenConnections)
 	assert.Equal(t, defaultCollectionInterval, config.CollectionInterval)
+	assert.Equal(t, defaultActiveQueryCountThreshold, config.ActiveQueryCountThreshold)
+}
+
+func TestConfig_SetDefaults_ActiveQueryCountThreshold(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    int
+		expected int
+	}{
+		{"zero (unset)", 0, defaultActiveQueryCountThreshold},
+		{"negative", -1, defaultActiveQueryCountThreshold},
+		{"below minimum", minQueryMonitoringCountThreshold - 1, defaultActiveQueryCountThreshold},
+		{"above maximum", maxQueryMonitoringCountThreshold + 1, defaultActiveQueryCountThreshold},
+		{"valid value", 30, 30},
+		{"minimum boundary", minQueryMonitoringCountThreshold, minQueryMonitoringCountThreshold},
+		{"maximum boundary", maxQueryMonitoringCountThreshold, maxQueryMonitoringCountThreshold},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			config := &Config{
+				ActiveQueryCountThreshold: tt.input,
+			}
+			config.SetDefaults()
+			assert.Equal(t, tt.expected, config.ActiveQueryCountThreshold)
+		})
+	}
 }
 
 func TestConfig_ValidateEnhanced(t *testing.T) {

@@ -79,7 +79,6 @@ receivers:
     pdb_services: ["ALL"]
     
     # Enable/disable specific scrapers (optional, all true by default)
-    # enable_session_scraper: true
     # enable_tablespace_scraper: true
     # enable_core_scraper: true
     # enable_pdb_scraper: true
@@ -139,7 +138,6 @@ You must provide either `datasource` OR all individual parameters.
 #### Scraper Control (Optional)
 | Parameter | Description | Default |
 |-----------|-------------|---------|
-| `enable_session_scraper` | Enable session metrics collection | true |
 | `enable_tablespace_scraper` | Enable tablespace metrics collection | true |
 | `enable_core_scraper` | Enable core database metrics collection | true |
 | `enable_pdb_scraper` | Enable PDB metrics collection | true |

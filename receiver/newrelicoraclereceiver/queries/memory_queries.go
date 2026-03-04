@@ -13,7 +13,7 @@ const (
 			INST_ID, 
 			NAME, 
 			VALUE 
-		FROM gv$pgastat 
+		FROM GV$PGASTAT 
 		WHERE NAME IN (
 			'total PGA inuse', 
 			'total PGA allocated', 

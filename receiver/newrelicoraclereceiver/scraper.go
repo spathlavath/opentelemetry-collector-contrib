@@ -213,7 +213,7 @@ func (s *newRelicOracleScraper) initializeQPMScrapers() error {
 	var err error
 	s.waitEventBlockingScraper, err = scrapers.NewWaitEventBlockingScraper(
 		s.client, s.mb, s.logger, s.metricsBuilderConfig,
-		s.config.QueryMonitoringCountThreshold,
+		s.config.ActiveQueryCountThreshold,
 	)
 	if err != nil {
 		return fmt.Errorf("failed to create wait event blocking scraper: %w", err)
@@ -229,20 +229,21 @@ func (s *newRelicOracleScraper) scrape(ctx context.Context) (pmetric.Metrics, er
 	startTime := time.Now()
 	s.logger.Info("Begin New Relic Oracle scrape", zap.Time("start_time", startTime))
 
-	scrapeCtx := s.createScrapeContext(ctx)
+	scrapeCtx, cancelScrape := s.createScrapeContext(ctx)
+	defer cancelScrape()
 
 	errChan := make(chan error, maxErrors)
 	var wg sync.WaitGroup
 
 	s.executeQPMScrapers(scrapeCtx, errChan)
 
-	s.executeIndependentScrapers(scrapeCtx, errChan, &wg)
+	scraperCount := s.executeIndependentScrapers(scrapeCtx, errChan, &wg)
 
 	scrapeErrors := s.collectScrapingErrors(scrapeCtx, errChan, &wg)
 
 	metrics := s.buildMetrics()
 
-	s.logScrapeCompletion(scrapeErrors)
+	s.logScrapeCompletion(scrapeErrors, scraperCount)
 
 	endTime := time.Now()
 	duration := endTime.Sub(startTime)
@@ -257,14 +258,13 @@ func (s *newRelicOracleScraper) scrape(ctx context.Context) (pmetric.Metrics, er
 	return metrics, nil
 }
 
-// createScrapeContext creates a context with timeout for scraping operations
-func (s *newRelicOracleScraper) createScrapeContext(ctx context.Context) context.Context {
+// createScrapeContext creates a context with timeout for scraping operations.
+// The caller must defer the returned cancel function to release context resources.
+func (s *newRelicOracleScraper) createScrapeContext(ctx context.Context) (context.Context, context.CancelFunc) {
 	if s.scrapeCfg.Timeout > 0 {
-		scrapeCtx, cancel := context.WithTimeout(ctx, s.scrapeCfg.Timeout)
-		_ = cancel
-		return scrapeCtx
+		return context.WithTimeout(ctx, s.scrapeCfg.Timeout)
 	}
-	return ctx
+	return ctx, func() {}
 }
 
 // executeQPMScrapers executes Query Performance Monitoring scrapers sequentially
@@ -296,14 +296,17 @@ func (s *newRelicOracleScraper) executeQPMScrapers(ctx context.Context, errChan 
 	}
 }
 
-// executeIndependentScrapers launches concurrent scrapers for independent metrics
-func (s *newRelicOracleScraper) executeIndependentScrapers(ctx context.Context, errChan chan<- error, wg *sync.WaitGroup) {
+// executeIndependentScrapers launches concurrent scrapers for independent metrics.
+// Returns the number of scrapers launched.
+func (s *newRelicOracleScraper) executeIndependentScrapers(ctx context.Context, errChan chan<- error, wg *sync.WaitGroup) int {
 	scraperFuncs := s.getIndependentScraperFunctions()
 
 	for i, scraperFunc := range scraperFuncs {
 		wg.Add(1)
 		go s.runScraperWithErrorHandling(ctx, errChan, wg, i, scraperFunc)
 	}
+
+	return len(scraperFuncs)
 }
 
 // getIndependentScraperFunctions returns the list of scraper functions that can run independently
@@ -427,8 +430,7 @@ func (s *newRelicOracleScraper) buildMetrics() pmetric.Metrics {
 }
 
 // logScrapeCompletion logs the completion of the scraping operation
-func (s *newRelicOracleScraper) logScrapeCompletion(scrapeErrors []error) {
-	scraperCount := len(s.getIndependentScraperFunctions())
+func (s *newRelicOracleScraper) logScrapeCompletion(scrapeErrors []error, scraperCount int) {
 	s.logger.Debug("Done New Relic Oracle scraping",
 		zap.Int("total_errors", len(scrapeErrors)),
 		zap.Int("scrapers_executed", scraperCount),

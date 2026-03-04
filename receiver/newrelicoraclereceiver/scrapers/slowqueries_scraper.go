@@ -176,6 +176,7 @@ func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) ([]models.SQ
 		// The anonymized query text is derived from the normalized SQL (for attribute display)
 		var queryHash, qText, nrServiceGUID string
 		if slowQuery.QueryText.Valid && slowQuery.QueryText.String != "" {
+
 			// Extract nrServiceGUID from query comment
 			nrServiceGUID = commonutils.ExtractNewRelicMetadata(slowQuery.QueryText.String)
 

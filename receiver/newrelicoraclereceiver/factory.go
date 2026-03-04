@@ -46,7 +46,6 @@ func createDefaultConfig() component.Config {
 		EnableQueryMonitoring:        defaultEnableQueryMonitoring,
 		EnableIntervalBasedAveraging: defaultEnableIntervalBasedAveraging,
 		// Set feature-level scraper flags to enabled by default
-		EnableSessionScraper:      defaultEnableSessionScraper,
 		EnableTablespaceScraper:   defaultEnableTablespaceScraper,
 		EnableCoreScraper:         defaultEnableCoreScraper,
 		EnablePdbScraper:          defaultEnablePdbScraper,
@@ -79,31 +78,6 @@ func createMetricsReceiverFunc(sqlOpenerFunc sqlOpenerFunc) receiver.CreateMetri
 		if err := sqlCfg.Validate(); err != nil {
 			return nil, fmt.Errorf("invalid configuration: %w", err)
 		}
-
-		// Log all configuration values (including defaults) for validation
-		settings.Logger.Info("New Relic Oracle Receiver Configuration",
-			zap.Duration("collection_interval", sqlCfg.ControllerConfig.CollectionInterval),
-			zap.Duration("timeout", sqlCfg.ControllerConfig.Timeout),
-			zap.Bool("disable_connection_pool", sqlCfg.DisableConnectionPool),
-			zap.Int("max_open_connections", sqlCfg.MaxOpenConnections),
-			zap.Bool("enable_query_monitoring", sqlCfg.EnableQueryMonitoring),
-			zap.Int("query_monitoring_response_time_threshold_ms", *sqlCfg.QueryMonitoringResponseTimeThreshold),
-			zap.Int("query_monitoring_count_threshold", sqlCfg.QueryMonitoringCountThreshold),
-			zap.Int("query_monitoring_interval_seconds", sqlCfg.QueryMonitoringIntervalSeconds),
-			zap.Int("child_cursors_per_sql_id", sqlCfg.ChildCursorsPerSQLID),
-			zap.Bool("enable_interval_based_averaging", sqlCfg.EnableIntervalBasedAveraging),
-			zap.Int("interval_calculator_cache_ttl_minutes", sqlCfg.IntervalCalculatorCacheTTLMinutes),
-			zap.Bool("enable_session_scraper", sqlCfg.EnableSessionScraper),
-			zap.Bool("enable_tablespace_scraper", sqlCfg.EnableTablespaceScraper),
-			zap.Bool("enable_core_scraper", sqlCfg.EnableCoreScraper),
-			zap.Bool("enable_pdb_scraper", sqlCfg.EnablePdbScraper),
-			zap.Bool("enable_system_scraper", sqlCfg.EnableSystemScraper),
-			zap.Bool("enable_connection_scraper", sqlCfg.EnableConnectionScraper),
-			zap.Bool("enable_container_scraper", sqlCfg.EnableContainerScraper),
-			zap.Bool("enable_rac_scraper", sqlCfg.EnableRacScraper),
-			zap.Bool("enable_database_info_scraper", sqlCfg.EnableDatabaseInfoScraper),
-			zap.Strings("pdb_services", sqlCfg.PdbServices),
-		)
 
 		metricsBuilder := metadata.NewMetricsBuilder(sqlCfg.MetricsBuilderConfig, settings)
 
@@ -258,47 +232,9 @@ func determineMonitoredServices(sqlOpenerFunc sqlOpenerFunc, dataSource, configu
 		return allServices, nil
 	}
 
-	// Case 3: pdb_services=['pdb1', 'pdb2'] - fetch only specified services
-	logger.Info("Filtering services based on configuration", zap.Strings("requested_services", pdbServices))
-	allServices, err := getAvailableServiceNames(sqlOpenerFunc, dataSource, logger)
-	if err != nil {
-		return nil, fmt.Errorf("failed to query services: %w", err)
-	}
-
-	filteredServices := filterServices(allServices, pdbServices, logger)
-	if len(filteredServices) == 0 {
-		return nil, fmt.Errorf("none of the requested services found: %v", pdbServices)
-	}
-
-	return filteredServices, nil
-}
-
-// filterServices filters services based on requested names (case-insensitive)
-func filterServices(allServices, requestedServices []string, logger *zap.Logger) []string {
-	requestMap := make(map[string]string) // lowercase -> original
-	for _, req := range requestedServices {
-		requestMap[strings.ToLower(req)] = req
-	}
-
-	var filtered []string
-	for _, service := range allServices {
-		serviceName := service
-		if dotIndex := strings.Index(service, "."); dotIndex != -1 {
-			serviceName = service[:dotIndex]
-		}
-
-		// Check if this service is in the requested list (case-insensitive)
-		if _, found := requestMap[strings.ToLower(serviceName)]; found {
-			filtered = append(filtered, service)
-			logger.Info("Including service", zap.String("service_name", service))
-		} else if _, found := requestMap[strings.ToLower(service)]; found {
-			// Also check the full FQDN
-			filtered = append(filtered, service)
-			logger.Info("Including service", zap.String("service_name", service))
-		}
-	}
-
-	return filtered
+	// Case 3: pdb_services=['pdb1', 'pdb2'] - use specified services directly
+	logger.Info("Using explicitly configured services", zap.Strings("services", pdbServices))
+	return pdbServices, nil
 }
 
 // getAvailableServiceNames queries the database for all available service names
