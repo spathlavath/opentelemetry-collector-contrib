@@ -71,7 +71,7 @@ func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) ([]models.SQ
 	// Apply interval-based delta calculation if enabled
 	var queriesToProcess []models.SlowQuery
 	if s.intervalCalculator != nil {
-		now := time.Now()
+		now := time.Now().UTC()
 
 		// Pre-allocate slice capacity to avoid reallocations
 		queriesToProcess = make([]models.SlowQuery, 0, len(slowQueries))
@@ -157,7 +157,7 @@ func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) ([]models.SQ
 		queriesToProcess = slowQueries
 	}
 
-	now := pcommon.NewTimestampFromTime(time.Now())
+	now := pcommon.NewTimestampFromTime(time.Now().UTC())
 
 	for i := range queriesToProcess {
 		slowQuery := &queriesToProcess[i]
@@ -198,7 +198,7 @@ func (s *SlowQueriesScraper) ScrapeSlowQueries(ctx context.Context) ([]models.SQ
 			sqlIdentifiers = append(sqlIdentifiers, models.SQLIdentifier{
 				SQLID:             slowQuery.QueryID.String,
 				ChildNumber:       0, // Will be populated later by child cursors scraper
-				Timestamp:         time.Now(),
+				Timestamp:         time.Now().UTC(),
 				NRServiceGUID:     nrServiceGUID,
 				NormalisedSQLHash: queryHash, // Empty string if no query text
 			})

@@ -57,7 +57,7 @@ func (s *SystemScraper) ScrapeSystemMetrics(ctx context.Context) []error {
 		return []error{err}
 	}
 
-	now := pcommon.NewTimestampFromTime(time.Now())
+	now := pcommon.NewTimestampFromTime(time.Now().UTC())
 	metricCount := 0
 
 	for _, metric := range metrics {

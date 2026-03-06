@@ -38,7 +38,7 @@ func NewChildCursorsScraper(oracleClient client.OracleClient, mb *metadata.Metri
 func (s *ChildCursorsScraper) ScrapeChildCursorsForIdentifiers(ctx context.Context, identifiers []models.SQLIdentifier) ([]models.SQLIdentifier, []error) {
 	var errs []error
 	s.logger.Debug("Starting child cursors scrape")
-	now := pcommon.NewTimestampFromTime(time.Now())
+	now := pcommon.NewTimestampFromTime(time.Now().UTC())
 	metricsEmitted := 0
 
 	for i := range identifiers {

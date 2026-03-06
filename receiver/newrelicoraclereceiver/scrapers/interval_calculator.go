@@ -88,7 +88,7 @@ func NewOracleIntervalCalculator(logger *zap.Logger, cacheTTL time.Duration) *Or
 		logger:           logger,
 		stateCache:       make(map[string]*OracleQueryState),
 		cacheTTL:         cacheTTL,
-		lastCacheCleanup: time.Now(),
+		lastCacheCleanup: time.Now().UTC(),
 	}
 }
 
