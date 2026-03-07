@@ -246,6 +246,16 @@ type MetricsConfig struct {
 	NewrelicmysqlReplicationSlaveRunning                    MetricConfig `mapstructure:"newrelicmysql.replication.slave_running"`
 	NewrelicmysqlReplicationSlaveSQLRunning                 MetricConfig `mapstructure:"newrelicmysql.replication.slave_sql_running"`
 	NewrelicmysqlReplicationSlavesConnected                 MetricConfig `mapstructure:"newrelicmysql.replication.slaves_connected"`
+	NewrelicmysqlSlowqueryAvgCPUTimeMs                      MetricConfig `mapstructure:"newrelicmysql.slowquery.avg_cpu_time_ms"`
+	NewrelicmysqlSlowqueryAvgElapsedTimeMs                  MetricConfig `mapstructure:"newrelicmysql.slowquery.avg_elapsed_time_ms"`
+	NewrelicmysqlSlowqueryAvgLockTimeMs                     MetricConfig `mapstructure:"newrelicmysql.slowquery.avg_lock_time_ms"`
+	NewrelicmysqlSlowqueryAvgRowsExamined                   MetricConfig `mapstructure:"newrelicmysql.slowquery.avg_rows_examined"`
+	NewrelicmysqlSlowqueryAvgRowsSent                       MetricConfig `mapstructure:"newrelicmysql.slowquery.avg_rows_sent"`
+	NewrelicmysqlSlowqueryExecutionCount                    MetricConfig `mapstructure:"newrelicmysql.slowquery.execution_count"`
+	NewrelicmysqlSlowqueryIntervalAvgElapsedTimeMs          MetricConfig `mapstructure:"newrelicmysql.slowquery.interval_avg_elapsed_time_ms"`
+	NewrelicmysqlSlowqueryIntervalExecutionCount            MetricConfig `mapstructure:"newrelicmysql.slowquery.interval_execution_count"`
+	NewrelicmysqlSlowqueryQueryDetails                      MetricConfig `mapstructure:"newrelicmysql.slowquery.query_details"`
+	NewrelicmysqlSlowqueryQueryErrors                       MetricConfig `mapstructure:"newrelicmysql.slowquery.query_errors"`
 	NewrelicmysqlUptime                                     MetricConfig `mapstructure:"newrelicmysql.uptime"`
 }
 
@@ -903,6 +913,36 @@ func DefaultMetricsConfig() MetricsConfig {
 			Enabled: true,
 		},
 		NewrelicmysqlReplicationSlavesConnected: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlSlowqueryAvgCPUTimeMs: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlSlowqueryAvgElapsedTimeMs: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlSlowqueryAvgLockTimeMs: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlSlowqueryAvgRowsExamined: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlSlowqueryAvgRowsSent: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlSlowqueryExecutionCount: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlSlowqueryIntervalAvgElapsedTimeMs: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlSlowqueryIntervalExecutionCount: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlSlowqueryQueryDetails: MetricConfig{
+			Enabled: true,
+		},
+		NewrelicmysqlSlowqueryQueryErrors: MetricConfig{
 			Enabled: true,
 		},
 		NewrelicmysqlUptime: MetricConfig{

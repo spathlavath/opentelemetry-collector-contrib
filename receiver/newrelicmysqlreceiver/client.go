@@ -13,6 +13,8 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicmysqlreceiver/common"
+	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicmysqlreceiver/models"
+	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicmysqlreceiver/queries"
 )
 
 // mySQLClient is the concrete implementation of Client interface.
@@ -343,6 +345,62 @@ func (c *mySQLClient) GetVersion() (string, error) {
 	var version string
 	err := c.db.QueryRow("SELECT VERSION()").Scan(&version)
 	return version, err
+}
+
+// QueryContext executes a query and returns sql.Rows for custom processing.
+func (c *mySQLClient) QueryContext(ctx context.Context, query string, args ...interface{}) (*sql.Rows, error) {
+	if c.db == nil {
+		return nil, fmt.Errorf("database connection not established")
+	}
+	return c.db.QueryContext(ctx, query, args...)
+}
+
+// GetSlowQueries retrieves slow queries from performance_schema
+func (c *mySQLClient) GetSlowQueries(ctx context.Context, intervalSeconds int) ([]models.SlowQuery, error) {
+	if c.db == nil {
+		return nil, fmt.Errorf("database connection not established")
+	}
+
+	query := queries.GetSlowQueriesSQL(intervalSeconds)
+
+	rows, err := c.db.QueryContext(ctx, query)
+	if err != nil {
+		return nil, fmt.Errorf("failed to execute slow query: %w", err)
+	}
+	defer rows.Close()
+
+	var slowQueries []models.SlowQuery
+	for rows.Next() {
+		var sq models.SlowQuery
+		err := rows.Scan(
+			&sq.CollectionTimestamp,
+			&sq.QueryID,
+			&sq.QueryText,
+			&sq.DatabaseName,
+			&sq.ExecutionCount,
+			&sq.TotalElapsedTimeMS,
+			&sq.AvgElapsedTimeMS,
+			&sq.AvgCPUTimeMS,
+			&sq.AvgLockTimeMS,
+			&sq.AvgRowsExamined,
+			&sq.AvgRowsSent,
+			&sq.TotalErrors,
+			&sq.FirstSeen,
+			&sq.LastExecutionTimestamp,
+		)
+		if err != nil {
+			c.logger.Warn("Failed to scan slow query row", zap.Error(err))
+			continue
+		}
+
+		slowQueries = append(slowQueries, sq)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("error iterating slow query results: %w", err)
+	}
+
+	return slowQueries, nil
 }
 
 // Close closes the database connection.

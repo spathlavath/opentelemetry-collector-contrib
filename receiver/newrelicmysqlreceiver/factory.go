@@ -38,6 +38,14 @@ func createDefaultConfig() component.Config {
 			Transport: confignet.TransportTypeTCP,
 		},
 		MetricsBuilderConfig: metadata.DefaultMetricsBuilderConfig(),
+		SlowQuery: SlowQueryConfig{
+			Enabled:                  false, // Disabled by default
+			ResponseTimeThreshold:    100,   // 100ms - only queries slower than this
+			CountThreshold:           10,    // Top 10 slowest queries
+			IntervalSeconds:          60,    // Look at queries from last 60 seconds
+			EnableIntervalCalculator: true,  // Enable delta metrics by default
+			CacheTTLMinutes:          30,    // Cache entries expire after 30 minutes
+		},
 	}
 }
 
