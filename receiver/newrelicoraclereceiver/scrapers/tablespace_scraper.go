@@ -58,7 +58,7 @@ func (s *TablespaceScraper) ScrapeTablespaceMetrics(ctx context.Context) []error
 		return []error{err}
 	}
 
-	now := pcommon.NewTimestampFromTime(time.Now().UTC())
+	now := pcommon.NewTimestampFromTime(time.Now())
 
 	errors = append(errors, s.scrapeTablespaceUsageMetrics(ctx, now, &metricCount)...)
 	errors = append(errors, s.scrapeGlobalNameTablespaceMetrics(ctx, now, &metricCount)...)

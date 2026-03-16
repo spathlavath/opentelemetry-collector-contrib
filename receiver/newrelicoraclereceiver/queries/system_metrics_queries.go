@@ -30,7 +30,7 @@ const (
 			SUM(PHYBLKWRT) AS PhysicalBlockWrites,
 			SUM(READTIM) * 10 AS ReadTime,
 			SUM(WRITETIM) * 10 AS WriteTime
-		FROM GV$SYSSTAT
+		FROM GV$FILESTAT
 		GROUP BY INST_ID`
 
 	// LongRunningQueriesSQL returns count of long-running queries per instance

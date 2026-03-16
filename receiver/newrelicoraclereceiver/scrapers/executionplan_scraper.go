@@ -50,7 +50,7 @@ func (s *ExecutionPlanScraper) ScrapeExecutionPlans(ctx context.Context, sqlIden
 	if len(sqlIdentifiers) == 0 {
 		return errs
 	}
-	now := time.Now().UTC()
+	now := time.Now()
 	s.cleanupCache(now)
 
 	totalTimeout := 30 * time.Second // Adjust based on your needs

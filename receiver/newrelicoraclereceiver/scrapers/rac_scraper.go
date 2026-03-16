@@ -191,7 +191,7 @@ func (s *RacScraper) scrapeASMDiskGroups(ctx context.Context) []error {
 			continue
 		}
 
-		now := pcommon.NewTimestampFromTime(time.Now().UTC())
+		now := pcommon.NewTimestampFromTime(time.Now())
 
 		if diskGroup.TotalMB.Valid && s.metricsBuilderConfig.Metrics.NewrelicoracledbAsmDiskgroupTotalMb.Enabled {
 			s.mb.RecordNewrelicoracledbAsmDiskgroupTotalMbDataPoint(now, diskGroup.TotalMB.Float64, diskGroup.Name.String)
@@ -225,7 +225,7 @@ func (s *RacScraper) scrapeClusterWaitEvents(ctx context.Context) []error {
 			continue
 		}
 
-		now := pcommon.NewTimestampFromTime(time.Now().UTC())
+		now := pcommon.NewTimestampFromTime(time.Now())
 		instanceIDStr := event.InstID.String
 		eventName := event.Event.String
 
@@ -265,7 +265,7 @@ func (s *RacScraper) scrapeInstanceStatus(ctx context.Context) []error {
 			continue
 		}
 
-		now := pcommon.NewTimestampFromTime(time.Now().UTC())
+		now := pcommon.NewTimestampFromTime(time.Now())
 		instanceIDStr := instance.InstID.String
 		statusStr := instance.Status.String
 		instanceNameStr := nullStringToString(instance.InstanceName)

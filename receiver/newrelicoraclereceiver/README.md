@@ -4,6 +4,90 @@
 
 The New Relic Oracle Receiver is a comprehensive OpenTelemetry receiver that collects extensive Oracle database metrics, performance data, and telemetry for monitoring Oracle database health, performance, and resource utilization.
 
+## Architecture
+
+The New Relic Oracle Receiver integrates seamlessly with the OpenTelemetry Collector ecosystem to provide comprehensive database monitoring:
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                          Customer's Host                                    │
+│  ┌───────────────────────────────────────────────────────────────────────┐ │
+│  │                   NRDOT - OpenTelemetry Collector                     │ │
+│  │                                                                         │ │
+│  │   ┌──────────────┐                                                    │ │
+│  │   │ Config.yaml  │◄────── Configuration related to DB connection      │ │
+│  │   └──────┬───────┘        and Metrics/Logs pipeline                   │ │
+│  │          │                                                             │ │
+│  │          ▼                                                             │ │
+│  │   ┌──────────────────────────────────────────┐                        │ │
+│  │   │           Receivers                      │                        │ │
+│  │   │  (SQL Server, Oracle, PostgreSQL, MySQL) │                        │ │
+│  │   └──────────────┬───────────────────────────┘                        │ │
+│  │                  │                                                     │ │
+│  │                  ▼                                                     │ │
+│  │   ┌──────────────────────┐                                            │ │
+│  │   │     Processors       │                                            │ │
+│  │   └──────────┬───────────┘                                            │ │
+│  │              │                                                         │ │
+│  │              ▼                                                         │ │
+│  │   ┌──────────────────────┐        OTLP / HTTP                         │ │
+│  │   │      Exporter        │───────► Endpoint                           │ │
+│  │   └──────────────────────┘                                            │ │
+│  └───────────────────────────────────────────────────────────────────────┘ │
+└─────────────────────────────────────────────────────────────────────────────┘
+                                  │
+                                  │ Fetches secrets and
+                                  │ keep it in NRDOT's memory
+                                  ▼
+                    ┌──────────────────────────┐
+                    │  Customer's Key Vault    │
+                    └──────────────────────────┘
+                                  │
+                                  │ queries
+                                  ▼
+         ┌─────────────────────────────────────────────────┐
+         │        Customer's Database                      │
+         │     With Performance Schema Enabled             │
+         │                                                  │
+         │  (query comment as nr_service_guid) ────────────┼─────┐
+         └─────────────────────────────────────────────────┘     │
+                                                                  │
+                                                                  ▼
+                                                      ┌──────────────────────┐
+                                                      │        APM           │
+                                                      │ (nr_service_guid:    │
+                                                      │     enabled)         │
+                                                      └──────────┬───────────┘
+                                                                 │
+                                                                 │ Via Ingest Pipeline
+                                                                 ▼
+                                                      ┌──────────────────────┐
+                                                      │    APM Consumer      │
+                                                      └──────────┬───────────┘
+                                                                 │
+                                                                 ▼
+                                                      ┌──────────────────────┐
+                                                      │        NRDB          │
+                                                      └──────────┬───────────┘
+                                                                 │
+                                                                 ▼
+                                                      ┌──────────────────────┐
+                                                      │    New Relic         │
+                                                      │   Observability      │
+                                                      │    Experience        │
+                                                      └──────────────────────┘
+```
+
+### Key Components
+
+- **Receivers**: Collects metrics from Oracle databases using native Oracle client libraries
+- **Processors**: Transforms and enriches telemetry data before export
+- **Exporter**: Sends processed metrics to New Relic via OTLP/HTTP endpoints
+- **Key Vault Integration**: Securely fetches database credentials and stores them in memory
+- **Query Correlation**: Links database queries with APM transactions using `nr_service_guid` comment tags
+- **NRDB**: New Relic's telemetry data platform for storage and querying
+- **Observability Experience**: Unified dashboards and visualization in New Relic UI
+
 ## Features
 
 This receiver collects comprehensive Oracle database metrics across multiple categories:
@@ -25,7 +109,7 @@ This receiver collects comprehensive Oracle database metrics across multiple cat
 ### Container Database (CDB) & Pluggable Database (PDB)
 - **CDB/PDB Status**: Container status, open mode, restricted status
 - **PDB Performance**: Per-PDB metrics including CPU usage, transactions, I/O rates
-- **Multi-tenancy Support**: Full support for Oracle 12c+ multitenant architecture
+- **Multi-tenancy Support**: Full support for Oracle 19c multitenant architecture
 
 ### Oracle RAC (Real Application Clusters)
 - **ASM Disk Groups**: Capacity, free space, offline disks
@@ -150,14 +234,14 @@ You must provide either `datasource` OR all individual parameters.
 ## Prerequisites
 
 ### Oracle Database
-- Supported versions: Oracle 11g, 12c, 19c, 21c, 23c
+- Supported version: Oracle 19c
 - Supports Standard Edition and Enterprise Edition
 - Supports non-CDB and CDB/PDB architectures
 - Oracle RAC monitoring requires appropriate cluster configuration
 
 ### Required Database Permissions
 
-#### For CDB/PDB Monitoring (Oracle 12c+)
+#### For CDB/PDB Monitoring (Oracle 19c)
 
 Create a common user with `C##` prefix and grant all required permissions:
 
@@ -250,7 +334,7 @@ GRANT SELECT ON ALL_VIEWS TO c##<YOUR_DB_USERNAME> CONTAINER=ALL;
 GRANT SELECT ON GLOBAL_NAME TO c##<YOUR_DB_USERNAME> CONTAINER=ALL;
 ```
 
-#### For Non-CDB or PDB-Specific Monitoring (Oracle 11g/12c Standard)
+#### For Non-CDB or PDB-Specific Monitoring
 
 For non-container databases or when connecting directly to a PDB, use a regular user without the `C##` prefix:
 

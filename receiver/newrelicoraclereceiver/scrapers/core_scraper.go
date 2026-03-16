@@ -48,7 +48,7 @@ func NewCoreScraper(c client.OracleClient, mb *metadata.MetricsBuilder, logger *
 func (s *CoreScraper) ScrapeCoreMetrics(ctx context.Context) []error {
 	var errors []error
 	s.logger.Debug("Scraping Oracle core database metrics")
-	now := pcommon.NewTimestampFromTime(time.Now().UTC())
+	now := pcommon.NewTimestampFromTime(time.Now())
 
 	// Always emit UI-critical metrics (scrapePGAMetrics handles both mandatory and advanced based on flag)
 	errors = append(errors, s.scrapePGAMetrics(ctx, now)...)

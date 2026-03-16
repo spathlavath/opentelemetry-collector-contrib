@@ -116,7 +116,7 @@ func newScraper(
 
 // start initializes the scraper and establishes database connections
 func (s *newRelicOracleScraper) start(context.Context, component.Host) error {
-	s.startTime = pcommon.NewTimestampFromTime(time.Now().UTC())
+	s.startTime = pcommon.NewTimestampFromTime(time.Now())
 
 	// Establish database connection
 	if err := s.initializeDatabase(); err != nil {
@@ -226,7 +226,7 @@ func (s *newRelicOracleScraper) initializeQPMScrapers() error {
 
 // scrape orchestrates the collection of all Oracle database metrics
 func (s *newRelicOracleScraper) scrape(ctx context.Context) (pmetric.Metrics, error) {
-	startTime := time.Now().UTC()
+	startTime := time.Now()
 	s.logger.Info("Begin New Relic Oracle scrape", zap.Time("start_time", startTime))
 
 	scrapeCtx, cancelScrape := s.createScrapeContext(ctx)
@@ -245,7 +245,7 @@ func (s *newRelicOracleScraper) scrape(ctx context.Context) (pmetric.Metrics, er
 
 	s.logScrapeCompletion(scrapeErrors, scraperCount)
 
-	endTime := time.Now().UTC()
+	endTime := time.Now()
 	duration := endTime.Sub(startTime)
 	s.logger.Info("Completed New Relic Oracle scrape",
 		zap.Time("end_time", endTime),
@@ -372,7 +372,7 @@ func (s *newRelicOracleScraper) runScraperWithErrorHandling(ctx context.Context,
 	}
 
 	s.logger.Debug("Starting scraper", zap.Int("scraper_index", index))
-	startTime := time.Now().UTC()
+	startTime := time.Now()
 
 	errs := scraperFunc(ctx)
 

@@ -13,7 +13,7 @@ import (
 	"strings"
 	"time"
 
-	_ "github.com/godror/godror" // Register Oracle driver
+	_ "github.com/sijms/go-ora/v2" // Register Oracle driver
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/internal/metadata"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/newrelicoraclereceiver/queries"
 	"go.opentelemetry.io/collector/component"
@@ -29,7 +29,7 @@ func NewFactory() receiver.Factory {
 		metadata.Type,
 		createDefaultConfig,
 		receiver.WithMetrics(createMetricsReceiverFunc(func(dataSourceName string) (*sql.DB, error) {
-			return sql.Open("godror", dataSourceName)
+			return sql.Open("oracle", dataSourceName)
 		}), metadata.MetricsStability))
 }
 
@@ -123,39 +123,48 @@ func getDataSource(cfg Config) string {
 		return cfg.DataSource
 	}
 
-	// Build godror connection string format
-	// Format: user/password@host:port/service_name
+	// Build go-ora connection string format
+	// Format: oracle://user:password@host:port/service_name
+	// Use url.URL to properly encode credentials
 	host, portStr, _ := net.SplitHostPort(cfg.Endpoint)
 	port, _ := strconv.ParseInt(portStr, 10, 32)
 
-	return fmt.Sprintf("%s/%s@%s:%d/%s", cfg.Username, cfg.Password, host, port, cfg.Service)
+	u := &url.URL{
+		Scheme: "oracle",
+		User:   url.UserPassword(cfg.Username, cfg.Password),
+		Host:   fmt.Sprintf("%s:%d", host, port),
+		Path:   "/" + cfg.Service,
+	}
+
+	return u.String()
 }
 
 func getHostAndPort(datasource string) (string, int64, error) {
-	// For godror format: user/password@host:port/service_name
-	// Extract the host:port part
-	if atIndex := strings.Index(datasource, "@"); atIndex != -1 {
-		hostPart := datasource[atIndex+1:]
-		if slashIndex := strings.Index(hostPart, "/"); slashIndex != -1 {
-			hostPart = hostPart[:slashIndex]
-		}
-		// Split host:port
-		host, portStr, err := net.SplitHostPort(hostPart)
-		if err != nil {
-			return "", 0, fmt.Errorf("failed to parse host:port from datasource: %w", err)
-		}
-		port, err := strconv.ParseInt(portStr, 10, 64)
-		if err != nil {
-			return "", 0, fmt.Errorf("failed to parse port: %w", err)
-		}
-		return host, port, nil
-	}
-
-	// Fallback to URL parsing for oracle:// format
+	// For go-ora format: oracle://user:password@host:port/service_name
+	// Parse as URL
 	datasourceURL, err := url.Parse(datasource)
 	if err != nil {
-		return "", 0, err
+		// Fallback: try godror format for backward compatibility
+		// Format: user/password@host:port/service_name
+		if atIndex := strings.Index(datasource, "@"); atIndex != -1 {
+			hostPart := datasource[atIndex+1:]
+			if slashIndex := strings.Index(hostPart, "/"); slashIndex != -1 {
+				hostPart = hostPart[:slashIndex]
+			}
+			// Split host:port
+			host, portStr, err := net.SplitHostPort(hostPart)
+			if err != nil {
+				return "", 0, fmt.Errorf("failed to parse host:port from datasource: %w", err)
+			}
+			port, err := strconv.ParseInt(portStr, 10, 64)
+			if err != nil {
+				return "", 0, fmt.Errorf("failed to parse port: %w", err)
+			}
+			return host, port, nil
+		}
+		return "", 0, fmt.Errorf("failed to parse datasource URL: %w", err)
 	}
+
 	host, portStr, err := net.SplitHostPort(datasourceURL.Host)
 	if err != nil {
 		return "", 0, fmt.Errorf("failed to parse host:port from URL: %w", err)
@@ -168,20 +177,20 @@ func getHostAndPort(datasource string) (string, int64, error) {
 }
 
 func getServiceName(datasource string) (string, error) {
-	// For godror format: user/password@host:port/service_name
-	// Extract the service name part after /
-	if atIndex := strings.Index(datasource, "@"); atIndex != -1 {
-		hostPart := datasource[atIndex+1:]
-		if slashIndex := strings.Index(hostPart, "/"); slashIndex != -1 {
-			return hostPart[slashIndex+1:], nil
-		}
-		return "", nil
-	}
-
-	// Fallback to URL parsing for oracle:// format
+	// For go-ora format: oracle://user:password@host:port/service_name
+	// Parse as URL
 	datasourceURL, err := url.Parse(datasource)
 	if err != nil {
-		return "", err
+		// Fallback: try godror format for backward compatibility
+		// Format: user/password@host:port/service_name
+		if atIndex := strings.Index(datasource, "@"); atIndex != -1 {
+			hostPart := datasource[atIndex+1:]
+			if slashIndex := strings.Index(hostPart, "/"); slashIndex != -1 {
+				return hostPart[slashIndex+1:], nil
+			}
+			return "", nil
+		}
+		return "", fmt.Errorf("failed to parse datasource URL: %w", err)
 	}
 	// Remove leading / from path
 	serviceName := strings.TrimPrefix(datasourceURL.Path, "/")
@@ -193,6 +202,13 @@ func getDataSourceWithService(cfg Config, serviceName string) string {
 	if cfg.DataSource != "" {
 		// If DataSource is provided, replace the service name in it
 		datasource := cfg.DataSource
+		// Try parsing as URL first (oracle:// format)
+		if datasourceURL, err := url.Parse(datasource); err == nil && datasourceURL.Scheme == "oracle" {
+			// Replace the service name in the path
+			datasourceURL.Path = "/" + serviceName
+			return datasourceURL.String()
+		}
+		// Fallback: godror format - user/password@host:port/service_name
 		if atIndex := strings.Index(datasource, "@"); atIndex != -1 {
 			hostPart := datasource[atIndex+1:]
 			if slashIndex := strings.Index(hostPart, "/"); slashIndex != -1 {
@@ -203,12 +219,20 @@ func getDataSourceWithService(cfg Config, serviceName string) string {
 		return datasource
 	}
 
-	// Build godror connection string format with specified service
-	// Format: user/password@host:port/service_name
+	// Build go-ora connection string format with specified service
+	// Format: oracle://user:password@host:port/service_name
+	// Use url.URL to properly encode credentials
 	host, portStr, _ := net.SplitHostPort(cfg.Endpoint)
 	port, _ := strconv.ParseInt(portStr, 10, 32)
 
-	return fmt.Sprintf("%s/%s@%s:%d/%s", cfg.Username, cfg.Password, host, port, serviceName)
+	u := &url.URL{
+		Scheme: "oracle",
+		User:   url.UserPassword(cfg.Username, cfg.Password),
+		Host:   fmt.Sprintf("%s:%d", host, port),
+		Path:   "/" + serviceName,
+	}
+
+	return u.String()
 }
 
 // determineMonitoredServices determines which services to monitor based on pdb_services configuration

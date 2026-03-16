@@ -100,7 +100,7 @@ func (s *WaitEventBlockingScraper) ScrapeWaitEventsAndBlocking(ctx context.Conte
 		return nil, []error{err}
 	}
 
-	now := pcommon.NewTimestampFromTime(time.Now().UTC())
+	now := pcommon.NewTimestampFromTime(time.Now())
 	s.emitWaitEventMetrics(now, waitEvents, sqlIDMap)
 	sqlIdentifiers := s.extractSQLIdentifiers(waitEvents, sqlIDMap)
 
@@ -278,7 +278,7 @@ func (s *WaitEventBlockingScraper) extractSQLIdentifiers(
 			identifiersMap[key] = models.SQLIdentifier{
 				SQLID:             sqlID,
 				ChildNumber:       childNumber,
-				Timestamp:         time.Now().UTC(),
+				Timestamp:         time.Now(),
 				NRServiceGUID:     nrServiceGUID,
 				NormalisedSQLHash: normalisedSQLHash,
 			}

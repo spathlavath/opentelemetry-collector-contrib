@@ -84,7 +84,7 @@ func (s *ContainerScraper) ScrapeContainerMetrics(ctx context.Context) []error {
 		return []error{err}
 	}
 
-	now := pcommon.NewTimestampFromTime(time.Now().UTC())
+	now := pcommon.NewTimestampFromTime(time.Now())
 
 	// Scrape container status metrics (only from CDB$ROOT)
 	if s.isConnectedToCDBRoot() {

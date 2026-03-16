@@ -47,7 +47,7 @@ func (s *PdbScraper) ScrapePdbMetrics(ctx context.Context) []error {
 		return nil
 	}
 
-	now := pcommon.NewTimestampFromTime(time.Now().UTC())
+	now := pcommon.NewTimestampFromTime(time.Now())
 	return s.scrapePDBSysMetrics(ctx, now)
 }
 

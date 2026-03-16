@@ -39,7 +39,7 @@ func (s *SessionScraper) ScrapeSessionCount(ctx context.Context) []error {
 		return errs
 	}
 
-	now := pcommon.NewTimestampFromTime(time.Now().UTC())
+	now := pcommon.NewTimestampFromTime(time.Now())
 
 	count, err := s.client.QuerySessionCount(ctx)
 	if err != nil {

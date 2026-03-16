@@ -54,7 +54,7 @@ func NewConnectionScraper(
 // ScrapeConnectionMetrics collects Oracle connection statistics
 func (s *ConnectionScraper) ScrapeConnectionMetrics(ctx context.Context) []error {
 	var scrapeErrors []error
-	now := pcommon.NewTimestampFromTime(time.Now().UTC())
+	now := pcommon.NewTimestampFromTime(time.Now())
 
 	// Always emit UI-critical metrics
 	scrapeErrors = append(scrapeErrors, s.scrapeCoreConnectionCounts(ctx, now)...)

@@ -23,14 +23,14 @@ import (
 func GetSlowQueriesSQL(intervalSeconds int) string {
 	return fmt.Sprintf(`
 		SELECT
-			TO_CHAR(SYS_EXTRACT_UTC(SYSTIMESTAMP), 'YYYY-MM-DD HH24:MI:SS') AS COLLECTION_TIMESTAMP,
+			TO_CHAR(SYSTIMESTAMP, 'YYYY-MM-DD HH24:MI:SS') AS COLLECTION_TIMESTAMP,
 			COALESCE(p.name, d.name) AS database_name,
 			sa.sql_id AS query_id,
 			sa.parsing_schema_name AS schema_name,
 			au.username AS user_name,
 			sa.executions AS execution_count,
 			sa.sql_fulltext AS query_text,
-			TO_CHAR(SYS_EXTRACT_UTC(CAST(sa.last_active_time AS TIMESTAMP WITH TIME ZONE)), 'YYYY-MM-DD HH24:MI:SS') AS last_active_timestamp,
+			TO_CHAR(sa.last_active_time, 'YYYY-MM-DD HH24:MI:SS') AS last_active_timestamp,
 			sa.elapsed_time / 1000 AS total_elapsed_time_ms,
 			sa.cpu_time / 1000 AS total_cpu_time_ms,
 			sa.disk_reads AS total_disk_reads,
@@ -77,7 +77,7 @@ func GetWaitEventsAndBlockingSQL(rowLimit int, excludeSQLIDs []string) string {
 
 	return fmt.Sprintf(`
 		SELECT
-			TO_CHAR(SYS_EXTRACT_UTC(SYSTIMESTAMP), 'YYYY-MM-DD HH24:MI:SS') AS COLLECTION_TIMESTAMP,
+			TO_CHAR(SYSTIMESTAMP, 'YYYY-MM-DD HH24:MI:SS') AS COLLECTION_TIMESTAMP,
 			COALESCE(p.name, d.name) AS database_name,
 			s.username,
 			s.sid,
@@ -94,7 +94,7 @@ func GetWaitEventsAndBlockingSQL(rowLimit int, excludeSQLIDs []string) string {
 					ELSE s.TIME_SINCE_LAST_WAIT_MICRO
 				END / 1000, 2
 			) AS wait_time_ms,
-			TO_CHAR(SYS_EXTRACT_UTC(CAST(s.SQL_EXEC_START AS TIMESTAMP WITH TIME ZONE)), 'YYYY-MM-DD HH24:MI:SS') AS SQL_EXEC_START,
+			TO_CHAR(s.SQL_EXEC_START, 'YYYY-MM-DD HH24:MI:SS') AS SQL_EXEC_START,
 			s.SQL_EXEC_ID,
 			s.PROGRAM,
 			s.MACHINE,
@@ -176,7 +176,7 @@ func GetActiveSessionsForMonitoredQueriesSQL(slowQueryIDs []string) string {
 
 	return fmt.Sprintf(`
 		SELECT
-			TO_CHAR(SYS_EXTRACT_UTC(SYSTIMESTAMP), 'YYYY-MM-DD HH24:MI:SS') AS COLLECTION_TIMESTAMP,
+			TO_CHAR(SYSTIMESTAMP, 'YYYY-MM-DD HH24:MI:SS') AS COLLECTION_TIMESTAMP,
 			COALESCE(p.name, d.name) AS database_name,
 			s.username,
 			s.sid,
@@ -193,7 +193,7 @@ func GetActiveSessionsForMonitoredQueriesSQL(slowQueryIDs []string) string {
 					ELSE s.TIME_SINCE_LAST_WAIT_MICRO
 				END / 1000, 2
 			) AS wait_time_ms,
-			TO_CHAR(SYS_EXTRACT_UTC(CAST(s.SQL_EXEC_START AS TIMESTAMP WITH TIME ZONE)), 'YYYY-MM-DD HH24:MI:SS') AS SQL_EXEC_START,
+			TO_CHAR(s.SQL_EXEC_START, 'YYYY-MM-DD HH24:MI:SS') AS SQL_EXEC_START,
 			s.SQL_EXEC_ID,
 			s.PROGRAM,
 			s.MACHINE,
@@ -265,7 +265,7 @@ func GetActiveSessionsForMonitoredQueriesSQL(slowQueryIDs []string) string {
 func GetSpecificChildCursorQuery(sqlID string, childNumber int64) string {
 	return fmt.Sprintf(`
 		SELECT
-			TO_CHAR(SYS_EXTRACT_UTC(SYSTIMESTAMP), 'YYYY-MM-DD HH24:MI:SS') AS COLLECTION_TIMESTAMP,
+			TO_CHAR(SYSTIMESTAMP, 'YYYY-MM-DD HH24:MI:SS') AS COLLECTION_TIMESTAMP,
 			COALESCE(p.name, d.name) AS database_name,
 			s.sql_id,
 			s.child_number,
@@ -277,8 +277,8 @@ func GetSpecificChildCursorQuery(sqlID string, childNumber int64) string {
 			CASE WHEN s.executions > 0 THEN s.buffer_gets / s.executions ELSE 0 END AS avg_buffer_gets,
 			s.executions,
 			s.invalidations,
-			TO_CHAR(SYS_EXTRACT_UTC(CAST(TO_DATE(s.first_load_time, 'YYYY/MM/DD HH24:MI:SS') AS TIMESTAMP WITH TIME ZONE)), 'YYYY-MM-DD HH24:MI:SS') AS first_load_time,
-			TO_CHAR(SYS_EXTRACT_UTC(CAST(TO_DATE(s.last_load_time, 'YYYY/MM/DD HH24:MI:SS') AS TIMESTAMP WITH TIME ZONE)), 'YYYY-MM-DD HH24:MI:SS') AS last_load_time
+			TO_CHAR(TO_DATE(s.first_load_time, 'YYYY/MM/DD HH24:MI:SS'), 'YYYY-MM-DD HH24:MI:SS') AS first_load_time,
+			TO_CHAR(TO_DATE(s.last_load_time, 'YYYY/MM/DD HH24:MI:SS'), 'YYYY-MM-DD HH24:MI:SS') AS last_load_time
 		FROM
 			V$SQL s
 		-- Use LEFT JOIN for Non-CDB compatibility
@@ -296,7 +296,7 @@ func GetExecutionPlanForChildQuery(sqlID string, childNumber int64) string {
 	return fmt.Sprintf(`
 		SELECT
 			SQL_ID,
-			TO_CHAR(SYS_EXTRACT_UTC(CAST(TIMESTAMP AS TIMESTAMP WITH TIME ZONE)), 'YYYY-MM-DD HH24:MI:SS') AS PLAN_GENERATED_TIMESTAMP,
+			TO_CHAR(TIMESTAMP, 'YYYY-MM-DD HH24:MI:SS') AS PLAN_GENERATED_TIMESTAMP,
 			TEMP_SPACE,
 			ACCESS_PREDICATES,
 			PROJECTION,

@@ -75,7 +75,7 @@ func (s *DatabaseInfoScraper) ScrapeDatabaseInfo(ctx context.Context) []error {
 		return errs
 	}
 
-	now := pcommon.NewTimestampFromTime(time.Now().UTC())
+	now := pcommon.NewTimestampFromTime(time.Now())
 	s.mb.RecordNewrelicoracledbDatabaseInfoDataPoint(
 		now,
 		int64(1),
@@ -108,7 +108,7 @@ func (s *DatabaseInfoScraper) ScrapeHostingInfo(ctx context.Context) []error {
 		return errs
 	}
 
-	now := pcommon.NewTimestampFromTime(time.Now().UTC())
+	now := pcommon.NewTimestampFromTime(time.Now())
 	s.mb.RecordNewrelicoracledbHostingInfoDataPoint(
 		now,
 		int64(1),
@@ -154,7 +154,7 @@ func (s *DatabaseInfoScraper) ScrapeDatabaseRole(ctx context.Context) []error {
 			protectionLevel = role.ProtectionLevel.String
 		}
 
-		now := pcommon.NewTimestampFromTime(time.Now().UTC())
+		now := pcommon.NewTimestampFromTime(time.Now())
 		s.mb.RecordNewrelicoracledbDatabaseRoleDataPoint(
 			now,
 			int64(1),
@@ -178,7 +178,7 @@ func extractCloudProviderForOTEL(hostingProvider string) string {
 }
 
 func (s *DatabaseInfoScraper) ensureCacheValid(ctx context.Context) error {
-	now := time.Now().UTC()
+	now := time.Now()
 
 	s.cacheMutex.RLock()
 	if s.cachedInfo != nil && now.Before(s.cacheValidUntil) {
@@ -223,7 +223,7 @@ func (s *DatabaseInfoScraper) processDatabaseInfoMetrics(metrics []models.Databa
 			OperatingSystem: runtime.GOOS,
 		}
 
-		s.cacheValidUntil = time.Now().UTC().Add(s.cacheDuration)
+		s.cacheValidUntil = time.Now().Add(s.cacheDuration)
 		break
 	}
 
